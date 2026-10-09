@@ -9,6 +9,13 @@
 | CLI integration | Synthetic delayed/stretched waveform plus exact oracle | Full package path transfers controlled cue boundaries |
 | Installed wheel | Separate environment, no source import, socket guard | Distributable package works without network processing |
 
+The separate smoke environment first restores runtime dependencies from
+`uv.lock` using `uv sync --locked --no-dev --no-install-project`. This installation
+step may use package access. The local built wheel is then installed with
+`uv pip install --offline --no-deps`; processing starts only after a socket guard
+has disabled network creation and connection. Locked direct distribution URLs
+avoid relying on cached registry metadata during the wheel installation.
+
 Generate the synthetic fixtures from the committed generator, retain their SHA256
 hashes and run the documented benchmark command. Default transformation: 240 ms
 delay and 1.08 time scale, six cues and twelve boundaries. The local acceptance

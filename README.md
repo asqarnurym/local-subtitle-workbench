@@ -104,6 +104,9 @@ file is configuration; only a successful GitHub Actions run demonstrates the
 hosted pipeline. GitHub run URLs are available from the repository's Actions tab.
 The workflow pins uv 0.12.24, action revisions and the locked hatchling backend.
 The build uses the restored environment rather than a separately resolved backend.
+The smoke environment restores runtime dependencies directly from `uv.lock`
+before installing the wheel offline with `--no-deps`. Dependency bootstrap may
+use the package network; actual wheel processing runs with network sockets blocked.
 
 Issues should include expected/actual behaviour, a minimal licensed input,
 manifest configuration and input hashes. See [development process](docs/DEVELOPMENT.md)

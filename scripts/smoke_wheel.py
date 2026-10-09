@@ -1,4 +1,4 @@
-"""Install a built wheel into a separate environment and process with sockets blocked."""
+"""Restore locked runtime dependencies, install a wheel, and block processing sockets."""
 
 import argparse
 import json
@@ -8,8 +8,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-import numpy as np
-
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -18,21 +16,30 @@ def main() -> int:
     args = parser.parse_args()
     wheel = args.wheel.resolve()
     output = args.output.resolve()
+    project = Path(__file__).resolve().parents[1]
     with tempfile.TemporaryDirectory(prefix="subtitle-wheel-") as directory:
         venv = Path(directory) / "venv"
         subprocess.run([sys.executable, "-m", "venv", "--without-pip", str(venv)], check=True)
         python = venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+        bootstrap_environment = os.environ.copy()
+        bootstrap_environment.pop("VIRTUAL_ENV", None)
+        bootstrap_environment["UV_PROJECT_ENVIRONMENT"] = str(venv)
         subprocess.run(
             [
                 "uv",
-                "pip",
-                "install",
-                "--offline",
+                "sync",
+                "--locked",
+                "--no-dev",
+                "--no-install-project",
                 "--python",
-                str(python),
-                str(wheel),
-                f"numpy=={np.__version__}",
+                sys.executable,
             ],
+            cwd=project,
+            env=bootstrap_environment,
+            check=True,
+        )
+        subprocess.run(
+            ["uv", "pip", "install", "--offline", "--no-deps", "--python", str(python), str(wheel)],
             check=True,
         )
         code = """

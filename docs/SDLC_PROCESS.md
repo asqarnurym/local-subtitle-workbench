@@ -105,3 +105,23 @@ An increment or feature pull request is considered **Done** if and only if it sa
 1. **Zero Credential Rule:** No API keys, cloud tokens, `.env` files, or proprietary credentials may ever be committed to the repository. The entire pipeline runs 100% locally on the user's workstation.
 2. **Offline Network Guard:** Packaging smoke tests (`scripts/smoke_wheel.py`) enforce an explicit socket block (`socket.socket = disabled_socket`) to guarantee that the workbench functions entirely offline without hidden model downloads or telemetry calls.
 3. **Weight & Data Storage:** Large pretrained model weights (HuggingFace, CTranslate2, MFA acoustic models) and raw speech corpora are stored in user cache directories (`~/.cache/`) and referenced via local paths; they are strictly excluded from Git tracking via `.gitignore`.
+
+---
+
+## 6. Increment Logging & Audit Reporting Protocol
+
+To maintain complete transparency, traceability, and defensibility of every development step for the Master's Thesis and course assignments, every completed increment must produce a dedicated, standardized markdown report.
+
+1. **Storage Location:** All increment reports are stored strictly in `docs/increments/`.
+2. **Naming Convention:** `INCREMENT_<N>_<UPPERCASE_NAME>.md` (e.g., `INCREMENT_1_SPEECH_MODELS_AND_NORM.md`).
+3. **Template Standard:** Each report must follow [`docs/increments/TEMPLATE_INCREMENT_REPORT.md`](file:///C:/Users/nurym/Desktop/local-subtitle-workbench/docs/increments/TEMPLATE_INCREMENT_REPORT.md).
+4. **Mandatory Report Sections:**
+   - Increment ID, Date, Branch, Commit SHA, Author, and Status.
+   - Executive Summary & Problem Solved.
+   - Traceability to Master's Individual Plan (НИРМ milestones) and ASDP Quality Gates.
+   - Exact Inventory of Changes: files created, modified, lines of code, and architectural responsibilities.
+   - Quality Gate Verification Evidence: full console outputs of `pytest`, `ruff check`, and wheel build.
+   - Architectural Decisions & Trade-Offs Made.
+   - Edge Cases and Boundary Conditions Tested.
+   - Handover notes and prerequisites for the subsequent increment.
+5. **Git Policy:** The increment report must be committed to the feature branch alongside the implementation code before the pull request or merge into `main` is approved.

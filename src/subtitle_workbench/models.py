@@ -1,6 +1,6 @@
 """Input contracts and resource bounds."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from numbers import Real
 
 
@@ -14,6 +14,41 @@ def finite_number(value: object, name: str) -> float:
     if not (-float("inf") < number < float("inf")):
         raise ValueError(f"{name} must be a finite number")
     return number
+
+
+def validate_identifier(identifier: object, name: str = "id") -> str:
+    if (
+        isinstance(identifier, bool)
+        or not isinstance(identifier, str)
+        or not identifier
+        or len(identifier) > 128
+        or any(not (char.isascii() and (char.isalnum() or char in "_-")) for char in identifier)
+    ):
+        raise ValueError(
+            f"{name} must be a non-empty ASCII identifier (letters, digits, underscore, hyphen)"
+        )
+    return identifier
+
+
+def validate_text(text: object, name: str = "text", allow_newlines: bool = True) -> str:
+    if isinstance(text, bool) or not isinstance(text, str) or not text.strip():
+        raise ValueError(f"{name} must be non-empty text")
+    if len(text) > 4000:
+        raise ValueError(f"{name} exceeds maximum length of 4000 characters")
+    if any(0xD800 <= ord(char) <= 0xDFFF for char in text):
+        raise ValueError(f"{name} must not contain surrogate characters")
+    if allow_newlines:
+        if any(
+            (ord(char) < 32 and char not in "\t\n\r")
+            or ord(char) == 127
+            or (128 <= ord(char) <= 159)
+            for char in text
+        ):
+            raise ValueError(f"{name} must not contain control characters")
+    else:
+        if any(ord(char) < 32 or ord(char) == 127 or (128 <= ord(char) <= 159) for char in text):
+            raise ValueError(f"{name} must not contain control characters")
+    return text
 
 
 @dataclass(frozen=True)
@@ -97,3 +132,130 @@ def validate_cues(data: object, duration: float) -> list[Cue]:
         result.append(Cue(identifier, start, end, text))
         ids.add(identifier)
     return result
+
+
+@dataclass(frozen=True)
+class PhonemeCue:
+    phoneme: str
+    start: float
+    end: float
+    confidence: float
+
+    def __post_init__(self) -> None:
+        validate_text(self.phoneme, "phoneme", allow_newlines=False)
+        start = finite_number(self.start, "start")
+        end = finite_number(self.end, "end")
+        if start < 0.0:
+            raise ValueError("start must be nonnegative")
+        if start >= end:
+            raise ValueError("start must be strictly less than end")
+        confidence = finite_number(self.confidence, "confidence")
+        if not (0.0 <= confidence <= 1.0):
+            raise ValueError("confidence must be between 0.0 and 1.0")
+        object.__setattr__(self, "start", start)
+        object.__setattr__(self, "end", end)
+        object.__setattr__(self, "confidence", confidence)
+
+
+@dataclass(frozen=True)
+class WordToken:
+    id: str
+    text: str
+    normalized: str
+    start: float
+    end: float
+    confidence: float
+    phonemes: list[PhonemeCue] = field(default_factory=list)
+    char_start: int | None = None
+    char_end: int | None = None
+
+    def __post_init__(self) -> None:
+        validate_identifier(self.id, "id")
+        validate_text(self.text, "text", allow_newlines=False)
+        validate_text(self.normalized, "normalized", allow_newlines=False)
+        start = finite_number(self.start, "start")
+        end = finite_number(self.end, "end")
+        if start < 0.0:
+            raise ValueError("start must be nonnegative")
+        if start >= end:
+            raise ValueError("start must be strictly less than end")
+        confidence = finite_number(self.confidence, "confidence")
+        if not (0.0 <= confidence <= 1.0):
+            raise ValueError("confidence must be between 0.0 and 1.0")
+        if not isinstance(self.phonemes, list) or any(
+            not isinstance(p, PhonemeCue) for p in self.phonemes
+        ):
+            raise ValueError("phonemes must be a list of PhonemeCue instances")
+        if (self.char_start is None) != (self.char_end is None):
+            raise ValueError("char_start and char_end must both be None or both be integers")
+        if self.char_start is not None and self.char_end is not None:
+            if (
+                isinstance(self.char_start, bool)
+                or not isinstance(self.char_start, int)
+                or self.char_start < 0
+            ):
+                raise ValueError("char_start must be a nonnegative integer")
+            if (
+                isinstance(self.char_end, bool)
+                or not isinstance(self.char_end, int)
+                or self.char_end < self.char_start
+            ):
+                raise ValueError("char_end must be an integer >= char_start")
+        object.__setattr__(self, "start", start)
+        object.__setattr__(self, "end", end)
+        object.__setattr__(self, "confidence", confidence)
+
+
+@dataclass(frozen=True)
+class ASRSegment:
+    id: str
+    start: float
+    end: float
+    text: str
+    words: list[WordToken]
+
+    def __post_init__(self) -> None:
+        validate_identifier(self.id, "id")
+        start = finite_number(self.start, "start")
+        end = finite_number(self.end, "end")
+        if start < 0.0:
+            raise ValueError("start must be nonnegative")
+        if start >= end:
+            raise ValueError("start must be strictly less than end")
+        validate_text(self.text, "text", allow_newlines=True)
+        if not isinstance(self.words, list) or any(
+            not isinstance(w, WordToken) for w in self.words
+        ):
+            raise ValueError("words must be a list of WordToken instances")
+        object.__setattr__(self, "start", start)
+        object.__setattr__(self, "end", end)
+
+
+@dataclass(frozen=True)
+class AlignmentResult:
+    words: list[WordToken]
+    phonemes: list[PhonemeCue]
+    alignment_method: str
+    path_cost: float
+    evaluated_cells: int
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.words, list) or any(
+            not isinstance(w, WordToken) for w in self.words
+        ):
+            raise ValueError("words must be a list of WordToken instances")
+        if not isinstance(self.phonemes, list) or any(
+            not isinstance(p, PhonemeCue) for p in self.phonemes
+        ):
+            raise ValueError("phonemes must be a list of PhonemeCue instances")
+        validate_text(self.alignment_method, "alignment_method", allow_newlines=False)
+        path_cost = finite_number(self.path_cost, "path_cost")
+        if path_cost < 0.0:
+            raise ValueError("path_cost must be nonnegative")
+        if (
+            isinstance(self.evaluated_cells, bool)
+            or not isinstance(self.evaluated_cells, int)
+            or self.evaluated_cells < 0
+        ):
+            raise ValueError("evaluated_cells must be a nonnegative integer")
+        object.__setattr__(self, "path_cost", path_cost)

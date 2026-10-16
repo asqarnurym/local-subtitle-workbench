@@ -149,12 +149,14 @@ class WordToken:
     confidence: float
     phonemes: list["PhonemeCue"] = field(default_factory=list)
 
+
 @dataclass(frozen=True)
 class PhonemeCue:
     phoneme: str
     start: float
     end: float
     confidence: float
+
 
 @dataclass(frozen=True)
 class ASRSegment:
@@ -163,6 +165,7 @@ class ASRSegment:
     end: float
     text: str
     words: list[WordToken]
+
 
 @dataclass(frozen=True)
 class AlignmentResult:

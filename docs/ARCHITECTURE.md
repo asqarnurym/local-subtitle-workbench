@@ -61,6 +61,20 @@ Every component in the architecture is chosen based on empirical trade-offs betw
 | **Forced Alignment** | **Montreal Forced Aligner (Kaldi GMM-HMM)** | TorchAudio MMS_FA / Charsiu / Gentle | • **Target Granularity:** MFA models acoustic transitions down to individual **phoneme states** via triphone acoustic models and CMUDict pronunciation lexicon, enabling the thesis target of $<20\text{ ms}$ error.<br>• **Academic Gold Standard:** Universally recognized in speech and linguistic science (McAuliffe et al., 2017). |
 | **Alignment Fallback** | **TorchAudio `MMS_FA` (CTC Trellis)** | Wav2Vec2-base / Kaldi-C++ in-process | • **Self-Contained Execution:** 100% PyTorch in-process execution without external Conda/Kaldi dependencies for CI/CD and rapid word-level testing.<br>• **Character Vocabulary:** Evaluates Trellis dynamic programming over character emission matrices. |
 
+### 2.1 Montreal Forced Aligner (MFA) Operational Architecture & Windows 11 Toolchain
+
+In speech science, Montreal Forced Aligner (McAuliffe et al., Interspeech 2017) is an open-source orchestration tool around compiled **Kaldi C++ binaries** (`compute-mfcc-feats`, `compile-train-graphs`, `gmm-align-compiled`) using GMM-HMM acoustic models and the CMUDict pronunciation lexicon.
+
+Two critical architectural decisions govern MFA in this workbench:
+1. **External CLI Integration (No PyPI Dependency):**  
+   Kaldi C++ binaries and OpenFST DLLs on Windows 11 are distributed via `conda-forge`. MFA **cannot** be packaged as a direct wheel in `pyproject.toml` (which uses Python 3.12 with `uv`). The workbench interfaces with MFA as an external CLI tool (`mfa.exe`) via `subprocess.run`, gracefully detecting its presence on system PATH (`check_mfa_available()`).
+2. **Corpus Staging Batch Architecture (Overhead Prevention):**  
+   Each invocation of `mfa align` incurs 10–15 seconds of process startup latency (Python CLI bootstrap, SQLite dictionary cache, Kaldi initialization). Spawning MFA per 30-second chunk in a loop would introduce disastrous overhead (50 chunks $\times$ 12s = 600s). The workbench stages all audio chunks into a temporary corpus directory (`temp/mfa_staging_<uuid>/corpus/chunk_0000.wav`, `.lab`), executes `mfa align` **once per document** (~22s total for 50 chunks), and parses the resulting Praat `.TextGrid` files.
+3. **Tripartite Dual-Engine Coexistence:**  
+   - **Mode B (MFA):** Primary scientific benchmark fulfilling the AITU Master's Individual Plan for sub-20ms phoneme boundaries.  
+   - **Mode A (MMS_FA CTC Trellis):** Self-contained, in-process PyTorch dynamic programming fallback for zero-dependency execution.  
+   - **Publication 2:** The direct empirical benchmark comparing Kaldi GMM-HMM vs Neural CTC Trellis on accented educational speech forms the core experimental contribution for the *Scientific Journal of Astana IT University*.
+
 ---
 
 ## 3. Hardware & VRAM Memory Budget (NVIDIA RTX 3050 Laptop 4 GB)
@@ -122,8 +136,8 @@ sequenceDiagram
     DTW->>DTW: Partition chunks (L <= 30s) with 0.5s padding
     DTW->>Align: Pass acoustic chunks & corresponding text
     alt Mode B: Montreal Forced Aligner
-        Align->>Align: Generate .lab & invoke MFA Kaldi
-        Align->>Align: Parse output TextGrid to phonemes (<20ms)
+        Align->>Align: Stage chunks into temp corpus (.wav + .lab) & run batch MFA
+        Align->>Align: Parse output TextGrids to phonemes (<20ms)
     else Mode A: CTC Trellis Fallback
         Align->>Align: Run MMS_FA CTC Trellis dynamic programming
         Align->>Align: Aggregate character frames to word bounds

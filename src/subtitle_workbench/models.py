@@ -259,3 +259,75 @@ class AlignmentResult:
         ):
             raise ValueError("evaluated_cells must be a nonnegative integer")
         object.__setattr__(self, "path_cost", path_cost)
+
+
+@dataclass(frozen=True)
+class AudioChunk:
+    id: str
+    index: int
+    start: float
+    end: float
+    padded_start: float
+    padded_end: float
+    text: str
+    words: list[WordToken] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        validate_identifier(self.id, "id")
+        if isinstance(self.index, bool) or not isinstance(self.index, int) or self.index < 0:
+            raise ValueError("index must be a nonnegative integer")
+
+        start = finite_number(self.start, "start")
+        end = finite_number(self.end, "end")
+        padded_start = finite_number(self.padded_start, "padded_start")
+        padded_end = finite_number(self.padded_end, "padded_end")
+
+        if padded_start < 0.0:
+            raise ValueError("padded_start must be nonnegative")
+        if padded_start > start:
+            raise ValueError("padded_start must be less than or equal to start")
+        if start >= end:
+            raise ValueError("start must be strictly less than end")
+        if end > padded_end:
+            raise ValueError("end must be less than or equal to padded_end")
+
+        validate_text(self.text, "text", allow_newlines=True)
+
+        if not isinstance(self.words, list) or any(
+            not isinstance(w, WordToken) for w in self.words
+        ):
+            raise ValueError("words must be a list of WordToken instances")
+
+        object.__setattr__(self, "start", start)
+        object.__setattr__(self, "end", end)
+        object.__setattr__(self, "padded_start", padded_start)
+        object.__setattr__(self, "padded_end", padded_end)
+        object.__setattr__(self, "words", list(self.words))
+
+
+@dataclass(frozen=True)
+class ChunkConfig:
+    max_chunk_duration: float = 30.0
+    min_chunk_duration: float = 1.0
+    overlap_padding: float = 0.5
+    min_silence_duration: float = 0.4
+
+    def __post_init__(self) -> None:
+        max_dur = finite_number(self.max_chunk_duration, "max_chunk_duration")
+        min_dur = finite_number(self.min_chunk_duration, "min_chunk_duration")
+        overlap = finite_number(self.overlap_padding, "overlap_padding")
+        min_sil = finite_number(self.min_silence_duration, "min_silence_duration")
+
+        if min_dur <= 0.0:
+            raise ValueError("min_chunk_duration must be positive")
+        if max_dur < min_dur:
+            raise ValueError("max_chunk_duration must be at least min_chunk_duration")
+        if overlap < 0.0:
+            raise ValueError("overlap_padding must be nonnegative")
+        if min_sil <= 0.0:
+            raise ValueError("min_silence_duration must be positive")
+
+        object.__setattr__(self, "max_chunk_duration", max_dur)
+        object.__setattr__(self, "min_chunk_duration", min_dur)
+        object.__setattr__(self, "overlap_padding", overlap)
+        object.__setattr__(self, "min_silence_duration", min_sil)

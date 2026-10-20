@@ -14,7 +14,7 @@ The **Local Subtitle Alignment Workbench** is an offline, modular Python system 
 In strict compliance with the Master's Individual Plan, the workbench integrates three foundational technologies into a unified hierarchical pipeline:
 1. **Automatic Speech Recognition (ASR):** OpenAI Whisper (via `faster-whisper` CTranslate2 INT8) for verbatim transcription and initial segment timestamps.
 2. **Macro-Alignment & Segmentation (DTW):** Bounded Dynamic Time Warping (`dtw.py`) with Silero-VAD silence boundary anchoring to eliminate temporal drift on long educational recordings.
-3. **Micro-Forced Alignment (MFA / CTC):** Montreal Forced Aligner (Kaldi GMM-HMM + CMUDict) as the primary phonetic scientific engine, with an in-process PyTorch CTC Trellis (`torchaudio MMS_FA`) fallback.
+3. **Forced Alignment (MFA & CTC Trellis):** Montreal Forced Aligner (Kaldi GMM-HMM + CMUDict) as the primary phonetic scientific engine, with an in-process PyTorch CTC Trellis (`torchaudio MMS_FA`) fallback.
 
 ```
                            HIERARCHICAL SYSTEM TOPOLOGY
@@ -34,7 +34,7 @@ In strict compliance with the Master's Individual Plan, the workbench integrates
 └───────────────────────────────────────────┬────────────────────────────────────────────┘
                                             ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                         STAGE 4: MICRO FORCED ALIGNMENT                                │
+│                         STAGE 4: FORCED ALIGNMENT (PHONETIC & WORD)            │
 │       Mode B (Primary): Montreal Forced Aligner (Kaldi HMM-GMM) ──► Phonemes (<20ms)   │
 │       Mode A (Fallback): TorchAudio MMS_FA (CTC Trellis DP)    ──► Words (<50ms)       │
 └───────────────────────────────────────────┬────────────────────────────────────────────┘
@@ -58,7 +58,7 @@ Every component in the architecture is chosen based on empirical trade-offs betw
 | **VAD** | **Silero-VAD v4 (ONNX / TorchScript)** | Energy thresholding / WebRTC VAD | • **Acoustic robustness:** Silero-VAD is trained on diverse noisy audio (SNR 10–30 dB) and reliably detects natural pause boundaries without false positives on breath/reverberation.<br>• **Lightweight:** Evaluates 30 ms windows in $<1\text{ ms}$ on CPU. |
 | **ASR** | **Faster-Whisper Large-v3 (INT8)** | Vanilla OpenAI Whisper (PyTorch FP16) / Distil-Whisper | • **Memory Sizing:** Large-v3 INT8 via CTranslate2 consumes **~1.85 GB VRAM**, fitting comfortably into our 4.0 GB GPU limit (Vanilla FP16 requires $>3.2\text{ GB}$).<br>• **Execution Speed:** 3.5x faster decoding than Vanilla Whisper on NVIDIA Turing/Ampere tensor cores.<br>• **Transcription Fidelity:** Retains SOTA low WER on accented academic speech. |
 | **Macro Alignment** | **Banded DTW with Overlap Padding (`dtw.py`)** | Global Unbounded DTW / FastDTW | • **Memory Bound:** Unbounded DTW on a 60-min lecture ($180,000 \times 180,000$) requires $\approx 32.4\text{ GB}$ of RAM ($O(T \times U)$).<br>• **Banded DP:** Bandwidth of $\pm 0.5\text{ s}$ around diagonal bounds evaluated cells to $<2,000,000$ ($O(T \cdot B)$), keeping memory $<15\text{ MB}$.<br>• **Chunk Padding:** $0.5\text{ s}$ context padding prevents acoustic truncation at chunk borders. |
-| **Micro Alignment** | **Montreal Forced Aligner (Kaldi GMM-HMM)** | TorchAudio MMS_FA / Charsiu / Gentle | • **Target Granularity:** MFA models acoustic transitions down to individual **phoneme states** via triphone acoustic models and CMUDict pronunciation lexicon, enabling the thesis target of $<20\text{ ms}$ error.<br>• **Academic Gold Standard:** Universally recognized in speech and linguistic science (McAuliffe et al., 2017). |
+| **Forced Alignment** | **Montreal Forced Aligner (Kaldi GMM-HMM)** | TorchAudio MMS_FA / Charsiu / Gentle | • **Target Granularity:** MFA models acoustic transitions down to individual **phoneme states** via triphone acoustic models and CMUDict pronunciation lexicon, enabling the thesis target of $<20\text{ ms}$ error.<br>• **Academic Gold Standard:** Universally recognized in speech and linguistic science (McAuliffe et al., 2017). |
 | **Alignment Fallback** | **TorchAudio `MMS_FA` (CTC Trellis)** | Wav2Vec2-base / Kaldi-C++ in-process | • **Self-Contained Execution:** 100% PyTorch in-process execution without external Conda/Kaldi dependencies for CI/CD and rapid word-level testing.<br>• **Character Vocabulary:** Evaluates Trellis dynamic programming over character emission matrices. |
 
 ---
@@ -91,8 +91,8 @@ VRAM (GB)
 | **2. Transcription (ASR)** | Faster-Whisper Large-v3 INT8 | GPU (CUDA 12.4) | ~1.85 GB VRAM | **1.85 GB** | **46.2% of VRAM (Safe)** |
 | **-- Inter-Stage Cleanup --** | `del model; gc.collect(); torch.cuda.empty_cache()` | CPU / GPU | - | **<0.15 GB** | Cleared |
 | **3. Macro-DTW** | Banded DTW (`dtw.py`) | CPU (NumPy) | ~45 MB RAM | 0.0 GB | Safe |
-| **4. Micro-Alignment (Mode B)** | MFA (Kaldi Subprocess) | CPU (Kaldi C++) | ~400 MB RAM | 0.0 GB | Safe (Zero VRAM) |
-| **4. Micro-Alignment (Mode A)** | MMS_FA (TorchAudio CTC) | GPU (CUDA 12.4) | ~1.45 GB VRAM | **1.45 GB** | **36.2% of VRAM (Safe)** |
+| **4. Forced Alignment: MFA (Mode B)** | MFA (Kaldi Subprocess) | CPU (Kaldi C++) | ~400 MB RAM | 0.0 GB | Safe (Zero VRAM) |
+| **4. Forced Alignment: CTC (Mode A)** | MMS_FA (TorchAudio CTC) | GPU (CUDA 12.4) | ~1.45 GB VRAM | **1.45 GB** | **36.2% of VRAM (Safe)** |
 | **5. Artifact Export** | WebVTT / JSON-LD / Manifest | CPU (Python) | ~10 MB RAM | 0.0 GB | Safe |
 
 *Maximum concurrent VRAM allocation at any point in the pipeline is $\max(1.85, 1.45) = 1.85\text{ GB} \le 3.5\text{ GB}$.*

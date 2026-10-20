@@ -84,7 +84,7 @@ An increment or feature pull request is considered **Done** if and only if it sa
 │ • Bounded chunk partitioner (L <= 30s) with 0.5s overlap padding                       │
 │ • Long-form drift compensation integrating dtw.py                                      │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
-│ Increment 4: Micro Forced Alignment Engines                                            │
+│ Increment 4: Forced Alignment Engines (MFA & CTC)                                      │
 │ • Montreal Forced Aligner adapter (mfa_wrapper.py) for Kaldi HMM-GMM (<20ms target)   │
 │ • TorchAudio MMS_FA CTC-Trellis in-process fallback (ctc_aligner.py)                   │
 ├────────────────────────────────────────────────────────────────────────────────────────┤

@@ -25,7 +25,7 @@ Node 1: Ingestion      [Native wave]  ◄──vs──►  [FFmpeg CLI / PyAV /
 Node 2: VAD            [Silero-VAD]   ◄──vs──►  [WebRTC VAD / PyAnnote / Energy]
 Node 3: ASR Engine     [Faster-Whisper]◄─vs──►  [OpenAI Whisper / WhisperX / Distil-Whisper]
 Node 4: Macro DTW      [Banded DTW]   ◄──vs──►  [FastDTW / ASR-anchor linear interpolation]
-Node 5: Micro Align    [MFA (Kaldi)]  ◄──vs──►  [TorchAudio MMS_FA / Charsiu / Gentle]
+Node 5: Forced Align   [MFA (Kaldi)]  ◄──vs──►  [TorchAudio MMS_FA / Charsiu / Gentle]
 Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT / ffmpeg subtitler]
 ```
 
@@ -98,7 +98,7 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
 
 ---
 
-### Node 5: Micro Forced Alignment (Core Scientific Node)
+### Node 5: Forced Alignment (Core Scientific Node)
 - **Primary Method:** Montreal Forced Aligner (Kaldi GMM-HMM + CMUDict acoustic models).
   - *Properties:* Standard phonetic science benchmark; models sub-phonemic states down to 10 ms resolution.
 - **Backlog Analogs:**

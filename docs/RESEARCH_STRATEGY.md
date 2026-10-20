@@ -19,7 +19,7 @@ In computer science and engineering master's theses, academic councils and attes
 ### 1.2 Our Scientific Contribution: Hierarchical Bounded Alignment
 The scientific novelty of this work resides in the **Two-Tier Cross-Modal Synchronization Method**:
 1. **Macro-Tier (Acoustic DTW with Overlap Padding):** Formulates a banded dynamic time warping strategy with $0.5\text{ s}$ context padding and silence anchoring that reduces time-warping complexity to $O(T \cdot B)$ (linear in practice) and proves elimination of cumulative temporal drift across 60-minute streams.
-2. **Micro-Tier (Invertible Token-Span Forced Alignment):** Introduces a reversible token-span mapping mechanism that reconciles acoustic phonetic dictionary requirements (CMUDict/ARPAbet) with verbatim text display, guaranteeing sub-20ms acoustic boundary accuracy without corrupting the on-screen educational subtitles.
+2. **Phonetic Tier (Invertible Token-Span Forced Alignment):** Introduces a reversible token-span mapping mechanism that reconciles acoustic phonetic dictionary requirements (CMUDict/ARPAbet) with verbatim text display, guaranteeing sub-20ms acoustic boundary accuracy without corrupting the on-screen educational subtitles.
 
 ---
 

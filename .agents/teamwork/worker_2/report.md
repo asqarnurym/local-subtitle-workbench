@@ -39,7 +39,7 @@ This report documents the completion of Increment 3 remediation and finalization
 - **Remediation**: Changed onset validation condition from `if curr_w.start < prev_w.start:` to `if curr_w.start <= prev_w.start: raise MonotonicityError(...)`. In addition, when coarticulation nudges `prev_w.end` backward, nested phonemes are clamped to `new_prev_end`.
 - **Location**: `src/subtitle_workbench/chunker.py` lines 324–341.
 
-### 2.5 Fix D5: Micro-Phoneme Duration Protection (`reconcile_chunk_alignments`)
+### 2.5 Fix D5: Phoneme Duration Protection (`reconcile_chunk_alignments`)
 - **Problem**: When a phoneme has duration $< 0.1$ms (e.g. $[0.10001, 0.10004]$), independent 4-decimal rounding caused `p_start == p_end`, triggering unhandled `ValueError: start must be strictly less than end` inside `PhonemeCue.__post_init__`.
 - **Remediation**: Safeguarded phoneme interval calculation with `if p_end <= p_start: p_end = round(p_start + 0.001, 4)`, ensuring a minimum 1ms duration and preserving data contract invariants.
 - **Location**: `src/subtitle_workbench/chunker.py` lines 283–290.

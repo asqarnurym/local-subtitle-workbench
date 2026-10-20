@@ -374,7 +374,7 @@ Detailed markdown table covering:
 #### Section 7: Handover & Prerequisites for Increment 4
 - Working tree clean, committed to `feature/increment-3-macro-dtw-chunking`.
 - Prerequisites for Increment 4:
-  - Macro-chunks produced by `partition_into_chunks` can be passed sequentially to the phonetic micro-aligner (MFA / MMS_FA).
+  - Macro-chunks produced by `partition_into_chunks` can be passed sequentially to the phonetic forced aligner (MFA / MMS_FA).
   - Aligned words can be fed directly to `reconcile_chunk_alignments` to assemble the full global subtitle timeline.
 
 ---

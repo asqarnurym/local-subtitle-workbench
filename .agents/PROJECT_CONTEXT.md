@@ -13,7 +13,7 @@ The goal is to develop an offline, high-precision forced alignment workbench tha
 The core scientific architecture integrates the **Whisper + DTW + MFA Triad**:
 - **ASR:** OpenAI Whisper (via `faster-whisper` Large-v3 INT8 with CTranslate2) for verbatim transcription and coarse segment timestamps.
 - **Macro-Alignment & Segmentation:** Banded Dynamic Time Warping (`dtw.py`) with Silero-VAD silence anchoring to eliminate temporal drift on long educational lectures.
-- **Micro-Forced Alignment:** Montreal Forced Aligner (Kaldi GMM-HMM + CMUDict) for phonetic boundary precision ($<20\text{ ms}$ target), with PyTorch CTC-Trellis (`torchaudio MMS_FA`) as an in-process fallback.
+- **Forced Alignment:** Montreal Forced Aligner (Kaldi GMM-HMM + CMUDict) for phonetic boundary precision ($<20\text{ ms}$ target), with PyTorch CTC-Trellis (`torchaudio MMS_FA`) as an in-process fallback.
 - **Exporters:** Bimodal outputs adhering to WCAG 2.1: WebVTT with word-level karaoke `<c>` tags and schema.org `VideoObject`/`Clip` JSON-LD.
 
 ---

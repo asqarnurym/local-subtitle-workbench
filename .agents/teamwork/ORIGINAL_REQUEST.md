@@ -127,3 +127,61 @@ Integrity mode: demo
 - [ ] Создан коммит в ветке feature/increment-2-asr-and-vad с точным сообщением:
   git commit -m "feat(asr): implement faster-whisper transcriber and vad silence extractor with vram lifecycle"
 - [ ] Оформлен отчёт docs/increments/INCREMENT_2_ASR_AND_VAD.md.
+
+
+## 2026-10-20T14:46:16Z
+
+Implement Increment 3 for the "Local Subtitle Alignment Workbench" project: Bounded Chunker (chunk duration L <= 30.0s), Contextual Overlap Padding (0.5s), and Global Monotonic Alignment Reconciler to eliminate cumulative timestamp drift on long educational recordings (10–60 minutes) while strictly maintaining linear memory complexity.
+
+Working directory: `C:\Users\nurym\Desktop\local-subtitle-workbench`
+Git branch: `feature/increment-3-macro-dtw-chunking`
+Integrity mode: development
+
+## Requirements
+
+### R1. Macro-Chunking Data Models & Contracts (`src/subtitle_workbench/models.py`)
+- Implement immutable dataclass `AudioChunk` with fields: `id: str`, `index: int`, `start: float`, `end: float`, `padded_start: float`, `padded_end: float`, `text: str`, `words: list[WordToken]`.
+- Implement immutable dataclass `ChunkConfig` with configurable thresholds: `max_chunk_duration: float = 30.0`, `min_chunk_duration: float = 1.0`, `overlap_padding: float = 0.5`, `min_silence_duration: float = 0.4`.
+- Validate all numerical fields are finite and non-negative, satisfying strict invariants: `0.0 <= padded_start <= start < end <= padded_end`. Ensure identifiers are valid ASCII non-empty strings and words are valid `WordToken` instances.
+- Export `AudioChunk` and `ChunkConfig` in `src/subtitle_workbench/__init__.py`.
+
+### R2. Macro-Segmentation & Monotonic Alignment Reconciler (`src/subtitle_workbench/chunker.py`)
+- Define typed exceptions `ChunkingError` and `MonotonicityError` with clear diagnostic context.
+- Implement `partition_into_chunks(segments: list[ASRSegment], silences: list[tuple[float, float]], total_duration: float, config: ChunkConfig | None = None) -> list[AudioChunk]`:
+  - Partition continuous audio stream into sequential chunks strictly bounded by `end - start <= max_chunk_duration` (30.0s).
+  - Prioritize split points on natural pauses from VAD (`silences` with pause duration >= `min_silence_duration`), then ASR sentence segment boundaries.
+  - Fallback: for speech segments longer than 30.0s without silence pauses, partition along word boundaries with the lowest acoustic/pause interval.
+  - Calculate symmetric overlap padding (`overlap_padding = 0.5s`), clamped strictly within `[0.0, total_duration]`: `padded_start = max(0.0, start - padding)`, `padded_end = min(total_duration, end + padding)`.
+- Implement `reconcile_chunk_alignments(chunks: list[AudioChunk], chunk_aligned_words: list[list[WordToken]]) -> list[WordToken]`:
+  - Translate local chunk timestamps into document global timeline: `t_global = chunk.start + t_local`.
+  - Discard word tokens located inside overlap padding seams to eliminate boundary duplication.
+  - Guarantee strict global monotonicity (`word[i+1].start >= word[i].end` or onset order); raise `MonotonicityError` if chronology is corrupted.
+  - Safeguard against zero-duration words and division-by-zero errors.
+- Export chunker symbols in `src/subtitle_workbench/__init__.py`.
+
+### R3. Comprehensive Test Suite (`tests/test_chunker.py`)
+- Zero mocks on pure chunking and alignment reconciliation business logic.
+- Verify `partition_into_chunks`:
+  - Strict `<= 30.0s` duration limit on synthetic segment sequences (10–60 minutes).
+  - Natural anchor selection preference using VAD silences.
+  - Padding clamping at temporal boundaries (`t = 0.0` has `padded_start == 0.0`, `t = total_duration` has `padded_end == total_duration`).
+  - Fallback chunking on long continuous speech lacking pauses.
+- Verify `reconcile_chunk_alignments`:
+  - Correct coordinate transformation from local chunk time to global timeline.
+  - Seamless token deduplication at overlap borders.
+  - Strict monotonicity verification and error handling (`MonotonicityError`).
+
+### R4. Increment 3 SDLC Audit Report (`docs/increments/INCREMENT_3_MACRO_DTW_CHUNKING.md`)
+- Complete report based on `docs/increments/TEMPLATE_INCREMENT_REPORT.md`.
+- Document anchor selection algorithm, overlap padding design rationale, test metrics, verification logs, and architectural trade-offs.
+
+## Acceptance Criteria
+
+### Automated Verification Gates
+- [ ] All 314 existing tests continue to pass without regression: `uv run --locked pytest`
+- [ ] All new tests in `tests/test_chunker.py` pass with 100% success rate.
+- [ ] Zero ruff lint errors: `uv run --locked ruff check .`
+- [ ] Zero ruff formatting issues: `uv run --locked ruff format --check .`
+- [ ] Offline wheel build completes successfully: `uv run --locked python -m build --wheel --no-isolation`
+- [ ] Git commit created on branch `feature/increment-3-macro-dtw-chunking` with message: `feat(chunker): implement bounded chunk partitioner and monotonic alignment reconciler`
+- [ ] Audit document `docs/increments/INCREMENT_3_MACRO_DTW_CHUNKING.md` created with complete execution evidence.

@@ -1,60 +1,60 @@
-# Sentinel Handoff Report: Increment 2 (ASR & VAD)
+# Handoff Report: Sentinel Increment 3 Completion
 
-**Milestone:** Increment 2 — ASR (Faster-Whisper Large-v3 INT8) & Silero-VAD Silence Detector with GPU VRAM Lifecycle Management  
-**Branch:** `feature/increment-2-asr-and-vad`  
-**Git Commit:** `e8f8f10753d95d901734277dbb28b942d2f5f605`  
-**Commit Message:** `feat(asr): implement faster-whisper transcriber and vad silence extractor with vram lifecycle`  
-**Working Directory:** `c:\Users\nurym\Desktop\local-subtitle-workbench`  
-**Audit Verdict:** `VICTORY CONFIRMED` (teamwork_preview_victory_auditor)  
+**Date:** 2026-10-20T16:14:00Z  
+**Branch:** `feature/increment-3-macro-dtw-chunking`  
+**Git Commit:** `cac155811f827d36b5813014f05b10216d993771`  
+**Working Directory:** `C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork`  
+**Verdict:** **VICTORY CONFIRMED**
 
 ---
 
 ## 1. Observation
-All Increment 2 requirements have been fully implemented, adversarial-reviewed across 3 consecutive rounds, and independently audited:
-1. **R1. Optional Dependencies (`pyproject.toml`)**:
-   - Added optional group `[project.optional-dependencies] speech = ["faster-whisper>=1.0.0", "torch>=2.2.0"]`.
-   - Core packaging remains lightweight (standard library + NumPy only), passing all tests offline on CPU with zero runtime dependency on ML packages.
-2. **R2. ASR & Silero-VAD Module (`src/subtitle_workbench/asr.py`, `audio.py`, `__init__.py`)**:
-   - Exception hierarchy: `ASRError` base class with `AudioFormatError`, `ASRInferenceError`, and `VRAMAllocationError`.
-   - `WhisperTranscriber`: Automated device resolution (`cuda` if available else `cpu`) and quantization (`int8_float16` for CUDA, `int8` for CPU) ensuring VRAM consumption <= 1.85 GB on 4 GB laptop GPU.
-   - Deterministic VRAM lifecycle: explicit `unload()` method discarding model references, invoking `gc.collect()`, and flushing `torch.cuda.empty_cache()` (supporting context manager semantics).
-   - `extract_vad_silences`: Pause extraction (>= 400ms) with scale-invariant frame conversion and streaming validation.
-   - Memory optimization: 64 KB chunked streaming reads in `validate_wav` bounding RAM on multi-hour audio files.
-   - Full public export in `src/subtitle_workbench/__init__.py`.
-3. **R3. Unit & Contract Test Suite (`tests/test_asr.py`)**:
-   - 54 comprehensive tests covering contract invariants (`ASRSegment`, `WordToken`), boundary validation, corrupted audio rejection, VRAM lifecycle verification, offline dummy Faster-Whisper backend, and skip-protected live integration test.
-4. **R4. Documentation**:
-   - Formal report completed at `docs/increments/INCREMENT_2_ASR_AND_VAD.md`.
+- **Original Request**: Implement Increment 3 for the "Local Subtitle Alignment Workbench" project: Bounded Chunker (chunk duration $L \le 30.0\text{s}$), Contextual Overlap Padding ($0.5\text{s}$), and Global Monotonic Alignment Reconciler to eliminate cumulative timestamp drift on long educational recordings (10–60 minutes) while strictly maintaining linear memory complexity.
+- **Implemented Deliverables**:
+  - `src/subtitle_workbench/models.py`: Immutable dataclasses `AudioChunk` and `ChunkConfig` with strict numeric boundary validation ($0.0 \le \text{padded\_start} \le \text{start} < \text{end} \le \text{padded\_end}$), ASCII identifier check, and token collection typing.
+  - `src/subtitle_workbench/chunker.py`: Typed exceptions `ChunkingError` and `MonotonicityError`. Function `partition_into_chunks` with 3-tier anchor priority (VAD silences $\ge 0.4\text{s}$, ASR sentence boundaries, inter-word pause fallbacks), unvoiced silence interval advancement, and symmetric overlap padding clamped to $[0.0, \text{total\_duration}]$. Function `reconcile_chunk_alignments` with local-to-global timeline projection, cross-chunk seam deduplication, strict onset monotonicity validation, coarticulation resolution ($\le 50\text{ms}$), and micro-phoneme duration protection.
+  - `src/subtitle_workbench/__init__.py`: Exported `AudioChunk`, `ChunkConfig`, `ChunkingError`, `MonotonicityError`, `partition_into_chunks`, `reconcile_chunk_alignments`.
+  - `tests/test_chunker.py`: 102 pure business logic unit and boundary tests without mocks.
+  - `docs/increments/INCREMENT_3_MACRO_DTW_CHUNKING.md`: Complete SDLC Increment 3 audit report with architectural rationale and verification evidence.
+- **Verification Gates**:
+  - `uv run --locked pytest`: 416 passed, 1 skipped in 4.71s (100% pass rate, 0 regressions).
+  - `uv run --locked ruff check .`: 0 errors.
+  - `uv run --locked ruff format --check .`: 0 diffs (186 files formatted).
+  - `uv run --locked python -m build --wheel --no-isolation`: Built `local_subtitle_workbench-0.1.0-py3-none-any.whl`.
+  - `scripts/smoke_wheel.py`: Offline execution passed, max absolute error = 18.4ms $\le$ 50ms.
+  - Chunker stress tests (`tests/stress_test_chunker.py`): 8/8 suites passed.
+  - Reconciler stress tests (`scripts/stress_reconcile.py`): 24/24 passed.
+  - Adversarial challenge (`scripts/adversarial_challenge.py`): 18/18 checks passed.
 
 ---
 
 ## 2. Logic Chain
-1. Evaluated incoming request as SWE Light (`teamwork_preview_swe`) per single self-contained fix signals.
-2. Initialized Sentinel monitoring with two background crons: Progress Reporting (`*/8 * * * *`) and Liveness Check (`*/10 * * * *`).
-3. SWE Light Orchestrator executed sequential refinement:
-   - Implementer (`implementer_1`) developed TDD foundation and contracts (290 tests passing).
-   - Reviewer Round 1 (`reviewer_r1`) resolved 7 defects (timestamp rounding collapse, subthreshold VAD silence, frame scaling heuristic, control character sanitization, empty word fallback, broad CUDA OOM detection) and added 8 adversarial tests.
-   - Reviewer Round 2 (`reviewer_r2`) resolved 6 defects (frame overshoot VAD distortion, raw RuntimeError on corrupt WAV, hyphenated token handling, parameter validation) and added 8 adversarial tests.
-   - Reviewer Round 3 (`reviewer_r3`) resolved 6 defects (inverted chunks, NaN/Inf timestamp validation, optional kwargs forwarding, inverted segment bounds, 64 KB streaming in `validate_wav`) and added 8 adversarial tests.
-4. Orchestrator claimed victory after 3 review rounds and zero open ledger defects.
-5. Sentinel triggered independent blocking Victory Auditor (`teamwork_preview_victory_auditor`), which executed 3-phase audit (Timeline, Anti-falsification, Independent test execution) resulting in `VICTORY CONFIRMED`.
-6. Terminated all background tasks and killed all subagent processes.
+1. **Request Intake & Routing**: Sentinel recorded the incoming request verbatim into `.agents/teamwork/ORIGINAL_REQUEST.md`. Evaluated against the Routing Decision Table and routed to **General** (`teamwork_preview_orchestrator`).
+2. **Orchestrator Execution**: Orchestrator surveyed the codebase via 3 Explorers, established `PROJECT.md`, and dispatched `worker_1` for initial implementation.
+3. **Adversarial Review & Remediation Loop**: Orchestrator subjected the initial code to Reviewers (1 & 2), Challengers (1 & 2), and Auditor 1. Five edge-case findings were identified (unvoiced interval chunk bounding, floating-point boundary clamping, boundary token seam deduplication, strict onset monotonicity, and micro-phoneme duration collapse). Orchestrator routed these to `explorer_4` for patch design and `worker_2` for remediation, regression testing, and SDLC report generation.
+4. **Acceptance Gate**: Specialists `reviewer_3` (APPROVE), `challenger_3` (APPROVE), and `auditor_2` (CLEAN) cleared the deliverable. Orchestrator committed the changes to git (`cac155811f827d36b5813014f05b10216d993771`) and delivered handoff.
+5. **Independent Victory Audit**: Sentinel intercepted the victory claim and spawned `teamwork_preview_victory_auditor` (`3f41742b-a2e4-4087-acc5-6ece37448d94`). The auditor conducted an independent 3-phase audit (Timeline, Cheating Forensics, Independent Test Execution) and confirmed all requirements are genuinely satisfied.
+6. **Final Cleanup**: Cancelled background crons (task-26, task-28) and terminated all subagents.
 
 ---
 
 ## 3. Caveats
-- Hardware-specific testing on the physical NVIDIA RTX 3050 Laptop GPU with live multi-gigabyte Large-v3 weights is guarded by `pytest.mark.skipif(not _FASTER_WHISPER_AVAILABLE)` in offline CPU test runs. Installing `speech` dependencies (`uv sync --extra speech`) enables live GPU inference within the verified <= 1.85 GB VRAM ceiling.
+- Optional dependency `faster-whisper` test in `test_asr.py` was skipped during CPU offline run as intended; all core and chunking logic runs 100% offline without network or GPU dependencies.
+- Monotonic reconciler allows coarticulation overlaps up to 50ms by clamping endpoints, but strictly rejects non-monotonic onsets (`curr_w.start <= prev_w.start`), raising `MonotonicityError`.
 
 ---
 
 ## 4. Conclusion
-Increment 2 is 100% complete and fully verified. The repository is ready for Increment 3 (Macro-DTW alignment and audio chunking).
+Increment 3 is **COMPLETED**, fully verified against all automated verification gates, independently audited with **VICTORY CONFIRMED**, and committed to `feature/increment-3-macro-dtw-chunking`.
 
 ---
 
 ## 5. Verification Method
-- `uv run --locked pytest`: 314 passed, 1 skipped in 4.14s (100% pass rate, 0 regressions).
-- `uv run --locked ruff check .`: Clean (0 errors).
-- `uv run --locked ruff format --check .`: Clean (92 files formatted).
-- `uv run --locked python -m build --wheel --no-isolation`: Clean wheel built.
-- `uv run python scripts/smoke_wheel.py`: Passed (offline socket guard enabled, max error: 18.4ms).
+Run the following commands in `C:\Users\nurym\Desktop\local-subtitle-workbench`:
+```powershell
+uv run --locked pytest
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked python -m build --wheel --no-isolation
+uv run python scripts/smoke_wheel.py --wheel dist/local_subtitle_workbench-0.1.0-py3-none-any.whl --output test_smoke_out
+```

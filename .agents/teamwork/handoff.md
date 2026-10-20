@@ -1,29 +1,34 @@
-# Sentinel Handoff / Status Report
+# Sentinel Final Handoff & Completion Report: Increment 1
 
 ## Observation
-Received user request to implement Increment 1 of the Local Subtitle Alignment Workbench (speech data models and token-span text normalizer with reversible cue projection).
-The request specifies a single self-contained fix and requests small and focused handling.
-Repository is at `c:\Users\nurym\Desktop\local-subtitle-workbench`, branch `feature/increment-1-speech-models-and-norm`.
+User requested Increment 1 implementation for the "Local Subtitle Alignment Workbench" (speech data contracts and word-span token normalizer with reversible cue projection) under repository `c:\Users\nurym\Desktop\local-subtitle-workbench` on branch `feature/increment-1-speech-models-and-norm`.
 
 ## Logic Chain
-1. Evaluated request against Routing Decision Table:
-   - Signals present: One self-contained code change AND explicit instruction to keep it small and focused ("This is a single self-contained fix; keep it small and focused").
-   - Selected Route: SWE Light (`teamwork_preview_swe`). Pre-flight dependency audit is not required.
-2. Initialized Sentinel coordination state:
-   - Recorded verbatim request to `.agents/teamwork/ORIGINAL_REQUEST.md`.
-   - Initialized `.agents/teamwork/BRIEFING.md`.
-3. Spawned `teamwork_preview_swe` (conversation ID: `59d2837d-7072-4cbf-930f-35378ae0090a`) to orchestrate the implementation and reviewer loop.
-4. Scheduled monitoring crons:
-   - Cron 1: Progress Reporting (`*/8 * * * *`, task-16)
-   - Cron 2: Liveness Check (`*/10 * * * *`, task-18)
+1. **Routing**: Task was evaluated per the Routing Decision Table. Based on the explicit "single self-contained fix; keep it small and focused" signal, it was routed to **SWE Light** (`teamwork_preview_swe`).
+2. **Orchestration**: Dispatched `teamwork_preview_swe` (conversation ID: `59d2837d-7072-4cbf-930f-35378ae0090a`).
+3. **Execution & Refinement Loop**:
+   - Round 0 Implementer: Implemented speech models (`models.py`) and normalizer (`text_norm.py`) with initial test suites.
+   - Round 1 Reviewer: Identified and fixed multi-line cue ID extraction, Windows CRLF WebVTT issues, and C1 control character boundaries (247 passing tests).
+   - Round 2 Reviewer: Hardened against Unicode ellipsis, typographical quotes/symbols, math minus (`−`), and currency parsing (256 passing tests).
+   - Round 3 Reviewer: Hardened against interval monotonicity edge cases and sub-millisecond WebVTT collapse (261 passing tests).
+4. **Git Commit**: Commit `e7876de28074f53862ab60fca519fdef58a77541` was created on branch `feature/increment-1-speech-models-and-norm` with message: `feat(speech): implement speech data models and token-span text normalizer`.
+5. **Independent Victory Audit**:
+   - Dispatched independent `teamwork_preview_victory_auditor` (conversation ID: `fe999ead-0cc7-4296-b692-fee22580732a`) with zero shared context from implementation swarm.
+   - Phase A (Timeline & Commit forensics): PASS. Commit matches spec, clean working tree outside `.agents/teamwork/` metadata.
+   - Phase B (Integrity / Anti-falsification): PASS. 0 mocks repo-wide, 0 monkeypatching, 0 skipped/xfail tests, lightweight numpy dependency preserved, offline socket safety confirmed.
+   - Phase C (Independent Test Execution): PASS. All 261 tests pass (3.68s), 0 ruff linter issues, 0 ruff formatting issues, clean wheel built without isolation, offline smoke test passed with 18.4ms error.
+   - Verdict: **VICTORY CONFIRMED**.
+6. **Cleanup**: Cancelled monitoring crons (task-16, task-18) and invoked `manage_subagents(action="kill_all")`.
 
 ## Caveats
-- Sentinel does not perform technical implementation or code reviews.
-- Completion claim from the orchestrator must undergo independent verification via `teamwork_preview_victory_auditor` before declaring success.
+- Base package maintains strict lightweight constraint (NumPy only, no torch or faster-whisper dependencies). Live acoustic inference and MFA Kaldi execution are scheduled for Increments 2 and 4.
 
 ## Conclusion
-Orchestration launched successfully. Sentinel is now actively monitoring the SWE Light loop.
+Increment 1 is 100% complete, fully verified, and backed by a confirmed independent post-victory audit.
 
 ## Verification Method
-- Background task tracking for Cron 1 and Cron 2.
-- Reactive wakeup on message from orchestrator `59d2837d-7072-4cbf-930f-35378ae0090a`.
+- Independent audit log: `c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\teamwork_preview_victory_auditor_sentinel\handoff.md`
+- Git verification: `git log -1` on `feature/increment-1-speech-models-and-norm`
+- Automated test command: `uv run --locked pytest` (261 passed)
+- Linter / Formatter commands: `uv run --locked ruff check .` / `uv run --locked ruff format --check .`
+- Build verification: `uv run --locked python -m build --wheel --no-isolation`

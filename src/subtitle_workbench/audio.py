@@ -1,5 +1,6 @@
 """Strict PCM WAV input and deterministic feature extraction."""
 
+import struct
 import wave
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,16 +21,45 @@ class Audio:
         return len(self.samples) / self.sample_rate
 
 
+def validate_wav(path: Path | str, sample_rate: int = 16000) -> None:
+    """Accept uncompressed mono PCM16 WAV at specified rate; reject unsupported media."""
+    if not isinstance(path, (str, Path)):
+        raise TypeError(f"path must be a str or Path, got {type(path).__name__}")
+    path = Path(path)
+    if not path.is_file():
+        raise FileNotFoundError(f"File not found: {path}")
+    try:
+        with wave.open(str(path), "rb") as wav:
+            if (
+                wav.getnchannels() != 1
+                or wav.getsampwidth() != 2
+                or wav.getcomptype() != "NONE"
+                or wav.getframerate() != sample_rate
+            ):
+                raise ValueError(f"audio must be uncompressed mono PCM16 WAV at {sample_rate} Hz")
+            count = wav.getnframes()
+            if count <= 0:
+                raise ValueError("audio file contains no audio frames")
+            # Verify EOF integrity using chunked reads to avoid allocating multi-hundred MBs
+            bytes_to_read = 2 * count
+            bytes_read = 0
+            chunk_size = 65536
+            while bytes_read < bytes_to_read:
+                to_read_frames = min(chunk_size // 2, count - (bytes_read // 2))
+                chunk = wav.readframes(to_read_frames)
+                if not chunk:
+                    break
+                bytes_read += len(chunk)
+            if bytes_read != bytes_to_read:
+                raise ValueError("WAV data is truncated")
+    except (wave.Error, EOFError, RuntimeError, struct.error) as err:
+        raise ValueError(f"Corrupt or invalid WAV file: {err}") from err
+
+
 def load_wav(path: Path, config: Config) -> Audio:
     """Accept PCM16 mono 16 kHz; reject unsupported media before allocation."""
+    validate_wav(path, config.sample_rate)
     with wave.open(str(path), "rb") as wav:
-        if (
-            wav.getnchannels() != 1
-            or wav.getsampwidth() != 2
-            or wav.getcomptype() != "NONE"
-            or wav.getframerate() != config.sample_rate
-        ):
-            raise ValueError("audio must be uncompressed mono PCM16 WAV at 16000 Hz")
         count = wav.getnframes()
         hop = round(config.hop_seconds * config.sample_rate)
         if count < round(config.window_seconds * config.sample_rate):
@@ -37,8 +67,6 @@ def load_wav(path: Path, config: Config) -> Audio:
         if (count + hop - 1) // hop > config.max_frames:
             raise ValueError("audio exceeds configured max_frames; use a shorter segment")
         raw = wav.readframes(count)
-        if len(raw) != 2 * count:
-            raise ValueError("WAV data is truncated")
     samples = np.frombuffer(raw, dtype="<i2").astype(np.float64) / 32768.0
     if np.sqrt(np.mean(samples * samples)) < 1e-4:
         raise ValueError("audio is silent or too quiet for reliable alignment")

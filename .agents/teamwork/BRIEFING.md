@@ -1,37 +1,37 @@
-# BRIEFING — 2026-10-16T22:00:03Z
+# BRIEFING — 2026-10-20T03:38:21Z
 
 ## Mission
-Sentinel monitoring and execution coordination for Increment 1 of the Local Subtitle Alignment Workbench (speech data models and token-span text normalizer).
+Sentinel monitoring and execution coordination for Increment 2 of the Local Subtitle Alignment Workbench (ASR Faster-Whisper Large-v3 INT8 and Silero-VAD with VRAM lifecycle).
 
 ## 🔒 My Identity
 - Archetype: sentinel
 - Working directory: c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork
-- Orchestrator: 59d2837d-7072-4cbf-930f-35378ae0090a
-- Victory Auditor: fe999ead-0cc7-4296-b692-fee22580732a
+- Orchestrator: 4534aab2-f34e-4242-aa58-b4ae7977bec3
+- Victory Auditor: to be spawned on victory claim
 
 ## 🔒 Key Constraints
 - No technical decisions — relay only
 - Victory Audit is MANDATORY before reporting completion
-- Work strictly on branch `feature/increment-1-speech-models-and-norm` in `c:\Users\nurym\Desktop\local-subtitle-workbench`
+- Work strictly on branch `feature/increment-2-asr-and-vad` in `c:\Users\nurym\Desktop\local-subtitle-workbench`
 - No writing code, analyzing problems, or technical implementation by Sentinel
 
 ## User Context
-- **Last user request**: Implement Increment 1 (speech data contracts and word-span token normalizer with reversible cue projection) as a single self-contained fix.
+- **Last user request**: Implement Increment 2 (ASR module with Faster-Whisper Large-v3 INT8 and Silero-VAD silence detection with deterministic GPU memory lifecycle).
 - **Pending clarifications**: none
-- **Delivered results**: Increment 1 speech data contracts and word-span token normalizer with reversible cue projection fully verified and committed.
+- **Delivered results**: Increment 1 complete. Increment 2 spawned.
 
 ## Project Status
-- **Phase**: complete
+- **Phase**: in progress
 - **Route**: SWE Light (`teamwork_preview_swe`)
-- **Crons**: cancelled (task-16, task-18 terminated)
+- **Crons**:
+  - Cron 1 (Progress Reporting, */8 * * * *): 1a878a13-28c2-4989-85c9-50dc931865a6/task-32
+  - Cron 2 (Liveness Check, */10 * * * *): 1a878a13-28c2-4989-85c9-50dc931865a6/task-34
 
 ## Victory Audit Status
-- **Triggered**: yes
-- **Verdict**: VICTORY CONFIRMED
+- **Triggered**: no
+- **Verdict**: pending
 - **Retry count**: 0
 
 ## Artifact Index
 - `c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md` — Authoritative verbatim record of user request
-- `c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\teamwork_preview_swe_1\handoff.md` — Orchestrator handoff report
-- `c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\teamwork_preview_victory_auditor_sentinel\handoff.md` — Independent victory audit report
-- Git Commit: `e7876de28074f53862ab60fca519fdef58a77541` on `feature/increment-1-speech-models-and-norm`
+- `c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\teamwork_preview_swe_2\DISPATCH.md` — SWE Light Orchestrator dispatch instructions

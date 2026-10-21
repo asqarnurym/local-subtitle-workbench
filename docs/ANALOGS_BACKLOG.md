@@ -23,7 +23,7 @@ This document formalizes the **Analogs Backlog**:
                        PIPELINE NODES & ANALOG SPECTRUM
 Node 1: Ingestion      [Native wave]  ◄──vs──►  [FFmpeg CLI / PyAV / librosa]
 Node 2: VAD            [Silero-VAD]   ◄──vs──►  [WebRTC VAD / PyAnnote / Energy]
-Node 3: ASR Engine     [Faster-Whisper]◄─vs──►  [OpenAI Whisper / WhisperX / Distil-Whisper]
+Node 3: ASR Engine     [Faster-Whisper]◄─vs──►  [Whisper / whisper.cpp / Distil-Whisper / Parakeet / Canary]
 Node 4: Macro DTW      [Banded DTW]   ◄──vs──►  [FastDTW / ASR-anchor linear interpolation]
 Node 5: Forced Align   [MFA (Kaldi)]  ◄──vs──►  [TorchAudio MMS_FA / Charsiu / Gentle]
 Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT / ffmpeg subtitler]
@@ -73,12 +73,19 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
   2. `analog-3b: whisperx_batched` — Batched inference using HuggingFace Transformers pipeline + VAD chunking.
   3. `analog-3c: distil_whisper` — Knowledge-distilled Whisper (6x faster decoder, 50% fewer parameters).
   4. `analog-3d: conformer_ctc` — NeMo Conformer-CTC (non-autoregressive, zero hallucination loops).
+  5. `analog-3e: whisper_cpp` — Georgi Gerganov's pure C/C++ GGML port of Whisper with 4-bit/5-bit quantization. **Crucial for universal educational accessibility:** enables local offline transcription on standard student laptops with integrated graphics (pure CPU execution without CUDA/GPU or heavy PyTorch runtimes).
+  6. `analog-3f: parakeet_tdt` — NVIDIA NeMo Parakeet-TDT 1.1B (FastConformer architecture with Token-and-Duration Transducer). Evaluates single-pass non-autoregressive transcription where token acoustic durations are natively emitted by the decoder.
+  7. `analog-3g: canary_1b` — NVIDIA Canary-1B (FastConformer encoder + Transformer decoder with multi-task punctuation, capitalization, and multilingual transcription).
+  8. `analog-3h: audio_llm_qwen2_audio` — Alibaba Qwen2-Audio (Audio-Language Model baseline). Used to benchmark generative LLM audio comprehension versus classical acoustic ASR pipelines in terms of VRAM consumption, latency, and hallucination rates.
 - **Scientific Questions:**
   - Does INT8 quantization in CTranslate2 degrade transcription accuracy (WER) on technical computer science lectures relative to FP16 PyTorch?
   - Can Distil-Whisper reach $\text{RTF} < 0.08$ on RTX 3050 without degrading Word Error Rate beyond $+1.0\%$ absolute?
+  - Can `whisper.cpp` with 4-bit / 5-bit quantization on an 8-core CPU provide acceptable RTF ($< 0.3$) for offline student accessibility without any dedicated GPU hardware?
+  - Do non-autoregressive Transducer models (Parakeet-TDT) eliminate the acoustic time-warping drift inherent in attention-based Whisper decoders?
+  - What are the memory, latency, and hallucination trade-offs of generative Audio-LLMs (Qwen2-Audio) compared to bounded pipeline architectures (Whisper + MFA) for millisecond subtitle synchronization?
 - **Isolated Simulation Protocol (`tests/analogs/test_asr_analogs.py`):**
   - Evaluate on 3 benchmark lecture recordings (10 minutes total).
-  - Measure: WER (%), Memory Peak VRAM (GB), Inference RTF on RTX 3050 GPU.
+  - Measure: WER (%), Memory Peak VRAM (GB), CPU RAM (GB), Inference RTF on both RTX 3050 GPU and pure CPU.
 
 ---
 

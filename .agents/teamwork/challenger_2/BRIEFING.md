@@ -3,7 +3,7 @@
 ## Mission
 Empirically stress-test Increment 3 (reconcile_chunk_alignments) with rigorous test harnesses and adversarial scenarios.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: challenger
 - Roles: critic, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_2
@@ -11,7 +11,7 @@ Empirically stress-test Increment 3 (reconcile_chunk_alignments) with rigorous t
 - Milestone: Increment 3: reconcile_chunk_alignments
 - Instance: 2
 
-## 🔒 Key Constraints
+## Key Constraints
 - Review-only — do NOT modify implementation code
 - Must run verification code directly; claims must be backed by empirical evidence
 - Write tests/scripts outside of .agents/teamwork/ (or run via pytest / temporary harness in project test directory)

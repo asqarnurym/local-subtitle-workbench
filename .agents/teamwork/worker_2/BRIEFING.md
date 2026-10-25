@@ -3,14 +3,14 @@
 ## Mission
 Implement remediation fixes (D1-D5), append 7 regression tests, create INCREMENT_3_MACRO_DTW_CHUNKING.md, and execute full verification suite for Increment 3.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: worker
 - Roles: implementer, qa, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_2
 - Original parent: 0fa70c77-af14-4918-bbd6-040d951e6665
 - Milestone: Increment 3 Remediation and Finalization
 
-## 🔒 Key Constraints
+## Key Constraints
 - DO NOT CHEAT. All implementations genuine. No hardcoding or dummy logic.
 - Exclusive write ownership: src/subtitle_workbench/chunker.py, tests/test_chunker.py, docs/increments/INCREMENT_3_MACRO_DTW_CHUNKING.md, plus own workspace folder.
 - Execute full verification suite and all tests must pass.

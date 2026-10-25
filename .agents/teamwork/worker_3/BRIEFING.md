@@ -3,14 +3,14 @@
 ## Mission
 Create clean git commit for Increment 3 deliverables on branch feature/increment-3-macro-dtw-chunking, verify commit integrity, and report handoff.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: worker
 - Roles: implementer, qa, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_3
 - Original parent: 0fa70c77-af14-4918-bbd6-040d951e6665
 - Milestone: Increment 3 Commit Finalization
 
-## 🔒 Key Constraints
+## Key Constraints
 - Branch: feature/increment-3-macro-dtw-chunking
 - Commit message: "feat(chunker): implement bounded chunk partitioner and monotonic alignment reconciler"
 - Include only Increment 3 deliverables and supporting test harnesses; exclude scratch/temp files and agent folders.

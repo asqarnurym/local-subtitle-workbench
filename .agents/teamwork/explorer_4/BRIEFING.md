@@ -3,14 +3,14 @@
 ## Mission
 Formulate a complete, unified, code-level remediation strategy for all identified issues in Increment 3 (chunker.py, test_chunker.py, SDLC documentation).
 
-## 🔒 My Identity
+## My Identity
 - Archetype: explorer
 - Roles: explorer, analyzer, synthesizer
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\explorer_4
 - Original parent: 0fa70c77-af14-4918-bbd6-040d951e6665
 - Milestone: Increment 3 Remediation Strategy
 
-## 🔒 Key Constraints
+## Key Constraints
 - Read-only investigation — do NOT implement
 - Do NOT edit source code files directly
 - Write only to explorer_4 working directory

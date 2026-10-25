@@ -3,14 +3,14 @@
 ## Mission
 Orchestrate Increment 1 (speech data contracts & word-span token normalizer with reversible cue projection) via SWE Light pattern.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: teamwork_preview_swe
 - Roles: orchestrator, user_liaison, human_reporter, successor
 - Working directory: c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\teamwork_preview_swe_1
 - Original parent: Sentinel / Parent Agent
 - Original parent conversation ID: c575c7d3-4602-433f-a985-7b261a959fd4
 
-## 🔒 My Workflow
+## My Workflow
 - **Pattern**: SWE Light
 - **Scope document**: c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md
 1. **Decompose**: No decomposition. Single line of work dispatched as whole task.
@@ -26,7 +26,7 @@ Orchestrate Increment 1 (speech data contracts & word-span token normalizer with
 - **Current phase**: Complete
 - **Current focus**: Handoff & reporting to Sentinel
 
-## 🔒 Key Constraints
+## Key Constraints
 - NEVER write, modify, or create source code files yourself. Delegate all implementation and repair.
 - NEVER explore or debug the codebase to solve the task yourself.
 - Verify independently: read diff and re-run relevant tests to check claims.

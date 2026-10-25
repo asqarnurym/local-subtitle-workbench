@@ -3,7 +3,7 @@
 ## Mission
 Empirically stress-test partition_into_chunks for Increment 3 with extreme, pathological, and randomized audio segment configurations, verifying all bounds and invariants.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: empirical-challenger
 - Roles: critic, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_1
@@ -11,7 +11,7 @@ Empirically stress-test partition_into_chunks for Increment 3 with extreme, path
 - Milestone: Increment 3 verification
 - Instance: 1 of 1
 
-## 🔒 Key Constraints
+## Key Constraints
 - Review-only — do NOT modify implementation code in src/
 - Must run verification code ourselves, do NOT trust worker's claims or logs
 - Layout compliance: .agents/teamwork/ contains only metadata; code/test harnesses outside .agents/teamwork/

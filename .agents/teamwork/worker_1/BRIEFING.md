@@ -3,14 +3,14 @@
 ## Mission
 Implement Increment 3: Macro-Chunking and Monotonic Alignment Reconciler with genuine logic, strict TDD workflow, comprehensive tests, and zero cheating.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: worker
 - Roles: implementer, qa, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_1
 - Original parent: 0fa70c77-af14-4918-bbd6-040d951e6665
 - Milestone: Increment 3 - Macro-Chunking and Monotonic Alignment Reconciler
 
-## 🔒 Key Constraints
+## Key Constraints
 - DO NOT CHEAT: No hardcoded test results, facade implementations, or circumventing genuine logic.
 - Follow TDD workflow: Write comprehensive tests in tests/test_chunker.py first, verify RED, implement models and chunker logic, verify GREEN.
 - Pure business logic: Zero mocks on partitioning and reconciliation.

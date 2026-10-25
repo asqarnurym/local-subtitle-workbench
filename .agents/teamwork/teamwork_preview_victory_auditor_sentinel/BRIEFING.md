@@ -3,14 +3,14 @@
 ## Mission
 Conduct an independent, blocking post-victory audit for Increment 1 (speech data models and token-span text normalizer) of Local Subtitle Alignment Workbench.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: victory_auditor
 - Roles: critic, specialist, auditor, victory_verifier
 - Working directory: c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\teamwork_preview_victory_auditor_sentinel
 - Original parent: c575c7d3-4602-433f-a985-7b261a959fd4
 - Target: Increment 1 (feature/increment-1-speech-models-and-norm)
 
-## 🔒 Key Constraints
+## Key Constraints
 - Audit-only — do NOT modify implementation code
 - Trust NOTHING — verify everything independently
 - Clean git status verification on feature/increment-1-speech-models-and-norm

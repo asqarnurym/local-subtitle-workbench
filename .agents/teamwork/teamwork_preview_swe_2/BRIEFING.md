@@ -3,14 +3,14 @@
 ## Mission
 Orchestrate Increment 2 of Local Subtitle Alignment Workbench (ASR & VAD) via SWE Light pattern.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: orchestrator
 - Roles: orchestrator, user_liaison, human_reporter, successor
 - Working directory: c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\teamwork_preview_swe_2
 - Original parent: Sentinel
 - Original parent conversation ID: 1a878a13-28c2-4989-85c9-50dc931865a6
 
-## 🔒 My Workflow
+## My Workflow
 - **Pattern**: SWE Light
 - **Scope document**: c:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md
 1. **Decompose**: No decomposition — sequential refinement loop (SWE Light).
@@ -28,7 +28,7 @@ Orchestrate Increment 2 of Local Subtitle Alignment Workbench (ASR & VAD) via SW
 - **Current phase**: 4 (Handoff to Sentinel)
 - **Current focus**: Handoff report
 
-## 🔒 Key Constraints
+## Key Constraints
 - Dispatch-only orchestrator: NEVER write/edit source code files.
 - Sequential refinement: implementer -> reviewer 1..3 -> victory auditor.
 - Floor of 3 review rounds before termination.

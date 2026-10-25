@@ -3,14 +3,14 @@
 ## Mission
 Implement Increment 3: Bounded Chunker, Contextual Overlap Padding, and Global Monotonic Alignment Reconciler to eliminate cumulative timestamp drift while strictly maintaining linear memory complexity. [COMPLETED]
 
-## 🔒 My Identity
+## My Identity
 - Archetype: orchestrator
 - Roles: orchestrator, user_liaison, human_reporter, successor
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\orchestrator_1
 - Original parent: parent (Sentinel)
 - Original parent conversation ID: c4d463c7-7b84-4fc1-8259-20291443fc13
 
-## 🔒 My Workflow
+## My Workflow
 - **Pattern**: Project Pattern
 - **Scope document**: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\orchestrator_1\PROJECT.md
 1. **Decompose**: Survey codebase via Explorers, define models & chunker interfaces, milestones M1..M4.
@@ -26,7 +26,7 @@ Implement Increment 3: Bounded Chunker, Contextual Overlap Padding, and Global M
 - **Current phase**: Complete
 - **Current focus**: Sentinel handoff and report
 
-## 🔒 Key Constraints
+## Key Constraints
 - NEVER write, modify, or create source code files directly.
 - NEVER run build/test commands yourself — require workers to do so.
 - NEVER investigate or explore the problem at the code level — dispatch Explorers for technical investigation.

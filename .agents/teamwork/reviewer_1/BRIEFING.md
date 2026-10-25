@@ -3,7 +3,7 @@
 ## Mission
 Review Increment 3 (Subtitle chunking module, Chunk model, chunker tests, and integration) of Local Subtitle Alignment Workbench.
 
-## 🔒 My Identity
+## My Identity
 - Archetype: reviewer_critic
 - Roles: reviewer, critic
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_1
@@ -11,7 +11,7 @@ Review Increment 3 (Subtitle chunking module, Chunk model, chunker tests, and in
 - Milestone: Increment 3 Review
 - Instance: 1 of 1
 
-## 🔒 Key Constraints
+## Key Constraints
 - Review-only — do NOT modify implementation code
 - Objective review: assess work quality, verify claims, issue verdict
 - Adversarial challenge: stress-test assumptions, find failure modes, propose counter-examples

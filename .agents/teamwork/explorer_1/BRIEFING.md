@@ -3,14 +3,14 @@
 ## Mission
 Investigate existing speech data models and validation patterns in src/subtitle_workbench/models.py and __init__.py to define the exact specification, invariants, and implementation design for AudioChunk and ChunkConfig (Requirement R1).
 
-## 🔒 My Identity
+## My Identity
 - Archetype: explorer
 - Roles: investigation, synthesis
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\explorer_1
 - Original parent: 0fa70c77-af14-4918-bbd6-040d951e6665
 - Milestone: Increment 3 - Macro-DTW Chunking (R1 Models & Validation)
 
-## 🔒 Key Constraints
+## Key Constraints
 - Read-only investigation — do NOT implement
 - Scope boundaries: Exploration and analysis only. Do NOT modify any source code.
 - Write analysis report to C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\explorer_1\report.md

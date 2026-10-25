@@ -3,7 +3,7 @@
 ## Mission
 Conduct empirical stress challenge on remediated Increment 3 implementation (partition_into_chunks and reconcile_chunk_alignments).
 
-## 🔒 My Identity
+## My Identity
 - Archetype: empirical-challenger
 - Roles: critic, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_3
@@ -11,7 +11,7 @@ Conduct empirical stress challenge on remediated Increment 3 implementation (par
 - Milestone: Increment 3 Remediation Verification
 - Instance: 3 of 3
 
-## 🔒 Key Constraints
+## Key Constraints
 - Review-only — do NOT modify implementation code
 - Run verification code directly (generators, oracles, stress harnesses)
 - Must reproduce any bugs empirically; findings must have concrete proof

@@ -93,3 +93,47 @@ def extract_features(audio: Audio, config: Config) -> tuple[NDArray, NDArray]:
     centroid = spectral / (audio.sample_rate / 2) * config.spectral_weight
     features = np.column_stack((rms, centroid))
     return centres / audio.sample_rate, features
+
+
+def slice_wav(
+    source_path: Path | str,
+    target_path: Path | str,
+    start_sec: float,
+    end_sec: float,
+) -> None:
+    """Extract an audio slice [start_sec, end_sec] from a mono PCM16 WAV into target_path."""
+    source_path = Path(source_path)
+    target_path = Path(target_path)
+    validate_wav(source_path)
+    with wave.open(str(source_path), "rb") as r:
+        framerate = r.getframerate()
+        nframes = r.getnframes()
+        total_dur = nframes / framerate
+
+        if start_sec >= total_dur:
+            raise ValueError(
+                f"start_sec ({start_sec}s) must be strictly less than "
+                f"audio duration ({total_dur:.3f}s)"
+            )
+        if start_sec < 0.0:
+            raise ValueError("start_sec must be non-negative")
+        if end_sec <= start_sec:
+            raise ValueError(
+                f"end_sec ({end_sec}s) must be strictly greater than start_sec ({start_sec}s)"
+            )
+
+        start_frame = max(0, int(round(start_sec * framerate)))
+        end_frame = min(nframes, int(round(end_sec * framerate)))
+        if end_frame <= start_frame:
+            end_frame = min(nframes, start_frame + int(round(0.01 * framerate)))
+
+        r.setpos(start_frame)
+        num_to_read = max(0, end_frame - start_frame)
+        frames = r.readframes(num_to_read)
+
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    with wave.open(str(target_path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(framerate)
+        w.writeframes(frames)

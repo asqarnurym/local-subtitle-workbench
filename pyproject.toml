@@ -17,6 +17,12 @@ speech = [
     "faster-whisper>=1.0.0",
     "torch>=2.2.0",
 ]
+api = [
+    "fastapi>=0.162.0",
+    "httpx>=0.28.1",
+    "python-multipart>=0.0.32",
+    "uvicorn>=0.54.0",
+]
 
 [project.scripts]
 subtitle-workbench = "subtitle_workbench.cli:main"

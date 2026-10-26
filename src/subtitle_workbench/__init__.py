@@ -13,6 +13,7 @@ from .asr import (
     extract_vad_silences,
 )
 from .audio import (
+    get_duration,
     slice_wav,
 )
 from .chunker import (
@@ -56,11 +57,20 @@ from .models import (
     PhonemeCue,
     WordToken,
 )
+from .pipeline import (
+    align,
+    run_speech_pipeline,
+)
 from .provenance import (
     code_provenance,
     sha256,
 )
-from .text_norm import TokenSpan, normalize_text_spans, project_tokens_to_cues
+from .text_norm import (
+    TokenSpan,
+    normalize_text_spans,
+    normalize_transcript,
+    project_tokens_to_cues,
+)
 
 __all__ = [
     "ASRError",
@@ -88,6 +98,7 @@ __all__ = [
     "VRAMAllocationError",
     "WhisperTranscriber",
     "WordToken",
+    "align",
     "align_chunks",
     "align_ctc_trellis",
     "backtrack",
@@ -99,13 +110,16 @@ __all__ = [
     "extract_vad_silences",
     "format_vtt_timestamp",
     "generate_manifest",
+    "get_duration",
     "get_trellis",
     "normalize_text_spans",
+    "normalize_transcript",
     "parse_textgrid",
     "partition_into_chunks",
     "project_tokens_to_cues",
     "reconcile_chunk_alignments",
     "run_mfa_batch",
+    "run_speech_pipeline",
     "sha256",
     "slice_wav",
 ]

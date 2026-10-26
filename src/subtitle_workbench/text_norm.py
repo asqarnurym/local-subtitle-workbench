@@ -361,6 +361,11 @@ def normalize_text_spans(text: str) -> list[TokenSpan]:
     return results
 
 
+def normalize_transcript(transcript: str) -> list[TokenSpan]:
+    """Normalize transcript text into TokenSpan items with char offsets."""
+    return normalize_text_spans(transcript)
+
+
 def _adjust_cue_timing(
     cue_start: float,
     cue_end: float,
@@ -511,3 +516,14 @@ def project_tokens_to_cues(
                 )
 
     return cues
+
+
+__all__ = [
+    "CONTRACTIONS",
+    "TokenSpan",
+    "integer_to_words",
+    "normalize_text_spans",
+    "normalize_transcript",
+    "parse_number_to_words",
+    "project_tokens_to_cues",
+]

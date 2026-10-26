@@ -137,3 +137,19 @@ def slice_wav(
         w.setsampwidth(2)
         w.setframerate(framerate)
         w.writeframes(frames)
+
+
+def get_duration(path: Path | str) -> float:
+    """Return the duration of a WAV file in seconds."""
+    with wave.open(str(path), "rb") as w:
+        return w.getnframes() / float(w.getframerate())
+
+
+__all__ = [
+    "Audio",
+    "extract_features",
+    "get_duration",
+    "load_wav",
+    "slice_wav",
+    "validate_wav",
+]

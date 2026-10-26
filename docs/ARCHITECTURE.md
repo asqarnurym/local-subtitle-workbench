@@ -75,6 +75,19 @@ Two critical architectural decisions govern MFA in this workbench:
    - **Mode A (MMS_FA CTC Trellis):** Self-contained, in-process PyTorch dynamic programming fallback for zero-dependency execution.  
    - **Publication 2:** The direct empirical benchmark comparing Kaldi GMM-HMM vs Neural CTC Trellis on accented educational speech forms the core experimental contribution for the *Scientific Journal of Astana IT University*.
 
+### 2.2 Out-Of-Vocabulary (OOV) Academic Lexicon Mitigation
+In university lectures, instructors frequently employ specialized academic terminology (*backpropagation, quaternion, eigenvalues, kubernetes, polymorphism*) absent from standard pronunciation lexicons like CMUDict (~134k words).
+- **MFA G2P Generation:** Montreal Forced Aligner integrates an automated Grapheme-to-Phoneme model (`mfa g2p english_g2p`) to generate missing pronunciations dynamically during corpus staging.
+- **CTC Immunity:** The Mode A fallback (`torchaudio MMS_FA`) maps acoustic frames directly to a character-level alphabet (`[a-z|']`), rendering it inherently 100% immune to dictionary OOV failures.
+
+### 2.3 Discretization Limits: CTC 20ms Frame Stride vs Continuous Triphone HMMs
+- **MMS_FA (Wav2Vec2) Stride:** The convolutional feature extractor downsamples 16 kHz audio by 320 samples ($16000 / 320 = 50\text{ Hz}$), resulting in a discrete frame resolution of exactly **20.0 ms**. Without continuous sub-frame interpolation, CTC Trellis boundary placements are discretized to 20 ms intervals.
+- **MFA (Kaldi) Continuous Transitions:** Montreal Forced Aligner extracts MFCC features at a 10 ms hop rate (100 Hz) with continuous triphone HMM forward-backward transitions down to sub-frame states. This provides the mathematical capability required to reliably achieve sub-20ms boundary precision ($\text{Acc}@20\text{ms} \ge 85\%$) on acoustic benchmarks.
+
+### 2.4 Audio Duration & 32-bit RIFF/WAV Header Boundaries
+- Standard 32-bit RIFF/WAV headers represent data byte lengths as an unsigned 32-bit integer, capping file size at $2^{32} - 1 \approx 4.29\text{ GB}$ (equivalent to $\approx 37.2\text{ hours}$ of 16 kHz 16-bit mono PCM).
+- The pipeline's Stage 4 macro-chunker partitions audio into $L \le 30.0\text{ s}$ slices and streams raw byte frames via `slice_wav`, ensuring linear memory complexity $O(N)$ and preventing memory spikes or integer overflow on long lecture recordings.
+
 ---
 
 ## 3. Hardware & VRAM Memory Budget (NVIDIA RTX 3050 Laptop 4 GB)

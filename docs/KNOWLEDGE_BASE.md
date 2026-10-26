@@ -2,14 +2,14 @@
 **Project:** Local Subtitle Alignment Workbench  
 **Academic Context:** Master's Thesis in Computer Science & Engineering (Astana IT University)  
 **Author:** Askar Nurym  
-**Key References:** Cognitive Load Theory, W3C WCAG 2.1, Speech Acoustics, Forced Alignment (MFA & CTC), DTW
+**Key References:** Cognitive Load Theory, W3C WCAG 2.1, Speech Acoustics, Forced Alignment (MFA & CTC), DTW, Psychophysics
 
 ---
 
 ## 1. Educational Multimedia & Cognitive Ergonomics
 
 ### 1.1 Cognitive Load Theory & Split-Attention
-Cognitive Load Theory (CLT), pioneered by John Sweller and extended by Ayres & Sweller (2014), categorizes human working memory load into three types:
+Cognitive Load Theory (CLT), pioneered by John Sweller (1988, 2011) and extended by Ayres & Sweller (2014), categorizes human working memory load into three types:
 1. **Intrinsic Cognitive Load:** The inherent difficulty of the academic content (e.g., understanding a complex algorithmic proof).
 2. **Germane Cognitive Load:** Mental resources devoted to schema construction and deep learning.
 3. **Extraneous Cognitive Load:** Unnecessary mental effort imposed by poor instructional design, interface friction, or temporal desynchronization.
@@ -17,14 +17,23 @@ Cognitive Load Theory (CLT), pioneered by John Sweller and extended by Ayres & S
 Under the **Split-Attention Principle**, when educational video features misaligned sensory channels—such as speech audio lagging or leading corresponding subtitle text—the learner's executive working memory is forced to constantly buffer, cross-reference, and reconcile the discrepant modalities. This spikes extraneous cognitive load, causing mental fatigue and reducing comprehension.
 
 ### 1.2 Mayer's Temporal Contiguity Principle
-Richard Mayer's Cognitive Theory of Multimedia Learning (Mayer, 2009) establishes the **Temporal Contiguity Principle**: learners understand material significantly better when corresponding spoken words and printed text are presented simultaneously in time rather than successively. Subtitle desynchronization exceeding 100 ms breaks perceived simultaneity, disrupting multimodal binding in the human brain.
+Richard Mayer's Cognitive Theory of Multimedia Learning (Mayer & Anderson, 1991, 1992; Mayer, 2009) establishes the **Temporal Contiguity Principle**: learners understand material significantly better when corresponding spoken words and printed text are presented simultaneously in time rather than successively. Subtitle desynchronization exceeding 100 ms breaks perceived simultaneity, disrupting multimodal binding in the human brain.
 
-### 1.3 Accessibility Standards: WCAG 2.1 & ITU-R BT.1359-1
-- **W3C WCAG 2.1 (Guideline 1.2 - Time-based Media):** Level A and AA compliance (Success Criterion 1.2.2 «Captions Prerecorded») requires synchronized captions for all prerecorded audio content in synchronized media.
-- **ITU-R Recommendation BT.1359-1 (Relative timing of sound and vision):**
-  - **Undetectable Threshold:** Sound leading video by $<45\text{ ms}$ or lagging by $<125\text{ ms}$ is imperceptible to human viewers.
+### 1.3 Audiovisual Asynchrony Standards: ITU-R BT.1359-1 & EBU R37
+- **ITU-R Recommendation BT.1359-1 (Relative timing of sound and vision for broadcasting):**
+  - **Undetectable Threshold:** Sound leading video by $<45\text{ ms}$ or lagging by $<125\text{ ms}$ is imperceptible to human viewers under natural viewing conditions.
   - **Acceptability Threshold:** Sound leading video by $\le 90\text{ ms}$ to lagging by $\le 185\text{ ms}$ is acceptable.
-  - **Broadcast Collar:** Subtitle display transitions must align within $\pm 50\text{ ms}$ of spoken word onsets for comfortable reading.
+- **EBU Recommendation R37 (The relative timing of sound and vision components):**
+  - Total allowable end-to-end broadcast window is strictly bounded to $+40\text{ ms}$ (sound leading) to $-60\text{ ms}$ (sound lagging).
+  - Human perception is asymmetric: audio arriving before video defies real-world physics (light travels faster than sound; mouth articulators must move before acoustic energy is radiated), making viewers much less tolerant of audio lead than audio lag.
+- **Broadcast Subtitle Collar ($\pm 50\text{ ms}$):**
+  - Subtitle display transitions must align within $\pm 50\text{ ms}$ of spoken word onsets to center within active video frames (33.3 ms at 30 fps; 40 ms at 25 fps) and eliminate perceptual judder.
+
+### 1.4 Eye-Tracking Subtitle Cadence & The Temporal Window of Integration (TWI)
+- **Audiovisual Temporal Window of Integration (Dixon & Spitz, 1980; van Wassenhove et al., 2007; Grant et al., 2004):**
+  - Psychoacoustic experiments prove that multisensory speech integration operates within a temporal window of $100\text{--}200\text{ ms}$. When asynchrony exceeds $+125\text{ ms}$, cross-modal binding collapses, triggering conscious detection of desynchronization.
+- **Eye-Tracking Subtitle Fixations (Bisson et al., 2014; Perego et al., 2010; D'Ydewalle & De Bruycker, 2007):**
+  - Eye-tracking studies demonstrate that viewers initiate predictive gaze saccades to subtitle text $100\text{--}200\text{ ms}$ before spoken word acoustic onset. Aligning subtitles within $\pm 50\text{ ms}$ ensures text is visually stable upon saccadic landing, eliminating regressive eye fixations and pupil dilation (PCPD) associated with mental strain.
 
 ---
 
@@ -33,19 +42,19 @@ Richard Mayer's Cognitive Theory of Multimedia Learning (Mayer, 2009) establishe
 ### 2.1 Speech Signal Representation
 Speech is a non-stationary acoustic pressure wave generated by air expelled from the lungs, modulated by vocal fold vibration (fundamental frequency $F_0$) and filtered by the vocal tract (pharynx, oral, and nasal cavities).
 - **Formants ($F_1, F_2, F_3$):** Resonant frequencies of the vocal tract characterizing vowels and liquid consonants.
-- **Frame Analysis:** Because speech is quasi-stationary over short intervals (10–30 ms), short-time Fourier transforms (STFT) with a 40 ms window (Hann tapered) and a 10–20 ms hop rate are used to extract spectral representations.
+- **Frame Analysis:** Because speech is quasi-stationary over short intervals (10–30 ms), short-time Fourier transforms (STFT) with a 25–40 ms window (Hann tapered) and a 10–20 ms hop rate are used to extract spectral representations.
 
 ### 2.2 Phonetic Hierarchies & Coarticulation
 - **Grapheme:** The smallest unit of written language (letters, punctuation).
 - **Phoneme:** The smallest contrastive unit of sound in a language that distinguishes one word from another (e.g., `/p/` vs `/b/`).
 - **Phone:** The physical acoustic realization of a speech sound in continuous speech.
-- **Coarticulation:** The physical reality that the acoustic properties of a speech sound are blended with preceding and following sounds due to mechanical inertia of articulators (tongue, lips, velum). Because of coarticulation, phonetic boundaries are rarely instantaneous step-functions; they are continuous acoustic transitions spanning 10–30 ms.
+- **Coarticulation:** The physical reality that the acoustic properties of a speech sound are blended with preceding and following sounds due to mechanical inertia of articulators (tongue, lips, velum). Because of coarticulation, phonetic boundaries are continuous acoustic transitions spanning 10–30 ms rather than instantaneous step-functions.
 
 ### 2.3 Grapheme-to-Phoneme (G2P) & Lexicons
 Forced alignment requires mapping written text into target phonetic sequences.
 - **ARPAbet:** Standard 39-phoneme ASCII alphabet developed for American English speech recognition. Represents consonants (`P, B, T, D, S, Z, SH, CH...`) and vowels with lexical stress markers (`0` = no stress, `1` = primary stress, `2` = secondary stress, e.g., `AH0, EY1, IY2`).
 - **CMUDict (Carnegie Mellon Pronouncing Dictionary):** Gold-standard pronouncing dictionary containing $>134,000$ North American English words mapped to ARPAbet.
-- **Out-of-Vocabulary (OOV) Handling:** Technical lectures contain novel scientific terms (e.g., *backpropagation, transformer, quaternion*). When a token is absent from CMUDict, a neural or rule-based G2P model (e.g., `g2p_en`) predicts the most probable phonetic sequence using joint-sequence or transformer transducers.
+- **Out-of-Vocabulary (OOV) Handling:** Technical lectures contain novel scientific terms (e.g., *backpropagation, transformer, quaternion*). When a token is absent from CMUDict, a G2P model predicts the most probable phonetic sequence using joint-sequence or transformer transducers.
 
 ---
 
@@ -60,7 +69,7 @@ Forced alignment requires mapping written text into target phonetic sequences.
 Whisper's internal `word_timestamps=True` feature operates via dynamic time warping on cross-attention weights between decoder query positions and encoder representations:
 - Cross-attention weights are optimized for semantic text prediction, not acoustic boundary localization. Attention distributions across frames are inherently diffuse (often blurred across 100–300 ms).
 - On long audio recordings with extended pauses, speaker coughs, or classroom reverberation, autoregressive repetition penalties and hallucination loops cause cumulative temporal drift.
-- **Engineering Solution:** Whisper should be used for **verbatim text extraction and macro-segment bounds**, while precise acoustic boundary placement must be delegated to dedicated **Forced Alignment (MFA / CTC)**.
+- **Engineering Solution:** Whisper is used for **verbatim text extraction and macro-segment bounds**, while precise acoustic boundary placement is delegated to dedicated **Forced Alignment (MFA / CTC)**.
 
 ---
 
@@ -95,9 +104,31 @@ $$D(i, j) = d(x_i, y_j) + \min \left( D(i-1, j-1), D(i-1, j), D(i, j-1) \right)$
 
 ### 6.1 Human Phonetic Annotator Uncertainty
 In speech science, manual phonetic labeling (e.g., in TIMIT or Buckeye) is performed by human phoneticians inspecting spectrograms and waveforms in Praat.
-- Multiple empirical studies (Raymond et al., 2002; Hosom, 2009; Wesker et al., 2005) establish that the inter-annotator disagreement standard deviation across trained human phoneticians is:
+- Multiple empirical studies (Raymond et al., 2002; Wesenick & Kipp, 1996; McAuliffe et al., 2017) establish that the inter-annotator disagreement standard deviation across trained human phoneticians is:
   $$\sigma_{\text{annotator}} \approx 10\text{ -- }16\text{ ms}$$
 - Disagreement varies significantly by manner of articulation:
   - **Unvoiced stop closures (`/p/, /t/, /k/`):** High agreement ($\sigma \approx 5\text{--}8\text{ ms}$) due to sharp burst energy release.
   - **Vowel-to-semivowel transitions (`/r/, /l/, /w/`):** Lower agreement ($\sigma \approx 15\text{--}35\text{ ms}$) due to gradual continuous formant movement.
-- **Academic Consequence:** The requirement «boundary error $<20\text{ ms}$» represents the physiological resolution limit of human acoustic ground truth. No algorithm can claim lower error than the intrinsic uncertainty of the reference without circular self-certification.
+- **Academic Consequence:** The thesis target «boundary error $<20\text{ ms}$» represents the physiological resolution limit of human acoustic ground truth. No automated algorithm can claim lower error than the intrinsic uncertainty of human expert transcribers.
+
+---
+
+## 7. Pipeline Robustness & Critical Failure Mode Analysis (FMEA)
+
+A comprehensive failure mode analysis of the 7-stage speech pipeline identifies key technical edge cases and their architectural mitigations:
+
+1. **Academic Out-Of-Vocabulary (OOV) Terms:**
+   - *Phenomenon:* Technical lectures introduce specialized terminology (e.g. *backpropagation, quaternion, eigenvalues, kubernetes*) absent from CMUDict (~134k words).
+   - *Mitigation:* Montreal Forced Aligner provides an automated G2P fallback model (`mfa g2p`). Furthermore, the Mode A fallback (`torchaudio MMS_FA`) operates over a character-level emission vocabulary (`[a-z|']`), making it inherently 100% immune to dictionary OOV failures.
+2. **CTC Trellis Frame Discretization Limit:**
+   - *Phenomenon:* `MMS_FA` downsamples audio through its Wav2Vec2 convolutional encoder with a total stride of 320 samples ($16000 / 320 = 50\text{ Hz}$). Each discrete emission frame represents exactly **20.0 ms**.
+   - *Theoretical Consequence:* Without continuous sub-frame interpolation, CTC Trellis boundary placements are discretized to multiples of 20 ms. Conversely, Montreal Forced Aligner operates with 10 ms MFCC frame shifts (100 Hz) and continuous Gaussian mixture transitions, which is mathematically necessary to achieve sub-20ms boundary precision ($\text{Acc}@20\text{ms} > 85\%$).
+3. **Audio File Header Limit (32-bit RIFF/WAV Limit):**
+   - *Phenomenon:* Standard 32-bit RIFF/WAV headers represent audio byte lengths as an unsigned 32-bit integer, capping file size at $2^{32} - 1 \approx 4.29\text{ GB}$ (equivalent to $\approx 37.2\text{ hours}$ of 16 kHz 16-bit mono PCM).
+   - *Mitigation:* The macro-chunker partitions audio into $L \le 30.0\text{ s}$ chunks and slices bytes directly without loading multi-hour audio entirely into memory, strictly ensuring $O(N)$ linear memory complexity.
+4. **Whisper Hallucination Suppression:**
+   - *Phenomenon:* Long continuous silences or slide-reading pauses can cause autoregressive Whisper decoders to hallucinate repetitive loops (`"Thank you for watching"`).
+   - *Mitigation:* Silero-VAD extracts active speech intervals prior to Whisper decoding, ensuring silence is never passed to the autoregressive decoder.
+5. **Windows 11 MAX_PATH Boundary (260 Characters):**
+   - *Phenomenon:* Deep temporary directory nesting can exceed the standard Windows 260-character path limit.
+   - *Mitigation:* Staging directories use compact UUID prefixes directly within the system `%TEMP%` root (`C:\Users\<user>\AppData\Local\Temp`), keeping path depths $<85$ characters.

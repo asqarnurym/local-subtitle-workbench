@@ -93,7 +93,7 @@ An increment or feature pull request is considered **Done** if and only if it sa
 │ • Raw scientific alignment exporter (alignment_raw.json)                              │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
 │ Increment 6: Automated Empirical Benchmark Suite                                       │
-│ • scripts/speech_benchmark.py evaluating TIMIT, Buckeye, and Prototype audio          │
+│ • scripts/speech_benchmark.py evaluating TIMIT, Buckeye, and Synthetic audio          │
 │ • Automated Clustered Bootstrap (B=2000) and Paired Wilcoxon significance tests        │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```

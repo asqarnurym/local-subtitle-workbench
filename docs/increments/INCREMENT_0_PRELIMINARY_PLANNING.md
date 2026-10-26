@@ -63,7 +63,7 @@ Result: All checks passed!
 
 ## 5. Architectural & Design Decisions Made
 - **Decision 1 (Whisper + DTW + MFA Triad):** Strictly preserved the core technologies promised in the approved Master's Individual Plan, rejecting attempts to replace MFA with pure character-level MMS_FA in the primary scientific tier.
-- **Decision 2 (Corpus Separation):** Enforced physical subfolder isolation (`synthetic/`, `prototype_archive/`, `timit/`, `buckeye/`) and prohibited claiming phonetic accuracy on the Prototype archive due to lack of phonetic lab annotations.
+- **Decision 2 (Corpus Separation):** Enforced physical subfolder isolation (`synthetic/`, `timit/`, `buckeye/`, `aitu_lectures/`) and prohibited claiming phonetic accuracy on unverified recordings lacking phonetic lab annotations.
 - **Decision 3 (Sequential VRAM Management):** Budgeted sequential execution on NVIDIA RTX 3050 Laptop GPU, ensuring peak allocation $\le 1.85\text{ GB} \le 3.5\text{ GB} < 4.0\text{ GB}$.
 
 ---

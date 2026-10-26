@@ -1,3 +1,5 @@
+__version__ = "0.1.0"
+
 from .aligner import (
     ForcedAligner,
     align_chunks,
@@ -27,6 +29,13 @@ from .ctc_aligner import (
     backtrack,
     get_trellis,
 )
+from .export import (
+    export_jsonld,
+    export_karaoke_vtt,
+    export_raw_alignment,
+    format_vtt_timestamp,
+    generate_manifest,
+)
 from .mfa_wrapper import (
     MFAError,
     MFAExecutionError,
@@ -47,9 +56,11 @@ from .models import (
     PhonemeCue,
     WordToken,
 )
+from .provenance import (
+    code_provenance,
+    sha256,
+)
 from .text_norm import TokenSpan, normalize_text_spans, project_tokens_to_cues
-
-__version__ = "0.1.0"
 
 __all__ = [
     "ASRError",
@@ -81,7 +92,13 @@ __all__ = [
     "align_ctc_trellis",
     "backtrack",
     "check_mfa_available",
+    "code_provenance",
+    "export_jsonld",
+    "export_karaoke_vtt",
+    "export_raw_alignment",
     "extract_vad_silences",
+    "format_vtt_timestamp",
+    "generate_manifest",
     "get_trellis",
     "normalize_text_spans",
     "parse_textgrid",
@@ -89,5 +106,6 @@ __all__ = [
     "project_tokens_to_cues",
     "reconcile_chunk_alignments",
     "run_mfa_batch",
+    "sha256",
     "slice_wav",
 ]

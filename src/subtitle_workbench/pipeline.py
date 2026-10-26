@@ -3,8 +3,6 @@
 import hashlib
 import json
 import platform
-import shutil
-import subprocess
 import time
 from dataclasses import asdict
 from math import ceil
@@ -17,44 +15,13 @@ from .audio import extract_features, load_wav
 from .dtw import banded_dtw
 from .export import jsonld, webvtt
 from .models import Config, Cue, validate_cues
+from .provenance import code_provenance, sha256
 
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(65536), b""):
-            digest.update(block)
-    return digest.hexdigest()
-
-
-def code_provenance() -> dict:
-    """Fingerprint the installed code; attach revision only for this package's repository."""
-    package = Path(__file__).resolve().parent
-    digest = hashlib.sha256()
-    for source in sorted(package.glob("*.py")):
-        digest.update(source.name.encode("utf-8") + b"\0" + source.read_bytes())
-    result = {"source_sha256": digest.hexdigest(), "git_revision": None, "git_worktree_dirty": None}
-    repository = package.parent.parent
-    if shutil.which("git") is None:
-        return result
-    try:
-
-        def git(*arguments: str) -> str:
-            completed = subprocess.run(
-                ["git", "-C", str(repository), *arguments],
-                capture_output=True,
-                text=True,
-                check=True,
-                timeout=2,
-            )
-            return completed.stdout.strip()
-
-        if Path(git("rev-parse", "--show-toplevel")).resolve() == repository:
-            result["git_revision"] = git("rev-parse", "HEAD")
-            result["git_worktree_dirty"] = bool(git("status", "--porcelain"))
-    except (OSError, subprocess.SubprocessError):
-        pass
-    return result
+__all__ = [
+    "align",
+    "code_provenance",
+    "sha256",
+]
 
 
 def align(

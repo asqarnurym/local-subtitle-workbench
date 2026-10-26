@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import math
 import subprocess
 import sys
@@ -29,7 +30,13 @@ from subtitle_workbench.metrics import (
     evaluate_alignment_boundaries,
     paired_wilcoxon_test,
 )
-from subtitle_workbench.models import Config, PhonemeCue, WordToken
+from subtitle_workbench.models import ASRSegment, Config, PhonemeCue, WordToken
+from subtitle_workbench.provenance import sha256
+
+# Ensure project root is on sys.path for importing scripts in test suite
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 # ---------------------------------------------------------------------------
 # Corpora Loader Tests (TIMIT .phn, TIMIT .wrd, Buckeye TextGrid)
@@ -599,3 +606,499 @@ def test_cli_download_reference_corpora_offline(tmp_path: Path) -> None:
     assert (target_dir / "spk01_utt01.phn").exists()
     assert (target_dir / "spk01_utt01.wrd").exists()
     assert (target_dir / "spk01_utt01.TextGrid").exists()
+
+
+# ---------------------------------------------------------------------------
+# Benchmark Suite Runner Tests (scripts/speech_benchmark.py)
+# ---------------------------------------------------------------------------
+
+
+def test_speech_benchmark_hardware_profiling() -> None:
+    """Verify hardware and resource profiling helpers return valid metrics."""
+    from scripts.speech_benchmark import (
+        get_hardware_info,
+        get_peak_host_ram_mb,
+        get_peak_vram_mb,
+        reset_peak_vram,
+    )
+
+    vram = get_peak_vram_mb()
+    assert isinstance(vram, float)
+    assert vram >= 0.0
+
+    reset_peak_vram()
+
+    ram = get_peak_host_ram_mb()
+    assert isinstance(ram, float)
+    assert ram > 0.0
+
+    hw = get_hardware_info()
+    assert isinstance(hw, dict)
+    assert "platform" in hw
+    assert "processor" in hw
+    assert "python_version" in hw
+    assert "cuda_available" in hw
+    assert isinstance(hw["cuda_available"], bool)
+
+
+def test_speech_benchmark_simulation_profiles() -> None:
+    """Verify simulate_predictions reproduces empirical ablation shifts."""
+    from scripts.speech_benchmark import simulate_predictions
+
+    rng = np.random.default_rng(42)
+    ref_phones = [
+        PhonemeCue(phoneme="sh", start=0.1, end=0.25, confidence=1.0),
+        PhonemeCue(phoneme="iy", start=0.25, end=0.4, confidence=1.0),
+    ]
+    ref_words = [
+        WordToken(
+            id="w1",
+            text="she",
+            normalized="she",
+            start=0.1,
+            end=0.4,
+            confidence=1.0,
+            phonemes=ref_phones,
+        )
+    ]
+
+    # Mode 1: ~120 ms shift, words only
+    m1_words, m1_phones = simulate_predictions(ref_words, ref_phones, "mode1_whisper", rng)
+    assert len(m1_words) == 1
+    assert m1_phones is None
+    assert 0.16 <= m1_words[0].start <= 0.35
+    assert m1_words[0].start < m1_words[0].end
+
+    # Mode 2: ~35 ms shift, words and phones
+    m2_words, m2_phones = simulate_predictions(ref_words, ref_phones, "mode2_ctc", rng)
+    assert len(m2_words) == 1
+    assert m2_phones is not None
+    assert len(m2_phones) == 2
+    assert 0.108 <= m2_words[0].start <= 0.20
+    assert m2_words[0].start < m2_words[0].end
+
+    # Mode 3: ~12 ms shift, words and phones
+    m3_words, m3_phones = simulate_predictions(ref_words, ref_phones, "mode3_hybrid", rng)
+    assert len(m3_words) == 1
+    assert m3_phones is not None
+    assert len(m3_phones) == 2
+    assert 0.102 <= m3_words[0].start <= 0.13
+    assert m3_words[0].start < m3_words[0].end
+
+    # Unsupported mode
+    with pytest.raises(BenchmarkError, match="Unsupported ablation mode"):
+        simulate_predictions(ref_words, ref_phones, "invalid_mode", rng)
+
+
+def test_speech_benchmark_programmatic_offline_synthetic(tmp_path: Path) -> None:
+    """Verify programmatic speech_benchmark execution produces valid schema and stats."""
+    from scripts.speech_benchmark import run_benchmark
+
+    bench_dir = tmp_path / "bench_report"
+    res = run_benchmark(
+        corpus="timit",
+        output_dir=bench_dir,
+        offline_synthetic=True,
+        seed=42,
+        bootstrap_resamples=500,
+    )
+
+    assert res["schema_version"] == 1
+    assert res["offline_synthetic"] is True
+    assert res["utterance_count"] == 10
+    assert res["total_audio_duration_seconds"] > 0.0
+
+    modes = res["modes"]
+    assert "mode1_whisper" in modes
+    assert "mode2_ctc" in modes
+    assert "mode3_hybrid" in modes
+
+    m1 = modes["mode1_whisper"]
+    m2 = modes["mode2_ctc"]
+    m3 = modes["mode3_hybrid"]
+
+    # Invariant: Mode 3 Acc@20ms > Mode 2 Acc@20ms > Mode 1 Acc@20ms
+    assert (
+        m3["word_metrics"]["acc_20ms"]
+        > m2["word_metrics"]["acc_20ms"]
+        > m1["word_metrics"]["acc_20ms"]
+    )
+
+    # Invariant: Mode 3 MAE < 20 ms
+    assert m3["word_metrics"]["mae_ms"] < 20.0
+    assert (
+        m3["word_metrics"]["mae_ms"] < m2["word_metrics"]["mae_ms"] < m1["word_metrics"]["mae_ms"]
+    )
+
+    # Invariant: Mode 1 phone_metrics is None, Mode 2 and Mode 3 have phone metrics
+    assert m1["phone_metrics"] is None
+    assert m2["phone_metrics"] is not None
+    assert m3["phone_metrics"] is not None
+    assert m3["phone_metrics"]["acc_20ms"] > m2["phone_metrics"]["acc_20ms"]
+    assert m3["phone_metrics"]["mae_ms"] < 20.0
+
+    # Invariant: Resource profiling
+    for m in (m1, m2, m3):
+        assert m["performance"]["rtf"] >= 0.0
+        assert m["performance"]["peak_ram_mb"] > 0.0
+        assert m["performance"]["peak_vram_mb"] >= 0.0
+        assert m["performance"]["elapsed_seconds"] >= 0.0
+
+    # Invariant: Paired Wilcoxon hypothesis tests
+    sig = res["statistical_significance"]
+    assert "proposed_vs_whisper" in sig
+    assert "proposed_vs_ctc" in sig
+
+    w_whisper = sig["proposed_vs_whisper"]
+    assert w_whisper["p_value"] < 0.05
+    assert w_whisper["effect_size"] == "large"
+    assert w_whisper["cliffs_delta"] > 0.8
+    assert w_whisper["significant_0_05"] is True
+
+    w_ctc = sig["proposed_vs_ctc"]
+    assert w_ctc["p_value"] < 0.05
+    assert w_ctc["effect_size"] == "large"
+    assert w_ctc["cliffs_delta"] > 0.8
+    assert w_ctc["significant_0_05"] is True
+
+    # Artifact verification: benchmark_results.json and manifest.json
+    results_path = bench_dir / "benchmark_results.json"
+    manifest_path = bench_dir / "manifest.json"
+    assert results_path.is_file()
+    assert manifest_path.is_file()
+
+    saved_results = json.loads(results_path.read_text(encoding="utf-8"))
+    assert saved_results == res
+
+    manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest_data["schema_version"] == 1
+    assert "tool" in manifest_data
+    assert "code" in manifest_data
+    assert len(manifest_data["code"]["source_sha256"]) == 64
+    assert manifest_data["inputs"]["utterance_count"] == 10
+    assert manifest_data["outputs"]["benchmark_results.json"]["sha256"] == sha256(results_path)
+
+
+def test_speech_benchmark_cli_offline_synthetic(tmp_path: Path) -> None:
+    """Verify scripts/speech_benchmark.py executes via CLI with clean ASCII output."""
+    out_dir = tmp_path / "cli_benchmark"
+    cmd = [
+        sys.executable,
+        "scripts/speech_benchmark.py",
+        "--offline-synthetic",
+        "--output-dir",
+        str(out_dir),
+        "--seed",
+        "42",
+        "--bootstrap-resamples",
+        "500",
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    assert proc.returncode == 0
+    stdout = proc.stdout
+
+    # Clean ASCII checks
+    assert "[*] Speech Alignment Benchmark Suite" in stdout
+    assert "[+] mode1_whisper complete" in stdout
+    assert "[+] mode2_ctc complete" in stdout
+    assert "[+] mode3_hybrid complete" in stdout
+    assert "[+] Proposed vs Whisper" in stdout
+    assert "[+] Proposed vs CTC" in stdout
+    assert "[OK] Benchmark execution and artifact generation completed successfully." in stdout
+
+    # Zero-emoji rule verification on stdout and stderr
+    assert all(ord(char) < 128 for char in stdout)
+    assert all(ord(char) < 128 for char in proc.stderr)
+
+    assert (out_dir / "benchmark_results.json").is_file()
+    assert (out_dir / "manifest.json").is_file()
+
+
+def test_speech_benchmark_cli_help_and_options(tmp_path: Path) -> None:
+    """Verify CLI argument parsing, help flags, and subset filtering."""
+    # Help flag
+    help_proc = subprocess.run(
+        [sys.executable, "scripts/speech_benchmark.py", "--help"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert help_proc.returncode == 0
+    assert "--corpus" in help_proc.stdout
+    assert "--offline-synthetic" in help_proc.stdout
+    assert "--bootstrap-resamples" in help_proc.stdout
+
+    # Non-existent corpus directory without --offline-synthetic exits with code 1
+    bad_proc = subprocess.run(
+        [
+            sys.executable,
+            "scripts/speech_benchmark.py",
+            "--data-dir",
+            str(tmp_path / "non_existent"),
+            "--output-dir",
+            str(tmp_path / "bad_out"),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert bad_proc.returncode == 1
+    assert "[-] Benchmark Error" in bad_proc.stderr
+
+    # Max utterances flag bounding
+    limited_out = tmp_path / "limited_out"
+    lim_proc = subprocess.run(
+        [
+            sys.executable,
+            "scripts/speech_benchmark.py",
+            "--offline-synthetic",
+            "--output-dir",
+            str(limited_out),
+            "--max-utterances",
+            "3",
+            "--bootstrap-resamples",
+            "200",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert lim_proc.returncode == 0
+    assert "Loaded 3 utterances" in lim_proc.stdout
+
+    # Single mode execution
+    mode3_out = tmp_path / "mode3_only"
+    m3_proc = subprocess.run(
+        [
+            sys.executable,
+            "scripts/speech_benchmark.py",
+            "--offline-synthetic",
+            "--output-dir",
+            str(mode3_out),
+            "--modes",
+            "mode3_hybrid",
+            "--bootstrap-resamples",
+            "200",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert m3_proc.returncode == 0
+    res_m3 = json.loads((mode3_out / "benchmark_results.json").read_text(encoding="utf-8"))
+    assert list(res_m3["modes"].keys()) == ["mode3_hybrid"]
+    assert "proposed_vs_whisper" not in res_m3["statistical_significance"]
+
+
+def test_speech_benchmark_corpus_synthetic_offline(tmp_path: Path) -> None:
+    """Verify synthetic corpus runs with offline simulation when offline_synthetic=True."""
+    from scripts.speech_benchmark import run_benchmark
+
+    bench_dir = tmp_path / "synth_corpus"
+    res = run_benchmark(
+        corpus="synthetic",
+        output_dir=bench_dir,
+        offline_synthetic=True,
+        seed=42,
+        bootstrap_resamples=200,
+    )
+    assert res["corpus"] == "synthetic"
+    assert res["offline_synthetic"] is True
+    assert res["utterance_count"] == 10
+
+
+def test_speech_benchmark_real_production_execution(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Verify real production execution path extracts words and phones from alignment_raw.json."""
+    from scripts.speech_benchmark import run_benchmark
+
+    # 1. Mock WhisperTranscriber for Mode 1
+    class MockWhisperTranscriber:
+        def __init__(self, device: str | None = None, compute_type: str = "int8") -> None:
+            self.device = device
+            self.compute_type = compute_type
+            self.unloaded = False
+
+        def transcribe(self, audio_path: Path) -> list[ASRSegment]:
+            wrd_path = Path(audio_path).with_suffix(".wrd")
+            ref_words = parse_timit_wrd(wrd_path)
+            pred_words = [
+                WordToken(
+                    id=f"p_{w.id}",
+                    text=w.text,
+                    normalized=w.normalized,
+                    start=round(w.start + 0.025, 4),
+                    end=round(w.end + 0.025, 4),
+                    confidence=0.92,
+                )
+                for w in ref_words
+            ]
+            return [
+                ASRSegment(
+                    id="seg_0",
+                    start=pred_words[0].start,
+                    end=pred_words[-1].end,
+                    text=" ".join(w.text for w in pred_words),
+                    words=pred_words,
+                )
+            ]
+
+        def unload(self) -> None:
+            self.unloaded = True
+
+    monkeypatch.setattr(
+        "subtitle_workbench.asr.WhisperTranscriber",
+        MockWhisperTranscriber,
+        raising=False,
+    )
+
+    # 2. Mock run_speech_pipeline for Mode 2 (ctc) and Mode 3 (mfa)
+    def mock_run_speech_pipeline(audio_path, output_dir=None, engine="ctc", **kwargs):
+        out = Path(output_dir)
+        out.mkdir(parents=True, exist_ok=True)
+        wrd_path = Path(audio_path).with_suffix(".wrd")
+        phn_path = Path(audio_path).with_suffix(".phn")
+        ref_words = parse_timit_wrd(wrd_path)
+        ref_phones = parse_timit_phn(phn_path)
+
+        offset = 0.015 if engine == "ctc" else 0.005
+        words_data = []
+        for i, w in enumerate(ref_words):
+            w_start = round(w.start + offset, 4)
+            w_end = round(w.end + offset, 4)
+            w_phones = [
+                {
+                    "phoneme": p.phoneme,
+                    "start": round(p.start + offset, 4),
+                    "end": round(p.end + offset, 4),
+                    "confidence": 0.95,
+                }
+                for p in ref_phones
+                if p.start >= w.start - 0.02 and p.end <= w.end + 0.02
+            ]
+            words_data.append(
+                {
+                    "id": f"pred_w_{i}",
+                    "text": w.text,
+                    "normalized": w.normalized,
+                    "start": w_start,
+                    "end": w_end,
+                    "confidence": 0.96,
+                    "char_start": 0,
+                    "char_end": len(w.text),
+                    "phonemes": w_phones,
+                }
+            )
+
+        raw_payload = {
+            "schema_version": 1,
+            "alignment_method": engine,
+            "words": words_data,
+        }
+        (out / "alignment_raw.json").write_text(json.dumps(raw_payload), encoding="utf-8")
+        return {"schema_version": 1, "status": "mock_pipeline_complete"}
+
+    monkeypatch.setattr(
+        "subtitle_workbench.pipeline.run_speech_pipeline",
+        mock_run_speech_pipeline,
+    )
+
+    bench_dir = tmp_path / "prod_bench"
+    res = run_benchmark(
+        corpus="synthetic",
+        output_dir=bench_dir,
+        offline_synthetic=False,
+        max_utterances=2,
+        bootstrap_resamples=50,
+        seed=42,
+    )
+
+    assert res["corpus"] == "synthetic"
+    assert res["offline_synthetic"] is False
+    assert res["utterance_count"] == 2
+
+    modes = res["modes"]
+    assert "mode1_whisper" in modes
+    assert "mode2_ctc" in modes
+    assert "mode3_hybrid" in modes
+
+    # Mode 1 has word metrics from mock transcribe, phone_metrics is None
+    m1 = modes["mode1_whisper"]
+    assert m1["word_metrics"]["num_matched"] > 0
+    assert m1["phone_metrics"] is None
+
+    # Mode 2 and Mode 3 have word and phone metrics extracted from alignment_raw.json
+    m2 = modes["mode2_ctc"]
+    assert m2["word_metrics"]["num_matched"] > 0
+    assert m2["phone_metrics"] is not None
+    assert m2["phone_metrics"]["num_matched"] > 0
+
+    m3 = modes["mode3_hybrid"]
+    assert m3["word_metrics"]["num_matched"] > 0
+    assert m3["phone_metrics"] is not None
+    assert m3["phone_metrics"]["num_matched"] > 0
+
+    # Verify artifacts were generated
+    assert (bench_dir / "benchmark_results.json").is_file()
+    assert (bench_dir / "manifest.json").is_file()
+
+
+def test_speech_benchmark_cli_seed_negative_exits_one(tmp_path: Path) -> None:
+    """Verify CLI exits with code 1 when negative seed is passed."""
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "scripts/speech_benchmark.py",
+            "--offline-synthetic",
+            "--seed",
+            "-1",
+            "--output-dir",
+            str(tmp_path / "neg_seed"),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 1
+    assert "[-] Benchmark Error" in proc.stderr
+    assert "non-negative" in proc.stderr
+
+
+def test_speech_benchmark_negative_seed_validation(tmp_path: Path) -> None:
+    """Verify run_benchmark raises BenchmarkError for negative seed."""
+    from scripts.speech_benchmark import run_benchmark
+
+    with pytest.raises(BenchmarkError, match="non-negative"):
+        run_benchmark(
+            corpus="synthetic",
+            output_dir=tmp_path / "bad_seed",
+            seed=-1,
+        )
+
+
+def test_speech_benchmark_invalid_resamples_validation(tmp_path: Path) -> None:
+    """Verify run_benchmark raises BenchmarkError for bootstrap_resamples < 1."""
+    from scripts.speech_benchmark import run_benchmark
+
+    with pytest.raises(BenchmarkError, match="bootstrap_resamples"):
+        run_benchmark(
+            corpus="synthetic",
+            output_dir=tmp_path / "bad_resamples",
+            bootstrap_resamples=0,
+        )
+
+
+def test_get_peak_host_ram_mb_psutil_exception_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Verify get_peak_host_ram_mb falls back cleanly when psutil throws a runtime exception."""
+    from unittest.mock import MagicMock
+
+    from scripts.speech_benchmark import get_peak_host_ram_mb
+
+    mock_psutil = MagicMock()
+    mock_psutil.Process.side_effect = RuntimeError("AccessDenied simulated failure")
+    monkeypatch.setitem(sys.modules, "psutil", mock_psutil)
+
+    ram = get_peak_host_ram_mb()
+    assert isinstance(ram, float)
+    assert ram >= 0.0

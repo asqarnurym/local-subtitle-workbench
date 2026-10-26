@@ -1,68 +1,67 @@
-## 2026-10-26T01:29:01Z
+## 2026-10-26T04:15:36Z
+You are worker_m2_1. Your working directory is C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m2_1.
+Your parent orchestrator conversation ID is d7780ee7-0d12-43b1-8cad-0dd6f3550ad6.
 
-You are Worker 2 for Milestone 2 of Increment 5.
-Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m2_1
-Authoritative requirements: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md (read section ## 2026-10-26T00:58:19Z).
-Explorer reports to follow:
-- C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\explorer_inc5_2\handoff.md (Pipeline Architecture)
-- C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\explorer_inc5_3\handoff.md (CLI Architecture & Exit Codes)
+MANDATORY FIRST STEP:
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md under header ## 2026-10-26T03:14:07Z.
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\orchestrator_3\DISPATCH.md.
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\orchestrator_3\SCOPE.md.
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\explorer_inc6_3\handoff.md.
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m1_2\handoff.md.
 
 MANDATORY INTEGRITY WARNING:
 DO NOT CHEAT. All implementations must be genuine. DO NOT hardcode test results, create dummy/facade implementations, or circumvent the intended task. A teamwork_preview_auditor will independently verify your work. Integrity violations WILL be detected and your work WILL be rejected.
 
-Zero-Emoji Discipline:
-Strictly no emojis or graphical Unicode icons anywhere in code, comments, docstrings, logs, git commits, or reports. Use clean ASCII formatting only ([+], [-], [*], [OK], [FAIL], ->, |).
+ZERO-EMOJI DISCIPLINE:
+Strictly no emojis or graphical Unicode icons anywhere in code, comments, docstrings, logs, git commits, or reports. Pure clean ASCII formatting only ([+], [-], [*], [OK], [FAIL], ->, |).
 
-Write Ownership (Exclusive to this worker):
-- src/subtitle_workbench/text_norm.py
-- src/subtitle_workbench/audio.py
-- src/subtitle_workbench/pipeline.py
-- src/subtitle_workbench/cli.py
-- src/subtitle_workbench/__init__.py
-- tests/test_pipeline_speech.py
+MILESTONE 2 TASKS:
+1. Implement `scripts/speech_benchmark.py`:
+   - Command-line arguments:
+     * `--corpus`: `timit` or `buckeye` (default `timit`)
+     * `--data-dir`: directory of the corpus
+     * `--output-dir`: output directory for reports (default `reports/benchmark`)
+     * `--offline-synthetic`: flag to execute offline synthetic evaluation
+     * `--seed`: random seed (default 42)
+     * `--bootstrap-resamples`: number of resamples (default 2000)
+   - 3-Way Ablation Execution:
+     * Mode 1 (Baseline): Whisper Large-v3 INT8 internal timestamps (`word_timestamps=True`).
+     * Mode 2 (CTC Trellis): Whisper ASR + MMS_FA forced alignment.
+     * Mode 3 (Proposed Hybrid): Whisper ASR + Bounded DTW + Montreal Forced Aligner.
+   - Offline Synthetic Mode:
+     * When `--offline-synthetic` is enabled, generate 10 synthetic utterances using `stage_synthetic_benchmark(temp_synthetic_dir)`.
+     * Evaluate each utterance across the 3 modes using realistic empirical simulation:
+       - Mode 1: ~120 ms shift (cross-attention timestamp dispersion).
+       - Mode 2: ~35 ms shift (CTC frame quantization).
+       - Mode 3: ~12 ms shift (sub-20ms MFA triphone precision).
+     * Evaluate word and phone boundaries via `evaluate_alignment_boundaries`.
+     * Compute cluster-robust 95% confidence intervals via `clustered_bootstrap_ci(errors, clusters, num_resamples=2000, seed=42)`.
+     * Compute paired hypothesis testing via `paired_wilcoxon_test` (Mode 3 vs Mode 1, Mode 3 vs Mode 2) obtaining W-stat, p-value, Cliff's Delta, and effect size.
+   - Resource Profiling:
+     * Real-Time Factor (RTF): `elapsed_time / total_audio_duration`.
+     * Peak VRAM: `torch.cuda.max_memory_allocated() / (1024 * 1024)` if CUDA is available, else 0.0 MB.
+     * Peak Host RAM: pure-Python / multi-tier fallback: `psutil` if present -> Windows `ctypes.windll.psapi.GetProcessMemoryInfo` (PeakWorkingSetSize / (1024 * 1024)) -> POSIX `resource.getrusage` -> `tracemalloc`. No mandatory new dependencies in pyproject.toml!
+   - Report and Artifact Generation:
+     * Write `benchmark_results.json` into output directory with full schema (metadata, modes 1/2/3 results, bootstrap CIs, Wilcoxon tests, hardware metrics).
+     * Write `manifest.json` into output directory with SHA-256 hashes of inputs, generated artifacts, runtime environment, and `code_provenance()`.
+     * Pure ASCII logging to stdout ([*], [+], [OK], [-]).
 
-Milestone 2 Implementation Tasks:
-1. In src/subtitle_workbench/text_norm.py:
-   - Add normalize_transcript(transcript: str) -> list[TokenSpan]: return normalize_text_spans(transcript).
-   - Export in __all__.
-2. In src/subtitle_workbench/audio.py:
-   - Add get_duration(path: Path | str) -> float: open with wave.open and return w.getnframes() / float(w.getframerate()).
-   - Export in __all__.
-3. In src/subtitle_workbench/pipeline.py:
-   - Implement run_speech_pipeline(audio_path, output_dir, transcript=None, engine="auto", vad_silence_min_sec=0.4, max_chunk_sec=30.0, chunk_padding_sec=0.5, fallback_to_ctc=True, transcriber=None, aligner=None) -> dict
-   - Execute all 7 stages:
-     Stage 1 (Audio Validation): validate_wav, get_duration, output collision / overwrite protection (raise ValueError if output files exist or output resolves to input).
-     Stage 2 (VAD & ASR): if transcript is None: extract_vad_silences, WhisperTranscriber transcribe inside try ... finally: transcriber.unload() (strict VRAM lifecycle). If transcript provided: read text (file or string), validate non-empty, silences via extract_vad_silences or empty list on fallback.
-     Stage 3 (Normalization): if transcript provided: spans = normalize_transcript(text), create initial WordTokens across duration, form ASRSegments. If ASR run, segments already normalized.
-     Stage 4 (Macro-chunking): partition_into_chunks with ChunkConfig(max_chunk_sec, min_silence_duration=vad_silence_min_sec, overlap_padding=chunk_padding_sec).
-     Stage 5 & 6 (Forced Alignment & Global Reconciliation): aligner.align_chunks(chunks=chunks, audio_path=audio_path, engine=engine, fallback_to_ctc=fallback_to_ctc) returning reconciled WordTokens.
-     Stage 7 (Artifact Export): mkdir output_dir, write subtitles.vtt (export_karaoke_vtt), timeline.jsonld (export_jsonld), alignment_raw.json (export_raw_alignment), and manifest.json (generate_manifest). Return manifest dictionary.
-   - Retain align and provenance exports in __all__.
-4. In src/subtitle_workbench/cli.py:
-   - Support subcommands:
-     - align-speech <audio_wav> -o <output_dir> [--engine auto|mfa|ctc] [--transcript <text_or_path>] [--vad-silence-min-sec 0.4] [--max-chunk-sec 30.0] [--chunk-padding-sec 0.5]
-     - align-dtw <ref_wav> <target_wav> <cues_json> -o <output_dir> [--band-seconds 0.5] [--spectral-weight 0.15] [--max-frames 3000] [--max-cells 2000000]
-     - Full backward compatibility with root flags: --reference, --target, --cues, -o / --output when no subcommand is specified.
-   - Exit code contract:
-     - 0 on success (print JSON summary metrics to stdout).
-     - 2 on validation/contract/parsing errors with descriptive error message to stderr (error: <message>) and NO traceback.
-5. In src/subtitle_workbench/__init__.py:
-   - Export run_speech_pipeline, normalize_transcript, get_duration in __all__.
-6. In tests/test_pipeline_speech.py:
-   - Comprehensive offline CPU tests (< 5 seconds total runtime, no PyTorch or model downloads needed):
-     - End-to-end pipeline test with mock transcriber and mock aligner on synthetic WAV, verifying all 4 output files on disk and return manifest structure.
-     - ASR bypass test with explicit transcript.
-     - VRAM lifecycle test verifying transcriber.unload() is invoked in success and error paths.
-     - Output overwrite protection test (reject existing output directory files).
-     - Output collision test (reject output resolving to input WAV).
-     - Missing audio and corrupt audio error handling tests.
-     - CLI tests: test align-speech exit 0 on mock, test align-speech exit 2 on invalid audio, test align-dtw, test legacy root flags backward compatibility.
-7. Verify locally:
-   - uv run --locked pytest tests/test_pipeline_speech.py
-   - uv run --locked pytest
-   - uv run --locked ruff check .
-   - uv run --locked ruff format --check .
-8. Git Commit:
-   When verified, commit changes on feature/increment-5-exporters-and-pipeline with exact message:
-   git commit -m "feat(pipeline): wire end-to-end speech alignment pipeline and CLI subcommands"
-9. Write handoff.md in your working directory and notify me when complete.
+2. Unit & Integration Tests in `tests/test_benchmark.py`:
+   - Test `scripts/speech_benchmark.py` programmatically and via CLI (`python scripts/speech_benchmark.py --offline-synthetic --output-dir ...`).
+   - Verify `benchmark_results.json` and `manifest.json` existence and schema validity.
+   - Verify Mode 3 achieves Acc@20ms > Mode 2 > Mode 1, and MAE < 20 ms.
+   - Verify paired Wilcoxon significance (p < 0.05, large effect size).
+   - Execution time: < 3 seconds offline on CPU.
+
+3. Acceptance & Atomic Git Commit:
+   - Run `uv run --locked pytest tests/test_benchmark.py` (must pass 100%).
+   - Run `uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/benchmark_demo`.
+   - Run `uv run --locked pytest` (all 666+ tests pass).
+   - Run `uv run --locked ruff check .` and `uv run --locked ruff format --check .`.
+   - Create atomic git commit:
+     `git add scripts/speech_benchmark.py tests/test_benchmark.py`
+     `git commit -m "feat(benchmark): implement clustered bootstrap, paired Wilcoxon tests, and benchmark runner"`
+
+OUTPUT:
+Write detailed implementation and verification report to `C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m2_1\handoff.md`.
+Send completion message to parent orchestrator (d7780ee7-0d12-43b1-8cad-0dd6f3550ad6).

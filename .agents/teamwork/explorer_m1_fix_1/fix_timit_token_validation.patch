@@ -1,0 +1,71 @@
+--- a/src/subtitle_workbench/corpora.py
++++ b/src/subtitle_workbench/corpora.py
+@@ -61,7 +61,7 @@ def parse_timit_phn(phn_path: Path | str, sample_rate: int = 16000) -> list[Phon
+         if not stripped:
+             continue
+         parts = stripped.split()
+-        if len(parts) < 3:
++        if len(parts) != 3:
+             raise CorpusFormatError(
+                 f"Malformed TIMIT .phn line {line_idx} in {path.name}: "
+                 f"expected 3 tokens, got {len(parts)}"
+@@ -138,7 +138,7 @@ def parse_timit_wrd(wrd_path: Path | str, sample_rate: int = 16000) -> list[Word
+         if not stripped:
+             continue
+         parts = stripped.split()
+-        if len(parts) < 3:
++        if len(parts) != 3:
+             raise CorpusFormatError(
+                 f"Malformed TIMIT .wrd line {line_idx} in {path.name}: "
+                 f"expected 3 tokens, got {len(parts)}"
+--- a/tests/test_benchmark.py
++++ b/tests/test_benchmark.py
+@@ -82,6 +82,12 @@ def test_timit_phn_parser_malformed_and_monotonicity(tmp_path: Path) -> None:
+     with pytest.raises(CorpusFormatError, match="Malformed TIMIT .phn"):
+         parse_timit_phn(bad_line_file)
+ 
++    # Malformed line (more than 3 tokens / extra columns)
++    extra_tokens_file = tmp_path / "extra_tokens.phn"
++    extra_tokens_file.write_text("0 1600 sh extra\n", encoding="utf-8")
++    with pytest.raises(CorpusFormatError, match="expected 3 tokens, got 4"):
++        parse_timit_phn(extra_tokens_file)
++
+     # Non-integer sample boundaries
+     bad_int_file = tmp_path / "bad_int.phn"
+     bad_int_file.write_text("start end sh\n", encoding="utf-8")
+@@ -142,6 +148,12 @@ def test_timit_wrd_parser_malformed_and_monotonicity(tmp_path: Path) -> None:
+     with pytest.raises(CorpusFormatError, match="Malformed TIMIT .wrd"):
+         parse_timit_wrd(bad_file)
+ 
++    # Malformed line (more than 3 tokens / extra columns)
++    extra_tokens_wrd = tmp_path / "extra_tokens.wrd"
++    extra_tokens_wrd.write_text("1600 6400 she pronoun\n", encoding="utf-8")
++    with pytest.raises(CorpusFormatError, match="expected 3 tokens, got 4"):
++        parse_timit_wrd(extra_tokens_wrd)
++
+     non_mono_file = tmp_path / "non_mono.wrd"
+     non_mono_file.write_text("1600 6400 she\n6000 8000 had\n", encoding="utf-8")
+     with pytest.raises(CorpusFormatError, match="Non-monotonic timestamp"):
+@@ -149,6 +161,23 @@ def test_timit_wrd_parser_malformed_and_monotonicity(tmp_path: Path) -> None:
+ 
+ 
++def test_timit_parsers_preserve_blank_lines(tmp_path: Path) -> None:
++    """Verify TIMIT parsers safely ignore blank and whitespace-only lines."""
++    phn_file = tmp_path / "blank_lines.phn"
++    phn_file.write_text("\n\n0 1600 sh\n   \n1600 3200 iy\n\n", encoding="utf-8")
++    cues = parse_timit_phn(phn_file)
++    assert len(cues) == 2
++    assert cues[0].phoneme == "sh"
++    assert cues[1].phoneme == "iy"
++
++    wrd_file = tmp_path / "blank_lines.wrd"
++    wrd_file.write_text("\n\n0 1600 she\n   \n1600 3200 had\n\n", encoding="utf-8")
++    words = parse_timit_wrd(wrd_file)
++    assert len(words) == 2
++    assert words[0].text == "she"
++    assert words[1].text == "had"
++
++
+ def test_buckeye_textgrid_parser_filters_non_speech(tmp_path: Path) -> None:
+     """Verify Buckeye Praat TextGrid parser filters non-speech artifacts."""
+     tg_file = tmp_path / "buckeye_sample.TextGrid"

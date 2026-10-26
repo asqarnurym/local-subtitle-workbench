@@ -1,3 +1,2 @@
-# Challenger M1 2 Context
-Challenge Milestone 1: Accessibility Exporters and Provenance
-Adversarially verify export.py, provenance.py, stress testing, negative cases, and manifest security.
+# Challenger M1_2 Context
+Target: Milestone 1 empirical challenge (metrics.py, boundary evaluation, division by zero, oracle offsets, DP sequence alignment)

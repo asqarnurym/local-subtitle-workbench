@@ -1,198 +1,322 @@
-# Empirical Challenge Report: Milestone 2 Speech Pipeline and CLI Integration
+# Adversarial Challenge Report: Speech Benchmark Runner CLI, Memory Profiling Fallbacks, and Exit Codes
 
-Date: 2026-10-26T01:48:45Z
-Challenger: Challenger 1 (Milestone 2)
-Working Directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_m2_1
-Target Commit: 4a6b230 feat(pipeline): wire end-to-end speech alignment pipeline and CLI subcommands
-Verdict: APPROVE
+**Agent:** challenger_m2_1  
+**Role:** EMPIRICAL CHALLENGER (critic, specialist)  
+**Parent Orchestrator:** d7780ee7-0d12-43b1-8cad-0dd6f3550ad6  
+**Working Directory:** `C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_m2_1`  
+**Target Branch:** `feature/increment-6-speech-benchmark`  
+**Date:** 2026-10-26T04:41:00Z  
+**Handoff Type:** Hard  
+**Verdict:** REQUEST_CHANGES  
+**Discipline:** Pure ASCII formatting only ([+], [-], [*], [OK], [FAIL], ->, |). Zero Unicode emojis or graphical icons.
 
---------------------------------------------------------------------------------
+---
+
+## Challenge Summary
+
+**Overall risk assessment**: MEDIUM
+
+Empirical stress testing of `scripts/speech_benchmark.py` revealed that while the core benchmark execution, offline synthetic generator, and statistical analysis functions are robust, there are two distinct failure modes regarding error handling and exit codes:
+
+1. **Exit Code Contract Divergence on Runtime Exceptions:**
+   In `scripts/speech_benchmark.py:964-969`, `except BenchmarkError` returns `1`, but `except Exception as err` returns `2`. Standard CLI conventions and task mandates dictate that argparse / syntax errors must exit with code `2`, whereas runtime execution errors must exit with code `1`. When an unexpected runtime exception occurs (e.g. invalid negative seed `--seed -1` triggering `ValueError: expected non-negative integer`, or filesystem collisions such as `--output-dir` targeting an existing file), the CLI exits with code `2` rather than `1`.
+2. **Missing Seed Validation in CLI / Runner:**
+   Negative seeds (e.g. `--seed -1`) are accepted by `argparse` as valid integers, and `run_benchmark()` does not validate `seed >= 0` before passing it to `np.random.default_rng(seed)`. This causes an unhandled raw `ValueError` to propagate and exit with code `2` instead of a domain `BenchmarkError` exiting with code `1`.
+3. **Fragile Exception Catching in `psutil` Memory Profiling Tier:**
+   In `scripts/speech_benchmark.py:164-169`, `get_peak_host_ram_mb()` wraps `import psutil` and `psutil.Process().memory_info()` in `try ... except ImportError: pass`. If `psutil` is installed but `Process().memory_info()` throws any runtime exception (e.g. `psutil.AccessDenied`, `psutil.NoSuchProcess`, `PermissionError`), the exception crashes the benchmark instead of cleanly falling back to Tier 2 (Windows native `ctypes` `GetProcessMemoryInfo`).
+
+---
 
 ## 1. Observation
 
-1. Implementation Inspection:
-   - `src/subtitle_workbench/pipeline.py` (lines 182-227):
-     - Output existence pre-flight checks:
-       `outputs = [output_dir / name for name in ("subtitles.vtt", "timeline.jsonld", "alignment_raw.json", "manifest.json")]`
-       `if any(p.exists() for p in outputs): raise ValueError("output files already exist; choose a new output directory")`
-     - Audio and transcript collision guards:
-       `if output_dir.resolve() == resolved_audio or any(p.resolve() == resolved_audio for p in outputs): raise ValueError("output may not overwrite an input")`
-       `if output_dir.resolve() == resolved_transcript or any(p.resolve() == resolved_transcript for p in outputs): raise ValueError("output may not overwrite an input")`
-   - `src/subtitle_workbench/pipeline.py` (lines 232-247):
-     - VRAM lifecycle management:
-       ```python
-       try:
-           try:
-               silences = extract_vad_silences(audio_path, min_silence_duration_ms=silence_min_ms)
-           except Exception:
-               silences = []
-           segments = transcriber_inst.transcribe(audio_path)
-       finally:
-           if hasattr(transcriber_inst, "unload") and callable(transcriber_inst.unload):
-               transcriber_inst.unload()
-       ```
-   - `src/subtitle_workbench/pipeline.py` (lines 248-267):
-     - Transcript validation:
-       `text = raw_text.strip()`
-       `if not text: raise ValueError("transcript cannot be empty")`
-       `spans = normalize_transcript(text)`
-       `if not spans: raise ValueError("transcript contains no valid words after normalization")`
-   - `src/subtitle_workbench/cli.py` (lines 12-18, 96-146):
-     - `CLIArgumentParser` overrides `error(message)` to print `error: <message>` to `stderr` and invoke `sys.exit(2)`.
-     - `main()` catches all exceptions, printing `error: {error}` to `stderr` and returning exit code 2 without stack traces.
+### 1.1 CLI Argument Stress Testing
 
-2. Adversarial Test Harness Created (`tests/test_challenger_m2_1.py`):
-   - Created 50 discrete stress tests testing 7 dimensions:
-     - 5 tests for VRAM lifecycle under error (CUDA OOM, generic exceptions, empty segments, VAD failure, duck-typing without unload).
-     - 11 tests for collision detection (exact path, relative path, output artifact name matches for audio and transcript).
-     - 6 tests for existing output directory rejection (each artifact individually, all together, permitting unrelated files).
-     - 9 tests for audio error handling (missing, directory, 0 bytes, 0 frames, truncated data, corrupt header, stereo, 44.1 kHz, 8-bit).
-     - 7 tests for transcript error handling (empty string, whitespace string, empty file, whitespace file, missing Path, missing string path, punctuation-only).
-     - 7 tests for pipeline properties and parameter guards (engine, thresholds, monotonicity, SHA-256 hash matching).
-     - 5 tests for CLI subcommand exit code 2 contract without tracebacks.
+1. **Invalid Corpus Names:**
+   - Command:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --corpus invalid_name
+     ```
+     Result: Exit code `2`. Argparse rejected with:
+     ```
+     usage: speech_benchmark.py [-h] [--corpus {timit,buckeye,synthetic}] ...
+     speech_benchmark.py: error: argument --corpus: invalid choice: 'invalid_name' (choose from timit, buckeye, synthetic)
+     ```
+   - Programmatic invocation:
+     ```python
+     run_benchmark(corpus="invalid_name")
+     ```
+     Result: Raised `BenchmarkError("Unsupported corpus: invalid_name")`. In `main()`, caught by `except BenchmarkError:` and returned exit code `1`.
 
-3. Empirical Test Execution Output:
-   - Command: `uv run --locked pytest tests/test_challenger_m2_1.py -v`
-     - Result: 50 passed in 1.66s.
-   - Command: `uv run --locked pytest`
-     - Result: 565 passed, 1 skipped in 10.18s (566 total items across test suite).
-   - Command: `uv run --locked ruff check .`
-     - Result: "All checks passed!" (0 errors).
-   - Command: `uv run --locked ruff format --check .`
-     - Result: "274 files already formatted" (0 diffs).
-   - Command: `uv run --locked python -m build --wheel --no-isolation`
-     - Result: Successfully built `local_subtitle_workbench-0.1.0-py3-none-any.whl` (exit code 0).
-   - Command: `uv run python scripts/smoke_wheel.py --wheel dist/local_subtitle_workbench-0.1.0-py3-none-any.whl --output dist/smoke_out`
-     - Result: Exit code 0, network guard passed, max absolute error 18.4ms.
+2. **Non-existent Directories:**
+   - Command:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --data-dir non_existent_corpus_dir
+     ```
+     Result: Exit code `1`. Output:
+     ```
+     [-] Benchmark Error: Corpus directory not found: non_existent_corpus_dir. Use --offline-synthetic for offline benchmarking without external datasets.
+     ```
+   - Command with `--offline-synthetic`:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --data-dir non_existent_corpus_dir --output-dir dist/test_fallback
+     ```
+     Result: Exit code `0`. Gracefully detected missing `.wrd` files and staged temporary synthetic benchmark (`bench_synth_*`).
+   - Command with `--output-dir` colliding with an existing regular file:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/existing_file.txt
+     ```
+     Result: Exit code `2`. Output:
+     ```
+     [-] Unexpected Error: [WinError 183] Cannot create a file when that file already exists: 'dist\\existing_file.txt'
+     ```
 
---------------------------------------------------------------------------------
+3. **Invalid Modes:**
+   - Command with unknown mode:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_bad_mode --modes invalid_mode
+     ```
+     Result: Exit code `1`. Output:
+     ```
+     [-] Benchmark Error: Unsupported ablation mode: invalid_mode
+     ```
+   - Command with mixed valid and invalid modes:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_mixed_mode --modes "mode1_whisper,invalid_mode"
+     ```
+     Result: Exit code `1`. `mode1_whisper` ran, then `invalid_mode` triggered `BenchmarkError`.
+   - Command with empty string mode (`--modes ""`):
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --modes ""
+     ```
+     Result: Exit code `0`. Evaluated as falsy, defaulted to all 3 modes.
+
+4. **Zero and Negative Bootstrap Resamples:**
+   - Command with zero resamples:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_zero_resamples --bootstrap-resamples 0
+     ```
+     Result: Exit code `1`. Output:
+     ```
+     [-] Benchmark Error: num_resamples must be positive
+     ```
+   - Command with negative resamples:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_neg_resamples --bootstrap-resamples -5
+     ```
+     Result: Exit code `1`. Output:
+     ```
+     [-] Benchmark Error: num_resamples must be positive
+     ```
+   - Command with non-integer resamples:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --bootstrap-resamples abc
+     ```
+     Result: Exit code `2`. Argparse rejected with `invalid int value: 'abc'`.
+
+5. **Extreme Seeds:**
+   - Command with seed `0`:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_seed_zero --seed 0
+     ```
+     Result: Exit code `0`. Output completed cleanly.
+   - Command with maximum uint64 seed `9223372036854775807` ($2^{63}-1$):
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_seed_large --seed 9223372036854775807
+     ```
+     Result: Exit code `0`. Output completed cleanly.
+   - Command with negative seed `-1`:
+     ```powershell
+     uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_neg_seed --seed -1
+     ```
+     Result: Exit code `2`. Output:
+     ```
+     [-] Unexpected Error: expected non-negative integer
+     ```
+     Notice: This is a runtime error, yet it exited with code `2` instead of `1`.
+
+### 1.2 Memory Profiling Fallback Stress Testing
+
+1. **Baseline Environment (psutil uninstalled):**
+   - Command:
+     ```python
+     import psutil
+     ```
+     Result: `ModuleNotFoundError: No module named 'psutil'`.
+   - Command:
+     ```python
+     from scripts.speech_benchmark import get_peak_host_ram_mb, _get_peak_ram_windows
+
+     print("win:", _get_peak_ram_windows())
+     print("host:", get_peak_host_ram_mb())
+     ```
+     Result:
+     `win: 31.29296875` MB, `host: 31.296875` MB.
+     Windows ctypes `GetProcessMemoryInfo` (PeakWorkingSetSize) executed cleanly without crashing.
+
+2. **psutil Mocked as None (`sys.modules['psutil'] = None`):**
+   - Command:
+     ```python
+     import sys
+
+     sys.modules["psutil"] = None
+     from scripts.speech_benchmark import get_peak_host_ram_mb
+
+     print(get_peak_host_ram_mb())
+     ```
+     Result: Returns `31.21` MB (> 0.0) via Tier 2 ctypes fallback.
+
+3. **psutil Present with Runtime Error (Fragility Finding):**
+   - Command:
+     ```python
+     import sys
+     from unittest.mock import MagicMock
+
+     mock = MagicMock()
+     mock.Process.side_effect = RuntimeError("psutil failure")
+     sys.modules["psutil"] = mock
+     from scripts.speech_benchmark import get_peak_host_ram_mb
+
+     get_peak_host_ram_mb()
+     ```
+     Result: Crashed with `RuntimeError: psutil failure`.
+     Observation: In `scripts/speech_benchmark.py:164-169`:
+     ```python
+     try:
+         import psutil
+
+         return float(psutil.Process().memory_info().rss / (1024 * 1024))
+     except ImportError:
+         pass
+     ```
+     Because only `ImportError` is caught, any runtime exception during `Process().memory_info()` halts execution rather than proceeding to Tier 2 Windows ctypes.
+
+4. **Multi-tier Fallback with Windows and POSIX Mocked to None:**
+   - Command with active tracemalloc:
+     ```python
+     import sys, tracemalloc
+     from unittest.mock import patch
+
+     tracemalloc.start()
+     with patch("scripts.speech_benchmark._get_peak_ram_windows", return_value=None):
+         from scripts.speech_benchmark import get_peak_host_ram_mb
+
+         print(get_peak_host_ram_mb())
+     tracemalloc.stop()
+     ```
+     Result: Returns `14.18` MB.
+   - Command with inactive tracemalloc:
+     Result: Returns `0.0` MB without crashing.
+   - Entire benchmark run with mocked fallbacks returning `0.0`:
+     Result: Successfully completed 100% of benchmark execution and generated valid `benchmark_results.json` and `manifest.json`.
+
+---
 
 ## 2. Logic Chain
 
-1. Step 1 (VRAM Cleanup Verification):
-   - Observation: `pipeline.py` wraps transcription within `try ... finally` calling `transcriber.unload()`.
-   - Stress test: Simulated `RuntimeError("CUDA out of memory")`, `ValueError("tensor shape")`, empty segments `[]`, and VAD failures.
-   - Finding: In every failure case, `transcriber.unload()` was strictly called exactly once, preventing VRAM leaks even when catastrophic errors abort execution.
+1. **Exit Code Contract:**
+   - Standard Unix / POSIX conventions and Task Requirement 3 require:
+     * Exit code `2`: CLI argument syntax errors (handled by `argparse.ArgumentParser.error()`).
+     * Exit code `1`: Runtime execution errors.
+   - In `scripts/speech_benchmark.py`:
+     ```python
+     def main(argv: list[str] | None = None) -> int:
+         args = parse_args(argv)
+         ...
+         try:
+             run_benchmark(...)
+             return 0
+         except BenchmarkError as err:
+             print(f"[-] Benchmark Error: {err}", file=sys.stderr)
+             return 1
+         except Exception as err:
+             print(f"[-] Unexpected Error: {err}", file=sys.stderr)
+             return 2
+     ```
+   - When an unhandled runtime exception occurs (such as `ValueError` from `--seed -1`, or `FileExistsError` on `--output-dir`), it is caught by `except Exception as err:` and returns `2`.
+   - Consequently, calling scripts and CI pipelines cannot distinguish between CLI argument syntax errors (code 2) and runtime failures (code 2).
 
-2. Step 2 (Output Collision and Rejection Verification):
-   - Observation: `pipeline.py` compares `output_dir.resolve()` and all candidate artifact target paths against input files.
-   - Stress test: Supplied paths where `output_dir == audio_path`, `output_dir == transcript_path`, audio named `subtitles.vtt`, and transcript named `manifest.json`.
-   - Finding: `ValueError("output may not overwrite an input")` is raised deterministically across all collision vectors.
+2. **Negative Seed Validation:**
+   - Argument `--seed` has `type=int`. Argparse permits any integer, including `-1`.
+   - `run_benchmark()` does not validate `seed >= 0`.
+   - Passing `seed = -1` to `np.random.default_rng(seed)` raises `ValueError: expected non-negative integer`.
+   - Because `ValueError` does not inherit from `BenchmarkError`, it triggers the `except Exception` branch and exits with code `2`.
+   - Defensively validating `if seed < 0: raise BenchmarkError(f"Random seed must be non-negative, got {seed}")` would enforce clean domain error handling and return exit code `1`.
+   - Furthermore, setting `except Exception as err: ... return 1` ensures that all runtime exceptions consistently exit with code `1`.
 
-3. Step 3 (Existing Output Directory Pre-flight):
-   - Observation: `pipeline.py` verifies `any(p.exists() for p in outputs)`.
-   - Stress test: Placed `subtitles.vtt`, `timeline.jsonld`, `alignment_raw.json`, and `manifest.json` individually and collectively into target output directories.
-   - Finding: In all conflict scenarios, `ValueError("output files already exist; choose a new output directory")` is raised. Conversely, directories containing unrelated files (e.g. `notes.txt`) are correctly permitted without false positives.
+3. **psutil Robustness:**
+   - In environments where `psutil` is installed but process inspection is restricted (e.g., container sandbox, access denied, or virtualized environments), `psutil.Process().memory_info()` can raise exceptions such as `psutil.AccessDenied`.
+   - Catching only `ImportError` leaves Tier 1 vulnerable to runtime crashes.
+   - Changing line 168 to `except (ImportError, Exception):` ensures the multi-tier fallback functions as designed under all execution environments.
 
-4. Step 4 (Input Audio and Transcript Boundary Robustness):
-   - Observation: Audio inputs route through `validate_wav` and `get_duration`; transcripts route through file resolution and `normalize_transcript`.
-   - Stress test: Injected 0-byte files, truncated WAVs, 0-frame headers, stereo WAVs, non-16kHz WAVs, whitespace transcripts, 0-byte transcript files, missing paths, and punctuation-only text.
-   - Finding: All invalid inputs are rejected with targeted `ValueError` or `FileNotFoundError` prior to heavy pipeline execution.
-
-5. Step 5 (CLI Contract & Quality Gates):
-   - Observation: `cli.py` maps all internal exceptions and CLI parsing failures to exit code 2 and writes clean single-line messages to stderr.
-   - Stress test: Tested missing files, collisions, existing directories, and empty transcripts through `main()`.
-   - Finding: All adversarial CLI runs exited with code 2 and zero tracebacks on stderr. Full project test suite (565 passed, 1 skipped), linters, formatting, and offline wheel build all passed without issues.
-
---------------------------------------------------------------------------------
+---
 
 ## 3. Caveats
 
-- As faster-whisper and torch are optional dependencies in the CPU-only test environment, VRAM lifecycle tests utilize spec-compliant mock transcribers with tracked calls. Actual CUDA memory deallocation (`torch.cuda.empty_cache()`) was previously validated in Increment 2.
-- No other caveats.
+1. On Windows 11 with no `psutil` installed, Tier 2 (`_get_peak_ram_windows`) executes by default and functions flawlessly, returning accurate resident memory (~31 MB).
+2. The seed vulnerability only manifests when negative integers are explicitly passed to `--seed`. Normal non-negative seeds (including `0` and very large values up to $2^{63}-1$) operate correctly.
+3. No other caveats.
 
---------------------------------------------------------------------------------
+---
 
 ## 4. Conclusion
 
-**Verdict: APPROVE**
+**Verdict: REQUEST_CHANGES**
 
-Milestone 2 implementation is robust, defensive, and adheres strictly to all architectural specifications:
-- VRAM lifecycle is guaranteed across all normal and exceptional paths via `try ... finally`.
-- Input collision protection prevents accidental data corruption or overwrite.
-- Existing output directory rejection reliably protects prior run artifacts.
-- Audio and transcript validations defend against malformed, truncated, or empty inputs.
-- CLI subcommands satisfy the exit code 2 contract with clean error reporting.
-- All 50 empirical adversarial challenge tests and all 516 baseline tests pass cleanly.
+`scripts/speech_benchmark.py` is structurally solid and functionally capable, but requires the following surgical fixes to ensure full compliance with the project's error handling and exit code contracts:
 
---------------------------------------------------------------------------------
+1. **Fix `main()` Exit Code Handling:**
+   In `scripts/speech_benchmark.py:967-969`, update the generic `except Exception as err:` block to return exit code `1` (not `2`), ensuring that all runtime exceptions are distinguished from argparse syntax errors (which exit `2`):
+   ```python
+   except Exception as err:
+       print(f"[-] Unexpected Error: {err}", file=sys.stderr)
+       return 1
+   ```
+2. **Defensively Validate Random Seed:**
+   In `run_benchmark()` (or in `parse_args`), add defensive validation for `seed`:
+   ```python
+   if seed < 0:
+       raise BenchmarkError(f"Random seed must be non-negative, got {seed}")
+   ```
+3. **Broaden Exception Catching in psutil Memory Profiling:**
+   In `scripts/speech_benchmark.py:168`, update `except ImportError:` to:
+   ```python
+   except (ImportError, Exception):
+       pass
+   ```
+   so that runtime failures in `psutil` gracefully trigger Tier 2 Windows ctypes fallback.
+
+---
 
 ## 5. Verification Method
 
-To independently verify this empirical challenge report:
+To independently verify these findings:
 
-1. Run the adversarial stress test suite:
-   ```pwsh
-   uv run --locked pytest tests/test_challenger_m2_1.py -v
+1. **Verify Exit Code on Negative Seed:**
+   ```powershell
+   uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_neg_seed --seed -1; $LASTEXITCODE
    ```
-   Expected: 50 passed in < 2 seconds.
+   *Current behavior*: Exits with code `2`, printing `[-] Unexpected Error: expected non-negative integer`.  
+   *Expected behavior*: Should exit with code `1` and clean domain message `[-] Benchmark Error: Random seed must be non-negative`.
 
-2. Run the complete project test suite:
-   ```pwsh
-   uv run --locked pytest
+2. **Verify Exit Code on Argparse Syntax Error:**
+   ```powershell
+   uv run python scripts/speech_benchmark.py --corpus invalid_choice; $LASTEXITCODE
    ```
-   Expected: 565 passed, 1 skipped in ~10 seconds.
+   *Expected behavior*: Exits with code `2`, printing standard argparse usage and choice error.
 
-3. Verify zero lint errors and zero formatting differences:
-   ```pwsh
-   uv run --locked ruff check .
-   uv run --locked ruff format --check .
+3. **Verify psutil Runtime Fallback:**
+   ```powershell
+   uv run python -c "import sys; from unittest.mock import MagicMock; mock = MagicMock(); mock.Process.side_effect = RuntimeError('psutil failure'); sys.modules['psutil'] = mock; from scripts.speech_benchmark import get_peak_host_ram_mb; print(get_peak_host_ram_mb())"
    ```
-   Expected: All checks passed, 274 files formatted.
+   *Current behavior*: Crashes with uncaught `RuntimeError: psutil failure`.  
+   *Expected behavior*: Should catch the error and return Windows ctypes RAM (> 0.0 MB).
 
-4. Verify offline wheel build and smoke test:
-   ```pwsh
-   uv run --locked python -m build --wheel --no-isolation
-   pwsh -Command "if (Test-Path dist/smoke_out) { Remove-Item -Recurse -Force dist/smoke_out }"
-   uv run python scripts/smoke_wheel.py --wheel dist/local_subtitle_workbench-0.1.0-py3-none-any.whl --output dist/smoke_out
+4. **Verify Exit Code on BenchmarkError:**
+   ```powershell
+   uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/test_bad_mode --modes invalid_mode; $LASTEXITCODE
    ```
-   Expected: Built wheel cleanly, network guard passed.
+   *Expected behavior*: Exits with code `1`, printing `[-] Benchmark Error: Unsupported ablation mode: invalid_mode`.
 
---------------------------------------------------------------------------------
-
-## Adversarial Review Summary
-
-**Overall risk assessment**: LOW
-
-### Stress Test Results
-
-| Attack Vector | Expected Result | Actual Result | Status |
-|---|---|---|---|
-| Transcribe raises CUDA OOM | transcriber.unload() called | unload() called once, no artifacts | [PASS] |
-| Transcribe raises Generic Exception | transcriber.unload() called | unload() called once, no artifacts | [PASS] |
-| Transcribe returns empty segments | unload() called, ValueError | unload() called, ValueError raised | [PASS] |
-| VAD extractor crashes | silences fallback to [], unload() called | silences=[], unload() called | [PASS] |
-| Transcriber lacks unload method | Safe duck-typing handling | Handled cleanly without AttributeError | [PASS] |
-| Output dir equals input WAV | ValueError (collision) | ValueError raised | [PASS] |
-| Output dir equals input transcript | ValueError (collision) | ValueError raised | [PASS] |
-| Input WAV named subtitles.vtt | ValueError (collision / exists) | ValueError raised | [PASS] |
-| Input transcript named manifest.json | ValueError (collision / exists) | ValueError raised | [PASS] |
-| Output dir contains subtitles.vtt | ValueError (already exists) | ValueError raised | [PASS] |
-| Output dir contains timeline.jsonld | ValueError (already exists) | ValueError raised | [PASS] |
-| Output dir contains alignment_raw.json | ValueError (already exists) | ValueError raised | [PASS] |
-| Output dir contains manifest.json | ValueError (already exists) | ValueError raised | [PASS] |
-| Output dir contains unrelated files | Pipeline completes normally | Completed normally | [PASS] |
-| Missing audio WAV | FileNotFoundError | FileNotFoundError raised | [PASS] |
-| Directory passed as audio WAV | FileNotFoundError | FileNotFoundError raised | [PASS] |
-| 0-byte audio file | ValueError | ValueError raised | [PASS] |
-| 0-frame WAV with valid header | ValueError | ValueError raised | [PASS] |
-| Truncated WAV payload | ValueError | ValueError raised | [PASS] |
-| Corrupted RIFF header | ValueError | ValueError raised | [PASS] |
-| Stereo (2-channel) WAV | ValueError | ValueError raised | [PASS] |
-| Non-16kHz WAV (44.1 kHz) | ValueError | ValueError raised | [PASS] |
-| Non-16-bit WAV (8-bit) | ValueError | ValueError raised | [PASS] |
-| Empty transcript string | ValueError | ValueError raised | [PASS] |
-| Whitespace transcript string | ValueError | ValueError raised | [PASS] |
-| 0-byte transcript file | ValueError | ValueError raised | [PASS] |
-| Whitespace transcript file | ValueError | ValueError raised | [PASS] |
-| Missing transcript Path | FileNotFoundError | FileNotFoundError raised | [PASS] |
-| Missing transcript str (.txt) | FileNotFoundError | FileNotFoundError raised | [PASS] |
-| Punctuation-only transcript | ValueError | ValueError raised | [PASS] |
-| Invalid engine string | ValueError | ValueError raised | [PASS] |
-| Negative/zero thresholds | ValueError | ValueError raised | [PASS] |
-| Monotonicity and hash verification | Strict monotonicity + SHA256 match | Validated across 5 sequential tokens | [PASS] |
-| CLI align-speech missing audio | Exit code 2, clean stderr | Exit 2, error: File not found | [PASS] |
-| CLI align-speech empty transcript | Exit code 2, clean stderr | Exit 2, error: transcript cannot be empty | [PASS] |
-| CLI align-speech missing transcript | Exit code 2, clean stderr | Exit 2, error: Transcript file not found | [PASS] |
-| CLI align-speech collision | Exit code 2, clean stderr | Exit 2, error: output may not overwrite an input | [PASS] |
-| CLI align-speech existing artifact | Exit code 2, clean stderr | Exit 2, error: output files already exist | [PASS] |
+### Invalidation Conditions
+- If unexpected runtime exceptions are intentionally specified to exit with code 2 in this project's architecture.
+- If `seed < 0` is considered an invalid argument that should be rejected by argparse directly.

@@ -1,69 +1,62 @@
-# BRIEFING — 2026-10-26T01:23:45Z
+# BRIEFING - 2026-10-26T03:42:45Z
 
 ## Mission
-Review and adversarially challenge Milestone 1 of Increment 5 (Advanced Export & Provenance) implemented by worker_m1_1.
+Review Milestone 1 implementation of reference corpora loaders, parsers, and synthetic benchmark generator.
 
-## [LOCKED] My Identity
-- Archetype: reviewer_critic
+## [LOCK] My Identity
+- Archetype: reviewer and critic
 - Roles: reviewer, critic
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_m1_1
-- Original parent: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Milestone: Milestone 1 of Increment 5
+- Original parent: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Milestone: Milestone 1
 - Instance: 1 of 1
 
-## [LOCKED] Key Constraints
-- Review-only — do NOT modify implementation code
-- Zero-Emoji Discipline: strictly no emojis anywhere
-- Inspect for integrity violations (hardcoding, facades, shortcuts, fabricated results)
-- Provide explicit verdict: APPROVE or REQUEST_CHANGES
+## [LOCK] Key Constraints
+- Review-only - do NOT modify implementation code
+- ZERO-EMOJI DISCIPLINE: strictly no emojis or graphical Unicode icons anywhere in code, comments, docstrings, logs, git commits, or reports. Pure ASCII only ([+], [-], [*], [OK], [FAIL], ->, |).
+- Write review to C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_m1_1\handoff.md
+- Actively check for integrity violations: hardcoded test results, dummy/facade implementations, shortcuts, fabricated verification outputs, self-certifying work without genuine independent verification.
 
 ## Current Parent
-- Conversation ID: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Updated: not yet
+- Conversation ID: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Updated: 2026-10-26T03:42:45Z
 
 ## Review Scope
 - **Files to review**:
-  - src/subtitle_workbench/provenance.py
-  - src/subtitle_workbench/export.py
-  - src/subtitle_workbench/pipeline.py
-  - src/subtitle_workbench/__init__.py
-  - tests/test_export.py
-- **Interface contracts**: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md (## 2026-10-26T00:58:19Z)
-- **Review criteria**: correctness, style, conformance, backward compatibility, security/robustness, adversarial edge cases
+  - `src/subtitle_workbench/corpora.py`
+  - `scripts/download_reference_corpora.py`
+  - `tests/test_benchmark.py`
+  - `src/subtitle_workbench/metrics.py`
+  - `src/subtitle_workbench/__init__.py`
+- **Interface contracts**:
+  - `C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\orchestrator_3\SCOPE.md`
+  - `C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md`
+- **Review criteria**: correctness, style, conformance, adversarial robustness, integrity
 
 ## Review Checklist
 - **Items reviewed**:
-  - src/subtitle_workbench/provenance.py
-  - src/subtitle_workbench/export.py
-  - src/subtitle_workbench/pipeline.py
-  - src/subtitle_workbench/__init__.py
-  - tests/test_export.py
-  - Commit 6ba7e07
-  - pytest test suites (32 export tests, 466 total tests)
-  - ruff check & format
-  - wheel build and offline smoke test
+  - `src/subtitle_workbench/corpora.py`: TIMIT .phn, TIMIT .wrd, Buckeye TextGrid parsers, synthetic benchmark generator
+  - `scripts/download_reference_corpora.py`: CLI arguments and ASCII logging
+  - `tests/test_benchmark.py`: 16 offline unit tests covering parsers, boundary metrics, synthetic corpora, CLI
+  - `src/subtitle_workbench/metrics.py`: data contracts, boundary evaluation, bootstrap, Wilcoxon, exceptions
+  - `src/subtitle_workbench/__init__.py`: exported symbols
 - **Verdict**: APPROVE
-- **Unverified claims**: none; all claims independently reproduced and verified
+- **Unverified claims**: none; all independently verified
 
 ## Attack Surface
 - **Hypotheses tested**:
-  - format_vtt_timestamp rounding, negative values, Inf/NaN, large timestamps (>100h)
-  - export_karaoke_vtt empty list, single word, line word limit, char limit, pause breaks, HTML escaping, cue collapse, non-monotonic timestamps
-  - export_jsonld schema.org VideoObject, Clip offsets, ISO 8601 duration format, empty inputs
-  - export_raw_alignment phoneme hierarchy, speech/pause duration calculations, zero-pause division by zero safeguard
-  - generate_manifest missing inputs/outputs, SHA-256 digest validation, code_provenance git fallbacks
-- **Vulnerabilities found**: None. All edge cases handled defensively with typed exceptions.
-- **Untested angles**: Full pipeline integration with live ASR/aligner models (deferred to Milestone 2).
+  - Silence token case-insensitivity: PASSED
+  - Malformed sample rates and timestamps: PASSED
+  - Buckeye non-speech token filtering: PASSED
+  - Audio format validity (RMS >= 1e-4, 16 kHz mono PCM16): PASSED (RMS ~0.117)
+  - Congruence between synthetic .wrd, .phn, and .TextGrid: PASSED
+- **Vulnerabilities found**: zero integrity violations, zero critical flaws
+- **Untested angles**: real LDC TIMIT files (proprietary licensed), which is explicitly mitigated by synthetic benchmark generator
 
 ## Key Decisions Made
-- Initial setup completed
-- Full test suite verified independently
-- Adversarial tests executed and confirmed robust
-- Quality gates passed 100%
-- Issue verdict APPROVE
+- Confirmed zero-emoji compliance across all files via regex scan
+- Verified 100% test pass rate (16 passed in test_benchmark.py, 653 passed in full suite)
+- Issued verdict: APPROVE
 
 ## Artifact Index
-- C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_m1_1\DISPATCH.md — Dispatch log
-- C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_m1_1\BRIEFING.md — Working memory
-- C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_m1_1\progress.md — Progress heartbeat
-- C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_m1_1\handoff.md — Final review report
+- handoff.md - final review and challenge report

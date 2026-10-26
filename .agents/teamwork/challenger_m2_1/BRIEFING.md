@@ -1,54 +1,46 @@
-# BRIEFING — 2026-10-26T01:48:00Z
+# BRIEFING -- 2026-10-26T04:40:00Z
 
 ## Mission
-Adversarially challenge and empirically stress-test Milestone 2 of Increment 5 (run_speech_pipeline and CLI integration).
+Adversarially challenge scripts/speech_benchmark.py covering CLI edge cases, fallbacks, and exit codes.
 
 ## [LOCKED] My Identity
-- Archetype: EMPIRICAL CHALLENGER
+- Archetype: challenger
 - Roles: critic, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_m2_1
-- Original parent: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Milestone: Milestone 2 of Increment 5
+- Original parent: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Milestone: milestone_2
 - Instance: 1 of 1
 
 ## [LOCKED] Key Constraints
-- Review-only — do NOT modify implementation code
-- Zero-Emoji Discipline: strictly no emojis or graphical Unicode icons anywhere
-- Target environment: Windows 11, Python 3.11/3.12, uv, hatchling, pytest, ruff
-- Offline safety: no network calls during test execution or packaging
-- Verification code must be executed directly, never trusting unverified claims
+- Review-only -- do NOT modify implementation code
+- ZERO-EMOJI DISCIPLINE: strictly pure ASCII ([+], [-], [*], [OK], [FAIL], ->, |)
+- Verification code must be executed empirically
 
 ## Current Parent
-- Conversation ID: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Updated: not yet
+- Conversation ID: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Updated: 2026-10-26T04:32:06Z
 
 ## Review Scope
-- **Files to review**: src/subtitle_workbench/pipeline.py, src/subtitle_workbench/cli.py, src/subtitle_workbench/audio.py, src/subtitle_workbench/text_norm.py, tests/test_pipeline_speech.py
-- **Interface contracts**: ORIGINAL_REQUEST.md (## 2026-10-26T00:58:19Z), worker handoff report
-- **Review criteria**: VRAM cleanup guarantee, collision detection, existing output dir rejection, audio error handling, transcript error handling, CLI contract adherence
-
-## Key Decisions Made
-- [2026-10-26T01:43:00Z] Initialized briefing and plan for adversarial stress tests.
-- [2026-10-26T01:46:00Z] Created tests/test_challenger_m2_1.py with 50 adversarial stress tests covering all 5 challenge dimensions and property checks. All 50 passed in 1.66s.
-- [2026-10-26T01:47:30Z] Verified full suite (566 collected, 565 passed, 1 skipped), ruff check (0 errors), ruff format (0 diffs), wheel build, and smoke test.
-- [2026-10-26T01:48:00Z] Determined verdict: APPROVE.
-
-## Artifact Index
-- DISPATCH.md — record of incoming dispatch message
-- progress.md — liveness heartbeat and step tracking
-- handoff.md — final challenge verdict report
-- tests/test_challenger_m2_1.py — 50 empirical adversarial stress tests
+- Files to review: scripts/speech_benchmark.py, tests/test_benchmark.py
+- Review criteria: CLI argument validation, memory profiling fallbacks, exit code handling, robustness
 
 ## Attack Surface
-- **Hypotheses tested**:
-  - H1: transcriber.unload() fails to execute under CUDA OOM or generic exceptions -> REJECTED (guaranteed by try...finally in pipeline.py:238-246).
-  - H2: Output collision permits overwriting input audio or transcript files -> REJECTED (strict resolve() checks reject exact match and artifact naming).
-  - H3: Output directory containing any of the 4 artifacts is accepted -> REJECTED (rejected by any(p.exists())).
-  - H4: Invalid audio (0 bytes, 0 frames, truncated data, stereo, invalid rate, corrupt header) slips past validation -> REJECTED (all raise ValueError or FileNotFoundError).
-  - H5: Malformed transcripts (empty, whitespace, missing file, symbols-only) slip past validation -> REJECTED (all raise ValueError or FileNotFoundError).
-  - H6: CLI exits with traceback or code != 2 on validation failure -> REJECTED (CLIArgumentParser and main() wrap errors with code 2 and clean stderr).
-- **Vulnerabilities found**: None.
-- **Untested angles**: None within Milestone 2 scope. Real GPU VRAM allocation is tested via mocks for deterministic CPU execution.
+- Hypotheses tested:
+  * Hypothesis 1: CLI rejects invalid corpora, non-existent directories, invalid modes, and non-positive resamples cleanly. Verified.
+  * Hypothesis 2: Negative seeds are validated or exit with code 1. Falsified (exits with code 2 due to unhandled ValueError).
+  * Hypothesis 3: Multi-tier RAM profiling never crashes when psutil is absent, mocked as None, or raises runtime error. Partially falsified (crashes if psutil raises non-ImportError).
+  * Hypothesis 4: Main entry point exits with code 1 on runtime error and 2 on argparse error. Falsified (all non-BenchmarkError exceptions return 2).
+- Vulnerabilities found:
+  * Vulnerability 1: Unexpected runtime exceptions in main() return exit code 2 instead of 1, conflating runtime crashes with argparse syntax errors.
+  * Vulnerability 2: Negative seed (--seed -1) is not validated up front, propagating raw NumPy ValueError to main() and exiting with code 2.
+  * Vulnerability 3: get_peak_host_ram_mb only catches ImportError on psutil access; any runtime psutil.Error crashes instead of falling back to Tier 2 Windows ctypes.
+- Untested angles:
+  * Full GPU VRAM allocation under multi-hour continuous execution.
 
-## Loaded Skills
-- None
+## Key Decisions Made
+- Verdict: REQUEST_CHANGES based on exit code contract divergence and unhandled psutil runtime exception vulnerability.
+
+## Artifact Index
+- DISPATCH.md -- Initial task dispatch
+- handoff.md -- Adversarial challenge report
+- progress.md -- Liveness progress log

@@ -1,121 +1,181 @@
-# Challenger 1 Report: Milestone 1 - WebVTT Karaoke Exporter and Timestamp Verification
+# Adversarial Challenge Report: Increment 6 Milestone 1
+
+**Agent**: challenger_m1_1  
+**Target**: `src/subtitle_workbench/corpora.py` and `scripts/download_reference_corpora.py`  
+**Parent Orchestrator**: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6  
+**Date**: 2026-10-26  
+**Handoff Type**: Hard  
+**Verdict**: REQUEST_CHANGES  
+
+---
 
 ## 1. Observation
 
-Direct observations from reviewing and testing `src/subtitle_workbench/export.py`, `src/subtitle_workbench/provenance.py`, and `tests/test_export.py`:
+1. **TIMIT Line Token Count Validation Bug in `src/subtitle_workbench/corpora.py`:**
+   - In `parse_timit_phn` (lines 63-68):
+     ```python
+     parts = stripped.split()
+     if len(parts) < 3:
+         raise CorpusFormatError(
+             f"Malformed TIMIT .phn line {line_idx} in {path.name}: expected 3 tokens, got {len(parts)}"
+         )
+     ```
+   - In `parse_timit_wrd` (lines 140-145):
+     ```python
+     parts = stripped.split()
+     if len(parts) < 3:
+         raise CorpusFormatError(
+             f"Malformed TIMIT .wrd line {line_idx} in {path.name}: expected 3 tokens, got {len(parts)}"
+         )
+     ```
+   - Empirical test execution with 4-token line `0 1600 sh extra\n`:
+     Command:
+     ```python
+     p.write_text("0 1600 sh extra\n")
+     parse_timit_phn(p)
+     ```
+     Result: Returned `[PhonemeCue(phoneme='sh', start=0.0, end=0.1, confidence=1.0)]` without raising `CorpusFormatError`. Extra column `extra` was silently dropped.
+   - Empirical test execution on `parse_timit_wrd` with line `0 1600 she pronoun extra\n`:
+     Command:
+     ```python
+     w.write_text("0 1600 she pronoun extra\n")
+     parse_timit_wrd(w)
+     ```
+     Result: Returned `[WordToken(id='w_0000', text='she', normalized='she', start=0.0, end=0.1, confidence=1.0, phonemes=[], char_start=0, char_end=3)]` without raising `CorpusFormatError`. Extra columns were silently dropped.
 
-### 1.1 Implementation Architecture
-- `format_vtt_timestamp(seconds: float) -> str` (`src/subtitle_workbench/export.py:25-32`):
-  Uses `milliseconds(seconds)` with `Decimal(str(value)).quantize(Decimal("1"), rounding=ROUND_HALF_UP)` to round to milliseconds, and computes hours, minutes, seconds, milliseconds via `divmod`.
-- `export_karaoke_vtt(words: list[WordToken], max_line_words: int = 8, max_line_chars: int = 42, max_pause_break: float = 1.0) -> str` (`src/subtitle_workbench/export.py:48-112`):
-  - Validates argument types, positive thresholds, and input list composition (`src/subtitle_workbench/export.py:55-64`).
-  - Returns `"WEBVTT\n\n"` on empty `words` list (`src/subtitle_workbench/export.py:66-67`).
-  - Enforces monotonic timestamps: `if words[i + 1].start < words[i].start: raise ValueError("words must have monotonic timestamps")` (`src/subtitle_workbench/export.py:69-71`).
-  - Groups words by `len(current_cue) >= max_line_words`, `len(prospective_text) > max_line_chars`, and `pause >= (max_pause_break - 1e-6)` (`src/subtitle_workbench/export.py:81-89`).
-  - Validates non-collapsing millisecond intervals: `if milliseconds(end_sec) <= milliseconds(start_sec): raise ValueError(...)` (`src/subtitle_workbench/export.py:100-101`).
-  - Escapes cue text safely using `html.escape(t.text, quote=False)` while preserving quotes for clean subtitle rendering (`src/subtitle_workbench/export.py:106`).
+2. **Malformed TIMIT Inputs Correctly Rejected:**
+   - Negative start sample (`-100 1600 sh`): Raised `CorpusFormatError: Negative start sample -100 on line 1`.
+   - Inverted/equal boundaries (`1600 1600 sh`, `2000 1000 sh`): Raised `CorpusFormatError: Non-positive interval [...]`.
+   - Non-monotonic timestamps (`0 1600 sh\n1200 3200 iy`): Raised `CorpusFormatError: Non-monotonic timestamp on line 2: start 1200 < previous end 1600`.
+   - Inverted lines (`3200 4800 sh\n1600 3200 iy`): Raised `CorpusFormatError: Non-monotonic timestamp on line 2: start 1600 < previous end 4800`.
+   - Non-integer / float strings (`0.5 1600 sh`, `0 1600.5 sh`, `nan 1600 sh`, `inf 1600 sh`, `1e4 2e4 sh`): Raised `CorpusFormatError: Non-integer sample boundary on line 1`.
+   - Missing columns (`1600`, `0 1600`): Raised `CorpusFormatError: Malformed TIMIT .phn line 1: expected 3 tokens, got 1` (or 2).
+   - Non-positive sample rate (`sample_rate <= 0`): Raised `CorpusFormatError: sample_rate must be positive`.
 
-### 1.2 Empirical Stress-Testing Results
-1. **Timestamp Boundary and Rounding Test**:
-   - Zero: `format_vtt_timestamp(0)` -> `"00:00:00.000"` (observed).
-   - Near-zero: `1e-9` -> `"00:00:00.000"`, `0.000499` -> `"00:00:00.000"`, `0.0005` -> `"00:00:00.001"`.
-   - Carry over:
-     - `59.9995` -> `"00:01:00.000"`
-     - `3599.9995` -> `"01:00:00.000"`
-     - `86399.9995` -> `"24:00:00.000"`
-     - `360000.0` (100 hours) -> `"100:00:00.000"`
-   - Negative / non-finite rejection: `-1`, `-0.0001`, `float('nan')`, `float('inf')`, `True`, `None` all raise `ValueError`.
-2. **Monotonicity and Boundary Rejection**:
-   - Decreasing start times (`words[0].start = 2.0`, `words[1].start = 1.0`): strictly raised `ValueError: words must have monotonic timestamps`.
-   - Sub-millisecond collapsed cues (`start = 0.0001`, `end = 0.0004`): strictly raised `ValueError: cue 1 collapses after millisecond rounding`.
-   - `WordToken(start >= end)`: rejected at dataclass validation (`ValueError: start must be strictly less than end`).
-3. **HTML Injection & Special Characters**:
-   - Tested input payload: `["<script>alert(1)</script>", "A & B < C > D", "\"quoted\" and 'single'", "--> arrow in text", "Café naïve résumé", "Привет мир"]`.
-   - Verbatim output payload:
-     - `<script>alert(1)</script>` rendered as `&lt;script&gt;alert(1)&lt;/script&gt;`
-     - `A & B < C > D` rendered as `A &amp; B &lt; C &gt; D`
-     - `--> arrow in text` rendered as `--&gt; arrow in text` (preventing WebVTT delimiter collision)
-     - Quotes `"quoted"` and `'single'` preserved without unnecessary escaping entity noise.
-4. **Line Splitting Heuristics**:
-   - Word limit: `max_line_words = 2` with 3 words correctly split into 2 cues (2 + 1).
-   - Char limit: 9 characters with `max_line_chars = 9` remained 1 cue; with `max_line_chars = 8` split into 2 cues. Single word exceeding `max_line_chars` handled gracefully without hanging.
-   - Pause break: `1.0s` gap with `max_pause_break = 1.0` split into 2 cues; with `max_pause_break = 1.001` remained 1 cue.
-5. **W3C WebVTT Parser Compliance Harness**:
-   - Executed 500 randomized property-based stress tests evaluating random lengths (0 to 30 words), random intervals, random vocabularies, and randomized thresholds against a strict W3C WebVTT grammar parser.
-   - Result: 500/500 passed with 0 failures.
+3. **Buckeye TextGrid Edge Cases:**
+   - Empty tiers (`size = 0`): Correctly returned `[]`.
+   - Empty intervals (`intervals: size = 0` in `words` tier): Correctly returned `[]`.
+   - Missing words tier (`phones` tier only): Correctly returned `[]`.
+   - All 10 Buckeye non-speech tokens (`{B_TRANS}`, `{E_TRANS}`, `<IVER>`, `<LAUGH>`, `<VOCNOISE>`, `<NOISE>`, `SIL`, `<SIL>`, `UNKNOWN`, `<EXCLUDE>`): Case-insensitively filtered out across both word tier and phone tier.
+   - Phones with mixed non-speech tokens inside a word: Successfully stripped non-speech tokens (`<NOISE>`) while retaining legitimate phonetic segments (`t`, `eh`, `s`).
 
-### 1.3 Quality Gates Execution
-- Command: `uv run --locked pytest`
-  - Output: `494 passed, 1 skipped in 6.04s`
-- Command: `uv run --locked ruff check .`
-  - Output: `All checks passed!`
-- Command: `uv run --locked ruff format --check .`
-  - Output: `245 files already formatted`
-- Command: `uv run --locked python -m build --wheel --no-isolation`
-  - Output: `Successfully built local_subtitle_workbench-0.1.0-py3-none-any.whl`
+4. **Synthetic Benchmark Staging (`stage_synthetic_benchmark`):**
+   - Staged 10 utterances (`spk01_utt01` through `spk03_utt04`) into isolated temporary directory.
+   - Verified all 10 `.wav` files are valid uncompressed mono PCM16 at 16000 Hz passing `validate_wav` and `load_wav`.
+   - Verified audio RMS energy is in range [0.12, 0.15], strictly exceeding the minimum threshold ($RMS \ge 10^{-4}$).
+   - Verified exact mathematical duration correspondence across `.wav`, `.phn`, `.wrd`, and `.TextGrid`:
+     * Total audio samples matched file durations ($t = \text{samples} / 16000.0$).
+     * Word boundaries matched phone sequences ($w_{start} == p_{first, start}$, $w_{end} == p_{last, end}$).
+     * Word counts (28 total across 10 utterances) and phone counts (79 total) matched ground truth specifications.
+
+5. **Reference Corpora CLI Script (`scripts/download_reference_corpora.py`):**
+   - Executed `--corpus timit` with absent directory: Output clean guidance message pointing to LDC license (LDC93S1) and exited with status 0.
+   - Executed `--corpus buckeye` with absent directory: Output clean download link pointing to Ohio State repository and exited with status 0.
+   - Executed with invalid corpus name (`--corpus invalid_name`): Rejected with standard argparse exit code 2.
+   - Executed `--offline-synthetic`: Generated all 10 utterances cleanly with status 0.
 
 ---
 
 ## 2. Logic Chain
 
-1. **Premise**: Milestone 1 requires robust accessibility exporters, specifically verifying that `format_vtt_timestamp` and `export_karaoke_vtt` satisfy all W3C WebVTT grammar rules, handle adversarial inputs defensively, escape XSS markup, enforce monotonic timing, and handle line-splitting heuristics accurately.
-2. **Observation**: `format_vtt_timestamp` uses `Decimal` with `ROUND_HALF_UP` on string representations of numbers, ensuring exact decimal representation without binary float rounding artifacts at 0.5ms boundary points.
-3. **Observation**: `export_karaoke_vtt` uses `html.escape(t.text, quote=False)`, escaping `<`, `>`, and `&`, which converts `<script>` to safe text and converts `-->` to `--&gt;`, precluding cue timing delimiter corruption.
-4. **Observation**: Monotonicity validation catches decreasing start times; millisecond rounding validation catches cue collapses; parameter validation catches non-positive line limits and non-WordToken elements.
-5. **Observation**: An independent strict W3C WebVTT parser validated 500 property-generated outputs without encountering syntax errors, invalid timestamp headers, tag boundaries outside cues, or non-monotonic timestamps.
-6. **Deduction**: The Milestone 1 exporter implementation and tests satisfy all functional, architectural, and adversarial requirements.
+1. From Observation 1, the task requirements specifically state:
+   *"1. Test malformed TIMIT .phn and .wrd files (negative timestamps, non-monotonic times, extra/missing columns, invalid floats). Verify CorpusFormatError is raised defensively."*
+2. In `src/subtitle_workbench/corpora.py`, lines 64 and 141 perform the check `if len(parts) < 3:`.
+3. When an input file contains extra columns (e.g. `len(parts) > 3`), `len(parts) < 3` evaluates to `False`. The code proceeds to assign `phone = parts[2]` or `word_text = parts[2]`, silently discarding all subsequent tokens on the line.
+4. The error message on line 67 specifically states:
+   `f"expected 3 tokens, got {len(parts)}"`,
+   confirming the architectural intent was to enforce exactly 3 tokens per line.
+5. Therefore, the implementation permits malformed lines with superfluous columns to pass undetected without raising `CorpusFormatError`.
+6. From Observations 2, 3, 4, and 5, all other aspects of TIMIT parsing, Buckeye TextGrid processing, synthetic audio generation, duration-boundary correspondence, and CLI staging are functionally sound and mathematically exact.
+7. However, because the extra-columns vulnerability represents a direct divergence from Task Requirement 1, the verdict must be `REQUEST_CHANGES` to address this defect before milestone approval.
 
 ---
 
-## 3. Caveats
+## 3. Challenge Summary
 
-- **No Caveats**: All requested adversarial angles (timestamp boundaries, non-monotonic inputs, empty/single-word inputs, HTML injection, splitting edge cases, and W3C WebVTT compliance) were verified empirically through executable test harnesses.
+**Overall risk assessment**: MEDIUM
+
+### Challenges
+
+#### [Medium] Challenge 1: Unchecked Superfluous Tokens in TIMIT Files
+- **Assumption challenged**: That checking `len(parts) < 3` is sufficient to validate the 3-column TIMIT contract.
+- **Attack scenario**: A corrupted TIMIT file or an aligned table with 4+ columns (e.g., sample start, sample end, phone label, confidence score/stress marker) is ingested by `parse_timit_phn` or `parse_timit_wrd`. Instead of rejecting the invalid format defensively, the parser silently ignores the extra columns, potentially masking schema mismatches.
+- **Blast radius**: Low-to-medium; TIMIT files with non-standard column structures or malformed annotations will be parsed silently without diagnostic feedback.
+- **Mitigation**: Update the condition in both `parse_timit_phn` (line 64) and `parse_timit_wrd` (line 141) from `if len(parts) < 3:` to `if len(parts) != 3:`. Add corresponding unit test assertions in `tests/test_benchmark.py`.
 
 ---
 
-## 4. Conclusion
+## 4. Stress Test Results
 
-**Verdict: APPROVE**
-
-The implementation of `format_vtt_timestamp` and `export_karaoke_vtt` in Milestone 1 of Increment 5 meets all specification requirements and passes adversarial edge-case verification without regressions or vulnerabilities.
+| Test Scenario | Expected Behavior | Actual Behavior | Result |
+|---|---|---|---|
+| TIMIT .phn extra columns (`0 1600 sh extra`) | Raise `CorpusFormatError` | Returned `[PhonemeCue(...)]` silently | [FAIL] |
+| TIMIT .wrd extra columns (`0 1600 she pronoun`) | Raise `CorpusFormatError` | Returned `[WordToken(...)]` silently | [FAIL] |
+| TIMIT .phn missing columns (`0 1600`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| TIMIT .wrd missing columns (`1600`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| TIMIT non-integer float (`0.5 1600 sh`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| TIMIT non-integer NaN (`nan 1600 sh`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| TIMIT non-integer Inf (`inf 1600 sh`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| TIMIT negative start sample (`-100 1600 sh`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| TIMIT inverted boundaries (`2000 1000 sh`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| TIMIT non-monotonic timestamps (`0 1600\n1200 3200`) | Raise `CorpusFormatError` | Raised `CorpusFormatError` | [PASS] |
+| Buckeye empty tiers (`size = 0`) | Return `[]` | Returned `[]` | [PASS] |
+| Buckeye empty intervals (`intervals: size = 0`) | Return `[]` | Returned `[]` | [PASS] |
+| Buckeye phones-only tier | Return `[]` | Returned `[]` | [PASS] |
+| Buckeye 10 non-speech tokens filtering | Strip all non-speech tokens | All 10 filtered cleanly | [PASS] |
+| Buckeye mixed non-speech phone filtering | Strip `<NOISE>` from phone tier | Kept valid phones (`t`, `eh`, `s`) | [PASS] |
+| Synthetic 10 WAVs format & RMS | Valid mono PCM16 16kHz, RMS >= 1e-4 | Passed validate_wav, RMS ~0.14 | [PASS] |
+| Synthetic boundary-duration match | Exact match across .wav, .phn, .wrd, .TextGrid | 100% exact match | [PASS] |
+| CLI `--corpus timit` missing path | Print LDC message, exit 0 | Clean message, exit code 0 | [PASS] |
+| CLI `--corpus buckeye` missing path | Print OSU message, exit 0 | Clean message, exit code 0 | [PASS] |
+| CLI invalid corpus argument | Argparse error, exit code 2 | Exit code 2 with usage | [PASS] |
 
 ---
 
-## 5. Verification Method
+## 5. Caveats
 
-To independently reproduce and verify these findings:
+1. Real TIMIT and Buckeye corpora require separate external licensed files (LDC93S1 and OSU archive); this evaluation relied on synthetic and unit-level stress testing.
+2. Character encoding was tested with UTF-8. TIMIT files in legacy environments may occasionally use ASCII or ISO-8859-1; `read_text(encoding="utf-8", errors="replace")` handles non-UTF-8 characters gracefully by replacement.
 
-1. **Run full unit test suite**:
-   ```pwsh
+---
+
+## 6. Conclusion
+
+**Verdict: REQUEST_CHANGES**
+
+Required changes for `worker_m1_1`:
+1. In `src/subtitle_workbench/corpora.py`, update `parse_timit_phn`:
+   Change line 64 from `if len(parts) < 3:` to `if len(parts) != 3:`.
+2. In `src/subtitle_workbench/corpora.py`, update `parse_timit_wrd`:
+   Change line 141 from `if len(parts) < 3:` to `if len(parts) != 3:`.
+3. In `tests/test_benchmark.py`:
+   Add test cases verifying that lines with 4 or more tokens raise `CorpusFormatError` in both `test_timit_phn_parser_malformed_and_monotonicity` and `test_timit_wrd_parser_malformed_and_monotonicity`.
+
+Once these changes are applied and verified, the corpora module will fully satisfy all defensive boundary requirements.
+
+---
+
+## 7. Verification Method
+
+To independently verify the failure and proposed fix:
+
+1. **Reproduce Extra Columns Failure:**
+   ```powershell
+   uv run python -c "from pathlib import Path; from subtitle_workbench.corpora import parse_timit_phn, parse_timit_wrd; p = Path('test_extra.phn'); p.write_text('0 1600 sh extra\n'); print('PHN returned:', parse_timit_phn(p)); p.unlink()"
+   ```
+   Observed outcome: `[PhonemeCue(phoneme='sh', start=0.0, end=0.1, confidence=1.0)]` (defect confirmed).
+
+2. **Run Full Test Suite:**
+   ```powershell
+   uv run --locked pytest tests/test_benchmark.py -v
    uv run --locked pytest
    ```
-   *Expected output*: `494 passed, 1 skipped` in ~6s.
 
-2. **Run W3C WebVTT compliance and adversarial property harness**:
-   ```pwsh
-   @'
-   import random, re, html
-   from subtitle_workbench.models import WordToken
-   from subtitle_workbench.export import export_karaoke_vtt
-
-   vocab = ["hello", "world", "<script>alert(1)</script>", "A & B", "-->", "Rock & Roll", "x < y"]
-   for i in range(100):
-       words = [
-           WordToken(f"w{k}", random.choice(vocab), "w", float(k), float(k) + 0.8, 0.9)
-           for k in range(5)
-       ]
-       vtt = export_karaoke_vtt(words, max_line_words=2, max_line_chars=20)
-       assert vtt.startswith("WEBVTT\n\n")
-       assert "<script>" not in vtt
-   print("[OK] Independent verification passed.")
-   '@ | uv run python -
-   ```
-   *Expected output*: `[OK] Independent verification passed.`
-
-3. **Verify linting and packaging**:
-   ```pwsh
+3. **Verify Linter and Formatter:**
+   ```powershell
    uv run --locked ruff check .
    uv run --locked ruff format --check .
-   uv run --locked python -m build --wheel --no-isolation
    ```
-   *Expected output*: Zero lint errors, formatted code, and clean wheel build in `dist/`.
+
+Invalidation Conditions:
+- `parse_timit_phn` or `parse_timit_wrd` raises `CorpusFormatError` on a 4-token line without modifying `corpora.py`.

@@ -1,18 +1,21 @@
-## 2026-10-26T01:42:29Z
+## 2026-10-26T04:32:06Z
 
-You are Challenger 1 for Milestone 2 of Increment 5.
-Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_m2_1
-Authoritative requirements: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md (read section ## 2026-10-26T00:58:19Z).
-Worker handoff report: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m2_1\handoff.md.
+You are challenger_m2_1. Your working directory is C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_m2_1.
+Your parent orchestrator is d7780ee7-0d12-43b1-8cad-0dd6f3550ad6.
 
-Scope of Challenge:
-1. Adversarially verify run_speech_pipeline:
-   - Test VRAM cleanup: verify transcriber.unload() is always called, even when transcription raises an exception.
-   - Test output collision: ensure ValueError is raised when output path equals input audio or transcript path.
-   - Test existing output directory rejection: ensure ValueError is raised when output directory already contains generated artifacts.
-   - Test audio error handling: corrupt WAV, missing audio file, empty audio.
-   - Test transcript handling: empty transcript, whitespace-only transcript, missing transcript file.
-2. Run empirical stress tests or property checks.
-3. Zero-Emoji Discipline: strictly no emojis anywhere.
-4. Write your challenge report to handoff.md in your working directory with an explicit verdict: APPROVE or REQUEST_CHANGES.
-5. Send a completion message when done.
+MANDATORY FIRST STEP:
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md under header ## 2026-10-26T03:14:07Z.
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\orchestrator_3\DISPATCH.md.
+Read C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m2_1\handoff.md.
+
+TASK:
+Adversarially challenge `scripts/speech_benchmark.py`:
+1. Stress test CLI arguments: invalid corpus names, non-existent directories, invalid modes, zero or negative resamples, extreme seeds.
+2. Stress test memory profiling fallback: test with psutil uninstalled/mocked as None, verify Windows ctypes and tracemalloc fallbacks operate without crashing.
+3. Verify exit codes and clean error handling (exit code 1 on runtime error, 2 on argparse error).
+4. Issue verdict: APPROVE or REQUEST_CHANGES.
+
+CONSTRAINTS:
+- ZERO-EMOJI DISCIPLINE: strictly pure ASCII ([+], [-], [*], [OK], [FAIL], ->, |).
+- Write report to C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\challenger_m2_1\handoff.md.
+- Send completion message to parent orchestrator.

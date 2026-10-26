@@ -1,8 +1,2 @@
-# Reviewer M1 1 Context
-Review Milestone 1: Accessibility Exporters and Provenance
-Target files:
-- src/subtitle_workbench/provenance.py
-- src/subtitle_workbench/export.py
-- src/subtitle_workbench/pipeline.py
-- src/subtitle_workbench/__init__.py
-- tests/test_export.py
+# Reviewer M1_1 Context
+Target: Milestone 1 code review (corpora.py, download_reference_corpora.py, test_benchmark.py)

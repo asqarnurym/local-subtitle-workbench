@@ -1,0 +1,25 @@
+# Progress Tracking - worker_m2_2
+
+- Last visited: 2026-10-26T04:52:00Z
+- Status: Completed Milestone 2 Iteration 2 fixes and verified all gates.
+- Completed steps:
+  - Initialized DISPATCH.md and BRIEFING.md
+  - Read ORIGINAL_REQUEST.md, orchestrator_3 DISPATCH and SCOPE, reviewer_m2_1 handoff, challenger_m2_1 handoff
+  - Implemented `_deserialize_raw_alignment` in `scripts/speech_benchmark.py` and updated Mode 2 and Mode 3 to deserialize `alignment_raw.json`
+  - Updated `WhisperTranscriber` construction in Mode 1 to pass `device=None if device == "auto" else device`
+  - Updated `get_peak_host_ram_mb` to catch all `Exception`s on psutil
+  - Added input validation for `seed >= 0` and `bootstrap_resamples >= 1` in `run_benchmark`
+  - Updated `main()` in `scripts/speech_benchmark.py` to catch runtime exceptions and return exit code 1
+  - Added unit & integration tests in `tests/test_benchmark.py`:
+    - `test_speech_benchmark_real_production_execution`
+    - `test_speech_benchmark_cli_seed_negative_exits_one`
+    - `test_speech_benchmark_negative_seed_validation`
+    - `test_speech_benchmark_invalid_resamples_validation`
+    - `test_get_peak_host_ram_mb_psutil_exception_fallback`
+  - Ran `uv run --locked pytest tests/test_benchmark.py` (30/30 passed)
+  - Ran `uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/benchmark_demo` (passed)
+  - Ran `uv run --locked pytest` (677 passed, 1 skipped)
+  - Ran `uv run --locked ruff check .` and `uv run --locked ruff format --check .` (clean)
+  - Amended git commit 2: `a87fe08` (`feat(benchmark): implement clustered bootstrap, paired Wilcoxon tests, and benchmark runner`)
+- Current step:
+  - Preparing handoff report and completion notification

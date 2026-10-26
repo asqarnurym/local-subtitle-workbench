@@ -1,66 +1,55 @@
-# BRIEFING — 2026-10-26T01:42:29Z
+# BRIEFING — 2026-10-26T04:38:00Z
 
 ## Mission
-Objective and adversarial review of Milestone 2 (Increment 5) speech alignment pipeline, CLI integration, and text normalization.
+Review and adversarially stress-test `scripts/speech_benchmark.py` produced by worker_m2_1.
 
-## [LOCKED] My Identity
-- Archetype: reviewer
+## 🔒 My Identity
+- Archetype: reviewer, critic
 - Roles: reviewer, critic
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\reviewer_m2_1
-- Original parent: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Milestone: Milestone 2 (Increment 5)
-- Instance: 1 of 2
+- Original parent: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Milestone: M2 Speech Benchmark CLI & Harness Review
+- Instance: 1 of 1
 
-## [LOCKED] Key Constraints
+## 🔒 Key Constraints
 - Review-only — do NOT modify implementation code
-- Zero-Emoji Discipline: strictly no emojis anywhere
-- Adversarial integrity check: detect hardcoded results, dummy facades, bypasses, fabricated outputs
-- Strict verification with pytest and ruff
-- Standard handoff report structure (Observation, Logic Chain, Caveats, Conclusion, Verification Method) with APPROVE or REQUEST_CHANGES
+- ZERO-EMOJI DISCIPLINE: strictly pure ASCII ([+], [-], [*], [OK], [FAIL], ->, |)
+- Reviewer and adversarial critic integrity check: strictly check for dummy implementations, hardcoding, fabricated outputs, shortcutting
+- Report to handoff.md and send_message to orchestrator
 
 ## Current Parent
-- Conversation ID: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Updated: 2026-10-26T01:42:29Z
+- Conversation ID: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Updated: not yet
 
 ## Review Scope
-- **Files to review**:
-  - src/subtitle_workbench/text_norm.py
-  - src/subtitle_workbench/audio.py
-  - src/subtitle_workbench/pipeline.py
-  - src/subtitle_workbench/cli.py
-  - src/subtitle_workbench/__init__.py
-  - tests/test_pipeline_speech.py
-- **Interface contracts**: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\ORIGINAL_REQUEST.md (## 2026-10-26T00:58:19Z)
-- **Review criteria**: Correctness, completeness, 7 pipeline stages, VRAM lifecycle, collision protection, backward compatibility, exit codes, integrity check
+- **Files to review**: `scripts/speech_benchmark.py`, `tests/test_benchmark.py`, generated artifacts
+- **Interface contracts**: ORIGINAL_REQUEST.md (M2 requirements), orchestrator_3/DISPATCH.md, worker_m2_1/handoff.md
+- **Review criteria**: correctness, completeness, 3-way ablation accuracy, resource profiling integrity, output manifest integrity, formatting/linting, stress-test resilience
 
 ## Review Checklist
-- **Items reviewed**:
-  - `src/subtitle_workbench/text_norm.py` (normalize_transcript) -> [OK]
-  - `src/subtitle_workbench/audio.py` (get_duration) -> [OK]
-  - `src/subtitle_workbench/pipeline.py` (run_speech_pipeline with 7 stages, VRAM lifecycle, collision checks) -> [OK]
-  - `src/subtitle_workbench/cli.py` (align-speech, align-dtw, legacy flags, exit code 2 contract) -> [OK]
-  - `src/subtitle_workbench/__init__.py` (exports) -> [OK]
-  - `tests/test_pipeline_speech.py` (21 tests) -> [OK]
-- **Verdict**: APPROVE
-- **Unverified claims**: None. All worker claims independently reproduced and verified.
+- **Items reviewed**: `scripts/speech_benchmark.py`, `tests/test_benchmark.py`, `dist/test_reviewer_m2/`
+- **Verdict**: REQUEST_CHANGES
+- **Unverified claims**: Production execution branch was unexercised by test suite; uncovered critical bug where Mode 2 and Mode 3 return empty predictions on real data.
 
 ## Attack Surface
 - **Hypotheses tested**:
-  - Hardcoded test outputs / facade logic -> Rejected (genuine implementations verified)
-  - VRAM unload bypass on transcription error -> Tested via test_vram_lifecycle_on_error -> Passed (guaranteed in finally block)
-  - Collision & overwrite detection bypass -> Tested with identical output paths -> Passed (raises ValueError)
-  - Missing CLI args exit code -> Verified exit code 2 on stderr without traceback
-  - Single-line inline transcript containing slashes -> Identified heuristic edge-case where string with '/' and no newline is probed as file path
+  * Hypothesis 1: Single speaker / 1 utterance bootstrap clustering -> PASS (graceful fallback).
+  * Hypothesis 2: Zero bootstrap resamples validation -> PASS (rejected with exit code 1).
+  * Hypothesis 3: Random seed determinism -> PASS (exact numerical match across runs).
+  * Hypothesis 4: Resource profiling without psutil -> PASS (Windows ctypes PeakWorkingSetSize returns 37.55 MB).
+  * Hypothesis 5: Manifest SHA-256 cryptographic attestation -> PASS (exact hash match).
+  * Hypothesis 6: Production execution branch for Mode 2 / Mode 3 -> FAIL (critical bug: `res_pipe.get("words", [])` returns `[]`).
 - **Vulnerabilities found**:
-  - Minor: `pipeline.py` lines 207-217 treats single-line string with `/` as file path even if non-existent, triggering FileNotFoundError instead of fallback to raw text.
-- **Untested angles**: Hardware execution with real GPU weights (tested using CPU-only synthetic fixtures as mandated by offline constraint).
+  * [CRITICAL] `scripts/speech_benchmark.py:621,636`: `run_speech_pipeline` returns `manifest` dict, not words. `res_pipe.get("words", [])` returns `[]`, bypassing evaluation for Modes 2 & 3 in real mode.
+  * [MAJOR] `tests/test_benchmark.py`: lacks test coverage for production execution branch (`else:` path).
+  * [MINOR] `scripts/speech_benchmark.py:603`: passing `device="auto"` directly to `WhisperTranscriber` instead of `None` to enable auto-CUDA detection.
+- **Untested angles**: Real MFA binary execution on Windows (requires external conda/mfa installation, out of offline scope).
 
 ## Key Decisions Made
-- Independent test suites, linter, formatter, wheel build, and wheel smoke test executed and verified.
-- Integrity audit passed with no integrity violations detected.
-- Final verdict issued: APPROVE.
+- [2026-10-26T04:32:30Z] Initialized review workspace and briefing.
+- [2026-10-26T04:38:00Z] Concluded adversarial review; issued verdict REQUEST_CHANGES due to Critical production extraction bug.
 
 ## Artifact Index
-- DISPATCH.md — record of incoming dispatch
-- BRIEFING.md — situational awareness
-- handoff.md — final review report
+- DISPATCH.md — Initial dispatch message
+- progress.md — Heartbeat and progress tracking
+- handoff.md — Final review and challenge report

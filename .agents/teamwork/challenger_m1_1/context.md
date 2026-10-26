@@ -1,3 +1,2 @@
-# Challenger M1 1 Context
-Challenge Milestone 1: Accessibility Exporters and Provenance
-Adversarially verify export.py, provenance.py, edge cases, boundaries, and precision.
+# Challenger M1_1 Context
+Target: Milestone 1 empirical challenge (corpora.py, synthetic generator, TextGrid parsing, PCM16 validation)

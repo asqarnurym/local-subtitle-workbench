@@ -1,138 +1,127 @@
-# Handoff Report: Milestone 1 - Accessibility Exporters and Provenance
+# Handoff Report: Increment 6 Milestone 1 - Reference Corpora Loaders and Boundary Evaluation Metrics
+
+**Agent:** worker_m1_1  
+**Date:** 2026-10-26  
+**Parent Orchestrator:** d7780ee7-0d12-43b1-8cad-0dd6f3550ad6  
+**Working Directory:** `C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m1_1`  
+**Handoff Type:** Hard (Milestone 1 Complete)  
+
+---
 
 ## 1. Observation
 
-### 1.1 Scope and Ownership
-Directly observed assignment from `DISPATCH.md`:
-- Exclusive write ownership:
-  - `src/subtitle_workbench/provenance.py`
-  - `src/subtitle_workbench/export.py`
-  - `src/subtitle_workbench/pipeline.py` (re-export `sha256` and `code_provenance`)
-  - `src/subtitle_workbench/__init__.py`
-  - `tests/test_export.py`
+1. **Branch Checkout & Initial Git State:**
+   - Command: `git branch --list`
+     - Baseline head was on `feature/increment-5-exporters-and-pipeline`.
+   - Command: `git checkout -b feature/increment-6-speech-benchmark`
+     - Output: `Switched to a new branch 'feature/increment-6-speech-benchmark'`.
 
-### 1.2 Implemented Changes
-1. `src/subtitle_workbench/provenance.py` created:
-   - Extracted `sha256(path: Path | str) -> str` to compute SHA-256 digests in 64 KB blocks.
-   - Extracted `code_provenance() -> dict` to compute sha256 of all `*.py` files in package, and retrieve `git rev-parse HEAD` and `git status --porcelain`.
-   - Exported `code_provenance` and `sha256` in `__all__`.
+2. **Core Implementation Additions:**
+   - `src/subtitle_workbench/corpora.py`:
+     - `parse_timit_phn(phn_path: Path | str, sample_rate: int = 16000) -> list[PhonemeCue]`:
+       Reads sample intervals, converts to seconds ($t = s / \text{sample\_rate}$), filters silence markers (`'h#'`, `'pau'`, `'epi'`), strictly verifies monotonicity, and returns `PhonemeCue` objects with `confidence=1.0`.
+     - `parse_timit_wrd(wrd_path: Path | str, sample_rate: int = 16000) -> list[WordToken]`:
+       Reads word sample intervals, converts to seconds, produces monotonic `w_0000` identifiers, normalizes text via `normalize_text_spans`, and returns `WordToken` objects.
+     - `parse_buckeye_textgrid(textgrid_path: Path | str) -> list[WordToken]`:
+       Parses Praat TextGrids via `mfa_wrapper.parse_textgrid` and filters Buckeye non-speech tokens (`{B_TRANS}`, `{E_TRANS}`, `<IVER>`, `<LAUGH>`, `<VOCNOISE>`, `<NOISE>`, `SIL`, `<SIL>`, `UNKNOWN`, `<EXCLUDE>`) across word and phone tiers.
+     - `stage_synthetic_benchmark(target_dir: Path | str) -> Path`:
+       Deterministically generates 10 paired synthetic utterances (`spk01_utt01` through `spk03_utt04`) with modulated sinusoidal PCM16 mono 16 kHz audio (RMS >= 1e-4) and exact mathematical ground truth boundaries across paired `.wav`, `.phn`, `.wrd`, and `.TextGrid` files.
+   - `src/subtitle_workbench/metrics.py`:
+     - Typed exception hierarchy: `BenchmarkError(Exception)`, `CorpusFormatError(BenchmarkError)`, `MetricComputationError(BenchmarkError)`.
+     - Frozen dataclasses: `BoundaryEvaluation`, `WilcoxonTestResult`, `AlignmentEvaluationResult`.
+     - `evaluate_alignment_boundaries(pred_tokens, ref_tokens, tolerance_ms=20.0) -> BoundaryEvaluation`:
+       Dual boundary error evaluation ($|t_{pred} - t_{ref}| \times 1000.0$ ms) for start and end boundaries, 1-to-1 fast matching, dynamic programming Needleman-Wunsch sequence alignment, and division-by-zero protection.
+     - `clustered_bootstrap_ci(errors, clusters, num_resamples=2000, alpha=0.05, seed=42) -> tuple[float, float]`:
+       Cluster-robust percentile bootstrap resampling preserving intra-speaker correlation.
+     - `paired_wilcoxon_test(errors_baseline, errors_proposed) -> WilcoxonTestResult`:
+       Tie-adjusted Wilcoxon signed-rank test via `math.erf` normal approximation and $O((N+M)\log(N+M))$ Cliff's Delta effect size.
+   - `scripts/download_reference_corpora.py`:
+     - CLI utility supporting `--target-dir <path>`, `--offline-synthetic`, and `--corpus` with clean ASCII logging (`[*]`, `[+]`, `[OK]`, `[-]`).
+   - `src/subtitle_workbench/__init__.py`:
+     - Exported all new symbols in `__all__` in alphabetical order.
 
-2. `src/subtitle_workbench/pipeline.py`:
-   - Imported `code_provenance, sha256` from `.provenance`.
-   - Exported `align`, `code_provenance`, `sha256` in `__all__` to preserve full backwards compatibility for dependents such as `tests/test_integration.py`.
-
-3. `src/subtitle_workbench/export.py`:
-   - Implemented `format_vtt_timestamp(seconds: float) -> str` formatting `HH:MM:SS.mmm` with validation for nonnegative finite numbers; preserved `timestamp = format_vtt_timestamp` alias.
-   - Implemented `export_karaoke_vtt(words: list[WordToken], max_line_words: int = 8, max_line_chars: int = 42, max_pause_break: float = 1.0) -> str` with inline `<c.word><timestamp>text</c>` tags, line segmentation by word limit, char limit, and pause breaks, HTML escaping, empty input handling (`WEBVTT\n\n`), and monotonic timestamp validation. Preserved `webvtt(cues: list[Cue])` for backwards compatibility.
-   - Implemented `export_jsonld(words: list[WordToken], audio_duration: float, media_urn: str, language: str = "en") -> dict` generating schema.org `VideoObject` with `Clip` parts conforming to WCAG 2.1 Media Accessibility Guidelines and ISO 8601 duration `PT...S`. Preserved `jsonld(cues: list[Cue], duration: float, media_name: str)` for backwards compatibility.
-   - Implemented `export_raw_alignment(words: list[WordToken], audio_path: Path | str, alignment_method: str, metrics: dict | None = None) -> dict` returning hierarchical word and phoneme alignments with summary statistics (word/phoneme counts, mean confidences, speech duration, pause duration, speech-to-pause ratio).
-   - Implemented `generate_manifest(input_audio_path: Path, output_dir: Path, words: list[WordToken], metrics: dict, config: dict | None = None) -> dict` generating cryptographic provenance audit log `manifest.json` with SHA-256 digests of input WAV and all generated outputs (`subtitles.vtt`, `timeline.jsonld`, `alignment_raw.json`), incorporating `code_provenance()`.
-
-4. `src/subtitle_workbench/__init__.py`:
-   - Moved `__version__ = "0.1.0"` to the top of module to eliminate circular import issues during submodule initialization.
-   - Exported `code_provenance`, `export_jsonld`, `export_karaoke_vtt`, `export_raw_alignment`, `format_vtt_timestamp`, `generate_manifest`, `sha256` in `__all__`.
-
-5. `tests/test_export.py`:
-   - Added comprehensive tests for all new functions:
-     - `test_format_vtt_timestamp_alias`
-     - `test_export_karaoke_vtt_empty`
-     - `test_export_karaoke_vtt_single_word`
-     - `test_export_karaoke_vtt_escapes_html`
-     - `test_export_karaoke_vtt_breaks_on_max_line_words`
-     - `test_export_karaoke_vtt_breaks_on_max_line_chars`
-     - `test_export_karaoke_vtt_breaks_on_pause`
-     - `test_export_karaoke_vtt_non_monotonic_raises`
-     - `test_export_karaoke_vtt_parameter_validation`
-     - `test_export_jsonld_structure_and_types`
-     - `test_export_jsonld_empty_words`
-     - `test_export_jsonld_validation`
-     - `test_export_raw_alignment_metrics_and_hierarchy`
-     - `test_export_raw_alignment_empty`
-     - `test_export_raw_alignment_validation`
-     - `test_generate_manifest_success`
-     - `test_generate_manifest_missing_input_audio`
-     - `test_generate_manifest_missing_output_file`
-     - `test_sha256_computation`
-     - `test_code_provenance`
-   - Total test count in `tests/test_export.py`: 32 tests (all passing).
-
-### 1.3 Quality Gates Execution and Results
-- Unit test suite command: `uv run --locked pytest tests/test_export.py`
-  - Output: `32 passed in 0.54s`
-- Entire repository test suite: `uv run --locked pytest`
-  - Output: `466 passed, 1 skipped in 4.76s` (467 items, 1 skipped faster-whisper live weights test)
-- Linter check: `uv run --locked ruff check .`
-  - Output: `All checks passed!`
-- Formatting check: `uv run --locked ruff format --check .`
-  - Output: `218 files already formatted`
-- Wheel build: `uv run --locked python -m build --wheel --no-isolation`
-  - Output: `Successfully built local_subtitle_workbench-0.1.0-py3-none-any.whl`
-- Git commit created on branch `feature/increment-5-exporters-and-pipeline`:
-  - Hash: `6ba7e07`
-  - Message: `feat(export): implement WebVTT karaoke, schema.org JSON-LD, raw alignment, and manifest exporters`
+3. **Test Suite Verification & Quality Gates:**
+   - Benchmark test execution:
+     `uv run --locked pytest tests/test_benchmark.py -v`
+     Output: `16 passed in 0.72s`.
+   - Full regression test execution:
+     `uv run --locked pytest`
+     Output: `653 passed, 1 skipped in 12.57s`.
+   - Linter validation:
+     `uv run --locked ruff check .`
+     Output: `All checks passed!`.
+   - Formatter validation:
+     `uv run --locked ruff format --check .`
+     Output: `317 files already formatted`.
+   - Atomic git commit:
+     `git commit -m "feat(benchmark): implement reference corpora loaders and boundary evaluation metrics"`
+     Commit hash: `f751fad`.
 
 ---
 
 ## 2. Logic Chain
 
-1. **Premise**: In Increment 5 Requirement R1, standardized accessibility exporters must serialize word/phoneme alignments into WebVTT karaoke, schema.org JSON-LD, raw alignment hierarchy, and a cryptographic manifest.
-2. **Observation**: `pipeline.py` imports `export.py`. If `export.py` imports `sha256` or `code_provenance` from `pipeline.py`, a circular dependency triggers a runtime `ImportError`.
-3. **Deduction**: Extracting `sha256` and `code_provenance` to `src/subtitle_workbench/provenance.py` isolates the dependency. Re-exporting both functions in `pipeline.py` maintains 100% backward compatibility for all existing tests (e.g. `tests/test_integration.py`).
-4. **Observation**: `src/subtitle_workbench/__init__.py` imports `asr.py`, which imports `text_norm.py`, which imports `export.py`, which requires `__version__`. Defining `__version__` at the top of `__init__.py` ensures the attribute is available immediately during partial initialization.
-5. **Observation**: All 32 unit tests in `tests/test_export.py` and 466 total tests across the repository pass without regression in under 5 seconds.
-6. **Deduction**: Milestone 1 requirements are fully met, verified, and safely committed.
+1. Starting from Observation 1, the branch was branched from `feature/increment-5-exporters-and-pipeline` to `feature/increment-6-speech-benchmark`, providing the clean isolation required by the SDLC rules.
+2. In Observation 2, `corpora.py` reads integer sample offsets from TIMIT `.phn` and `.wrd` files and maps them to seconds via rational conversion ($t = s / \text{sample\_rate}$). Validating that $start < end$ and $start_{i} \ge end_{i-1}$ before silence filtering guarantees monotonicity while protecting against corrupted files via `CorpusFormatError`.
+3. In `stage_synthetic_benchmark`, speech intervals are built as exact rational multiples of 400 samples (25 ms / 0.025 s at 16 kHz), ensuring exact mathematical integer samples and non-repeating decimal boundary values without floating point drift. Audio signals are synthesized with modulated carrier tones producing RMS ~0.15, successfully satisfying the `load_wav` threshold ($RMS \ge 10^{-4}$).
+4. In `metrics.py`, evaluating start and end boundaries for each matched token produces $2K$ boundary error observations in milliseconds. Testing on oracle fixed temporal shifts confirmed:
+   - +15 ms shift: MAE = 15.0 ms, Acc@20ms = 100.0%, Acc@50ms = 100.0%.
+   - +25 ms shift: MAE = 25.0 ms, Acc@20ms = 0.0%, Acc@50ms = 100.0%.
+   - +60 ms shift: MAE = 60.0 ms, Acc@20ms = 0.0%, Acc@50ms = 0.0%, Acc@100ms = 100.0%.
+5. Sequence alignment provides a fast 1-to-1 path for forced alignment (where token sequences are identical) and a dynamic programming Needleman-Wunsch fallback with match score +2, mismatch -2, and gap -1 to recover matched words across insertions and deletions. Empty token inputs raise `MetricComputationError` to defend against division-by-zero.
+6. In Observation 3, all 16 new unit tests execute in 0.72 seconds, and the total test suite (653 passed) completes in 12.57 seconds without external network dependencies or SciPy, fulfilling the strict offline CPU requirement.
 
 ---
 
 ## 3. Caveats
 
-- **No Caveats**: All tasks specified for Milestone 1 were implemented genuine-to-spec without shortcuts or facades, passing all verification gates and offline wheel building.
+1. Real TIMIT and Buckeye corpora require external user-supplied files due to LDC and university licensing; however, `stage_synthetic_benchmark` generates 10 completely offline, mathematically exact synthetic utterances that allow complete local verification and automated testing.
+2. The Wilcoxon signed-rank test uses a tie-adjusted continuity-corrected normal approximation via `math.erf`, which is exact for sample sizes $N \ge 10$ and asymptotically robust across speech benchmark corpora.
 
 ---
 
 ## 4. Conclusion
 
-Milestone 1 is complete:
-- `src/subtitle_workbench/provenance.py` created and tested.
-- `src/subtitle_workbench/export.py` fully implements all 5 accessibility exporters and audit log manifest generation.
-- `src/subtitle_workbench/pipeline.py` re-exports provenance functions.
-- `src/subtitle_workbench/__init__.py` exports new symbols in `__all__`.
-- `tests/test_export.py` includes 32 passing tests.
-- Git commit `6ba7e07` committed on `feature/increment-5-exporters-and-pipeline`.
+Milestone 1 is completely satisfied and verified:
+1. Checked out `feature/increment-6-speech-benchmark`.
+2. Implemented reference corpora loaders and offline synthetic benchmark generator in `src/subtitle_workbench/corpora.py`.
+3. Implemented CLI staging tool in `scripts/download_reference_corpora.py`.
+4. Implemented core boundary metrics, clustered bootstrap, paired Wilcoxon, and dataclasses in `src/subtitle_workbench/metrics.py`.
+5. Exported symbols in `src/subtitle_workbench/__init__.py`.
+6. Verified 16 new tests in `tests/test_benchmark.py` in < 1 second.
+7. Verified full test suite (653 passed, 1 skipped) and clean Ruff check/format.
+8. Committed with atomic message: `feat(benchmark): implement reference corpora loaders and boundary evaluation metrics` (`f751fad`).
 
 ---
 
 ## 5. Verification Method
 
-To independently verify the implementation:
-
-1. **Run export tests**:
-   ```pwsh
-   uv run --locked pytest tests/test_export.py -v
+To independently reproduce and verify this work:
+1. Verify git branch and commit:
+   ```powershell
+   git status
+   git log -n 1 --oneline
    ```
-   *Expected*: 32 passed in < 1.0s.
-
-2. **Run full repository tests**:
-   ```pwsh
+2. Run benchmark unit tests:
+   ```powershell
+   uv run --locked pytest tests/test_benchmark.py -v
+   ```
+3. Run full regression test suite:
+   ```powershell
    uv run --locked pytest
    ```
-   *Expected*: 466 passed, 1 skipped in < 5.0s.
-
-3. **Verify lint and format**:
-   ```pwsh
+4. Verify linter and formatter:
+   ```powershell
    uv run --locked ruff check .
    uv run --locked ruff format --check .
    ```
-   *Expected*: All checks passed, 218 files already formatted.
-
-4. **Verify wheel build**:
-   ```pwsh
-   uv run --locked python -m build --wheel --no-isolation
+5. Test offline corpora staging CLI:
+   ```powershell
+   uv run python scripts/download_reference_corpora.py --offline-synthetic --target-dir dist/test_corpora
    ```
-   *Expected*: Clean wheel build in `dist/`.
 
-5. **Verify git log**:
-   ```pwsh
-   git log -n 1 --oneline
-   ```
-   *Expected*: `6ba7e07 feat(export): implement WebVTT karaoke, schema.org JSON-LD, raw alignment, and manifest exporters`.
+Invalidation Conditions:
+- Any test failure in `tests/test_benchmark.py` or regression in existing tests.
+- Division-by-zero on empty token lists instead of raising `MetricComputationError`.
+- Oracle boundary tests deviating from exact expectations (+15 ms, +25 ms, +60 ms).
+- Non-zero warnings from `ruff check .` or diffs from `ruff format --check .`.

@@ -1,10 +1,2 @@
-# Reviewer M2 1 Context
-Review Milestone 2: Speech Alignment Pipeline and CLI Integration
-Target files:
-- src/subtitle_workbench/text_norm.py
-- src/subtitle_workbench/audio.py
-- src/subtitle_workbench/pipeline.py
-- src/subtitle_workbench/cli.py
-- src/subtitle_workbench/__init__.py
-- tests/test_pipeline_speech.py
-Commit: 4a6b230
+# Reviewer M2_1 Context
+Target: Code review of scripts/speech_benchmark.py (CLI, 3-way ablation, profiling, JSON/manifest generation)

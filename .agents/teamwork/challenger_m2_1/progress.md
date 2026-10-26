@@ -1,12 +1,12 @@
-# Progress — Challenger 1 (Milestone 2)
+# Progress Log - challenger_m2_1
 
-Last visited: 2026-10-26T01:48:30Z
+Last visited: 2026-10-26T04:40:30Z
 
-## Status
-- [x] Initialized DISPATCH.md, BRIEFING.md, and progress.md
-- [x] Inspect implementation code in pipeline.py, cli.py, audio.py, text_norm.py
-- [x] Formulate concrete challenge hypotheses and write adversarial empirical test suite (tests/test_challenger_m2_1.py: 50 tests)
-- [x] Execute tests and analyze results (50/50 passed in 1.66s)
-- [x] Verify standard quality gates (pytest: 565 passed, 1 skipped; ruff check: 0 errors; ruff format: clean; wheel build: clean; smoke test: clean)
-- [x] Compile handoff.md with explicit verdict APPROVE
-- [ ] Send completion message to orchestrator
+[+] Initialized challenger_m2_1 workspace.
+[+] Read context files (ORIGINAL_REQUEST.md, DISPATCH.md, worker_m2_1 handoff.md).
+[+] Executed CLI argument stress tests: invalid corpus, non-existent data directory, invalid modes, zero/negative resamples, extreme seeds (0, 2**63-1, -1).
+[+] Executed memory profiling fallback stress tests: uninstalled psutil, mocked psutil=None, psutil runtime exception, ctypes fallback, tracemalloc fallback.
+[+] Verified exit codes: argparse errors (code 2), BenchmarkError (code 1), unexpected exceptions (code 2 divergence).
+[+] Identified 3 concrete robustness findings.
+[+] Updated BRIEFING.md.
+[*] Writing handoff.md with verdict REQUEST_CHANGES.

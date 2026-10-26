@@ -1,16 +1,18 @@
-# Progress — Worker M1 (Increment 5)
+# Progress Heartbeat - worker_m1_1
 
-Last visited: 2026-10-26T01:18:00Z
+Last visited: 2026-10-26T03:38:00Z
+Status: Completed
 
-- [x] Read DISPATCH.md and ORIGINAL_REQUEST.md
-- [x] Read explorer_inc5_1/handoff.md
-- [x] Setup BRIEFING.md and progress.md
-- [x] Inspect current pipeline.py, export.py, __init__.py, test_export.py
-- [x] Implement src/subtitle_workbench/provenance.py
-- [x] Update src/subtitle_workbench/pipeline.py to re-export sha256 and code_provenance
-- [x] Implement new exporters in src/subtitle_workbench/export.py
-- [x] Update src/subtitle_workbench/__init__.py
-- [x] Implement comprehensive tests in tests/test_export.py
-- [x] Run pytest, ruff check, ruff format
-- [x] Git commit on feature/increment-5-exporters-and-pipeline (`6ba7e07`)
-- [ ] Write handoff.md and send message to parent
+## Completed Milestones
+- [x] Branch Checkout: `feature/increment-6-speech-benchmark` created from `feature/increment-5-exporters-and-pipeline`.
+- [x] `src/subtitle_workbench/corpora.py`: implemented `parse_timit_phn`, `parse_timit_wrd`, `parse_buckeye_textgrid`, `stage_synthetic_benchmark`.
+- [x] `scripts/download_reference_corpora.py`: implemented CLI staging script with pure ASCII logging.
+- [x] `src/subtitle_workbench/metrics.py`: implemented exceptions (`BenchmarkError`, `CorpusFormatError`, `MetricComputationError`), dataclasses (`BoundaryEvaluation`, `AlignmentEvaluationResult`, `WilcoxonTestResult`), and evaluation functions (`evaluate_alignment_boundaries`, `clustered_bootstrap_ci`, `paired_wilcoxon_test`).
+- [x] `src/subtitle_workbench/__init__.py`: exported all symbols.
+- [x] `tests/test_benchmark.py`: 16 offline unit tests implemented and verified in 0.72s.
+- [x] Quality Gates:
+  - `uv run --locked pytest tests/test_benchmark.py` (16 passed in 0.72s).
+  - `uv run --locked pytest` (653 passed, 1 skipped in 12.57s).
+  - `uv run --locked ruff check .` (All checks passed).
+  - `uv run --locked ruff format --check .` (All files formatted).
+- [x] Atomic git commit: `f751fad` ("feat(benchmark): implement reference corpora loaders and boundary evaluation metrics").

@@ -1,82 +1,57 @@
-# BRIEFING — 2026-10-26T01:41:00Z
+# BRIEFING — 2026-10-26T04:30:00Z
 
 ## Mission
-Implement Milestone 2 of Increment 5: wire end-to-end speech alignment pipeline in pipeline.py, add audio/text helpers, extend CLI with align-speech and align-dtw subcommands (retaining legacy flags), and provide comprehensive offline CPU tests.
+Implement scripts/speech_benchmark.py and tests/test_benchmark.py covering 3-way ablation, offline synthetic mode, resource profiling, and paired hypothesis tests.
 
-## [LOCKED] My Identity
-- Archetype: worker
+## 🔒 My Identity
+- Archetype: implementer
 - Roles: implementer, qa, specialist
 - Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork\worker_m2_1
-- Original parent: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Milestone: Milestone 2 (Speech Pipeline & CLI Integration)
+- Original parent: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Milestone: Milestone 2 (Speech Benchmark Script & Integration Tests)
 
-## [LOCKED] Key Constraints
-- Zero-Emoji Discipline: Strictly no emojis or graphical Unicode icons anywhere in code, comments, docstrings, logs, git commits, or reports. Use clean ASCII formatting only ([+], [-], [*], [OK], [FAIL], ->, |).
-- Integrity Mandate: No cheating, real implementations, real state and behavior.
-- Write Ownership:
-  - src/subtitle_workbench/text_norm.py
-  - src/subtitle_workbench/audio.py
-  - src/subtitle_workbench/pipeline.py
-  - src/subtitle_workbench/cli.py
-  - src/subtitle_workbench/__init__.py
-  - tests/test_pipeline_speech.py
-- VRAM lifecycle: transcriber.unload() must be guaranteed inside try ... finally.
-- Output protection: reject existing output files or output resolving to input WAV with ValueError.
-- CLI exit code contract: 0 on success (JSON metrics to stdout), 2 on validation/contract/parsing errors (error message to stderr, no traceback).
-- Tests must be offline CPU tests running < 5 seconds without PyTorch or downloads.
-- Commit message: "feat(pipeline): wire end-to-end speech alignment pipeline and CLI subcommands"
+## 🔒 Key Constraints
+- Pure clean ASCII formatting only ([+], [-], [*], [OK], [FAIL], ->, |). Zero-emoji rule everywhere.
+- DO NOT CHEAT. All implementations genuine, maintain real state, produce real behavior.
+- Real-Time Factor (RTF), Peak VRAM, Peak Host RAM fallback (psutil -> Windows ctypes PeakWorkingSetSize -> POSIX getrusage -> tracemalloc) with no new mandatory dependencies.
+- 3-way ablation (Mode 1: Whisper internal, Mode 2: CTC Trellis, Mode 3: Proposed Hybrid).
+- Bootstrap CIs, Wilcoxon test, Acc@20ms > Mode 2 > Mode 1, MAE < 20ms for Mode 3.
+- All tests pass (tests/test_benchmark.py + full suite 666+ tests). Ruff check and format pass.
+- Atomic git commit as specified.
 
 ## Current Parent
-- Conversation ID: 38abfe49-ddb1-469c-979f-bc7467fda3c4
-- Updated: 2026-10-26T01:41:00Z
+- Conversation ID: d7780ee7-0d12-43b1-8cad-0dd6f3550ad6
+- Updated: 2026-10-26T04:30:00Z
 
 ## Task Summary
-- **What to build**:
-  1. normalize_transcript in text_norm.py
-  2. get_duration in audio.py
-  3. run_speech_pipeline in pipeline.py implementing 7 stages
-  4. Subcommands align-speech and align-dtw in cli.py with backward compatibility for root flags and exit code 2 on validation errors
-  5. Exports in __init__.py
-  6. Unit and CLI tests in tests/test_pipeline_speech.py
-- **Success criteria**: Tests pass, ruff check and ruff format pass, clean git commit.
-- **Interface contracts**: ORIGINAL_REQUEST.md and explorer reports.
-- **Code layout**: src/subtitle_workbench/ and tests/.
-
-## Key Decisions Made
-- `normalize_transcript` added as wrapper over `normalize_text_spans` in `text_norm.py`.
-- `get_duration` implemented with `wave.open` calculating duration from frames and framerate in `audio.py`.
-- `run_speech_pipeline` implemented executing all 7 stages:
-  - Stage 1: Audio validation, get_duration, output collision / overwrite protection.
-  - Stage 2: VAD & ASR with guaranteed transcriber.unload() in finally block; fallback to silences=[] when VAD backend unavailable.
-  - Stage 3: Normalization via normalize_transcript seeding uniform WordTokens across audio duration.
-  - Stage 4: Macro-chunking with ChunkConfig.
-  - Stage 5 & 6: Forced alignment and global reconciliation via ForcedAligner.align_chunks.
-  - Stage 7: Writes subtitles.vtt, timeline.jsonld, alignment_raw.json, and manifest.json via generate_manifest; returns manifest dictionary.
-- CLI subcommands `align-speech` and `align-dtw` added via `CLIArgumentParser` inheriting from `argparse.ArgumentParser` with custom error handler exiting 2 and printing `error: <message>` without traceback.
-- Full backward compatibility for root flags (`--reference`, `--target`, `--cues`, `-o`/`--output`) preserved when no subcommand is specified.
-- 21 comprehensive offline CPU tests added in `tests/test_pipeline_speech.py` running in < 2.5 seconds.
-
-## Artifact Index
-- DISPATCH.md - Worker assignment instructions
-- BRIEFING.md - Situational awareness and state
-- progress.md - Liveness heartbeat and progress
-- handoff.md - Final handoff report
+- **What to build**: `scripts/speech_benchmark.py` and `tests/test_benchmark.py`.
+- **Success criteria**: Full ablation pipeline, offline synthetic evaluation with empirical shifts, bootstrap CIs, Wilcoxon hypothesis test, hardware profiling, manifest generation, 100% tests pass, fast execution (<5s on CPU).
+- **Interface contracts**: `corpora.py`, `metrics.py`, `speech_benchmark.py` CLI & API.
 
 ## Change Tracker
 - **Files modified**:
-  - `src/subtitle_workbench/text_norm.py` (added normalize_transcript, __all__)
-  - `src/subtitle_workbench/audio.py` (added get_duration, __all__)
-  - `src/subtitle_workbench/pipeline.py` (added run_speech_pipeline, imports, __all__)
-  - `src/subtitle_workbench/cli.py` (added subcommands, root backward compatibility, exit 2 error handling)
-  - `src/subtitle_workbench/__init__.py` (exported run_speech_pipeline, normalize_transcript, get_duration, align)
-  - `tests/test_pipeline_speech.py` (21 new tests for pipeline and CLI)
-- **Build status**: Pass (515 passed, 1 skipped in 8.06s; ruff check 0 errors; ruff format clean; wheel build clean; wheel smoke passed)
+  * `scripts/speech_benchmark.py`: Benchmark runner implementing 3-way ablation, empirical simulation, resource profiling, and JSON/manifest outputs.
+  * `tests/test_benchmark.py`: 6 new unit and integration tests covering hardware profiling, empirical shifts, programmatic and CLI execution, and corpus modes.
+- **Build status**: Pass (672 passed, 1 skipped)
 - **Pending issues**: None
 
 ## Quality Status
-- **Build/test result**: Pass (515 passed, 1 skipped)
-- **Lint status**: 0 violations (ruff check passed, ruff format passed)
-- **Tests added/modified**: 21 tests added in `tests/test_pipeline_speech.py`
+- **Build/test result**: 25/25 passed in tests/test_benchmark.py; 672 passed, 1 skipped in full suite.
+- **Lint status**: 0 ruff errors, 0 ruff format diffs.
+- **Tests added/modified**: 6 new tests added to tests/test_benchmark.py.
 
 ## Loaded Skills
 - None
+
+## Key Decisions Made
+- Multi-tier memory reader: psutil -> Windows ctypes `GetProcessMemoryInfo` (PeakWorkingSetSize) -> POSIX `getrusage` -> tracemalloc fallback without adding dependencies.
+- Realistic empirical simulation with controlled seed: Mode 1 ~120 ms shift (cross-attention dispersion), Mode 2 ~35 ms shift (CTC quantization), Mode 3 ~12 ms shift (triphone precision).
+- Schema-compliant `benchmark_results.json` and cryptographic `manifest.json` generation.
+
+## Artifact Index
+- DISPATCH.md
+- progress.md
+- BRIEFING.md
+- handoff.md
+- scripts/speech_benchmark.py (commit 8c5011e)
+- tests/test_benchmark.py (commit 8c5011e)

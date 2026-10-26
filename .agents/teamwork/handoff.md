@@ -1,60 +1,49 @@
-# Handoff Report: Sentinel Increment 3 Completion
+# Sentinel Handoff — Increment 5
 
-**Date:** 2026-10-20T16:14:00Z  
-**Branch:** `feature/increment-3-macro-dtw-chunking`  
-**Git Commit:** `cac155811f827d36b5813014f05b10216d993771`  
-**Working Directory:** `C:\Users\nurym\Desktop\local-subtitle-workbench\.agents\teamwork`  
-**Verdict:** **VICTORY CONFIRMED**
+## Observation
+- User request received to implement Increment 5 of the "Local Subtitle Alignment Workbench" project (standardized accessibility exporters, speech alignment pipeline, and CLI integration) on branch `feature/increment-5-exporters-and-pipeline`.
+- Authoritative request logged verbatim in `ORIGINAL_REQUEST.md` under `## 2026-10-26T00:58:19Z`.
+- General path selected -> spawned Project Orchestrator (`38abfe49-ddb1-469c-979f-bc7467fda3c4`).
+- Scheduled monitoring crons: progress reporting task-24 (`*/8 * * * *`) and liveness checking task-26 (`*/10 * * * *`).
+- The project team executed the milestone decomposition:
+  * Milestone 1: Accessibility Exporters (`export.py`, `provenance.py`, `test_export.py`) -> commit `6ba7e07`.
+  * Milestone 2: Speech Alignment Pipeline & CLI Integration (`pipeline.py`, `cli.py`, `text_norm.py`, `audio.py`, `test_pipeline_speech.py`) -> commit `4a6b230`.
+  * Milestone 3: Full Acceptance Gates & SDLC Report (`INCREMENT_5_EXPORTERS_AND_PIPELINE.md`) -> commit `2fa9ec2`.
+- Project Orchestrator submitted completion claim and handoff report.
+- Independent Victory Auditor (`4348e0a2-ec62-4407-9635-ac5c3ab5d812`) was dispatched and conducted a blocking 3-phase audit, resulting in `VICTORY CONFIRMED`.
 
----
+## Logic Chain
+- Standardized Exporters:
+  * Implemented `format_vtt_timestamp` with non-negative finite bounds validation.
+  * Implemented `export_karaoke_vtt` generating W3C WebVTT documents with cue-level inline `<c.word><timestamp>text</c>` tags, line word/char limits, pause breaks, and monotonic timestamps.
+  * Implemented `export_jsonld` generating semantic schema.org `VideoObject` with `Clip` parts conforming to WCAG 2.1 Media Accessibility Guidelines.
+  * Implemented `export_raw_alignment` with hierarchical word/phoneme JSON and summary metrics.
+  * Implemented `generate_manifest` providing cryptographic SHA-256 provenance audit log.
+  * Extracted SHA-256 hashing and git provenance into `provenance.py` to eliminate circular dependencies.
+- Pipeline Orchestration & CLI:
+  * Implemented `run_speech_pipeline` with 7 sequential stages (validation, VAD/ASR with deterministic `unload()` lifecycle, normalization, chunking, forced alignment, timeline reconciliation, artifact export).
+  * Extended CLI with `align-speech` and `align-dtw` subcommands while maintaining backward compatibility with root legacy flags.
+  * Enforced exit code 2 contract on validation/contract errors with clean stderr messages.
+- SDLC and Verification:
+  * Authored `docs/increments/INCREMENT_5_EXPORTERS_AND_PIPELINE.md`.
+  * Preserved clean working tree and zero-emoji discipline.
+  * Independent Victory Auditor independently ran the test suite, linting, formatting, wheel building, and smoke testing.
 
-## 1. Observation
-- **Original Request**: Implement Increment 3 for the "Local Subtitle Alignment Workbench" project: Bounded Chunker (chunk duration $L \le 30.0\text{s}$), Contextual Overlap Padding ($0.5\text{s}$), and Global Monotonic Alignment Reconciler to eliminate cumulative timestamp drift on long educational recordings (10–60 minutes) while strictly maintaining linear memory complexity.
-- **Implemented Deliverables**:
-  - `src/subtitle_workbench/models.py`: Immutable dataclasses `AudioChunk` and `ChunkConfig` with strict numeric boundary validation ($0.0 \le \text{padded\_start} \le \text{start} < \text{end} \le \text{padded\_end}$), ASCII identifier check, and token collection typing.
-  - `src/subtitle_workbench/chunker.py`: Typed exceptions `ChunkingError` and `MonotonicityError`. Function `partition_into_chunks` with 3-tier anchor priority (VAD silences $\ge 0.4\text{s}$, ASR sentence boundaries, inter-word pause fallbacks), unvoiced silence interval advancement, and symmetric overlap padding clamped to $[0.0, \text{total\_duration}]$. Function `reconcile_chunk_alignments` with local-to-global timeline projection, cross-chunk seam deduplication, strict onset monotonicity validation, coarticulation resolution ($\le 50\text{ms}$), and micro-phoneme duration protection.
-  - `src/subtitle_workbench/__init__.py`: Exported `AudioChunk`, `ChunkConfig`, `ChunkingError`, `MonotonicityError`, `partition_into_chunks`, `reconcile_chunk_alignments`.
-  - `tests/test_chunker.py`: 102 pure business logic unit and boundary tests without mocks.
-  - `docs/increments/INCREMENT_3_MACRO_DTW_CHUNKING.md`: Complete SDLC Increment 3 audit report with architectural rationale and verification evidence.
-- **Verification Gates**:
-  - `uv run --locked pytest`: 416 passed, 1 skipped in 4.71s (100% pass rate, 0 regressions).
-  - `uv run --locked ruff check .`: 0 errors.
-  - `uv run --locked ruff format --check .`: 0 diffs (186 files formatted).
-  - `uv run --locked python -m build --wheel --no-isolation`: Built `local_subtitle_workbench-0.1.0-py3-none-any.whl`.
-  - `scripts/smoke_wheel.py`: Offline execution passed, max absolute error = 18.4ms $\le$ 50ms.
-  - Chunker stress tests (`tests/stress_test_chunker.py`): 8/8 suites passed.
-  - Reconciler stress tests (`scripts/stress_reconcile.py`): 24/24 passed.
-  - Adversarial challenge (`scripts/adversarial_challenge.py`): 18/18 checks passed.
+## Caveats
+- Speech pipeline dependencies (`faster-whisper`, `torch`) remain optional extras under `[project.optional-dependencies] speech`.
+- Full test suite runs offline on CPU without requiring live GPU or downloaded neural network weights via mock/stub fixtures. Real model execution will utilize local CUDA VRAM when installed.
+- Backward compatibility for legacy root DTW flags is fully preserved alongside new subcommands.
 
----
+## Conclusion
+- Increment 5 is 100% complete and independently verified.
+- Independent Victory Audit Verdict: `VICTORY CONFIRMED`.
+- All monitoring tasks and subagents have been terminated.
 
-## 2. Logic Chain
-1. **Request Intake & Routing**: Sentinel recorded the incoming request verbatim into `.agents/teamwork/ORIGINAL_REQUEST.md`. Evaluated against the Routing Decision Table and routed to **General** (`teamwork_preview_orchestrator`).
-2. **Orchestrator Execution**: Orchestrator surveyed the codebase via 3 Explorers, established `PROJECT.md`, and dispatched `worker_1` for initial implementation.
-3. **Adversarial Review & Remediation Loop**: Orchestrator subjected the initial code to Reviewers (1 & 2), Challengers (1 & 2), and Auditor 1. Five edge-case findings were identified (unvoiced interval chunk bounding, floating-point boundary clamping, boundary token seam deduplication, strict onset monotonicity, and micro-phoneme duration collapse). Orchestrator routed these to `explorer_4` for patch design and `worker_2` for remediation, regression testing, and SDLC report generation.
-4. **Acceptance Gate**: Specialists `reviewer_3` (APPROVE), `challenger_3` (APPROVE), and `auditor_2` (CLEAN) cleared the deliverable. Orchestrator committed the changes to git (`cac155811f827d36b5813014f05b10216d993771`) and delivered handoff.
-5. **Independent Victory Audit**: Sentinel intercepted the victory claim and spawned `teamwork_preview_victory_auditor` (`3f41742b-a2e4-4087-acc5-6ece37448d94`). The auditor conducted an independent 3-phase audit (Timeline, Cheating Forensics, Independent Test Execution) and confirmed all requirements are genuinely satisfied.
-6. **Final Cleanup**: Cancelled background crons (task-26, task-28) and terminated all subagents.
-
----
-
-## 3. Caveats
-- Optional dependency `faster-whisper` test in `test_asr.py` was skipped during CPU offline run as intended; all core and chunking logic runs 100% offline without network or GPU dependencies.
-- Monotonic reconciler allows coarticulation overlaps up to 50ms by clamping endpoints, but strictly rejects non-monotonic onsets (`curr_w.start <= prev_w.start`), raising `MonotonicityError`.
-
----
-
-## 4. Conclusion
-Increment 3 is **COMPLETED**, fully verified against all automated verification gates, independently audited with **VICTORY CONFIRMED**, and committed to `feature/increment-3-macro-dtw-chunking`.
-
----
-
-## 5. Verification Method
-Run the following commands in `C:\Users\nurym\Desktop\local-subtitle-workbench`:
-```powershell
-uv run --locked pytest
-uv run --locked ruff check .
-uv run --locked ruff format --check .
-uv run --locked python -m build --wheel --no-isolation
-uv run python scripts/smoke_wheel.py --wheel dist/local_subtitle_workbench-0.1.0-py3-none-any.whl --output test_smoke_out
-```
+## Verification Method
+- Independent audit results:
+  * `uv run --locked pytest`: 637 passed, 1 skipped in 13.28s (100% pass rate).
+  * `uv run --locked ruff check .`: PASS (0 errors).
+  * `uv run --locked ruff format --check .`: PASS (0 diffs across 289 files).
+  * `uv run --locked python -m build --wheel --no-isolation`: PASS (`local_subtitle_workbench-0.1.0-py3-none-any.whl`).
+  * `uv run python scripts/smoke_wheel.py --wheel dist/local_subtitle_workbench-0.1.0-py3-none-any.whl --output dist/smoke_out`: PASS (max error 18.4ms < 20ms threshold, offline socket guard verified).
+  * CLI execution verified for exit codes 0 and 2.

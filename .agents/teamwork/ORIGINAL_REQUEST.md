@@ -185,3 +185,70 @@ Integrity mode: development
 - [ ] Offline wheel build completes successfully: `uv run --locked python -m build --wheel --no-isolation`
 - [ ] Git commit created on branch `feature/increment-3-macro-dtw-chunking` with message: `feat(chunker): implement bounded chunk partitioner and monotonic alignment reconciler`
 - [ ] Audit document `docs/increments/INCREMENT_3_MACRO_DTW_CHUNKING.md` created with complete execution evidence.
+
+
+## 2026-10-26T00:58:19Z
+
+Implement Increment 5 of the "Local Subtitle Alignment Workbench" project: standardized accessibility exporters (W3C WebVTT Karaoke, schema.org JSON-LD, Raw Alignment Dump, SHA-256 Manifest) and an end-to-end speech alignment pipeline with CLI integration.
+
+Working directory: C:\Users\nurym\Desktop\local-subtitle-workbench
+Integrity mode: development
+
+## Environment and Constraints
+
+- Repository: `C:\Users\nurym\Desktop\local-subtitle-workbench`
+- Target Branch: `feature/increment-5-exporters-and-pipeline` (branched from `feature/increment-4-forced-alignment`)
+- Hardware Constraints: AMD Ryzen 9 5900HX, NVIDIA RTX 3050 Laptop GPU (4 GB VRAM, peak sequential budget <= 1.85 GB), Windows 11.
+- Unit and integration tests must execute offline on CPU in < 5 seconds without network calls and without requiring external model weights download (use mocks/stubs for inference runners).
+- Zero-Emoji Discipline: strictly no emojis or graphical Unicode icons in code, comments, docstrings, logs, git commits, or reports. Use clean ASCII formatting only (`[+]`, `[-]`, `[*]`, `[OK]`, `[FAIL]`, `->`, `|`).
+
+## Requirements
+
+### R1. Standardized Accessibility Exporters (`src/subtitle_workbench/export.py`)
+- Implement `format_vtt_timestamp(seconds: float) -> str`: formats seconds to `HH:MM:SS.mmm` with validation for nonnegative finite numbers.
+- Implement `export_karaoke_vtt(words: list[WordToken], max_line_words: int = 8, max_line_chars: int = 42, max_pause_break: float = 1.0) -> str`: generates valid W3C WebVTT documents with cue-level inline karaoke word tags (`<c.word><timestamp>text</c>`), segmenting cues by word count limit, character count limit, and pause breaks. Handle empty input gracefully (`WEBVTT\n\n`) and ensure monotonic timestamps.
+- Implement `export_jsonld(words: list[WordToken], audio_duration: float, media_urn: str, language: str = "en") -> dict`: generates semantic schema.org JSON-LD (`VideoObject` with `Clip` parts) matching W3C WCAG 2.1 Media Accessibility Guidelines and ISO 8601 duration `PT...S`.
+- Implement `export_raw_alignment(words: list[WordToken], audio_path: Path | str, alignment_method: str, metrics: dict | None = None) -> dict`: exports hierarchical alignment structure (words and nested phonemes with timing and confidence) and aggregate summary metrics (mean word/phoneme confidence, speech-to-pause ratio).
+- Implement `generate_manifest(input_audio_path: Path, output_dir: Path, words: list[WordToken], metrics: dict, config: dict | None = None) -> dict`: generates cryptographic provenance audit log `manifest.json` with SHA-256 hashes of input WAV and all generated outputs (`subtitles.vtt`, `timeline.jsonld`, `alignment_raw.json`), incorporating `code_provenance()`.
+
+### R2. End-to-End Speech Alignment Orchestrator (`src/subtitle_workbench/pipeline.py`)
+- Implement `run_speech_pipeline(audio_path, output_dir, transcript=None, engine="auto", vad_silence_min_sec=0.4, max_chunk_sec=30.0, chunk_padding_sec=0.5, fallback_to_ctc=True, transcriber=None, aligner=None) -> dict`.
+- Pipeline Execution Stages:
+  1. Audio Validation: verify file existence and PCM16 WAV format via `audio.validate_wav`.
+  2. VAD & ASR: if transcript not supplied, extract silences via `extract_vad_silences` and transcribe via `WhisperTranscriber`, followed by VRAM cleanup.
+  3. Normalization: apply `text_norm.normalize_transcript` preserving word mappings.
+  4. Macro-chunking: partition into chunks via `chunker.partition_into_chunks` (<= 30s limit, 0.5s padding).
+  5. Forced Alignment: slice chunk audio via `audio.slice_wav` and align via `ForcedAligner.align_chunks`.
+  6. Global Reconciliation: stitch chunk alignments via `chunker.reconcile_chunk_alignments`.
+  7. Artifact Export: create output directory and write `subtitles.vtt`, `timeline.jsonld`, `alignment_raw.json`, and `manifest.json`.
+- Return execution manifest dictionary with runtime metrics.
+
+### R3. CLI Interface Extension (`src/subtitle_workbench/cli.py`)
+- Support subcommands via `argparse.ArgumentParser`:
+  - `align-speech <audio_wav> -o <output_dir> [--engine auto|mfa|ctc] [--transcript <text_or_path>]`
+  - Backward compatibility: preserve existing DTW alignment under `align-dtw <ref_wav> <target_wav> <cues_json> -o <output_dir>` as well as direct root flags `--reference`, `--target`, `--cues`, `--output`.
+- Return exit code 0 on success, exit code 2 on validation/contract errors with descriptive error messages to stderr.
+
+### R4. Automated Unit & Integration Tests
+- Extend `tests/test_export.py`: verify karaoke VTT tag syntax, line splitting rules, JSON-LD schema compliance, raw alignment structure, and SHA-256 manifest verification.
+- Create `tests/test_pipeline_speech.py`: end-to-end pipeline test on synthetic WAV with mock transcriber and mock aligner, output file integrity checks, error handling tests for missing files and output overwrite protection, and CLI subprocess execution test.
+
+### R5. Increment Report Documentation (`docs/increments/INCREMENT_5_EXPORTERS_AND_PIPELINE.md`)
+- Complete Increment 5 SDLC report based on `docs/increments/TEMPLATE_INCREMENT_REPORT.md`, documenting architectural decisions, file inventory, quality gate execution logs, and boundary condition coverage.
+
+## Acceptance Criteria
+
+### Automated Verification Gates
+- [ ] 100% test pass rate across all existing 446 tests and new Increment 5 tests: `uv run --locked pytest`
+- [ ] Zero ruff lint errors: `uv run --locked ruff check .`
+- [ ] Zero ruff formatting errors: `uv run --locked ruff format --check .`
+- [ ] Package wheel builds without isolation: `uv run --locked python -m build --wheel --no-isolation`
+- [ ] Offline installed-wheel smoke test succeeds: `uv run python scripts/smoke_wheel.py --wheel dist/local_subtitle_workbench-0.1.0-py3-none-any.whl --output dist/smoke_out`
+
+### Git & SDLC Deliverables
+- [ ] Clean working tree on branch `feature/increment-5-exporters-and-pipeline`.
+- [ ] Atomic git commits following Conventional Commits specification:
+  - `feat(export): implement WebVTT karaoke, schema.org JSON-LD, raw alignment, and manifest exporters`
+  - `feat(pipeline): wire end-to-end speech alignment pipeline and CLI subcommands`
+  - `docs(sdlc): formalize Increment 5 verification report and audit logs`
+- [ ] Completed increment documentation at `docs/increments/INCREMENT_5_EXPORTERS_AND_PIPELINE.md`.

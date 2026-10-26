@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pytest
@@ -1102,3 +1104,473 @@ def test_get_peak_host_ram_mb_psutil_exception_fallback(
     ram = get_peak_host_ram_mb()
     assert isinstance(ram, float)
     assert ram >= 0.0
+
+
+# ---------------------------------------------------------------------------
+# Publication LaTeX Table Generator Tests (scripts/generate_paper_tables.py)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def sample_benchmark_payload() -> dict[str, Any]:
+    """Provide valid benchmark results dictionary matching speech_benchmark schema."""
+    return {
+        "schema_version": 1,
+        "corpus": "timit",
+        "offline_synthetic": True,
+        "seed": 42,
+        "bootstrap_resamples": 2000,
+        "utterance_count": 10,
+        "total_audio_duration_seconds": 17.1,
+        "modes": {
+            "mode1_whisper": {
+                "name": "Whisper Large-v3 INT8 (Internal Timestamps)",
+                "word_metrics": {
+                    "mae_ms": 119.12,
+                    "medae_ms": 121.34,
+                    "rmse_ms": 120.13,
+                    "acc_20ms": 0.0,
+                    "acc_50ms": 0.0,
+                    "acc_100ms": 12.12,
+                    "ci_95": [116.98, 121.73],
+                    "num_matched": 33,
+                    "num_unmatched": 0,
+                },
+                "phone_metrics": None,
+                "performance": {
+                    "rtf": 0.045,
+                    "peak_vram_mb": 0.0,
+                    "peak_ram_mb": 37.8,
+                    "elapsed_seconds": 0.77,
+                },
+            },
+            "mode2_ctc": {
+                "name": "CTC Trellis (MMS_FA)",
+                "word_metrics": {
+                    "mae_ms": 35.08,
+                    "medae_ms": 36.37,
+                    "rmse_ms": 37.35,
+                    "acc_20ms": 12.12,
+                    "acc_50ms": 84.85,
+                    "acc_100ms": 100.0,
+                    "ci_95": [33.33, 39.03],
+                    "num_matched": 33,
+                    "num_unmatched": 0,
+                },
+                "phone_metrics": {
+                    "mae_ms": 35.83,
+                    "medae_ms": 35.79,
+                    "rmse_ms": 37.59,
+                    "acc_20ms": 8.73,
+                    "acc_50ms": 89.68,
+                    "acc_100ms": 100.0,
+                    "ci_95": [34.70, 36.60],
+                    "num_matched": 126,
+                    "num_unmatched": 0,
+                },
+                "performance": {
+                    "rtf": 0.025,
+                    "peak_vram_mb": 512.5,
+                    "peak_ram_mb": 42.1,
+                    "elapsed_seconds": 0.43,
+                },
+            },
+            "mode3_hybrid": {
+                "name": "Proposed Hybrid (Whisper + Bounded DTW + MFA)",
+                "word_metrics": {
+                    "mae_ms": 11.68,
+                    "medae_ms": 12.15,
+                    "rmse_ms": 12.15,
+                    "acc_20ms": 100.0,
+                    "acc_50ms": 100.0,
+                    "acc_100ms": 100.0,
+                    "ci_95": [11.21, 11.91],
+                    "num_matched": 33,
+                    "num_unmatched": 0,
+                },
+                "phone_metrics": {
+                    "mae_ms": 12.86,
+                    "medae_ms": 12.97,
+                    "rmse_ms": 13.44,
+                    "acc_20ms": 97.22,
+                    "acc_50ms": 100.0,
+                    "acc_100ms": 100.0,
+                    "ci_95": [12.79, 12.96],
+                    "num_matched": 126,
+                    "num_unmatched": 0,
+                },
+                "performance": {
+                    "rtf": 0.038,
+                    "peak_vram_mb": 1850.0,
+                    "peak_ram_mb": 48.5,
+                    "elapsed_seconds": 0.65,
+                },
+            },
+        },
+        "statistical_significance": {
+            "proposed_vs_whisper": {
+                "metric": "word_mae",
+                "wilcoxon_w": 0.0,
+                "p_value": 1.6791013024430868e-12,
+                "cliffs_delta": 1.0,
+                "effect_size": "large",
+                "significant_0_05": True,
+                "significant_0_001": True,
+            },
+            "proposed_vs_ctc": {
+                "metric": "word_mae",
+                "wilcoxon_w": 8.0,
+                "p_value": 2.4222845951271665e-12,
+                "cliffs_delta": 0.9394,
+                "effect_size": "large",
+                "significant_0_05": True,
+                "significant_0_001": True,
+            },
+        },
+    }
+
+
+def test_generate_alignment_accuracy_table_mock_data(
+    sample_benchmark_payload: dict[str, Any],
+) -> None:
+    """Verify Table 1 contains booktabs tags, clean formatting, and no unescaped percent."""
+    from scripts.generate_paper_tables import generate_alignment_accuracy_table
+
+    tex = generate_alignment_accuracy_table(sample_benchmark_payload)
+
+    # Core LaTeX structure
+    assert r"\begin{table}[t]" in tex
+    assert r"\centering" in tex
+    assert r"\caption{TIMIT Core Test Alignment Accuracy Across Ablation Modes}" in tex
+    assert r"\label{tab:alignment_accuracy}" in tex
+    assert r"\begin{tabular}{lcccccc}" in tex
+    assert r"\toprule" in tex
+    assert r"\midrule" in tex
+    assert r"\bottomrule" in tex
+    assert r"\end{tabular}" in tex
+    assert r"\end{table}" in tex
+
+    # Methods
+    assert "Whisper Large-v3" in tex
+    assert r"CTC Trellis (MMS\_FA)" in tex
+    assert "Proposed Hybrid" in tex
+
+    # Formatted metrics
+    assert "119.1 [117.0, 121.7]" in tex
+    assert "121.3" in tex
+    assert "35.1 [33.3, 39.0]" in tex
+    assert "35.8" in tex
+    assert "11.7 [11.2, 11.9]" in tex
+    assert "12.9" in tex
+
+    # Mode 1 phone metrics must be '--'
+    assert "--" in tex
+
+    # Escaped percent in tabular headers and cells
+    assert r"Word MAE [95\% CI] (ms)" in tex
+    assert r"Acc@20ms (\%)" in tex
+    assert r"100.0\%" in tex
+    assert r"12.1\%" in tex
+    assert r"0.0\%" in tex
+
+    # Invariant: NO unescaped percent sign in the table
+    assert re.search(r"(?<!\\)%", tex) is None
+
+
+def test_generate_computational_performance_table_mock_data(
+    sample_benchmark_payload: dict[str, Any],
+) -> None:
+    """Verify Table 2 contains RTF, VRAM, RAM columns and booktabs formatting."""
+    from scripts.generate_paper_tables import generate_computational_performance_table
+
+    tex = generate_computational_performance_table(sample_benchmark_payload)
+
+    assert r"\begin{table}[t]" in tex
+    assert r"\centering" in tex
+    assert r"\caption{Computational Efficiency Across Ablation Modes}" in tex
+    assert r"\label{tab:computational_performance}" in tex
+    assert r"\begin{tabular}{lccc}" in tex
+    assert r"\toprule" in tex
+    assert r"\midrule" in tex
+    assert r"\bottomrule" in tex
+    assert r"\end{tabular}" in tex
+    assert r"\end{table}" in tex
+
+    # RTF formatted to 3 decimal places with \(\times\)
+    assert r"0.045\(\times\)" in tex
+    assert r"0.025\(\times\)" in tex
+    assert r"0.038\(\times\)" in tex
+
+    # Peak VRAM: Mode 1 is 0.0 -> '--', Mode 2 is 512.5, Mode 3 is 1850.0
+    assert "--" in tex
+    assert "512.5" in tex
+    assert "1850.0" in tex
+
+    # Peak RAM formatted with 1 decimal place
+    assert "37.8" in tex
+    assert "42.1" in tex
+    assert "48.5" in tex
+
+    # Invariant: NO unescaped percent sign in the table
+    assert re.search(r"(?<!\\)%", tex) is None
+
+
+def test_generate_statistical_significance_table_mock_data(
+    sample_benchmark_payload: dict[str, Any],
+) -> None:
+    """Verify Table 3 contains Wilcoxon W, p-value in math mode, signed Cliff's delta."""
+    from scripts.generate_paper_tables import generate_statistical_significance_table
+
+    tex = generate_statistical_significance_table(sample_benchmark_payload)
+
+    assert r"\begin{table}[t]" in tex
+    assert r"\centering" in tex
+    assert r"\caption{Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size}" in tex
+    assert r"\label{tab:statistical_significance}" in tex
+    assert r"\begin{tabular}{lcccc}" in tex
+    assert r"\toprule" in tex
+    assert r"\midrule" in tex
+    assert r"\bottomrule" in tex
+    assert r"\end{tabular}" in tex
+    assert r"\end{table}" in tex
+
+    # Comparison pairs
+    assert "Proposed Hybrid vs. Whisper Large-v3" in tex
+    assert "Proposed Hybrid vs. CTC Trellis" in tex
+
+    # Wilcoxon W
+    assert "0.0" in tex
+    assert "8.0" in tex
+
+    # p-values formatted in scientific math mode
+    assert r"$1.68 \times 10^{-12}$" in tex
+    assert r"$2.42 \times 10^{-12}$" in tex
+
+    # Cliff's delta with sign
+    assert "+1.00" in tex
+    assert "+0.94" in tex
+
+    # Effect size capitalized
+    assert "Large" in tex
+
+    # Invariant: NO unescaped percent sign in the table
+    assert re.search(r"(?<!\\)%", tex) is None
+
+
+def test_generate_all_tables_from_json_file(tmp_path: Path) -> None:
+    """Verify generate_all_tables produces all 3 .tex files from benchmark_results.json."""
+    from scripts.generate_paper_tables import generate_all_tables
+
+    input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
+    assert input_file.is_file(), f"Expected test artifact {input_file} to exist"
+
+    out_dir = tmp_path / "paper_tables"
+    result_paths = generate_all_tables(input_file, out_dir)
+
+    assert set(result_paths.keys()) == {
+        "alignment_accuracy",
+        "computational_performance",
+        "statistical_significance",
+    }
+
+    t1_file = out_dir / "table_alignment_accuracy.tex"
+    t2_file = out_dir / "table_computational_performance.tex"
+    t3_file = out_dir / "table_statistical_significance.tex"
+
+    for f in (t1_file, t2_file, t3_file):
+        assert f.is_file()
+        content = f.read_text(encoding="utf-8")
+        assert len(content) > 100
+        assert r"\begin{table}" in content
+        assert r"\begin{tabular}" in content
+        assert r"\toprule" in content
+        assert r"\midrule" in content
+        assert r"\bottomrule" in content
+        assert r"\end{tabular}" in content
+        assert r"\end{table}" in content
+        # Zero unescaped percent signs
+        assert re.search(r"(?<!\\)%", content) is None
+
+
+def test_generate_paper_tables_cli_execution(tmp_path: Path) -> None:
+    """Verify scripts/generate_paper_tables.py CLI generates 3 tables and pure ASCII output."""
+    input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
+    out_dir = tmp_path / "cli_tables"
+
+    cmd = [
+        sys.executable,
+        "scripts/generate_paper_tables.py",
+        "--input",
+        str(input_file),
+        "--output-dir",
+        str(out_dir),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True, check=True)
+
+    assert proc.returncode == 0
+    stdout = proc.stdout
+    assert "[+] Generated alignment_accuracy table" in stdout
+    assert "[+] Generated computational_performance table" in stdout
+    assert "[+] Generated statistical_significance table" in stdout
+    assert "[OK] All publication LaTeX tables generated successfully." in stdout
+
+    # Zero-Emoji discipline: pure ASCII on stdout and stderr
+    assert all(ord(c) < 128 for c in stdout)
+    assert all(ord(c) < 128 for c in proc.stderr)
+
+    assert (out_dir / "table_alignment_accuracy.tex").is_file()
+    assert (out_dir / "table_computational_performance.tex").is_file()
+    assert (out_dir / "table_statistical_significance.tex").is_file()
+
+
+def test_generate_paper_tables_cli_arg_error(tmp_path: Path) -> None:
+    """Verify CLI exits with code 2 on unknown flags."""
+    cmd = [
+        sys.executable,
+        "scripts/generate_paper_tables.py",
+        "--unrecognized-flag",
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    assert proc.returncode == 2
+    assert "error" in proc.stderr.lower() or "unrecognized" in proc.stderr.lower()
+
+
+def test_generate_paper_tables_cli_missing_input_file(tmp_path: Path) -> None:
+    """Verify CLI exits with code 1 when input JSON is missing."""
+    cmd = [
+        sys.executable,
+        "scripts/generate_paper_tables.py",
+        "--input",
+        str(tmp_path / "missing_benchmark.json"),
+        "--output-dir",
+        str(tmp_path / "out"),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    assert proc.returncode == 1
+    assert "[-] Error:" in proc.stderr
+    assert "not found" in proc.stderr.lower()
+
+
+def test_generate_paper_tables_cli_invalid_json_file(tmp_path: Path) -> None:
+    """Verify CLI exits with code 1 on malformed JSON input."""
+    bad_json = tmp_path / "bad.json"
+    bad_json.write_text("{ corrupt json: [", encoding="utf-8")
+
+    cmd = [
+        sys.executable,
+        "scripts/generate_paper_tables.py",
+        "--input",
+        str(bad_json),
+        "--output-dir",
+        str(tmp_path / "out"),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    assert proc.returncode == 1
+    assert "[-] Error:" in proc.stderr
+
+
+def test_generate_paper_tables_missing_required_keys() -> None:
+    """Verify validation errors when required JSON structures are missing."""
+    from scripts.generate_paper_tables import (
+        generate_alignment_accuracy_table,
+        generate_computational_performance_table,
+        generate_statistical_significance_table,
+    )
+
+    with pytest.raises(ValueError, match="missing 'modes'"):
+        generate_alignment_accuracy_table({})
+
+    with pytest.raises(ValueError, match="missing 'modes'"):
+        generate_computational_performance_table({})
+
+    with pytest.raises(ValueError, match="missing 'statistical_tests'"):
+        generate_statistical_significance_table({"modes": {}})
+
+    with pytest.raises(ValueError, match="Unsupported table format"):
+        generate_alignment_accuracy_table({"modes": {"m1": {}}}, table_format="markdown")
+
+
+def test_generate_paper_tables_buckeye_corpus_caption(
+    sample_benchmark_payload: dict[str, Any],
+) -> None:
+    """Verify caption updates cleanly when corpus is buckeye."""
+    from scripts.generate_paper_tables import generate_alignment_accuracy_table
+
+    payload = dict(sample_benchmark_payload)
+    payload["corpus"] = "buckeye"
+    tex = generate_alignment_accuracy_table(payload)
+    assert r"\caption{Buckeye Speech Corpus Alignment Accuracy Across Ablation Modes}" in tex
+
+
+def test_generate_paper_tables_escape_latex_edge_cases() -> None:
+    """Verify escape_latex handles unescaped %, _, and already escaped sequences."""
+    from scripts.generate_paper_tables import escape_latex
+
+    assert escape_latex("") == ""
+    assert escape_latex("test_word") == r"test\_word"
+    assert escape_latex("100% accuracy") == r"100\% accuracy"
+    assert escape_latex(r"already\_escaped and \% safe") == r"already\_escaped and \% safe"
+    assert escape_latex("AT&T_model_v1") == r"AT&T\_model\_v1"
+
+
+def test_generate_paper_tables_alternative_schema_keys() -> None:
+    """Verify generator supports schema variants (computational_metrics, statistical_tests)."""
+    from scripts.generate_paper_tables import (
+        generate_computational_performance_table,
+        generate_statistical_significance_table,
+    )
+
+    alt_payload = {
+        "modes": {
+            "mode1_whisper": {
+                "description": "Whisper Baseline",
+                "word_metrics": {"mae_ms": 110.0, "medae_ms": 112.0},
+                "computational_metrics": {
+                    "rtf": 0.05,
+                    "peak_vram_mb": 1200.0,
+                    "peak_host_ram_mb": 500.0,
+                },
+            }
+        },
+        "statistical_tests": {
+            "mode3_vs_mode1": {
+                "w_statistic": 4.5,
+                "p_value": 0.042,
+                "cliffs_delta": 0.75,
+                "effect_size": "medium",
+            }
+        },
+    }
+
+    t2 = generate_computational_performance_table(alt_payload)
+    assert "Whisper Baseline" in t2
+    assert r"0.050\(\times\)" in t2
+    assert "1200.0" in t2
+    assert "500.0" in t2
+
+    t3 = generate_statistical_significance_table(alt_payload)
+    assert "Proposed Hybrid vs. Whisper Large-v3" in t3
+    assert "4.5" in t3
+    assert "0.042" in t3
+    assert "+0.75" in t3
+    assert "Medium" in t3
+
+
+def test_generate_paper_tables_programmatic_main_dispatch(tmp_path: Path) -> None:
+    """Verify main() return codes in-process for 0, 1, and 2."""
+    from scripts.generate_paper_tables import main
+
+    input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
+    out_dir = tmp_path / "main_dispatch"
+
+    # Exit code 0 on valid run
+    code0 = main(["--input", str(input_file), "--output-dir", str(out_dir)])
+    assert code0 == 0
+
+    # Exit code 1 on missing file
+    code1 = main(["--input", str(tmp_path / "not_found.json")])
+    assert code1 == 1
+
+    # Exit code 2 on invalid flag
+    code2 = main(["--bogus-option"])
+    assert code2 == 2

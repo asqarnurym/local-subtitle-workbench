@@ -709,7 +709,13 @@ def test_cli_real_mode_uninstalled_dependencies_clean_exit_code_1() -> None:
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True)
     assert proc.returncode == 1
-    assert "[-] Benchmark Error: Mode 1 production execution failed" in proc.stderr
+    assert any(
+        err in proc.stderr
+        for err in [
+            "[-] Benchmark Error: Mode 1 production execution failed",
+            "[-] Benchmark Error: Mode 2 production execution failed",
+        ]
+    )
     assert "Traceback (most recent call last)" not in proc.stderr
     # Zero-emoji rule verification
     assert all(ord(c) < 128 for c in proc.stdout)

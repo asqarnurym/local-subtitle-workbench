@@ -236,7 +236,7 @@ def test_forced_aligner_transcript_length_mismatch(tmp_path: Path) -> None:
 def test_forced_aligner_mfa_missing_no_fallback(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.setattr("shutil.which", lambda _: None)
+    monkeypatch.setattr("subtitle_workbench.aligner.check_mfa_available", lambda: False)
     audio_wav = tmp_path / "audio.wav"
     create_dummy_wav(audio_wav)
     chunk = AudioChunk(
@@ -249,8 +249,9 @@ def test_forced_aligner_mfa_missing_no_fallback(
         text="hello",
     )
 
+    # Invariant: when engine="mfa", it must raise MFANotFoundError even if fallback_to_ctc=True
     with pytest.raises(MFANotFoundError):
-        align_chunks([chunk], audio_wav, engine="mfa", fallback_to_ctc=False)
+        align_chunks([chunk], audio_wav, engine="mfa", fallback_to_ctc=True)
 
 
 def test_forced_aligner_mfa_success_mock(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

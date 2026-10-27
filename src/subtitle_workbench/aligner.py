@@ -121,16 +121,12 @@ class ForcedAligner:
                     "and fallback_to_ctc is False."
                 )
         elif engine == "mfa":
-            if mfa_ok:
-                chosen_engine = "mfa"
-            elif fallback_to_ctc:
-                logger.warning(
-                    "Montreal Forced Aligner ('mfa') requested but not found on PATH. "
-                    "Falling back to in-process PyTorch CTC Trellis aligner."
+            if not mfa_ok:
+                raise MFANotFoundError(
+                    "Montreal Forced Aligner ('mfa') requested but not found on PATH or .mfa_env. "
+                    "Cannot execute phonetic alignment without MFA binary."
                 )
-                chosen_engine = "ctc"
-            else:
-                raise MFANotFoundError("Montreal Forced Aligner ('mfa') not found on PATH.")
+            chosen_engine = "mfa"
         elif engine == "ctc":
             chosen_engine = "ctc"
         else:

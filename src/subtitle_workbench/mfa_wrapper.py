@@ -11,6 +11,7 @@ Provides:
 from __future__ import annotations
 
 import logging
+import os
 import shutil
 import subprocess
 import tempfile
@@ -48,6 +49,7 @@ class SubprocessRunner:
         cmd: list[str],
         timeout: float | None = None,
     ) -> subprocess.CompletedProcess[str]:
+        _ensure_mfa_on_path()
         return subprocess.run(
             cmd,
             capture_output=True,
@@ -59,8 +61,31 @@ class SubprocessRunner:
         )
 
 
+def _ensure_mfa_on_path() -> None:
+    """Discover standard user conda/micromamba MFA prefixes and add to PATH if present."""
+    candidates = [
+        Path.home() / ".mfa_env" / "Scripts" / "mfa.exe",
+        Path.home() / ".mfa_env" / "bin" / "mfa",
+    ]
+    for c in candidates:
+        if c.is_file():
+            env_dir = c.parent.parent
+            extra_paths = [
+                str(env_dir / "Scripts"),
+                str(env_dir / "Library" / "bin"),
+                str(env_dir / "Library" / "usr" / "bin"),
+                str(env_dir / "bin"),
+                str(env_dir),
+            ]
+            for ep in reversed(extra_paths):
+                if ep not in os.environ.get("PATH", ""):
+                    os.environ["PATH"] = ep + ";" + os.environ.get("PATH", "")
+            break
+
+
 def check_mfa_available() -> bool:
     """Inspect host environment PATH for Montreal Forced Aligner ('mfa') binary."""
+    _ensure_mfa_on_path()
     return shutil.which("mfa") is not None
 
 

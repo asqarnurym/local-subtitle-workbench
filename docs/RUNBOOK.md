@@ -8,6 +8,13 @@ Target machine: Windows 11, AMD Ryzen 9 5900HX, NVIDIA RTX 3050 Laptop GPU (4 GB
 uv sync --locked --all-extras
 ```
 
+Tests (the `api` extra is required; without it test collection fails on FastAPI):
+
+```powershell
+uv run --locked --all-extras ruff check .
+uv run --locked --all-extras pytest -m "not model"
+```
+
 ### 1.1 Verify that Whisper can use the GPU
 
 ```powershell
@@ -19,6 +26,8 @@ Expected: `True`. Faster-Whisper runs on CTranslate2, which needs cuBLAS 12 and 
 The benchmark uses `--device cuda` by default and **stops with an error** if the GPU is not usable; it never silently falls back to the CPU. Use `--device cpu` only deliberately (results record the device in `config.asr.device`).
 
 The torch wheel from PyPI is CPU-only on Windows; it is used only by the CTC baseline (MMS_FA), which does not need the GPU for accuracy.
+
+**Status (2026-10-28):** `whisper_cuda_available()` returned `False` on the target laptop although `nvidia-smi` sees the GPU. Cause not yet found (candidate: the installed CTranslate2 wheel is CPU-only). Do not run the benchmark with `--device cuda` until this check returns `True`.
 
 ### 1.2 Montreal Forced Aligner
 
@@ -32,6 +41,8 @@ mfa version
 ```
 
 `mfa` must be on `PATH` in the shell that runs the benchmark (or installed under `~/.mfa_env`). The workbench calls `mfa align` once per batch with per-speaker directories (speaker adaptation), `--g2p_model_path english_us_arpa` (pronunciations for out-of-vocabulary words) and `--fine_tune` (boundary refinement below the 10 ms frame shift).
+
+**Status (2026-10-28):** MFA was not found on the laptop (`conda` and `mfa` absent). Install it before any B2 or A2 run.
 
 ## 2. Reference corpora
 
@@ -61,6 +72,17 @@ uv run python scripts/speech_benchmark.py --corpus buckeye --data-dir data/corpo
 ```
 
 Each run writes `benchmark_results.json` (per-mode summary and paired tests), `benchmark_utterances.json` (one row per utterance and mode, including failures and their error text) and `manifest.json` (code hash, input audio hashes, configuration, hardware).
+
+## 3a. Validation protocol
+
+Steps 1-6 must be completed in order. A failed step stops the protocol.
+
+1. **Clean tree and tests.** `git status` is empty. `ruff check .` and `pytest -m "not model"` pass (see section 1).
+2. **Buckeye sample.** Use 10 clips per speaker across all 40 speakers (about 400 clips), drawn with `seed = 20260401` from the staged clips in `data/corpora/buckeye`. Save the selected clip IDs and the seed to `reports/buckeye_sample_20260401.json`.
+3. **Pilot criteria.** On the 10-utterance TIMIT pilot and then on the Buckeye sample: share of failed utterances below 5%, and `word_metrics.coverage` at least 90%. If either fails, do not start the full run; investigate `benchmark_utterances.json` first.
+4. **Freeze.** After a passing pilot, tag the commit (`bench-frozen-<date>`). Code, sample and configuration do not change after the tag; any change means a new tag and a new pilot.
+5. **Full run and tables.** Sections 3 and 5, run from the frozen tag only.
+6. **Ledger.** For each claim that uses the results, add a row to `docs/CLAIM_LEDGER.csv` with `data_provenance = MODEL_EXECUTION`, the run directory and the git tag.
 
 ## 4. Checks before using numbers
 

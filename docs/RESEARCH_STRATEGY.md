@@ -36,8 +36,8 @@ To maximize academic rigor without spreading resources too thin, the research is
 │ • Purely algorithmic & computational focus   │ • Algorithmic Core + Educational Validation  │
 │ • Objective benchmark metrics:               │ • Cognitive Ergonomics User Study (N=15-20): │
 │   - Word MAE, Phone MAE (ms)                 │   - NASA-TLX Cognitive Load Questionnaire   │
-│   - Acc@20ms and Acc@50ms tolerances         │   - Reading comprehension & split-attention  │
-│   - Real-Time Factor (RTF) on RTX 3050       │ • Demonstrates real pedagogical impact       │
+│   - Acc@20ms tolerance                       │   - Reading comprehension & split-attention  │
+│                                              │ • Demonstrates real pedagogical impact       │
 │ • Clustered Bootstrap & Wilcoxon tests       │ • Full chapter on educational accessibility  │
 └──────────────────────────────────────────────┴──────────────────────────────────────────────┘
 ```

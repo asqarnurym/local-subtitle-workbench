@@ -13,8 +13,10 @@ All datasets used by the workbench must strictly reside within isolated subdirec
 ```
 data/corpora/
 ├── synthetic/               # Synthetic signal bursts for unit DTW math verification
-├── timit/                   # DARPA/NIST Acoustic-Phonetic Gold Standard (LDC93S1)
-├── buckeye/                 # OSU Buckeye Conversational Speech Corpus (Casual English)
+├── timit/                   # TIMIT gold: free NLTK sample (160 utt.) or full LDC93S1
+├── buckeye/                 # Buckeye gold: clips cut from the native .words/.phones tracks
+├── librispeech/             # SILVER: MFA alignments (agreement only, never accuracy)
+├── l2arctic/                # SILVER: automatic TextGrids (accented speech, relative only)
 └── aitu_lectures/           # Planned double-blind annotated AITU lecture benchmark
 ```
 
@@ -27,6 +29,9 @@ data/corpora/
 | **`CORPUS-SYNTH`** | `data/corpora/synthetic/` | Synthetic Math Oracle | Synthetic tone bursts | MIT / Local generator | **VALID** (Unit regression, CI wheel smoke test) | **INVALID** (Must NEVER be reported as speech accuracy) |
 | **`CORPUS-TIMIT`** | `data/corpora/timit/` | Phoneme + Word Lab Gold ($\pm 10\text{--}16\text{ ms}$) | Studio clean ($SNR > 35\text{ dB}$, $RT_{60} < 0.1\text{ s}$) | LDC License (`LDC93S1`, Commercial Restricted) | **VALID** (Algorithmic calibration) | **VALID** (Primary gold-standard benchmark for sub-20ms phoneme target) |
 | **`CORPUS-BUCKEYE`**| `data/corpora/buckeye/` | Phoneme + Word Lab Gold ($\pm 15\text{--}35\text{ ms}$) | High coarticulation, conversational speech | Free Academic Non-Commercial | **VALID** (Stress testing) | **VALID** (Stress-test benchmark for spontaneous reductions) |
+| **`CORPUS-TIMIT-SAMPLE`** | `data/corpora/timit/` | Phoneme + Word Lab Gold (same annotation as TIMIT) | Studio clean | CC BY-NC-SA (LDC, distributed by NLTK) | **VALID** | **VALID** (160 utterances, 16 speakers; free) |
+| **`CORPUS-LIBRISPEECH`** | `data/corpora/librispeech/` | **Silver**: Montreal Forced Aligner output | Read audiobooks | CC BY 4.0 | **VALID** (scale, relative comparisons) | **Agreement with MFA only**; must not be used to rank an MFA-based mode |
+| **`CORPUS-L2ARCTIC`** | `data/corpora/l2arctic/` | **Silver**: forced-alignment TextGrids; the `annotation/` subset corrects phone labels but its boundaries remain on the 10 ms forced-alignment grid | Read, non-native (6 L1s) | CC BY-NC 4.0 | **VALID** (accent robustness, relative) | **Agreement only** |
 | **`CORPUS-AITU`**   | `data/corpora/aitu_lectures/` | Double-blind Praat Gold (Planned) | Real university auditorium lectures | Creative Commons / In-house AITU | **VALID** (Final system target) | **VALID** (When double-blind annotation and IAA are published) |
 
 ---
@@ -81,7 +86,7 @@ data/corpora/
 - **Specification:** A dedicated subset of 4 lecture clips (total 20 minutes) extracted from Astana IT University computer science lectures:
   - Audio pre-processed to 16 kHz mono PCM WAV.
   - Double-blind phonetic annotation in Praat by two independent annotators.
-  - Published Inter-Annotator Agreement (Cohen's Kappa and boundary RMSE).
+  - Published Inter-Annotator Agreement (Cohen's Kappa and boundary agreement).
 - **Validity for Project & Publication:** Will serve as the empirical validation testbed for the Master's Thesis defense and final journal publication.
 
 ---
@@ -92,7 +97,7 @@ The following reference datasets are cataloged for multi-domain validation, cros
 
 1. **LRS3-TED Audiovisual Speech Corpus (`BACKLOG-LRS3`):**
    - *Source:* Oxford Visual Geometry Group & DeepMind (Afouras et al., Interspeech 2018).
-   - *Description:* Over 400 hours of video lectures and TED talks with synchronized word alignments and video frames. Ideal for testing educational talking-head video synchronization and visual lip-sync.
+   - *Description:* Over 400 hours of video lectures and TED talks with automatically derived word alignments and video frames (not a manual boundary reference). Ideal for testing educational talking-head video synchronization and visual lip-sync.
    - *Licensing:* Creative Commons / Academic Research.
 2. **LibriSpeech-Alignments (`BACKLOG-LIBRISPEECH`):**
    - *Source:* Panayotov et al. (ICASSP 2015) with precomputed Montreal Forced Aligner acoustic alignments (Montreal Corpus Tools).

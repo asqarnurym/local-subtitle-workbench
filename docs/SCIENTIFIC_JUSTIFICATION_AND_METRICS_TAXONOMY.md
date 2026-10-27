@@ -57,13 +57,8 @@ This document provides the exhaustive scientific, psychoacoustic, and empirical 
 | Metric | Mathematical Definition | Why Chosen? (Scientific & Practical Justification) |
 | :--- | :--- | :--- |
 | **MAE (Mean Absolute Error)** | $\frac{1}{N} \sum_{i=1}^N \|t_i^{\text{pred}} - t_i^{\text{ref}}\|$ | Standard metric across forced alignment literature (MFA, WhisperX, Charsiu). Measures average temporal displacement in milliseconds. Reported separately for Word and Phoneme levels. |
-| **MedAE (Median Absolute Error)** | $\text{median}(\{\|t_i^{\text{pred}} - t_i^{\text{ref}}\|\})$ | **Robustness against ASR insertion/deletion outliers.** Because boundary errors exhibit a heavy right-tail distribution due to occasional missed words, median provides the true central tendency of the aligner. |
 | **Acc@20ms (%)** | $\frac{1}{N} \sum \mathbb{I}(\Delta t_i \le 20\text{ms}) \times 100\%$ | **Direct thesis target verification.** Measures the percentage of boundaries satisfying the human-equivalent noise floor ($\le 20\text{ ms}$) on TIMIT. Target: $\ge 85\%$. |
-| **Acc@50ms (%)** | $\frac{1}{N} \sum \mathbb{I}(\Delta t_i \le 50\text{ms}) \times 100\%$ | **Broadcast & WCAG 2.1 compliance.** Measures the proportion of subtitle transitions that are completely imperceptible to human learners according to ITU-R BT.1359-1 and EBU R37. Target: $\ge 95\%$. |
-| **Acc@100ms (%)** | $\frac{1}{N} \sum \mathbb{I}(\Delta t_i \le 100\text{ms}) \times 100\%$ | **Cognitive load safeguard.** Measures the proportion of boundaries that strictly prevent split-attention collapse. Target: $\ge 99\%$. |
 | **WER (Word Error Rate)** | $\frac{S + D + I}{N_{\text{ref}}} \times 100\%$ | **Transcription integrity.** Measures text accuracy (substitutions, deletions, insertions). Crucial because boundary alignment is invalid if the underlying words are hallucinated or omitted. |
-| **RTF (Real-Time Factor)** | $\frac{T_{\text{processing}}}{T_{\text{audio}}}$ | **Hardware viability.** Proves that the system executes faster than real-time ($\text{RTF} \le 0.25$ means 1 hour of lecture is processed in $\le 15$ minutes on an affordable RTX 3050 Laptop GPU). |
-| **Peak VRAM (GB)** | $\max(\text{allocated VRAM})$ | **Hardware ceiling.** Verifies the system never exceeds 3.5 GB on a 4.0 GB consumer GPU. |
 
 ---
 
@@ -95,7 +90,7 @@ This document provides the exhaustive scientific, psychoacoustic, and empirical 
 ## 5. Scientific Justification of Technological Choices
 
 ### 5.1 Why Faster-Whisper (Large-v3 INT8)?
-* **Accuracy vs Memory:** Large-v3 yields SOTA transcription accuracy on accented academic English. In FP16 it requires $>3.2\text{ GB}$ VRAM, which would cause OOM errors on a 4 GB laptop GPU. CTranslate2 INT8 quantization reduces VRAM footprint to **~1.85 GB** (a 42% reduction) with $<0.2\%$ degradation in Word Error Rate.
+* **Accuracy vs Memory:** Large-v3 yields SOTA transcription accuracy on accented academic English. In FP16 it requires $>3.2\text{ GB}$ VRAM, which would cause OOM errors on a 4 GB laptop GPU. CTranslate2 INT8 quantization makes it fit the 4 GB GPU.
 * **Why not Cloud ASR (Google Speech / OpenAI API)?** Violates the strict master's thesis mandate for 100% offline, local, privacy-preserving execution on university hardware without recurring API costs.
 
 ### 5.2 Why Banded DTW (`dtw.py`) with 0.5s Overlap Padding?

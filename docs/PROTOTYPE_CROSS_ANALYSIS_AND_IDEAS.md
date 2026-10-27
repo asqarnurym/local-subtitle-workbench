@@ -36,7 +36,7 @@ In Section 6 (*Threats to Validity*) and Section 7 (*Conclusion & Future Work*) 
 │ work."                                │                 │ evaluating millisecond-level Word & Phone MAE.       │
 ├───────────────────────────────────────┼─────────────────┼───────────────────────────────────────────────────────┤
 │ 2. "ASR confidence does not indicate  │ RESOLVED        │ Switched from confidence proxies to exact millisecond │
-│ actual transcription accuracy."       │                 │ collar evaluation (Acc@20ms, Acc@50ms, Acc@100ms).    │
+│ actual transcription accuracy."       │                 │ boundary evaluation (MAE, Acc@20ms).                  │
 ├───────────────────────────────────────┼─────────────────┼───────────────────────────────────────────────────────┤
 │ 3. "A larger test corpus with source  │ RESOLVED        │ Adopted recognized benchmark standards (LDC93S1,      │
 │ links and license metadata..."        │                 │ Buckeye) with immutable SHA-256 manifest audit trails.│

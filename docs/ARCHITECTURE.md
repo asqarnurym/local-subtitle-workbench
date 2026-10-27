@@ -13,8 +13,8 @@ The **Local Subtitle Alignment Workbench** is an offline, modular Python system 
 
 In strict compliance with the Master's Individual Plan, the workbench integrates three foundational technologies into a unified hierarchical pipeline:
 1. **Automatic Speech Recognition (ASR):** OpenAI Whisper (via `faster-whisper` CTranslate2 INT8) for verbatim transcription and initial segment timestamps.
-2. **Macro-Alignment & Segmentation (DTW):** Bounded Dynamic Time Warping (`dtw.py`) with Silero-VAD silence boundary anchoring to eliminate temporal drift on long educational recordings.
-3. **Forced Alignment (MFA & CTC Trellis):** Montreal Forced Aligner (Kaldi GMM-HMM + CMUDict) as the primary phonetic scientific engine, with an in-process PyTorch CTC Trellis (`torchaudio MMS_FA`) fallback.
+2. **Macro-Alignment & Segmentation ("downsample-then-align"):** a known transcript is first aligned to the Whisper words by a banded monotonic dynamic-programming alignment over word tokens (`anchoring.py`; a DTW-style path at word resolution), then cut into pause-anchored chunks using Silero-VAD. The separate acoustic banded DTW (`dtw.py`) serves the audio-to-audio timing-transfer tool (`align-dtw`).
+3. **Forced Alignment:** Montreal Forced Aligner (Kaldi GMM-HMM) is the engine of the proposed pipeline; torchaudio `MMS_FA` (CTC trellis) is a baseline. The engine is always chosen explicitly; there is no automatic fallback between engines.
 
 ```
                            HIERARCHICAL SYSTEM TOPOLOGY
@@ -29,14 +29,14 @@ In strict compliance with the Master's Individual Plan, the workbench integrates
 └───────────────────────────────────────────┬────────────────────────────────────────────┘
                                             ▼ (VRAM Unload: torch.cuda.empty_cache())
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                        STAGE 3: MACRO-DTW & BOUNDED CHUNKING                           │
-│  Partitioning (L <= 30s) + Overlap (Δ_pad = 0.5s) ──► Banded DTW (dtw.py) Drift Stitch │
+│                 STAGE 3: TRANSCRIPT ANCHORING & BOUNDED CHUNKING                       │
+│  Word-level banded DP (anchoring.py) ──► Chunks L <= 30 s, overlap 0.5 s (chunker.py)  │
 └───────────────────────────────────────────┬────────────────────────────────────────────┘
                                             ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                         STAGE 4: FORCED ALIGNMENT (PHONETIC & WORD)            │
-│       Mode B (Primary): Montreal Forced Aligner (Kaldi HMM-GMM) ──► Phonemes (<20ms)   │
-│       Mode A (Fallback): TorchAudio MMS_FA (CTC Trellis DP)    ──► Words (<50ms)       │
+│       Proposed: Montreal Forced Aligner, one batch call ──► Words + Phonemes          │
+│       Baseline: TorchAudio MMS_FA (CTC Trellis DP)      ──► Words                     │
 └───────────────────────────────────────────┬────────────────────────────────────────────┘
                                             ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
@@ -56,10 +56,10 @@ Every component in the architecture is chosen based on empirical trade-offs betw
 | :--- | :--- | :--- | :--- |
 | **Audio Ingestion** | **Pure Python `wave` (PCM16 16kHz)** | `FFmpeg` / `PyAV` subprocess | • **Zero external dependency:** Operates natively without system binaries or DLL conflicts.<br>• **Deterministic memory:** Strict header inspection rejects invalid rates or channels before allocation.<br>• **Audio fidelity:** Guarantees uncompressed, un-resampled PCM data for downstream models. *(FFmpeg is maintained in the backlog as an optional containerized preprocessor).* |
 | **VAD** | **Silero-VAD v4 (ONNX / TorchScript)** | Energy thresholding / WebRTC VAD | • **Acoustic robustness:** Silero-VAD is trained on diverse noisy audio (SNR 10–30 dB) and reliably detects natural pause boundaries without false positives on breath/reverberation.<br>• **Lightweight:** Evaluates 30 ms windows in $<1\text{ ms}$ on CPU. |
-| **ASR** | **Faster-Whisper Large-v3 (INT8)** | Vanilla Whisper / Distil-Whisper / whisper.cpp / NeMo Parakeet-TDT | • **Memory Sizing:** Large-v3 INT8 via CTranslate2 consumes **~1.85 GB VRAM**, fitting comfortably into our 4.0 GB GPU limit (Vanilla FP16 requires $>3.2\text{ GB}$).<br>• **Execution Speed:** 3.5x faster decoding than Vanilla Whisper on NVIDIA Turing/Ampere tensor cores.<br>• **Transcription Fidelity:** Retains SOTA low WER on accented academic speech.<br>• **Accessibility Alternatives:** `whisper.cpp` provides pure-CPU offline fallback for low-resource student laptops without dedicated GPUs; `Parakeet-TDT` provides a non-autoregressive Transducer benchmark in the analogs backlog. |
+| **ASR** | **Faster-Whisper Large-v3 (INT8)** | Vanilla Whisper / Distil-Whisper / whisper.cpp / NeMo Parakeet-TDT | • **Memory Sizing:** Large-v3 INT8 via CTranslate2 fits into the 4.0 GB GPU of the target laptop, whereas vanilla FP16 does not.<br>• **Transcription Fidelity:** Retains SOTA low WER on accented academic speech.<br>• **Accessibility Alternatives:** `whisper.cpp` provides pure-CPU offline fallback for low-resource student laptops without dedicated GPUs; `Parakeet-TDT` provides a non-autoregressive Transducer benchmark in the analogs backlog. |
 | **Macro Alignment** | **Banded DTW with Overlap Padding (`dtw.py`)** | Global Unbounded DTW / FastDTW | • **Memory Bound:** Unbounded DTW on a 60-min lecture ($180,000 \times 180,000$) requires $\approx 32.4\text{ GB}$ of RAM ($O(T \times U)$).<br>• **Banded DP:** Bandwidth of $\pm 0.5\text{ s}$ around diagonal bounds evaluated cells to $<2,000,000$ ($O(T \cdot B)$), keeping memory $<15\text{ MB}$.<br>• **Chunk Padding:** $0.5\text{ s}$ context padding prevents acoustic truncation at chunk borders. |
 | **Forced Alignment** | **Montreal Forced Aligner (Kaldi GMM-HMM)** | TorchAudio MMS_FA / Charsiu / Gentle | • **Target Granularity:** MFA models acoustic transitions down to individual **phoneme states** via triphone acoustic models and CMUDict pronunciation lexicon, enabling the thesis target of $<20\text{ ms}$ error.<br>• **Academic Gold Standard:** Universally recognized in speech and linguistic science (McAuliffe et al., 2017). |
-| **Alignment Fallback** | **TorchAudio `MMS_FA` (CTC Trellis)** | Wav2Vec2-base / Kaldi-C++ in-process | • **Self-Contained Execution:** 100% PyTorch in-process execution without external Conda/Kaldi dependencies for CI/CD and rapid word-level testing.<br>• **Character Vocabulary:** Evaluates Trellis dynamic programming over character emission matrices. |
+| **Alignment Baseline** | **TorchAudio `MMS_FA` (CTC Trellis)** | Wav2Vec2-base / Kaldi-C++ in-process | • **Self-Contained Execution:** 100% PyTorch in-process execution without external Conda/Kaldi dependencies for CI/CD and rapid word-level testing.<br>• **Character Vocabulary:** Evaluates Trellis dynamic programming over character emission matrices. |
 
 ### 2.1 Montreal Forced Aligner (MFA) Operational Architecture & Windows 11 Toolchain
 
@@ -67,18 +67,18 @@ In speech science, Montreal Forced Aligner (McAuliffe et al., Interspeech 2017) 
 
 Two critical architectural decisions govern MFA in this workbench:
 1. **External CLI Integration (No PyPI Dependency):**  
-   Kaldi C++ binaries and OpenFST DLLs on Windows 11 are distributed via `conda-forge`. MFA **cannot** be packaged as a direct wheel in `pyproject.toml` (which uses Python 3.12 with `uv`). The workbench interfaces with MFA as an external CLI tool (`mfa.exe`) via `subprocess.run`, gracefully detecting its presence on system PATH (`check_mfa_available()`).
+   Kaldi C++ binaries and OpenFST DLLs on Windows 11 are distributed via `conda-forge`. MFA **cannot** be packaged as a direct wheel in `pyproject.toml` (which uses Python 3.12 with `uv`). The workbench interfaces with MFA as an external CLI tool (`mfa.exe`) via `subprocess.run`; if MFA is requested but missing, the run stops with an error.
 2. **Corpus Staging Batch Architecture (Overhead Prevention):**  
-   Each invocation of `mfa align` incurs 10–15 seconds of process startup latency (Python CLI bootstrap, SQLite dictionary cache, Kaldi initialization). Spawning MFA per 30-second chunk in a loop would introduce disastrous overhead (50 chunks $\times$ 12s = 600s). The workbench stages all audio chunks into a temporary corpus directory (`temp/mfa_staging_<uuid>/corpus/chunk_0000.wav`, `.lab`), executes `mfa align` **once per document** (~22s total for 50 chunks), and parses the resulting Praat `.TextGrid` files.
+   Each invocation of `mfa align` incurs 10–15 seconds of process startup latency (Python CLI bootstrap, SQLite dictionary cache, Kaldi initialization). Spawning MFA per 30-second chunk in a loop would introduce disastrous overhead (50 chunks $\times$ 12s = 600s). The workbench stages all audio chunks into a temporary corpus directory (`temp/mfa_staging_<uuid>/corpus/chunk_0000.wav`, `.lab`), executes `mfa align` **once per batch** (one lecture, or every utterance of a benchmark run, grouped into per-speaker directories so that MFA performs speaker adaptation), and parses the resulting Praat `.TextGrid` files. Out-of-vocabulary words are pronounced with `--g2p_model_path`, and `--fine_tune` refines boundaries below the 10 ms frame shift.
 3. **Tripartite Dual-Engine Coexistence:**  
    - **Mode B (MFA):** Primary scientific benchmark fulfilling the AITU Master's Individual Plan for sub-20ms phoneme boundaries.  
-   - **Mode A (MMS_FA CTC Trellis):** Self-contained, in-process PyTorch dynamic programming fallback for zero-dependency execution.  
+   - **Mode A (MMS_FA CTC Trellis):** In-process PyTorch baseline, used only when explicitly selected.  
    - **Publication 2:** The direct empirical benchmark comparing Kaldi GMM-HMM vs Neural CTC Trellis on accented educational speech forms the core experimental contribution for the *Scientific Journal of Astana IT University*.
 
 ### 2.2 Out-Of-Vocabulary (OOV) Academic Lexicon Mitigation
 In university lectures, instructors frequently employ specialized academic terminology (*backpropagation, quaternion, eigenvalues, kubernetes, polymorphism*) absent from standard pronunciation lexicons like CMUDict (~134k words).
-- **MFA G2P Generation:** Montreal Forced Aligner integrates an automated Grapheme-to-Phoneme model (`mfa g2p english_g2p`) to generate missing pronunciations dynamically during corpus staging.
-- **CTC Immunity:** The Mode A fallback (`torchaudio MMS_FA`) maps acoustic frames directly to a character-level alphabet (`[a-z|']`), rendering it inherently 100% immune to dictionary OOV failures.
+- **MFA G2P Generation:** `mfa align --g2p_model_path english_us_arpa` generates pronunciations for out-of-vocabulary words during alignment.
+- **CTC Immunity:** The CTC baseline (`torchaudio MMS_FA`) maps acoustic frames directly to a character-level alphabet (`[a-z|']`), rendering it inherently 100% immune to dictionary OOV failures.
 
 ### 2.3 Discretization Limits: CTC 20ms Frame Stride vs Continuous Triphone HMMs
 - **MMS_FA (Wav2Vec2) Stride:** The convolutional feature extractor downsamples 16 kHz audio by 320 samples ($16000 / 320 = 50\text{ Hz}$), resulting in a discrete frame resolution of exactly **20.0 ms**. Without continuous sub-frame interpolation, CTC Trellis boundary placements are discretized to 20 ms intervals.
@@ -90,39 +90,9 @@ In university lectures, instructors frequently employ specialized academic termi
 
 ---
 
-## 3. Hardware & VRAM Memory Budget (NVIDIA RTX 3050 Laptop 4 GB)
+## 3. Hardware Constraint (NVIDIA RTX 3050 Laptop, 4 GB)
 
-To prevent CUDA Out-Of-Memory (OOM) crashes, the pipeline enforces **Strict Sequential Execution** with explicit garbage collection and cache flushing between stages.
-
-```
-                           GPU VRAM TIMELINE (BUDGET: 4.0 GB)
-VRAM (GB)
- 4.0 ┌──────────────────────────────────────────────────────────── (Hard GPU Limit)
- 3.5 ┌ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - (Safe Headroom)
- 3.0 │
- 2.5 │
- 2.0 │     ┌──────────────┐
-     │     │Faster-Whisper│
- 1.5 │     │Large-v3 INT8 │                          ┌──────────────┐
-     │     │  (~1.85 GB)  │                          │  MMS_FA /    │
- 1.0 │     │              │                          │  PyTorch GPU │
-     │     │              │     (torch.cuda.empty)   │  (~1.45 GB)  │
- 0.5 │     │              │ ──► [VRAM FLUSHED]   ──► │              │
- 0.0 └─────┴──────────────┴──────────────────────────┴──────────────┴──────── Time
-        Stage 2 (ASR)          Inter-Stage            Stage 4 (Align)
-```
-
-| Pipeline Stage | Active Component | Hardware Device | Working Memory | Peak VRAM | Status vs 4.0 GB Budget |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **1. Audio Ingestion** | `load_wav` / Silero-VAD | CPU (NumPy/ONNX) | ~60 MB RAM | 0.0 GB | Safe |
-| **2. Transcription (ASR)** | Faster-Whisper Large-v3 INT8 | GPU (CUDA 12.4) | ~1.85 GB VRAM | **1.85 GB** | **46.2% of VRAM (Safe)** |
-| **-- Inter-Stage Cleanup --** | `del model; gc.collect(); torch.cuda.empty_cache()` | CPU / GPU | - | **<0.15 GB** | Cleared |
-| **3. Macro-DTW** | Banded DTW (`dtw.py`) | CPU (NumPy) | ~45 MB RAM | 0.0 GB | Safe |
-| **4. Forced Alignment: MFA (Mode B)** | MFA (Kaldi Subprocess) | CPU (Kaldi C++) | ~400 MB RAM | 0.0 GB | Safe (Zero VRAM) |
-| **4. Forced Alignment: CTC (Mode A)** | MMS_FA (TorchAudio CTC) | GPU (CUDA 12.4) | ~1.45 GB VRAM | **1.45 GB** | **36.2% of VRAM (Safe)** |
-| **5. Artifact Export** | WebVTT / JSON-LD / Manifest | CPU (Python) | ~10 MB RAM | 0.0 GB | Safe |
-
-*Maximum concurrent VRAM allocation at any point in the pipeline is $\max(1.85, 1.45) = 1.85\text{ GB} \le 3.5\text{ GB}$.*
+To prevent CUDA Out-Of-Memory crashes on a 4 GB laptop GPU, neural models run **strictly sequentially**: Faster-Whisper is unloaded (`del model; gc.collect(); torch.cuda.empty_cache()`) before the CTC aligner is loaded. MFA (Kaldi) runs on CPU. This is an engineering constraint, not an evaluation metric.
 
 ---
 
@@ -135,7 +105,7 @@ sequenceDiagram
     participant Ingest as Audio & VAD (audio.py)
     participant ASR as Faster-Whisper (asr.py)
     participant Norm as Normalizer (text_norm.py)
-    participant DTW as Macro Chunker & DTW (dtw.py)
+    participant DTW as Anchoring & Chunker (anchoring.py, chunker.py)
     participant Align as Forced Aligner (mfa_wrapper.py)
     participant Export as Exporter (export.py)
 
@@ -146,18 +116,19 @@ sequenceDiagram
     ASR->>Norm: Return coarse segments & words
     ASR->>ASR: Unload Whisper from GPU VRAM
     Norm->>DTW: Normalized token spans + silence anchors
+    DTW->>DTW: Scenario A: banded word-level alignment of transcript to ASR words (anchors)
     DTW->>DTW: Partition chunks (L <= 30s) with 0.5s padding
     DTW->>Align: Pass acoustic chunks & corresponding text
-    alt Mode B: Montreal Forced Aligner
-        Align->>Align: Stage chunks into temp corpus (.wav + .lab) & run batch MFA
-        Align->>Align: Parse output TextGrids to phonemes (<20ms)
-    else Mode A: CTC Trellis Fallback
+    alt engine = mfa (proposed)
+        Align->>Align: Stage chunks into per-speaker corpus (.wav + .lab), one MFA call
+        Align->>Align: Parse output TextGrids to words and phonemes
+    else engine = ctc (baseline, explicit only)
         Align->>Align: Run MMS_FA CTC Trellis dynamic programming
         Align->>Align: Aggregate character frames to word bounds
     end
     Align->>Export: Return refined word & phoneme intervals
     Export->>Export: Generate WebVTT (karaoke tags) & JSON-LD
-    Export->>Export: Compute SHA-256 manifest & runtime metrics
+    Export->>Export: Compute SHA-256 manifest
     Export-->>User: Output subtitles.vtt, timeline.jsonld, manifest.json
 ```
 

@@ -22,7 +22,7 @@ The core scientific architecture integrates the **Whisper + DTW + MFA Triad**:
 - **Scope Boundary:** Strictly Speech-to-Text Forced Alignment and Subtitle Generation. Strictly excluded: Text-to-Speech (TTS), visual slide/scene descriptions, LLM summaries.
 - **Language Scope:** English-only initial verifiable core (per Individual Plan); Multilingual (RU/KZ) treated as future extensions.
 - **Hardware Platform:** AMD Ryzen 9 5900HX, 16 GB RAM, NVIDIA GeForce RTX 3050 Laptop GPU (4 GB VRAM), Windows 11.
-- **Memory Ceiling:** Peak VRAM $\le 3.5\text{ GB} < 4.0\text{ GB}$ via explicit sequential execution and inter-stage memory cleanup.
+- **Memory Constraint:** models must fit the 4 GB GPU via explicit sequential execution and inter-stage memory cleanup.
 - **Runtime Toolchain:** Python 3.11 / 3.12, `uv` package manager, `hatchling` build backend, `ruff` linter, `pytest` test runner.
 
 ---

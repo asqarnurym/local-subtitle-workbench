@@ -1,129 +1,118 @@
 # Local Subtitle Alignment Workbench
 
-An offline hierarchical subtitle synchronization system for generating millisecond-accurate educational subtitles on consumer workstation hardware. Author: Askar Nurym (Astana IT University).
+An offline subtitle synchronization pipeline that produces word- and phone-level timestamps for educational lecture audio on a consumer laptop. Author: Askar Nurym (Astana IT University).
 
-The workbench provides an end-to-end local speech pipeline: Voice Activity Detection (VAD), Automated Speech Recognition (ASR), banded Dynamic Time Warping (DTW) with contextual overlap padding, and forced phonetic alignment via Montreal Forced Aligner (Kaldi GMM-HMM) or PyTorch CTC Trellis (Meta MMS_FA). Outputs include standard WebVTT subtitles, W3C WCAG 2.1 Media Accessibility JSON-LD timelines, and cryptographic audit manifests.
+The reference pipeline is: Silero-VAD → Faster-Whisper ASR → coarse word-level anchoring of the known transcript (banded sequence alignment, scenario A) → pause-anchored chunking → forced alignment (Montreal Forced Aligner, Kaldi GMM-HMM, with speaker adaptation, G2P for out-of-vocabulary words and boundary fine-tuning) → global monotonic reconciliation → WebVTT, schema.org JSON-LD and SHA-256 manifests. No step is skipped and no engine silently falls back to another.
 
-## System Architecture
+## Pipeline
 
 ```
- Audio Input (16 kHz PCM WAV)
-         │
-         ▼
- [1. Silero-VAD] ──────────► Acoustic pause detection & chunking (audio.py)
-         │
-         ▼
- [2. Faster-Whisper ASR] ──► Large-v3 INT8 transcription & initial timestamps (asr.py)
-         │                   (Deterministic VRAM unload: gc.collect() & cuda.empty_cache())
-         ▼
- [3. Banded Macro-DTW] ────► Monotone sequence alignment with overlap padding (dtw.py)
-         │
-         ▼
- [4. Forced Alignment] ────► Dual-Engine Alignment Facade (alignment.py)
-         │                   ├─ Mode B: Montreal Forced Aligner (Kaldi GMM-HMM batch staging)
-         │                   └─ Mode A: TorchAudio MMS_FA CTC Trellis (in-process fallback)
-         ▼
- [5. Exporters] ───────────► WebVTT, WCAG 2.1 JSON-LD, and SHA-256 Manifest (export.py)
-         │
-         ▼
- [6. Delivery Layers] ─────► Local CLI, FastAPI REST service (api.py), Docker container
+ Audio (16 kHz mono PCM16 WAV)        [optional] known transcript (scenario A)
+        │                                        │
+        ▼                                        │
+ 1. Silero-VAD pauses (strict: a VAD error stops the run)
+        │                                        │
+        ▼                                        │
+ 2. Faster-Whisper large-v3 word timestamps (GPU via CTranslate2 when available)
+        │                                        │
+        ▼                                        ▼
+ 3. Scenario A: banded word-sequence alignment of transcript ↔ ASR words
+    (coarse "downsample-then-align" stage; anchors + interpolation, stats reported)
+    Scenario B: ASR words are used directly
+        │
+        ▼
+ 4. Pause-anchored chunking (≤ 30 s, 0.5 s overlap padding)
+        │
+        ▼
+ 5. Forced alignment of all chunks in ONE call
+    ├─ mfa : Montreal Forced Aligner (per-speaker corpus, --g2p_model_path, --fine_tune)
+    └─ ctc : torchaudio MMS_FA CTC trellis (baseline; explicit choice only)
+        │
+        ▼
+ 6. Global monotonic reconciliation → WebVTT karaoke, JSON-LD, manifest
 ```
 
-| Module | Responsibility | Key Contracts & Invariants |
-| --- | --- | --- |
-| `audio.py` | Audio ingestion & Silero-VAD | Mono PCM16 16 kHz; pause-delimited acoustic chunks $\le 30.0$ s |
-| `asr.py` | Faster-Whisper ASR | Large-v3 INT8 CTranslate2; deterministic VRAM lifecycle |
-| `dtw.py` | Banded Dynamic Time Warping | Monotone alignment path; bounded band around diagonal ($O(T \cdot B)$) |
-| `alignment.py` | Forced phonetic alignment | MFA CLI batch staging (`temp/mfa_staging_*`) & MMS_FA CTC Trellis |
-| `pipeline.py` | Orchestration & provenance | End-to-end execution `run_speech_pipeline`; input/output SHA-256 manifest |
-| `export.py` | Standardized subtitle export | WebVTT karaoke cues, schema.org / WCAG 2.1 `VideoObject` JSON-LD |
-| `api.py` | FastAPI microservice | Asynchronous job runner, background worker, multipart uploads |
-| `metrics.py` | Benchmark evaluation | Boundary MAE, Acc@20ms/50ms/100ms, clustered bootstrap CI, Wilcoxon with Holm adjustment |
-| `corpora.py` | Standard corpus parsers | NIST TIMIT Core Test (`.phn`, `.wrd`), Buckeye Praat TextGrid, synthetic generator |
+| Module | Responsibility |
+| --- | --- |
+| `asr.py` | Faster-Whisper ASR and Silero-VAD; CUDA detection through CTranslate2 and registration of pip-installed cuBLAS/cuDNN DLLs on Windows |
+| `anchoring.py` | Coarse alignment of a known transcript to ASR words (banded DP over words) |
+| `chunker.py` | Pause-anchored chunk partitioning and seam reconciliation |
+| `mfa_wrapper.py` | MFA corpus staging (one `mfa align` call for many utterances) and TextGrid parsing |
+| `aligner.py` | `ForcedAligner` facade: batch alignment (`align_requests`) and strict single-recording alignment |
+| `pipeline.py` | `prepare_alignment_job` (stages 1-4) and `run_speech_pipeline` (complete pipeline + export) |
+| `metrics.py` | Boundary MAE, Acc@20ms, cluster bootstrap CI, paired Wilcoxon + Holm |
+| `phone_sets.py` | Folding of TIMIT/Buckeye/ARPAbet phones to the 39-phone set |
+| `corpora.py`, `buckeye.py` | TIMIT `.wrd/.phn`, Buckeye native `.words/.phones` (clip segmentation), TextGrid loaders |
+| `api.py` | FastAPI service (`/health`, `/info`, `/align-speech`) |
 
-## Status of Evaluation
+## Evaluation status
 
-- **Harness Implementation:** The automated empirical benchmark suite (`scripts/speech_benchmark.py`), statistical significance module (`metrics.py`), and LaTeX table generator (`scripts/generate_paper_tables.py`) are fully implemented and verified via comprehensive unit and challenger tests.
-- **Real Corpus Results (UNMEASURED / PENDING_EXPERIMENT):** No empirical results on real speech corpora (DARPA/NIST TIMIT Core Test or Buckeye Speech Corpus) have been executed yet. The author is responsible for obtaining and mounting licensed corpus archives in `data/corpora/timit` and `data/corpora/buckeye`.
-- **Synthetic Pipeline Self-Test:** The `--offline-synthetic` mode (`dist/benchmark_demo`) uses a deterministic 10-utterance acoustic slice to verify pipeline data flow, metric calculation math, and LaTeX generation. It does **not** execute real speech models and must **not** be cited as empirical performance. All unbacked metrics from prior preliminary drafts have been retracted (see [INCREMENT_6R](docs/increments/INCREMENT_6R_INTEGRITY_REMEDIATION.md)).
+- **No citable results exist yet.** Earlier pilot runs were discarded: their references were MFA alignments and the proposed mode received the reference transcript while the baseline did not. See `docs/IMPROVEMENT_PLAN.md`.
+- **Metrics (Individual Master's Plan):** mean absolute boundary error (word and phone level, start and end boundaries) with cluster bootstrap 95% CI, and the share of boundaries within 20 ms. Coverage (matched reference words) is reported next to every mode.
+- **Benchmark modes:** scenario B (no transcript): `B0_whisper`, `B1_whisper_ctc`, `B2_proposed`; scenario A (transcript known): `A1_ctc`, `A2_proposed`. Proposed vs. baseline comparisons are paired by utterance ID.
+- **Reference corpora:** gold = TIMIT (free NLTK sample, or full LDC93S1) and Buckeye (free, registration); silver = LibriSpeech test-clean and L2-ARCTIC (their boundaries come from forced alignment and are reported as agreement, not accuracy).
+- **Synthetic self-test:** `--offline-synthetic` simulates predictions to test metric and table code. It never runs models and is never citable.
 
 ## Installation
 
-Requirements: Python 3.11 or 3.12 and `uv`. Base installation runs entirely offline with zero GPU dependencies (pure Python + NumPy + SciPy).
+Python 3.11 or 3.12 and `uv`.
 
 ```sh
-# Base environment (audio ingestion, DTW, exporters, CLI, benchmark harness)
-uv sync --locked
-
-# Speech models extra (Faster-Whisper, PyTorch, TorchAudio MMS_FA)
-uv sync --locked --extra speech
-
-# Web API extra (FastAPI, Uvicorn, HTTPX)
-uv sync --locked --extra api
-
-# All extras
+uv sync --locked                       # base (DTW, exporters, CLI, benchmark harness)
+uv sync --locked --extra speech        # Faster-Whisper, torch/torchaudio, CUDA 12 runtime for CTranslate2
+uv sync --locked --extra api           # FastAPI service
 uv sync --locked --all-extras
 ```
 
-### Montreal Forced Aligner (Optional External Toolchain)
-For sub-20ms GMM-HMM phonetic alignment (Mode B), install Montreal Forced Aligner via Conda on Windows 11:
+### Montreal Forced Aligner (required for the proposed pipeline)
+
+MFA is installed with Conda (it is not available as a wheel):
+
 ```powershell
 conda create -n mfa -c conda-forge montreal-forced-aligner
 conda activate mfa
-mfa model download acoustic english_mfa
-mfa model download dictionary english_mfa
+mfa model download acoustic english_us_arpa
+mfa model download dictionary english_us_arpa
+mfa model download g2p english_us_arpa
 ```
-The workbench auto-detects `mfa` on PATH; if absent, it gracefully falls back to in-process TorchAudio CTC Trellis (Mode A).
+
+`mfa` must be on `PATH` (or installed under `~/.mfa_env`). If `--engine mfa` is requested and MFA is missing, the run stops with an error.
+
+See `docs/RUNBOOK.md` for GPU verification and the full benchmark procedure.
 
 ## Usage
 
-### 1. Command Line Interface (CLI)
 ```sh
-# End-to-end speech pipeline (ASR + DTW + Forced Alignment)
-uv run subtitle-workbench align-speech --audio lecture.wav --engine ctc --output-dir out/
+# Scenario B: no transcript (Whisper output is aligned)
+uv run subtitle-workbench align-speech lecture.wav -o out_b/
 
-# Audio-to-audio timing transfer (DTW reference-to-target)
-uv run subtitle-workbench align-audio --reference ref.wav --target tgt.wav --cues cues.json --output out/
-```
+# Scenario A: known transcript
+uv run subtitle-workbench align-speech lecture.wav -o out_a/ --transcript-file lecture.txt
+uv run subtitle-workbench align-speech clip.wav -o out_c/ --transcript-text "known text"
 
-### 2. FastAPI REST Microservice
-```sh
+# Baseline engine (explicit)
+uv run subtitle-workbench align-speech lecture.wav -o out_ctc/ --engine ctc
+
+# Audio-to-audio timing transfer (separate DTW tool)
+uv run subtitle-workbench align-dtw ref.wav target.wav cues.json -o out_dtw/
+
+# REST API
 uv run uvicorn subtitle_workbench.api:app --host 127.0.0.1 --port 8000
 ```
-Open interactive Swagger documentation at `http://127.0.0.1:8000/docs`.
 
-### 3. Pipeline Self-Test & Benchmark Harness
-```sh
-# Run deterministic synthetic pipeline self-test
-uv run python scripts/speech_benchmark.py --offline-synthetic --output-dir dist/benchmark_demo
-
-# Generate publication LaTeX tables (requires --allow-simulated for synthetic runs)
-uv run python scripts/generate_paper_tables.py --input dist/benchmark_demo/benchmark_results.json --output-dir docs/paper --allow-simulated
-```
-
-## Verification and Continuous Integration
-
-All code passes strict quality gates: linting, formatting, type contracts, offline network isolation, and automated tests.
+## Verification
 
 ```sh
-# Linting & formatting
 uv run --locked ruff check .
 uv run --locked ruff format --check .
-
-# Full test suite (offline, socket-guarded)
-uv run --locked pytest
-
-# Standalone wheel packaging and offline smoke test
+uv run --locked pytest          # unit tests never load real models (see tests/conftest.py)
 uv run --locked python -m build --wheel --no-isolation
-uv run python scripts/smoke_wheel.py --wheel dist/local_subtitle_workbench-0.1.0-py3-none-any.whl --output dist/smoke_out
 ```
 
-## Hardware Budget and Resource Management
+## Hardware
 
-- **Target Workstation:** AMD Ryzen 9 5900HX, 16 GB Host RAM, NVIDIA GeForce RTX 3050 Laptop GPU (4 GB VRAM limit, Windows 11).
-- **VRAM Lifecycle Management:** Models are loaded sequentially. After ASR transcription, Faster-Whisper is unloaded, and Python garbage collection plus `torch.cuda.empty_cache()` are explicitly invoked before forced alignment runs, capping sequential peak allocation under 1.85 GB VRAM.
-- **Privacy & Offline Integrity:** Zero external cloud API calls or telemetry. The application executes entirely on local hardware.
+Target: AMD Ryzen 9 5900HX, 16 GB RAM, NVIDIA RTX 3050 Laptop GPU (4 GB), Windows 11. Whisper runs on the GPU through CTranslate2; it is unloaded before alignment. MFA runs on the CPU. Everything runs locally without network services.
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+MIT License. See [LICENSE](LICENSE). Corpora keep their own licenses (TIMIT sample: CC BY-NC-SA; Buckeye: non-commercial).

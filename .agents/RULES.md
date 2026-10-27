@@ -6,7 +6,7 @@
 
 ## 1. Zero Tolerance for Synthetic & Fabricated Claims
 
-1. **Rule of Real Execution:** Never generate, project, or report numerical metrics (MAE, Acc@20ms, Acc@50ms, WER, RTF) without executing the code and producing a verifiable `manifest.json` on disk.
+1. **Rule of Real Execution:** Never generate, project, or report numerical metrics (MAE, Acc@20ms) without executing the code and producing a verifiable `manifest.json` on disk.
 2. **Explicit Unmeasured Markers:** In any comparison table, document, or progress summary where benchmark scripts have not yet been run, every metric cell must be written as:
    ```
    `UNMEASURED / PENDING_EXPERIMENT`
@@ -36,4 +36,4 @@
    All tests must pass with 100% success rate.
 3. **Offline Safety:** Never make unauthorized external network requests, download unverified weights, or run paid cloud APIs. Packaging tests must run with the network socket guard enabled.
 4. **Hardware Discipline:** Always verify that proposed models fit sequentially within the **4.0 GB VRAM limit** of the NVIDIA RTX 3050 Laptop GPU. Every neural model loaded into VRAM must have an explicit `unload()` / `torch.cuda.empty_cache()` teardown step.
-5. **Mandatory Increment Reporting:** Every completed increment must generate its detailed audit log in `docs/increments/INCREMENT_<N>_<UPPERCASE_NAME>.md` conforming to `docs/increments/TEMPLATE_INCREMENT_REPORT.md` before concluding work or merging into `main`.
+5. **Change Records:** Changes are documented by descriptive git commit messages. Only citable empirical claims are tracked, in `docs/CLAIM_LEDGER.csv`. Separate per-increment reports are no longer produced.

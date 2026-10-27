@@ -45,7 +45,7 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
   - Does high-quality `soxr` sinc resampling in FFmpeg yield lower downstream WER than linear interpolation on 44.1 kHz lecture audio?
 - **Isolated Simulation Protocol (`tests/analogs/test_ingestion_analogs.py`):**
   - Run each analog over 5 test audio files (sample rates: 16kHz, 44.1kHz, 48kHz; containers: WAV, MP4, MP3).
-  - Measure: Wall-clock ingestion latency (ms), Peak RAM (MB), Audio sample SNR against reference PCM.
+  - Measure: Audio sample SNR against reference PCM.
 
 ---
 
@@ -58,16 +58,16 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
   3. `analog-2c: pyannote_vad` — SOTA neural segmentation model (BiLSTM / SincNet).
 - **Scientific Questions:**
   - Does WebRTC-VAD fail on low-energy lecture consonants and trailing vowel fades compared to Silero?
-  - Does PyAnnote provide superior pause boundaries at the expense of excessive GPU VRAM consumption ($>800\text{ MB}$)?
+  - Does PyAnnote provide superior pause boundaries?
 - **Isolated Simulation Protocol (`tests/analogs/test_vad_analogs.py`):**
   - Evaluate on 10 minutes of auditorium lecture audio with classroom background murmur (SNR 15 dB).
-  - Measure: Speech boundary Precision / Recall against manual silence labels, processing RTF.
+  - Measure: Speech boundary Precision / Recall against manual silence labels.
 
 ---
 
 ### Node 3: Speech Recognition (ASR Engine)
 - **Primary Method:** `faster-whisper` Large-v3 (CTranslate2 INT8 quantized).
-  - *Properties:* Fast inference via custom 8-bit matrix multiplication kernels, ~1.85 GB VRAM allocation.
+  - *Properties:* Fast inference via custom 8-bit matrix multiplication kernels.
 - **Backlog Analogs:**
   1. `analog-3a: vanilla_openai_whisper` — Official PyTorch FP16 / FP32 implementation from OpenAI repository.
   2. `analog-3b: whisperx_batched` — Batched inference using HuggingFace Transformers pipeline + VAD chunking.
@@ -76,16 +76,15 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
   5. `analog-3e: whisper_cpp` — Georgi Gerganov's pure C/C++ GGML port of Whisper with 4-bit/5-bit quantization. **Crucial for universal educational accessibility:** enables local offline transcription on standard student laptops with integrated graphics (pure CPU execution without CUDA/GPU or heavy PyTorch runtimes).
   6. `analog-3f: parakeet_tdt` — NVIDIA NeMo Parakeet-TDT 1.1B (FastConformer architecture with Token-and-Duration Transducer). Evaluates single-pass non-autoregressive transcription where token acoustic durations are natively emitted by the decoder.
   7. `analog-3g: canary_1b` — NVIDIA Canary-1B (FastConformer encoder + Transformer decoder with multi-task punctuation, capitalization, and multilingual transcription).
-  8. `analog-3h: audio_llm_qwen2_audio` — Alibaba Qwen2-Audio (Audio-Language Model baseline). Used to benchmark generative LLM audio comprehension versus classical acoustic ASR pipelines in terms of VRAM consumption, latency, and hallucination rates.
+  8. `analog-3h: audio_llm_qwen2_audio` — Alibaba Qwen2-Audio (Audio-Language Model baseline). Used to benchmark generative LLM audio comprehension versus classical acoustic ASR pipelines in terms of hallucination rates.
 - **Scientific Questions:**
   - Does INT8 quantization in CTranslate2 degrade transcription accuracy (WER) on technical computer science lectures relative to FP16 PyTorch?
-  - Can Distil-Whisper reach $\text{RTF} < 0.08$ on RTX 3050 without degrading Word Error Rate beyond $+1.0\%$ absolute?
-  - Can `whisper.cpp` with 4-bit / 5-bit quantization on an 8-core CPU provide acceptable RTF ($< 0.3$) for offline student accessibility without any dedicated GPU hardware?
+  - Does Distil-Whisper degrade downstream boundary accuracy relative to Large-v3 when its transcript is force-aligned?
   - Do non-autoregressive Transducer models (Parakeet-TDT) eliminate the acoustic time-warping drift inherent in attention-based Whisper decoders?
-  - What are the memory, latency, and hallucination trade-offs of generative Audio-LLMs (Qwen2-Audio) compared to bounded pipeline architectures (Whisper + MFA) for millisecond subtitle synchronization?
+  - What are the hallucination trade-offs of generative Audio-LLMs (Qwen2-Audio) compared to bounded pipeline architectures (Whisper + MFA) for millisecond subtitle synchronization?
 - **Isolated Simulation Protocol (`tests/analogs/test_asr_analogs.py`):**
   - Evaluate on 3 benchmark lecture recordings (10 minutes total).
-  - Measure: WER (%), Memory Peak VRAM (GB), CPU RAM (GB), Inference RTF on both RTX 3050 GPU and pure CPU.
+  - Measure: downstream word/phone boundary MAE and Acc@20ms after forced alignment.
 
 ---
 
@@ -119,7 +118,7 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
   - How do out-of-vocabulary technical terms affect G2P fallback across the engines?
 - **Isolated Simulation Protocol (`tests/analogs/test_aligner_analogs.py`):**
   - Evaluate on the TIMIT NIST Core Test (192 sentences with phonetic gold standard).
-  - Measure: Phone MAE (ms), Word MAE (ms), Acc@20ms (%), Acc@50ms (%), Processing RTF, RAM/VRAM footprint.
+  - Measure: Phone MAE (ms), Word MAE (ms), Acc@20ms (%).
 
 ---
 
@@ -127,6 +126,6 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
 
 1. **Isolation Guarantee:** Analog implementations must be located exclusively in `src/subtitle_workbench/experimental/` or `tests/analogs/`. They must not alter the default behavior of the core CLI tool `subtitle-workbench`.
 2. **Promotion to Core:** An analog is promoted to the primary pipeline if and only if:
-   - It demonstrates statistically significant superior accuracy ($\Delta \text{MAE} < 0, p < 0.01$) or superior efficiency ($\Delta \text{RTF} < -30\%$) on the frozen benchmark.
+   - It demonstrates statistically significant superior accuracy ($\Delta \text{MAE} < 0, p < 0.01$) on the frozen benchmark.
    - It passes all existing regression tests with zero breaking changes to output schemas (`subtitles.vtt`, `manifest.json`).
    - The decision is approved and logged in the project audit records.

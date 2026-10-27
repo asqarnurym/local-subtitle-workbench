@@ -324,7 +324,7 @@ Following international journal criteria (IEEE Transactions on Learning Technolo
 * **Canonical BibTeX Key:** `Borah2026`
 * **Physical Local PDF:** `Thesis/Article base/Low‐latency transformer model for streaming automatic speech recognition.pdf`
 * **Target Manuscript Section:** Section 4 (Experimental Setup & Benchmarks)
-* **Workbench Component:** Computational Efficiency & Real-Time Factor (RTF) Profiling
+* **Workbench Component:** Background context on streaming ASR (not an evaluation target)
 * **Primary Claim / Empirical Value Substantiated:**
   Minimizing inference latency while preserving recognition accuracy is critical for practical speech processing applications.
 * **Exact Verbatim Quote & Page Coordinate:**

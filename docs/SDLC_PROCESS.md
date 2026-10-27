@@ -108,20 +108,6 @@ An increment or feature pull request is considered **Done** if and only if it sa
 
 ---
 
-## 6. Increment Logging & Audit Reporting Protocol
+## 6. Change Records
 
-To maintain complete transparency, traceability, and defensibility of every development step for the Master's Thesis and course assignments, every completed increment must produce a dedicated, standardized markdown report.
-
-1. **Storage Location:** All increment reports are stored strictly in `docs/increments/`.
-2. **Naming Convention:** `INCREMENT_<N>_<UPPERCASE_NAME>.md` (e.g., `INCREMENT_1_SPEECH_MODELS_AND_NORM.md`).
-3. **Template Standard:** Each report must follow [`docs/increments/TEMPLATE_INCREMENT_REPORT.md`](file:///C:/Users/nurym/Desktop/local-subtitle-workbench/docs/increments/TEMPLATE_INCREMENT_REPORT.md).
-4. **Mandatory Report Sections:**
-   - Increment ID, Date, Branch, Commit SHA, Author, and Status.
-   - Executive Summary & Problem Solved.
-   - Traceability to Master's Individual Plan (НИРМ milestones) and ASDP Quality Gates.
-   - Exact Inventory of Changes: files created, modified, lines of code, and architectural responsibilities.
-   - Quality Gate Verification Evidence: full console outputs of `pytest`, `ruff check`, and wheel build.
-   - Architectural Decisions & Trade-Offs Made.
-   - Edge Cases and Boundary Conditions Tested.
-   - Handover notes and prerequisites for the subsequent increment.
-5. **Git Policy:** The increment report must be committed to the feature branch alongside the implementation code before the pull request or merge into `main` is approved.
+Every change is described by a descriptive git commit message; the repository history is the audit trail. Separate per-increment markdown reports are not produced. Citable empirical claims (numbers that may appear in a publication) are tracked in `docs/CLAIM_LEDGER.csv`, each linked to a `benchmark_results.json` + `manifest.json` pair produced by real model execution.

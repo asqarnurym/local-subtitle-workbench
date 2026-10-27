@@ -39,7 +39,7 @@ The audit manifest must record:
 4. **Configuration Dict:** Complete parameter set (hop size, window size, band seconds, model identifiers).
 5. **Output Hashes:** SHA-256 of all generated files (`subtitles.vtt`, `timeline.jsonld`, `alignment_raw.json`).
 6. **Runtime Environment:** Exact Python, NumPy, PyTorch, CUDA, OS, and hardware platform identifiers.
-7. **Empirical Metrics:** Evaluated cell count, path length, path cost, elapsed wall-clock time, and Real-Time Factor (RTF).
+7. **Empirical Metrics:** Evaluated cell count, path length, and path cost.
 
 ---
 
@@ -60,7 +60,7 @@ The audit manifest must record:
 ### Rule 3: Strict Separation of Raw Scientific vs Display Timings
 - **Raw Scientific Timings (`alignment_raw.json`):**
   - Contains exact floating-point boundary timestamps generated directly by the aligner (MFA or CTC Trellis).
-  - Used exclusively for computing scientific metrics: $\text{MAE}$, $\text{MedAE}$, $\text{Acc}@10\text{ms}$, $\text{Acc}@20\text{ms}$.
+  - Used exclusively for computing scientific metrics: $\text{MAE}$ and $\text{Acc}@20\text{ms}$.
 - **Display Subtitles (`subtitles.vtt`):**
   - Contains post-processed, millisecond-rounded, and ergonomically clamped intervals (e.g., minimum display duration 0.8 s) for video player UX.
   - **Prohibition:** Never evaluate scientific boundary precision on display-clamped subtitles, as post-processing masks true acoustic prediction errors.

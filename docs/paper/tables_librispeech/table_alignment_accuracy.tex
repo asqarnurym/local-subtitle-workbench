@@ -1,0 +1,13 @@
+\begin{table}[t]
+\centering
+\caption{LibriSpeech (test-clean) Alignment Accuracy Across Ablation Modes}
+\label{tab:alignment_accuracy}
+\begin{tabular}{lcccccc}
+\toprule
+Method & Word MAE [95\% CI] (ms) & Word MedAE (ms) & Phone MAE (ms) & Acc@20ms (\%) & Acc@50ms (\%) & Acc@100ms (\%) \\
+\midrule
+Whisper Large-v3 & 620.2 [148.9, 1317.7] & 130.0 & -- & 1.1\% & 9.3\% & 37.0\% \\
+CTC Trellis (MMS\_FA) & 103.5 [94.2, 117.4] & 60.0 & -- & 24.6\% & 49.3\% & 66.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}

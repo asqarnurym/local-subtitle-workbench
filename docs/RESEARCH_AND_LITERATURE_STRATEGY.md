@@ -115,3 +115,31 @@ While the 54 existing local papers comprehensively cover ASR, subtitles, and cog
 1. Search and download the 7 gap articles as full-text PDFs into `Thesis/Article base/`.
 2. Extract exact quotes, table numbers, and findings to an annotated index file (`docs/LITERATURE_ANNOTATIONS.md`).
 3. Incorporate verified textual citations only during the final manuscript drafting stage.
+
+---
+
+## 6. Academic Framing & Tone: Absolute Prohibition of Defensive Disclaimers
+
+A critical guideline for scientific writing and peer-reviewed journal submission:
+
+### The "Defensive Disclaimers" Pitfall
+A common artifact of assisted academic writing is defensive justification against irrelevant alternatives—e.g., awkward phrases like:
+- *«In our approach, we explicitly avoided any cloud LLM calls...»* (Unprofessional / irrelevant)
+- *«We put a strict ban on external APIs and cloud services...»* (Defensive / naive)
+- *«Unlike other systems that make cloud calls, our pipeline does not use cloud...»* (Unscientific)
+
+A journal peer reviewer does not know about past prototype iterations or project history, and evaluating a forced alignment paper does not prompt expectations of cloud LLM calls. Inserting such disclaimers raises unnecessary skepticism and degrades academic credibility.
+
+### Principles of Academic Framing:
+1. **Focus on What the System IS, Not What It IS NOT:**
+   - The manuscript describes the acoustic models, CTC loss formulations, GMM-HMM emission probabilities, VAD pause boundaries, and dynamic time warping matrices. The absence of generative text models or speech synthesis is self-evident from the mathematical and system description.
+2. **Positive, Standard Scientific Terminology:**
+   - When operational constraints, privacy, or deployment environments are discussed (e.g., in the System Architecture or Deployment section), use standard computer science and information security terms:
+     - *«Self-contained, edge-deployable architecture»*
+     - *«Local, deterministic signal processing pipeline»*
+     - *«Institutional data privacy, student data sovereignty, and regulatory compliance (e.g., FERPA, GDPR)»*
+     - *«Guaranteed bounded execution latency independent of external network availability»*
+     - *«Reproducible, zero-marginal-cost offline processing on institutional commodity hardware»*
+3. **Zero Leaks into Final Drafts:**
+   - Pre-submission automated check must verify that terms like "prohibition", "banned", "avoided cloud calls", or "forbidden LLM" never leak into LaTeX/Word manuscripts or thesis chapters.
+

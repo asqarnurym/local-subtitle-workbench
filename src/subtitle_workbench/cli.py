@@ -45,15 +45,22 @@ def main(argv: list[str] | None = None) -> int:
     speech_parser.add_argument("-o", "--output", required=True, type=Path, help="Output directory")
     speech_parser.add_argument(
         "--engine",
-        choices=["auto", "mfa", "ctc"],
-        default="auto",
-        help="Alignment engine (auto, mfa, ctc)",
+        choices=["mfa", "ctc"],
+        default="mfa",
+        help="Forced alignment engine (default: mfa; no implicit fallback)",
     )
-    speech_parser.add_argument(
-        "--transcript",
+    transcript_group = speech_parser.add_mutually_exclusive_group()
+    transcript_group.add_argument(
+        "--transcript-text",
         type=str,
         default=None,
-        help="Inline transcript string or path to text file",
+        help="Known transcript as inline text (scenario A)",
+    )
+    transcript_group.add_argument(
+        "--transcript-file",
+        type=Path,
+        default=None,
+        help="Known transcript as UTF-8 text file (scenario A)",
     )
     speech_parser.add_argument(
         "--vad-silence-min-sec",
@@ -98,7 +105,8 @@ def main(argv: list[str] | None = None) -> int:
             manifest = run_speech_pipeline(
                 audio_path=args.audio_wav,
                 output_dir=args.output,
-                transcript=args.transcript,
+                transcript_text=args.transcript_text,
+                transcript_path=args.transcript_file,
                 engine=args.engine,
                 vad_silence_min_sec=args.vad_silence_min_sec,
                 max_chunk_sec=args.max_chunk_sec,

@@ -91,7 +91,7 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 "hello world",
                 "--engine",
                 "ctc",
@@ -130,10 +130,10 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-file",
                 str(transcript_file),
                 "--engine",
-                "auto",
+                "mfa",
             ]
         )
 
@@ -162,7 +162,7 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 "quick brown fox",
                 "--engine",
                 "ctc",
@@ -300,7 +300,7 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(tmp_path / "out"),
-                "--transcript",
+                "--transcript-file",
                 str(tmp_path / "missing.txt"),
             ]
         )
@@ -321,7 +321,7 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(tmp_path / "out"),
-                "--transcript",
+                "--transcript-text",
                 "   ",
             ]
         )
@@ -349,7 +349,7 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 "hello",
             ]
         )
@@ -362,7 +362,7 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 "hello",
             ]
         )
@@ -384,7 +384,7 @@ class TestAlignSpeechSubcommand:
                 str(wav),
                 "-o",
                 str(wav),
-                "--transcript",
+                "--transcript-text",
                 "hello",
             ]
         )
@@ -769,7 +769,7 @@ class TestStressAndBoundaryChecks:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 large_transcript,
                 "--engine",
                 "ctc",
@@ -781,22 +781,22 @@ class TestStressAndBoundaryChecks:
         assert metrics["chunk_count"] >= 1
         assert (out / "manifest.json").is_file()
 
-    def test_transcript_exceeding_4000_char_boundary_fails_gracefully(
+    def test_transcript_exceeding_4000_characters_is_supported(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
     ) -> None:
-        """Document empirical finding: transcript > 4000 characters triggers ASRSegment limit.
-
-        Because pipeline.py lines 283-291 places the full transcript into a single
-        ASRSegment without pre-chunking, transcripts > 4000 characters exceed the
-        validate_text() ceiling and return exit code 2 with descriptive error.
-        """
+        """Lecture-length transcripts (> 4000 characters) must be aligned, not rejected."""
         wav = tmp_path / "long_speech2.wav"
         out = tmp_path / "long_out2"
-        create_pcm16_wav(wav, duration_sec=5.0)
+        create_pcm16_wav(wav, duration_sec=320.0)  # ~2.5 words per second, lecture pace
 
         words = [f"word{i}" for i in range(800)]
         large_transcript = " ".join(words)
         assert len(large_transcript) > 4000
+
+        monkeypatch.setattr(
+            "subtitle_workbench.pipeline.ForcedAligner",
+            lambda: make_mock_aligner(words[:50]),
+        )
 
         code = main(
             [
@@ -804,14 +804,14 @@ class TestStressAndBoundaryChecks:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 large_transcript,
             ]
         )
-        assert code == 2
-        captured = capsys.readouterr()
-        assert "error: text exceeds maximum length of 4000 characters" in captured.err
-        assert "Traceback" not in captured.err
+        assert code == 0
+        metrics = json.loads(capsys.readouterr().out)
+        assert metrics["anchoring"]["n_reference_words"] == 800
+        assert metrics["chunk_count"] > 1
 
     def test_paths_with_spaces(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
@@ -834,25 +834,25 @@ class TestStressAndBoundaryChecks:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 "hello world",
             ]
         )
         assert code == 0
         assert (out / "manifest.json").is_file()
 
-    def test_transcript_heuristic_finding_slash_in_single_line_text(
+    def test_transcript_text_with_slash_is_text_not_path(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
     ) -> None:
-        """Document empirical finding: single-line transcript with '/' is treated as missing file.
-
-        Because pipeline.py lines 210-215 interprets any single-line transcript
-        string containing '/' or '\\' as a file path, passing '24/7' or 'either/or'
-        raises FileNotFoundError and exits with code 2.
-        """
+        """Inline text such as '24/7' must be treated as text (no path guessing)."""
         wav = tmp_path / "audio.wav"
         out = tmp_path / "out"
         create_pcm16_wav(wav, duration_sec=1.0)
+
+        monkeypatch.setattr(
+            "subtitle_workbench.pipeline.ForcedAligner",
+            lambda: make_mock_aligner(["this", "is"]),
+        )
 
         code = main(
             [
@@ -860,12 +860,9 @@ class TestStressAndBoundaryChecks:
                 str(wav),
                 "-o",
                 str(out),
-                "--transcript",
+                "--transcript-text",
                 "This is a 24/7 service",
             ]
         )
-        # Returns exit code 2 with descriptive error
-        assert code == 2
-        captured = capsys.readouterr()
-        assert "error: Transcript file not found:" in captured.err
-        assert "Traceback" not in captured.err
+        assert code == 0
+        assert (out / "manifest.json").is_file()

@@ -17,6 +17,10 @@ speech = [
     "faster-whisper>=1.0.0",
     "torch>=2.2.0",
     "torchaudio>=2.2.0",
+    # CUDA 12 runtime for CTranslate2 (Faster-Whisper GPU inference); DLLs are
+    # registered at runtime by subtitle_workbench.asr.register_nvidia_dll_dirs().
+    "nvidia-cublas-cu12>=12.4; sys_platform == 'win32' or sys_platform == 'linux'",
+    "nvidia-cudnn-cu12>=9.1,<10; sys_platform == 'win32' or sys_platform == 'linux'",
 ]
 api = [
     "fastapi>=0.162.0",

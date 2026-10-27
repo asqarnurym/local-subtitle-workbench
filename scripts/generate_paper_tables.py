@@ -1,9 +1,8 @@
 """LaTeX Publication Table Generator for Speech Alignment Benchmark Suite.
 
 Generates production-quality booktabs LaTeX tables for Paper 2 publication:
-- Table 1: Alignment Accuracy across ablation modes (TIMIT / Buckeye)
-- Table 2: Computational Performance (RTF, peak VRAM, peak host RAM)
-- Table 3: Statistical Significance (Paired Wilcoxon W, p-value, Cliff's delta)
+- Table 1: Alignment Accuracy across ablation modes (mean boundary error, Acc@20ms)
+- Table 2: Statistical Significance (Paired Wilcoxon W, p-value, Cliff's delta)
 
 Adheres strictly to the Zero-Emoji Discipline and pure ASCII formatting.
 """
@@ -20,26 +19,29 @@ from typing import Any
 
 # Standard method display names for publication tables
 METHOD_DISPLAY_NAMES: dict[str, str] = {
-    "mode1_whisper": "Whisper Large-v3",
-    "mode2_ctc": "CTC Trellis (MMS\\_FA)",
-    "mode3_hybrid": "Proposed Hybrid",
+    "B0_whisper": "(B0) Whisper timestamps",
+    "B1_whisper_ctc": "(B1) Whisper + CTC",
+    "B2_proposed": "(B2) Proposed: Whisper + MFA",
+    "A1_ctc": "(A1) Known text + CTC",
+    "A2_proposed": "(A2) Proposed: known text + MFA",
 }
 
 # Standard comparison pair display names
 COMPARISON_DISPLAY_NAMES: dict[str, str] = {
-    "proposed_vs_whisper": "Proposed Hybrid vs. Whisper Large-v3",
-    "mode3_vs_mode1": "Proposed Hybrid vs. Whisper Large-v3",
-    "proposed_vs_ctc": "Proposed Hybrid vs. CTC Trellis",
-    "mode3_vs_mode2": "Proposed Hybrid vs. CTC Trellis",
-    "ctc_vs_whisper": "CTC Trellis vs. Whisper Large-v3",
-    "mode2_vs_mode1": "CTC Trellis vs. Whisper Large-v3",
+    "B2_vs_B0": "B2 Proposed vs. B0 Whisper",
+    "B2_vs_B1": "B2 Proposed vs. B1 Whisper + CTC",
+    "A2_vs_A1": "A2 Proposed vs. A1 CTC",
 }
 
-PREFERRED_MODE_ORDER: list[str] = [
-    "mode1_whisper",
-    "mode2_ctc",
-    "mode3_hybrid",
-]
+PREFERRED_MODE_ORDER: list[str] = list(METHOD_DISPLAY_NAMES)
+
+CORPUS_CAPTIONS: dict[str, str] = {
+    "timit": "TIMIT (read speech, manual boundaries)",
+    "buckeye": "Buckeye (spontaneous speech, manual boundaries)",
+    "librispeech": "LibriSpeech test-clean (silver reference: MFA alignments)",
+    "l2arctic": "L2-ARCTIC (accented speech; silver reference: forced alignments)",
+    "synthetic": "Synthetic self-test",
+}
 
 
 def escape_latex(text: str) -> str:
@@ -61,14 +63,9 @@ def _format_method_name(mode_id: str, mode_data: dict[str, Any]) -> str:
     """Format publication method name with LaTeX escaping."""
     if "description" in mode_data and mode_data["description"]:
         return escape_latex(str(mode_data["description"]))
-
-    name = mode_data.get("name", "")
     if mode_id in METHOD_DISPLAY_NAMES:
-        if not name or "Internal Timestamps" in name or "MMS_FA" in name or "MFA" in name:
-            return METHOD_DISPLAY_NAMES[mode_id]
-        return escape_latex(name)
-
-    return escape_latex(name or mode_id)
+        return METHOD_DISPLAY_NAMES[mode_id]
+    return escape_latex(mode_data.get("name", "") or mode_id)
 
 
 def _format_ci(mae: float, ci: list[float] | tuple[float, float] | None) -> str:
@@ -83,27 +80,6 @@ def _format_acc(val: float | None) -> str:
     if val is None or math.isnan(val):
         return "--"
     return f"{val:.1f}\\%"
-
-
-def _format_rtf(rtf: float | None) -> str:
-    """Format Real-Time Factor to 3 decimal places with LaTeX multiplication symbol."""
-    if rtf is None or math.isnan(rtf):
-        return "--"
-    return f"{rtf:.3f}\\(\\times\\)"
-
-
-def _format_vram(vram_mb: float | None) -> str:
-    """Format peak VRAM in MB or '--' if 0.0 or None."""
-    if vram_mb is None or math.isnan(vram_mb) or vram_mb <= 0.0:
-        return "--"
-    return f"{vram_mb:.1f}"
-
-
-def _format_ram(ram_mb: float | None) -> str:
-    """Format peak host RAM in MB."""
-    if ram_mb is None or math.isnan(ram_mb):
-        return "--"
-    return f"{ram_mb:.1f}"
 
 
 def _format_p_value(p_val: float | None) -> str:
@@ -172,18 +148,11 @@ def generate_alignment_accuracy_table(
     all_keys = ordered_keys + remaining_keys
 
     corpus = str(data.get("corpus", "synthetic")).lower()
-    if corpus == "timit":
-        base_caption = "TIMIT Core Test Alignment Accuracy Across Ablation Modes"
-    elif corpus == "buckeye":
-        base_caption = "Buckeye Speech Corpus Alignment Accuracy Across Ablation Modes"
-    elif corpus == "librispeech":
-        base_caption = "LibriSpeech (test-clean) Alignment Accuracy Across Ablation Modes"
-    elif corpus == "l2arctic":
-        base_caption = "L2-ARCTIC (Accented Speech) Alignment Accuracy Across Ablation Modes"
-    elif corpus == "synthetic":
-        base_caption = "Synthetic Benchmark Alignment Accuracy Across Ablation Modes"
-    else:
-        base_caption = f"{corpus.capitalize()} Alignment Accuracy Across Ablation Modes"
+    corpus_label = CORPUS_CAPTIONS.get(corpus, escape_latex(corpus.capitalize()))
+    n_utt = data.get("n_utterances")
+    n_spk = data.get("n_speakers")
+    sample = f" ({n_utt} utterances, {n_spk} speakers)" if n_utt and n_spk else ""
+    base_caption = f"Boundary Error on {corpus_label}{sample}"
 
     caption = f"{prefix}{base_caption}"
 
@@ -192,11 +161,11 @@ def generate_alignment_accuracy_table(
         r"\centering",
         f"\\caption{{{caption}}}",
         r"\label{tab:alignment_accuracy}",
-        r"\begin{tabular}{lcccccc}",
+        r"\begin{tabular}{lcccc}",
         r"\toprule",
         (
-            r"Method & Word MAE [95\% CI] (ms) & Word MedAE (ms) & Phone MAE (ms) & "
-            r"Acc@20ms (\%) & Acc@50ms (\%) & Acc@100ms (\%) \\"
+            r"Method & Word MAE [95\% CI] (ms) & Word Acc@20ms (\%) & "
+            r"Phone MAE (ms) & Phone Acc@20ms (\%) \\"
         ),
         r"\midrule",
     ]
@@ -215,85 +184,15 @@ def generate_alignment_accuracy_table(
         else:
             w_mae_str = "--"
 
-        w_medae = w_metrics.get("medae_ms")
-        w_medae_str = f"{float(w_medae):.1f}" if w_medae is not None else "--"
-
         if p_metrics and p_metrics.get("mae_ms") is not None:
             p_mae_str = f"{float(p_metrics['mae_ms']):.1f}"
         else:
             p_mae_str = "--"
 
         acc_20_str = _format_acc(w_metrics.get("acc_20ms"))
-        acc_50_str = _format_acc(w_metrics.get("acc_50ms"))
-        acc_100_str = _format_acc(w_metrics.get("acc_100ms"))
+        p_acc_20_str = _format_acc(p_metrics.get("acc_20ms")) if p_metrics else "--"
 
-        row = (
-            f"{method_name} & {w_mae_str} & {w_medae_str} & {p_mae_str} & "
-            f"{acc_20_str} & {acc_50_str} & {acc_100_str} \\\\"
-        )
-        lines.append(row)
-
-    lines.extend(
-        [
-            r"\bottomrule",
-            r"\end{tabular}",
-            r"\end{table}",
-        ]
-    )
-    return "\n".join(lines) + "\n"
-
-
-def generate_computational_performance_table(
-    data: dict[str, Any],
-    table_format: str = "booktabs",
-    allow_simulated: bool = False,
-) -> str:
-    """Generate Table 2: Computational Efficiency Across Ablation Modes."""
-    if table_format != "booktabs":
-        raise ValueError(f"Unsupported table format: '{table_format}'. Must be 'booktabs'.")
-
-    prefix = _check_provenance_and_get_prefix(data, allow_simulated=allow_simulated)
-
-    if "modes" not in data or not data["modes"]:
-        raise ValueError("Benchmark results JSON missing 'modes' dictionary")
-
-    modes_dict = data["modes"]
-
-    ordered_keys = [k for k in PREFERRED_MODE_ORDER if k in modes_dict]
-    remaining_keys = [k for k in modes_dict if k not in ordered_keys]
-    all_keys = ordered_keys + remaining_keys
-
-    caption = f"{prefix}Computational Efficiency Across Ablation Modes"
-
-    lines: list[str] = [
-        r"\begin{table}[t]",
-        r"\centering",
-        f"\\caption{{{caption}}}",
-        r"\label{tab:computational_performance}",
-        r"\begin{tabular}{lccc}",
-        r"\toprule",
-        r"Method & Real-Time Factor (RTF) & Peak VRAM (MB) & Peak Host RAM (MB) \\",
-        r"\midrule",
-    ]
-
-    for key in all_keys:
-        m_info = modes_dict[key]
-        method_name = _format_method_name(key, m_info)
-
-        perf = m_info.get("computational_metrics") or m_info.get("performance") or {}
-
-        rtf_val = perf.get("rtf")
-        rtf_str = _format_rtf(float(rtf_val) if rtf_val is not None else None)
-
-        vram_val = perf.get("peak_vram_mb")
-        vram_str = _format_vram(float(vram_val) if vram_val is not None else None)
-
-        ram_val = perf.get("peak_ram_mb")
-        if ram_val is None:
-            ram_val = perf.get("peak_host_ram_mb")
-        ram_str = _format_ram(float(ram_val) if ram_val is not None else None)
-
-        row = f"{method_name} & {rtf_str} & {vram_str} & {ram_str} \\\\"
+        row = f"{method_name} & {w_mae_str} & {acc_20_str} & {p_mae_str} & {p_acc_20_str} \\\\"
         lines.append(row)
 
     lines.extend(
@@ -338,9 +237,9 @@ def generate_statistical_significance_table(
         r"\centering",
         f"\\caption{{{caption}}}",
         r"\label{tab:statistical_significance}",
-        r"\begin{tabular}{lcccc}",
+        r"\begin{tabular}{lccccc}",
         r"\toprule",
-        r"Comparison Pair & Wilcoxon \(W\) & \(p\)-value & Cliff's \(\delta\) & Effect Size \\",
+        r"Comparison Pair & \(n\) & Wilcoxon \(W\) & \(p_{Holm}\) & Cliff's \(\delta\) & Effect \\",
         r"\midrule",
     ]
 
@@ -369,7 +268,9 @@ def generate_statistical_significance_table(
         effect_val = pair_data.get("effect_size", "")
         effect_str = str(effect_val).capitalize() if effect_val else "--"
 
-        row = f"{pair_name} & {w_str} & {p_str} & {delta_str} & {effect_str} \\\\"
+        n_val = pair_data.get("n_pairs")
+        n_str = str(int(n_val)) if n_val is not None else "--"
+        row = f"{pair_name} & {n_str} & {w_str} & {p_str} & {delta_str} & {effect_str} \\\\"
         lines.append(row)
 
     lines.extend(
@@ -388,7 +289,7 @@ def generate_all_tables(
     table_format: str = "booktabs",
     allow_simulated: bool = False,
 ) -> dict[str, Path]:
-    """Load benchmark JSON and generate all three LaTeX tables.
+    """Load benchmark JSON and generate all LaTeX tables.
 
     Returns dictionary mapping table keys to created Path instances.
     """
@@ -408,12 +309,6 @@ def generate_all_tables(
     t1_path = out_dir / "table_alignment_accuracy.tex"
     t1_path.write_text(t1_content, encoding="utf-8")
 
-    t2_content = generate_computational_performance_table(
-        data, table_format=table_format, allow_simulated=allow_simulated
-    )
-    t2_path = out_dir / "table_computational_performance.tex"
-    t2_path.write_text(t2_content, encoding="utf-8")
-
     t3_content = generate_statistical_significance_table(
         data, table_format=table_format, allow_simulated=allow_simulated
     )
@@ -422,7 +317,6 @@ def generate_all_tables(
 
     return {
         "alignment_accuracy": t1_path,
-        "computational_performance": t2_path,
         "statistical_significance": t3_path,
     }
 

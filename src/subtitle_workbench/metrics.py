@@ -1,6 +1,6 @@
 """Empirical alignment benchmark metrics and statistical analysis module.
 
-Provides boundary evaluation metrics (MAE, MedAE, RMSE, Acc@20ms/50ms/100ms),
+Provides boundary evaluation metrics (mean absolute boundary error, Acc@20ms),
 clustered bootstrap confidence intervals for speaker/utterance correlation,
 and paired non-parametric hypothesis testing (Wilcoxon signed-rank, Cliff's Delta).
 """
@@ -37,11 +37,7 @@ class BoundaryEvaluation:
     """Evaluation metrics for a single boundary tier (words or phonemes)."""
 
     mae: float
-    medae: float
-    rmse: float
     acc_20ms: float
-    acc_50ms: float
-    acc_100ms: float
     boundary_errors_ms: list[float]
     num_matched: int
     num_unmatched: int
@@ -49,17 +45,12 @@ class BoundaryEvaluation:
 
     def __post_init__(self) -> None:
         mae = finite_number(self.mae, "mae")
-        medae = finite_number(self.medae, "medae")
-        rmse = finite_number(self.rmse, "rmse")
         acc_20 = finite_number(self.acc_20ms, "acc_20ms")
-        acc_50 = finite_number(self.acc_50ms, "acc_50ms")
-        acc_100 = finite_number(self.acc_100ms, "acc_100ms")
         tol = finite_number(self.tolerance_ms, "tolerance_ms")
-        if mae < 0.0 or medae < 0.0 or rmse < 0.0:
+        if mae < 0.0:
             raise ValueError("Error metrics must be non-negative")
-        for name, val in (("acc_20ms", acc_20), ("acc_50ms", acc_50), ("acc_100ms", acc_100)):
-            if not (0.0 <= val <= 100.0):
-                raise ValueError(f"{name} must be between 0.0 and 100.0")
+        if not (0.0 <= acc_20 <= 100.0):
+            raise ValueError("acc_20ms must be between 0.0 and 100.0")
         if not isinstance(self.boundary_errors_ms, list):
             raise ValueError("boundary_errors_ms must be a list of float errors")
         if not isinstance(self.num_matched, int) or self.num_matched < 0:
@@ -67,11 +58,7 @@ class BoundaryEvaluation:
         if not isinstance(self.num_unmatched, int) or self.num_unmatched < 0:
             raise ValueError("num_unmatched must be a non-negative integer")
         object.__setattr__(self, "mae", mae)
-        object.__setattr__(self, "medae", medae)
-        object.__setattr__(self, "rmse", rmse)
         object.__setattr__(self, "acc_20ms", acc_20)
-        object.__setattr__(self, "acc_50ms", acc_50)
-        object.__setattr__(self, "acc_100ms", acc_100)
         object.__setattr__(self, "tolerance_ms", tol)
 
 
@@ -105,13 +92,10 @@ class WilcoxonTestResult:
 
 @dataclass(frozen=True)
 class AlignmentEvaluationResult:
-    """Full alignment evaluation result with word/phone metrics and hardware profiling."""
+    """Full alignment evaluation result with word/phone boundary metrics."""
 
     word_metrics: BoundaryEvaluation
     phone_metrics: BoundaryEvaluation | None = None
-    rtf: float = 0.0
-    peak_vram_mb: float = 0.0
-    peak_ram_mb: float = 0.0
     bootstrap_ci_95: dict[str, tuple[float, float]] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -122,33 +106,14 @@ class AlignmentEvaluationResult:
             self.phone_metrics, BoundaryEvaluation
         ):
             raise ValueError("phone_metrics must be None or an instance of BoundaryEvaluation")
-        rtf = finite_number(self.rtf, "rtf")
-        vram = finite_number(self.peak_vram_mb, "peak_vram_mb")
-        ram = finite_number(self.peak_ram_mb, "peak_ram_mb")
-        if rtf < 0.0 or vram < 0.0 or ram < 0.0:
-            raise ValueError("Resource metrics must be non-negative")
-        object.__setattr__(self, "rtf", rtf)
-        object.__setattr__(self, "peak_vram_mb", vram)
-        object.__setattr__(self, "peak_ram_mb", ram)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert evaluation result to JSON-serializable dictionary."""
         return {
             "word_mae": self.word_metrics.mae,
-            "word_medae": self.word_metrics.medae,
-            "word_rmse": self.word_metrics.rmse,
             "word_acc_20ms": self.word_metrics.acc_20ms,
-            "word_acc_50ms": self.word_metrics.acc_50ms,
-            "word_acc_100ms": self.word_metrics.acc_100ms,
             "phone_mae": self.phone_metrics.mae if self.phone_metrics else None,
-            "phone_medae": self.phone_metrics.medae if self.phone_metrics else None,
-            "phone_rmse": self.phone_metrics.rmse if self.phone_metrics else None,
             "phone_acc_20ms": self.phone_metrics.acc_20ms if self.phone_metrics else None,
-            "phone_acc_50ms": self.phone_metrics.acc_50ms if self.phone_metrics else None,
-            "phone_acc_100ms": self.phone_metrics.acc_100ms if self.phone_metrics else None,
-            "rtf": self.rtf,
-            "peak_vram_mb": self.peak_vram_mb,
-            "peak_ram_mb": self.peak_ram_mb,
             "bootstrap_ci_95": {k: [v[0], v[1]] for k, v in self.bootstrap_ci_95.items()},
             "metadata": self.metadata,
         }
@@ -252,19 +217,11 @@ def evaluate_alignment_boundaries(
 
     errors = np.asarray(boundary_errors, dtype=np.float64)
     mae = float(np.mean(errors))
-    medae = float(np.median(errors))
-    rmse = float(np.sqrt(np.mean(errors**2)))
     acc_20 = float(np.mean(errors <= (20.0 + BOUNDARY_EPSILON_MS)) * 100.0)
-    acc_50 = float(np.mean(errors <= (50.0 + BOUNDARY_EPSILON_MS)) * 100.0)
-    acc_100 = float(np.mean(errors <= (100.0 + BOUNDARY_EPSILON_MS)) * 100.0)
 
     return BoundaryEvaluation(
         mae=mae,
-        medae=medae,
-        rmse=rmse,
         acc_20ms=acc_20,
-        acc_50ms=acc_50,
-        acc_100ms=acc_100,
         boundary_errors_ms=[float(x) for x in boundary_errors],
         num_matched=len(matched_pairs),
         num_unmatched=num_unmatched,

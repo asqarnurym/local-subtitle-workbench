@@ -55,8 +55,8 @@ def test_api_service_info() -> None:
     response = client.get("/info")
     assert response.status_code == 200
     data = response.json()
-    assert "auto" in data["supported_engines"]
-    assert "mfa" in data["supported_engines"]
+    assert data["supported_engines"] == ["mfa", "ctc"]
+    assert data["default_engine"] == "mfa"
     assert "ctc" in data["supported_engines"]
     assert data["constraints"]["max_chunk_sec"] == 30.0
 
@@ -70,7 +70,7 @@ def test_api_align_invalid_engine() -> None:
         data={"engine": "invalid_engine_name"},
     )
     assert response.status_code == 422
-    assert "input should be 'auto', 'mfa' or 'ctc'" in response.text.lower()
+    assert "input should be 'mfa' or 'ctc'" in response.text.lower()
 
 
 def test_api_align_negative_parameters() -> None:
@@ -91,7 +91,7 @@ def test_api_align_corrupt_audio() -> None:
     response = client.post(
         "/align-speech",
         files={"audio": ("corrupt.wav", io.BytesIO(corrupt_bytes), "audio/wav")},
-        data={"engine": "auto"},
+        data={"engine": "mfa"},
     )
     assert response.status_code == 400
     assert "Audio processing error" in response.json()["detail"]
@@ -119,9 +119,12 @@ def test_api_align_success_mocked(mock_pipeline: MagicMock, tmp_path: Path) -> N
     response = client.post(
         "/align-speech",
         files={"audio": ("lecture.wav", io.BytesIO(wav_bytes), "audio/wav")},
-        data={"transcript": "Hello", "engine": "auto"},
+        data={"transcript": "Hello", "engine": "mfa"},
     )
     assert response.status_code == 200
+    _, kwargs = mock_pipeline.call_args
+    assert kwargs["transcript_text"] == "Hello"
+    assert kwargs["engine"] == "mfa"
     data = response.json()
     assert data["status"] == "success"
     assert data["filename"] == "lecture.wav"
@@ -140,7 +143,7 @@ def test_api_internal_server_error(mock_pipeline: MagicMock) -> None:
     response = client.post(
         "/align-speech",
         files={"audio": ("crash.wav", io.BytesIO(wav_bytes), "audio/wav")},
-        data={"engine": "auto"},
+        data={"engine": "mfa"},
     )
     assert response.status_code == 500
     assert "Internal alignment error" in response.json()["detail"]

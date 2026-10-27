@@ -166,11 +166,8 @@ def test_exception_hierarchy():
 
 
 def test_device_and_compute_type_cuda_selection():
-    """When CUDA is available, auto-select cuda and int8_float16."""
-    mock_torch = MagicMock()
-    mock_torch.cuda.is_available.return_value = True
-
-    with patch.dict(sys.modules, {"torch": mock_torch}):
+    """When CTranslate2 can use CUDA, auto-select cuda and int8_float16."""
+    with patch("subtitle_workbench.asr.whisper_cuda_available", return_value=True):
         transcriber = WhisperTranscriber(
             model_instance=DummyWhisperBackend(),
             device=None,
@@ -182,10 +179,7 @@ def test_device_and_compute_type_cuda_selection():
 
 def test_device_and_compute_type_cpu_selection():
     """When CUDA is unavailable, auto-select cpu and int8."""
-    mock_torch = MagicMock()
-    mock_torch.cuda.is_available.return_value = False
-
-    with patch.dict(sys.modules, {"torch": mock_torch}):
+    with patch("subtitle_workbench.asr.whisper_cuda_available", return_value=False):
         transcriber = WhisperTranscriber(
             model_instance=DummyWhisperBackend(),
             device=None,
@@ -759,11 +753,11 @@ def test_transcribe_vram_allocation_error_on_alloc_failure(tmp_path):
 
 
 def test_device_resolution_handles_cuda_driver_exception():
-    """Device resolution falls back to cpu when torch.cuda raises an exception."""
-    mock_torch = MagicMock()
-    mock_torch.cuda.is_available.side_effect = RuntimeError("Driver mismatch")
+    """Auto device resolution uses cpu when CTranslate2 raises while probing CUDA."""
+    mock_ct2 = MagicMock()
+    mock_ct2.get_cuda_device_count.side_effect = RuntimeError("Driver mismatch")
 
-    with patch.dict(sys.modules, {"torch": mock_torch}):
+    with patch.dict(sys.modules, {"ctranslate2": mock_ct2}):
         transcriber = WhisperTranscriber(
             model_instance=DummyWhisperBackend(),
             device=None,
@@ -771,6 +765,13 @@ def test_device_resolution_handles_cuda_driver_exception():
         )
         assert transcriber.device == "cpu"
         assert transcriber.compute_type == "int8"
+
+
+def test_explicit_cuda_request_is_strict():
+    """device='cuda' must raise instead of silently running on CPU."""
+    with patch("subtitle_workbench.asr.whisper_cuda_available", return_value=False):
+        with pytest.raises(ASRInferenceError, match="cuda"):
+            WhisperTranscriber(model_instance=DummyWhisperBackend(), device="cuda")
 
 
 def test_extract_vad_silences_timestamp_overshoot_not_treated_as_samples(tmp_path):

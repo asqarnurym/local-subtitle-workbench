@@ -1,22 +1,37 @@
-"""Automated Speech Alignment Benchmark Suite Runner.
+"""Speech alignment benchmark: reference pipeline vs. baselines on annotated corpora.
 
-Executes 3-way ablation (Whisper baseline, CTC Trellis, Proposed Hybrid),
-measures boundary errors on TIMIT and Buckeye speech corpora, computes
-cluster-robust bootstrap confidence intervals and paired Wilcoxon hypothesis tests,
-profiles hardware resources (RTF, peak VRAM, peak RAM), and generates
-structured benchmark_results.json and cryptographic manifest.json.
+Modes (one row per mode in the result tables)
+
+Scenario B - no transcript (Whisper output is aligned; the realistic lecture case)
+    B0_whisper      Whisper large-v3 word timestamps (baseline)
+    B1_whisper_ctc  Whisper -> MMS_FA CTC forced alignment (WhisperX-style baseline)
+    B2_proposed     Whisper -> anchoring/chunking -> MFA (proposed reference pipeline)
+Scenario A - transcript known (the reference transcript of the corpus is given)
+    A1_ctc          anchoring/chunking -> MMS_FA CTC (baseline)
+    A2_proposed     anchoring/chunking -> MFA (proposed reference pipeline)
+
+Every mode runs the complete pipeline for its scenario (VAD and Whisper are never
+skipped; Whisper supplies anchors in scenario A). Execution is staged so that each
+model is loaded once: (1) one Whisper instance transcribes every utterance,
+(2) Whisper is unloaded, (3) all utterances are aligned by MFA in a single batch
+call and by one reused CTC model.
+
+Metrics (Individual Master's Plan): mean absolute boundary error (word and phone
+level, start and end boundaries) and the share of boundaries within 20 ms, with a
+cluster bootstrap 95% CI. Methods are compared with paired Wilcoxon signed-rank
+tests on utterance-level word MAE (paired by utterance ID, Holm correction).
+Failures are recorded per utterance, never silently dropped.
 """
 
 from __future__ import annotations
 
 import argparse
-import ctypes
 import datetime
 import json
 import platform
 import sys
 import tempfile
-import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -33,19 +48,52 @@ from subtitle_workbench.corpora import (
 from subtitle_workbench.metrics import (
     BOUNDARY_EPSILON_MS,
     BenchmarkError,
+    MetricComputationError,
     bonferroni_holm_adjustment,
     clustered_bootstrap_ci,
     evaluate_alignment_boundaries,
     paired_wilcoxon_test,
 )
 from subtitle_workbench.models import PhonemeCue, WordToken
+from subtitle_workbench.phone_sets import fold_phones
 from subtitle_workbench.provenance import code_provenance, sha256
 
-MODE_NAMES: dict[str, str] = {
-    "mode1_whisper": "Whisper Large-v3 INT8 (Internal Timestamps)",
-    "mode2_ctc": "CTC Trellis (MMS_FA)",
-    "mode3_hybrid": "Proposed Hybrid (Whisper + Bounded DTW + MFA)",
+
+@dataclass(frozen=True)
+class ModeSpec:
+    name: str
+    scenario: str  # "A" or "B"
+    engine: str | None  # None -> Whisper timestamps only
+    has_phones: bool
+
+
+MODES: dict[str, ModeSpec] = {
+    "B0_whisper": ModeSpec("Whisper word timestamps", "B", None, False),
+    "B1_whisper_ctc": ModeSpec("Whisper + CTC (MMS_FA)", "B", "ctc", False),
+    "B2_proposed": ModeSpec("Proposed: Whisper + anchoring + MFA", "B", "mfa", True),
+    "A1_ctc": ModeSpec("Known text + CTC (MMS_FA)", "A", "ctc", False),
+    "A2_proposed": ModeSpec("Proposed: known text + anchoring + MFA", "A", "mfa", True),
 }
+DEFAULT_MODES = list(MODES)
+
+# Primary hypotheses: proposed vs. each baseline within the same scenario
+COMPARISONS: list[tuple[str, str, str]] = [
+    ("B2_vs_B0", "B0_whisper", "B2_proposed"),
+    ("B2_vs_B1", "B1_whisper_ctc", "B2_proposed"),
+    ("A2_vs_A1", "A1_ctc", "A2_proposed"),
+]
+
+REFERENCE_TYPES: dict[str, str] = {
+    "timit": "gold",
+    "buckeye": "gold",
+    "synthetic": "synthetic",
+    # Reference boundaries of these corpora were produced by forced alignment (MFA):
+    # results measure agreement with MFA, not accuracy.
+    "librispeech": "silver_mfa",
+    "l2arctic": "silver_mfa",
+}
+
+MIN_SPEAKERS_FOR_SPEAKER_CLUSTERS = 10
 
 
 @dataclass(frozen=True)
@@ -59,162 +107,172 @@ class BenchmarkUtterance:
     ref_words: list[WordToken]
     ref_phones: list[PhonemeCue]
 
+    @property
+    def transcript(self) -> str:
+        return " ".join(w.text for w in self.ref_words)
+
 
 # ---------------------------------------------------------------------------
-# Resource Profiling Helpers
+# Hardware provenance
 # ---------------------------------------------------------------------------
-
-
-def get_peak_vram_mb() -> float:
-    """Return peak GPU VRAM allocated in MB, or 0.0 if CUDA is unavailable."""
-    try:
-        import torch
-
-        if torch.cuda.is_available():
-            return float(torch.cuda.max_memory_allocated() / (1024 * 1024))
-    except Exception:
-        pass
-    return 0.0
-
-
-def reset_peak_vram() -> None:
-    """Reset GPU peak memory tracking if CUDA is available."""
-    try:
-        import torch
-
-        if torch.cuda.is_available():
-            torch.cuda.reset_peak_memory_stats()
-    except Exception:
-        pass
-
-
-def _get_peak_ram_windows() -> float | None:
-    """Query Windows process peak working set size in MB via ctypes."""
-    try:
-        from ctypes import wintypes
-
-        class PROCESS_MEMORY_COUNTERS_EX(ctypes.Structure):
-            _fields_ = [
-                ("cb", wintypes.DWORD),
-                ("PageFaultCount", wintypes.DWORD),
-                ("PeakWorkingSetSize", ctypes.c_size_t),
-                ("WorkingSetSize", ctypes.c_size_t),
-                ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
-                ("QuotaPagedPoolUsage", ctypes.c_size_t),
-                ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
-                ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
-                ("PagefileUsage", ctypes.c_size_t),
-                ("PeakPagefileUsage", ctypes.c_size_t),
-                ("PrivateUsage", ctypes.c_size_t),
-            ]
-
-        psapi = ctypes.WinDLL("psapi.dll")
-        kernel32 = ctypes.WinDLL("kernel32.dll")
-
-        GetProcessMemoryInfo = psapi.GetProcessMemoryInfo
-        GetProcessMemoryInfo.argtypes = [wintypes.HANDLE, ctypes.c_void_p, wintypes.DWORD]
-        GetProcessMemoryInfo.restype = wintypes.BOOL
-
-        GetCurrentProcess = kernel32.GetCurrentProcess
-        GetCurrentProcess.restype = wintypes.HANDLE
-
-        counters = PROCESS_MEMORY_COUNTERS_EX()
-        counters.cb = ctypes.sizeof(PROCESS_MEMORY_COUNTERS_EX)
-        handle = GetCurrentProcess()
-        if GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb):
-            return float(counters.PeakWorkingSetSize / (1024 * 1024))
-    except Exception:
-        pass
-    return None
-
-
-def _get_peak_ram_posix() -> float | None:
-    """Query POSIX max resident set size in MB via resource."""
-    try:
-        import resource
-
-        rusage = resource.getrusage(resource.RUSAGE_SELF)
-        scale = 1024.0 * 1024.0 if sys.platform == "darwin" else 1024.0
-        return float(rusage.ru_maxrss / scale)
-    except Exception:
-        pass
-    return None
-
-
-def _get_peak_ram_tracemalloc() -> float:
-    """Query tracemalloc peak memory in MB."""
-    try:
-        import tracemalloc
-
-        if tracemalloc.is_tracing():
-            _, peak = tracemalloc.get_traced_memory()
-            return float(peak / (1024 * 1024))
-    except Exception:
-        pass
-    return 0.0
-
-
-def get_peak_host_ram_mb() -> float:
-    """Return peak host resident RAM in MB via multi-tier fallback.
-
-    Tier 1: psutil if present
-    Tier 2: Windows ctypes GetProcessMemoryInfo (PeakWorkingSetSize)
-    Tier 3: POSIX resource.getrusage (ru_maxrss)
-    Tier 4: tracemalloc fallback
-    """
-    try:
-        import psutil
-
-        return float(psutil.Process().memory_info().rss / (1024 * 1024))
-    except Exception:
-        pass
-
-    win_ram = _get_peak_ram_windows()
-    if win_ram is not None and win_ram > 0.0:
-        return win_ram
-
-    posix_ram = _get_peak_ram_posix()
-    if posix_ram is not None and posix_ram > 0.0:
-        return posix_ram
-
-    return _get_peak_ram_tracemalloc()
 
 
 def get_hardware_info() -> dict[str, Any]:
-    """Gather hardware platform and GPU metadata."""
-    cuda_avail = False
+    """Gather platform and GPU metadata (device actually usable by each model)."""
+    torch_cuda = False
     cuda_name: str | None = None
     try:
         import torch
 
-        cuda_avail = bool(torch.cuda.is_available())
-        if cuda_avail:
+        torch_cuda = bool(torch.cuda.is_available())
+        if torch_cuda:
             cuda_name = str(torch.cuda.get_device_name(0))
     except Exception:
         pass
+    try:
+        from subtitle_workbench.asr import whisper_cuda_available
+
+        whisper_cuda = whisper_cuda_available()
+    except Exception:
+        whisper_cuda = False
 
     return {
         "platform": platform.platform(),
         "processor": platform.processor(),
         "python_version": platform.python_version(),
-        "cuda_available": cuda_avail,
+        "cuda_available": torch_cuda or whisper_cuda,
+        "whisper_cuda_available": whisper_cuda,
+        "torch_cuda_available": torch_cuda,
         "cuda_device_name": cuda_name,
     }
 
 
 def get_audio_duration_seconds(wav_path: Path | str) -> float:
-    """Read WAV duration in seconds without loading raw audio arrays."""
     import wave
 
     with wave.open(str(wav_path), "rb") as w:
-        framerate = w.getframerate()
-        frames = w.getnframes()
-        return float(frames) / float(framerate) if framerate > 0 else 0.0
+        return w.getnframes() / float(w.getframerate())
 
 
 # ---------------------------------------------------------------------------
-# Offline Pipeline Self-Test Simulation
+# Corpus loaders (no silent skipping: malformed items raise)
 # ---------------------------------------------------------------------------
+
+
+def load_synthetic_utterances(data_dir: Path) -> list[BenchmarkUtterance]:
+    """Load staged synthetic benchmark utterances from directory."""
+    utterances: list[BenchmarkUtterance] = []
+    for wrd_file in sorted(data_dir.glob("*.wrd")):
+        utt_id = wrd_file.stem
+        spk_id = utt_id.split("_")[0] if "_" in utt_id else utt_id
+        wav_file = data_dir / f"{utt_id}.wav"
+        phn_file = data_dir / f"{utt_id}.phn"
+        if not wav_file.is_file():
+            raise BenchmarkError(f"Missing audio for {wrd_file.name}")
+        utterances.append(
+            BenchmarkUtterance(
+                id=utt_id,
+                speaker_id=spk_id,
+                wav_path=wav_file,
+                duration=get_audio_duration_seconds(wav_file),
+                ref_words=parse_timit_wrd(wrd_file),
+                ref_phones=parse_timit_phn(phn_file) if phn_file.is_file() else [],
+            )
+        )
+    return utterances
+
+
+def load_timit_utterances(data_dir: Path) -> list[BenchmarkUtterance]:
+    """Load TIMIT (full LDC layout or the NLTK sample: <speaker-dir>/<utt>.wav/.wrd/.phn).
+
+    Utterance IDs are ``<speaker>_<utt>`` because sentence IDs (e.g. ``sa1``) repeat
+    across speakers.
+    """
+    utterances: list[BenchmarkUtterance] = []
+    wrd_files = sorted(set(data_dir.glob("**/*.wrd")) | set(data_dir.glob("**/*.WRD")))
+    for wrd_file in wrd_files:
+        spk_id = wrd_file.parent.name.lower()
+        wav_file = next(
+            (
+                w
+                for w in (wrd_file.with_suffix(".wav"), wrd_file.with_suffix(".WAV"))
+                if w.is_file()
+            ),
+            None,
+        )
+        if wav_file is None:
+            raise BenchmarkError(f"Missing audio for {wrd_file}")
+        phn_file = next(
+            (
+                p
+                for p in (wrd_file.with_suffix(".phn"), wrd_file.with_suffix(".PHN"))
+                if p.is_file()
+            ),
+            None,
+        )
+        utterances.append(
+            BenchmarkUtterance(
+                id=f"{spk_id}_{wrd_file.stem.lower()}",
+                speaker_id=spk_id,
+                wav_path=wav_file,
+                duration=get_audio_duration_seconds(wav_file),
+                ref_words=parse_timit_wrd(wrd_file),
+                ref_phones=parse_timit_phn(phn_file) if phn_file else [],
+            )
+        )
+    return utterances
+
+
+def _speaker_from_stem(stem: str, corpus: str) -> str:
+    if corpus == "librispeech":
+        return stem.split("-")[0]
+    if corpus == "l2arctic":
+        return stem.split("_")[0]
+    # Buckeye clips: s0101a_0003 -> s01
+    return stem[:3]
+
+
+def load_textgrid_utterances(data_dir: Path, corpus: str) -> list[BenchmarkUtterance]:
+    """Load ``<utt>.wav`` + ``<utt>.TextGrid`` pairs (Buckeye clips, LibriSpeech, L2-ARCTIC)."""
+    utterances: list[BenchmarkUtterance] = []
+    tg_files = sorted(set(data_dir.glob("**/*.TextGrid")) | set(data_dir.glob("**/*.textgrid")))
+    for tg_file in tg_files:
+        wav_file = next(
+            (w for w in (tg_file.with_suffix(".wav"), tg_file.with_suffix(".WAV")) if w.is_file()),
+            None,
+        )
+        if wav_file is None:
+            raise BenchmarkError(f"Missing audio for {tg_file}")
+        ref_words = parse_buckeye_textgrid(tg_file)
+        utterances.append(
+            BenchmarkUtterance(
+                id=tg_file.stem,
+                speaker_id=_speaker_from_stem(tg_file.stem, corpus),
+                wav_path=wav_file,
+                duration=get_audio_duration_seconds(wav_file),
+                ref_words=ref_words,
+                ref_phones=[p for w in ref_words for p in w.phonemes],
+            )
+        )
+    return utterances
+
+
+# Backwards-compatible name
+def load_buckeye_utterances(data_dir: Path) -> list[BenchmarkUtterance]:
+    return load_textgrid_utterances(data_dir, "buckeye")
+
+
+# ---------------------------------------------------------------------------
+# Simulated self-test (pipeline plumbing only; never citable)
+# ---------------------------------------------------------------------------
+
+_SIM_OFFSETS_MS: dict[str, tuple[float, float]] = {
+    "B0_whisper": (120.0, 20.0),
+    "B1_whisper_ctc": (36.0, 12.0),
+    "A1_ctc": (35.0, 12.0),
+    "B2_proposed": (13.0, 4.0),
+    "A2_proposed": (12.0, 3.5),
+}
 
 
 def simulate_predictions_for_pipeline_selftest(
@@ -223,306 +281,332 @@ def simulate_predictions_for_pipeline_selftest(
     mode: str,
     rng: np.random.Generator,
 ) -> tuple[list[WordToken], list[PhonemeCue] | None]:
-    """Generate synthetic perturbations exclusively for pipeline self-testing.
+    """Shift reference boundaries by mode-specific noise to exercise metric/table code."""
+    if mode not in _SIM_OFFSETS_MS:
+        raise BenchmarkError(f"Unsupported ablation mode: {mode}")
+    mu, sd = _SIM_OFFSETS_MS[mode]
 
-    CAUTION: This function does NOT model any real ASR or alignment system.
-    Its outputs reflect only hard-coded random distributions and must NOT
-    be cited or reported as empirical results.
-    """
-    if mode == "mode1_whisper":
-        pred_words: list[WordToken] = []
-        for w in ref_words:
-            s_ms = float(np.clip(rng.normal(120.0, 20.0), 60.0, 200.0))
-            e_ms = float(np.clip(rng.normal(120.0, 20.0), 60.0, 200.0))
-            ns = round(w.start + s_ms / 1000.0, 6)
-            ne = round(w.end + e_ms / 1000.0, 6)
-            if ne <= ns:
-                ne = ns + 0.05
-            pred_words.append(
-                WordToken(
-                    id=f"{w.id}_m1",
-                    text=w.text,
-                    normalized=w.normalized,
-                    start=ns,
-                    end=ne,
-                    confidence=round(float(rng.uniform(0.65, 0.90)), 3),
-                    phonemes=[],
-                    char_start=w.char_start,
-                    char_end=w.char_end,
-                )
-            )
-        return pred_words, None
+    def shift() -> float:
+        return float(np.clip(rng.normal(mu, sd), 1.0, 4 * mu)) / 1000.0
 
-    if mode == "mode2_ctc":
-        pred_words = []
-        for w in ref_words:
-            s_ms = float(np.clip(rng.normal(35.0, 12.0), 8.0, 70.0))
-            e_ms = float(np.clip(rng.normal(35.0, 12.0), 8.0, 70.0))
-            ns = round(w.start + s_ms / 1000.0, 6)
-            ne = round(w.end + e_ms / 1000.0, 6)
-            if ne <= ns:
-                ne = ns + 0.05
-
-            word_phones: list[PhonemeCue] = []
-            for p in w.phonemes:
-                ps_ms = float(np.clip(rng.normal(36.0, 12.0), 8.0, 70.0))
-                pe_ms = float(np.clip(rng.normal(36.0, 12.0), 8.0, 70.0))
-                pns = round(p.start + ps_ms / 1000.0, 6)
-                pne = round(p.end + pe_ms / 1000.0, 6)
-                if pne <= pns:
-                    pne = pns + 0.01
-                word_phones.append(
-                    PhonemeCue(
-                        phoneme=p.phoneme,
-                        start=pns,
-                        end=pne,
-                        confidence=round(float(rng.uniform(0.70, 0.92)), 3),
-                    )
-                )
-
-            pred_words.append(
-                WordToken(
-                    id=f"{w.id}_m2",
-                    text=w.text,
-                    normalized=w.normalized,
-                    start=ns,
-                    end=ne,
-                    confidence=round(float(rng.uniform(0.75, 0.95)), 3),
-                    phonemes=word_phones,
-                    char_start=w.char_start,
-                    char_end=w.char_end,
-                )
-            )
-
-        pred_phones: list[PhonemeCue] = []
-        for p in ref_phones:
-            ps_ms = float(np.clip(rng.normal(36.0, 12.0), 8.0, 70.0))
-            pe_ms = float(np.clip(rng.normal(36.0, 12.0), 8.0, 70.0))
-            pns = round(p.start + ps_ms / 1000.0, 6)
-            pne = round(p.end + pe_ms / 1000.0, 6)
-            if pne <= pns:
-                pne = pns + 0.01
-            pred_phones.append(
-                PhonemeCue(
-                    phoneme=p.phoneme,
-                    start=pns,
-                    end=pne,
-                    confidence=round(float(rng.uniform(0.70, 0.92)), 3),
-                )
-            )
-        return pred_words, pred_phones
-
-    if mode == "mode3_hybrid":
-        pred_words = []
-        for w in ref_words:
-            s_ms = float(np.clip(rng.normal(12.0, 3.5), 2.0, 24.0))
-            e_ms = float(np.clip(rng.normal(12.0, 3.5), 2.0, 24.0))
-            ns = round(w.start + s_ms / 1000.0, 6)
-            ne = round(w.end + e_ms / 1000.0, 6)
-            if ne <= ns:
-                ne = ns + 0.05
-
-            word_phones = []
-            for p in w.phonemes:
-                ps_ms = float(np.clip(rng.normal(13.0, 3.8), 2.0, 25.0))
-                pe_ms = float(np.clip(rng.normal(13.0, 3.8), 2.0, 25.0))
-                pns = round(p.start + ps_ms / 1000.0, 6)
-                pne = round(p.end + pe_ms / 1000.0, 6)
-                if pne <= pns:
-                    pne = pns + 0.01
-                word_phones.append(
-                    PhonemeCue(
-                        phoneme=p.phoneme,
-                        start=pns,
-                        end=pne,
-                        confidence=round(float(rng.uniform(0.85, 0.99)), 3),
-                    )
-                )
-
-            pred_words.append(
-                WordToken(
-                    id=f"{w.id}_m3",
-                    text=w.text,
-                    normalized=w.normalized,
-                    start=ns,
-                    end=ne,
-                    confidence=round(float(rng.uniform(0.85, 0.98)), 3),
-                    phonemes=word_phones,
-                    char_start=w.char_start,
-                    char_end=w.char_end,
-                )
-            )
-
-        pred_phones = []
-        for p in ref_phones:
-            ps_ms = float(np.clip(rng.normal(13.0, 3.8), 2.0, 25.0))
-            pe_ms = float(np.clip(rng.normal(13.0, 3.8), 2.0, 25.0))
-            pns = round(p.start + ps_ms / 1000.0, 6)
-            pne = round(p.end + pe_ms / 1000.0, 6)
-            if pne <= pns:
-                pne = pns + 0.01
-            pred_phones.append(
-                PhonemeCue(
-                    phoneme=p.phoneme,
-                    start=pns,
-                    end=pne,
-                    confidence=round(float(rng.uniform(0.85, 0.99)), 3),
-                )
-            )
-        return pred_words, pred_phones
-
-    raise BenchmarkError(f"Unsupported ablation mode: {mode}")
-
-
-# ---------------------------------------------------------------------------
-# Utterance Discovery
-# ---------------------------------------------------------------------------
-
-
-def load_synthetic_utterances(data_dir: Path) -> list[BenchmarkUtterance]:
-    """Load staged synthetic benchmark utterances from directory."""
-    utterances: list[BenchmarkUtterance] = []
-    wrd_files = sorted(data_dir.glob("*.wrd"))
-    for wrd_file in wrd_files:
-        utt_id = wrd_file.stem
-        spk_id = utt_id.split("_")[0] if "_" in utt_id else utt_id
-        wav_file = data_dir / f"{utt_id}.wav"
-        phn_file = data_dir / f"{utt_id}.phn"
-
-        if not wav_file.is_file():
-            continue
-
-        ref_words = parse_timit_wrd(wrd_file)
-        ref_phones = parse_timit_phn(phn_file) if phn_file.is_file() else []
-        dur = get_audio_duration_seconds(wav_file)
-
-        utterances.append(
-            BenchmarkUtterance(
-                id=utt_id,
-                speaker_id=spk_id,
-                wav_path=wav_file,
-                duration=dur,
-                ref_words=ref_words,
-                ref_phones=ref_phones,
-            )
-        )
-    return utterances
-
-
-def load_timit_utterances(data_dir: Path) -> list[BenchmarkUtterance]:
-    """Discover and parse real TIMIT utterances (.wav, .wrd, .phn)."""
-    utterances: list[BenchmarkUtterance] = []
-    # Case-insensitive search for wrd files
-    wrd_files = list(data_dir.glob("**/*.wrd")) + list(data_dir.glob("**/*.WRD"))
-    wrd_files = sorted(set(wrd_files))
-
-    for wrd_file in wrd_files:
-        utt_id = wrd_file.stem
-        spk_id = wrd_file.parent.name
-        wav_candidates = [
-            wrd_file.with_suffix(".wav"),
-            wrd_file.with_suffix(".WAV"),
-        ]
-        wav_file = next((w for w in wav_candidates if w.is_file()), None)
-        if not wav_file:
-            continue
-
-        phn_candidates = [
-            wrd_file.with_suffix(".phn"),
-            wrd_file.with_suffix(".PHN"),
-        ]
-        phn_file = next((p for p in phn_candidates if p.is_file()), None)
-
-        try:
-            ref_words = parse_timit_wrd(wrd_file)
-            ref_phones = parse_timit_phn(phn_file) if phn_file else []
-            dur = get_audio_duration_seconds(wav_file)
-            utterances.append(
-                BenchmarkUtterance(
-                    id=utt_id,
-                    speaker_id=spk_id,
-                    wav_path=wav_file,
-                    duration=dur,
-                    ref_words=ref_words,
-                    ref_phones=ref_phones,
-                )
-            )
-        except Exception:
-            continue
-
-    return utterances
-
-
-def load_buckeye_utterances(data_dir: Path) -> list[BenchmarkUtterance]:
-    """Discover and parse Buckeye Speech Corpus utterances (.wav, .TextGrid)."""
-    utterances: list[BenchmarkUtterance] = []
-    tg_files = list(data_dir.glob("**/*.TextGrid")) + list(data_dir.glob("**/*.textgrid"))
-    tg_files = sorted(set(tg_files))
-
-    for tg_file in tg_files:
-        utt_id = tg_file.stem
-        spk_id = utt_id[:3] if len(utt_id) >= 3 else utt_id
-        wav_candidates = [
-            tg_file.with_suffix(".wav"),
-            tg_file.with_suffix(".WAV"),
-        ]
-        wav_file = next((w for w in wav_candidates if w.is_file()), None)
-        if not wav_file:
-            continue
-
-        try:
-            ref_words = parse_buckeye_textgrid(tg_file)
-            ref_phones = [p for w in ref_words for p in w.phonemes]
-            dur = get_audio_duration_seconds(wav_file)
-            utterances.append(
-                BenchmarkUtterance(
-                    id=utt_id,
-                    speaker_id=spk_id,
-                    wav_path=wav_file,
-                    duration=dur,
-                    ref_words=ref_words,
-                    ref_phones=ref_phones,
-                )
-            )
-        except Exception:
-            continue
-
-    return utterances
-
-
-# ---------------------------------------------------------------------------
-# Benchmark Core Runner
-# ---------------------------------------------------------------------------
-
-
-def _deserialize_raw_alignment(raw_file: Path) -> list[WordToken]:
-    """Deserialize WordToken instances with nested PhonemeCue instances from alignment_raw.json."""
-    raw_data = json.loads(raw_file.read_text(encoding="utf-8"))
-    pred_words: list[WordToken] = []
-    for wd in raw_data.get("words", []):
-        word_phones = [
-            PhonemeCue(
-                phoneme=pd["phoneme"],
-                start=float(pd["start"]),
-                end=float(pd["end"]),
-                confidence=float(pd.get("confidence", 1.0)),
-            )
-            for pd in wd.get("phonemes", [])
-        ]
-        pred_words.append(
+    words = []
+    for w in ref_words:
+        s = round(w.start + shift(), 6)
+        e = round(w.end + shift(), 6)
+        words.append(
             WordToken(
-                id=wd["id"],
-                text=wd["text"],
-                normalized=wd["normalized"],
-                start=float(wd["start"]),
-                end=float(wd["end"]),
-                confidence=float(wd.get("confidence", 1.0)),
-                phonemes=word_phones,
-                char_start=wd.get("char_start"),
-                char_end=wd.get("char_end"),
+                id=f"{w.id}_{mode}",
+                text=w.text,
+                normalized=w.normalized,
+                start=s,
+                end=max(e, s + 0.01),
+                confidence=0.9,
             )
         )
-    return pred_words
+    phones = None
+    if MODES[mode].has_phones:
+        phones = []
+        for p in ref_phones:
+            s = round(p.start + shift(), 6)
+            e = round(p.end + shift(), 6)
+            phones.append(PhonemeCue(p.phoneme, s, max(e, s + 0.005), 0.9))
+    return words, phones
+
+
+# ---------------------------------------------------------------------------
+# Real execution
+# ---------------------------------------------------------------------------
+
+
+class CachedTranscriber:
+    """Transcribe each file once even when scenarios A and B both need the ASR output."""
+
+    def __init__(self, inner: Any) -> None:
+        self.inner = inner
+        self._cache: dict[str, Any] = {}
+
+    def transcribe(self, audio_path: Path | str, **kwargs: Any) -> Any:
+        key = str(Path(audio_path).resolve())
+        if key not in self._cache:
+            self._cache[key] = self.inner.transcribe(audio_path, **kwargs)
+        return self._cache[key]
+
+    def unload(self) -> None:
+        if hasattr(self.inner, "unload"):
+            self.inner.unload()
+
+
+def _error_text(err: BaseException) -> str:
+    return f"{type(err).__name__}: {err}"
+
+
+def execute_modes(
+    utterances: list[BenchmarkUtterance],
+    modes: list[str],
+    transcriber: Any,
+    aligner: Any,
+    vad_backend: Any | None = None,
+    log: Callable[[str], None] = print,
+) -> dict[str, dict[str, tuple[list[WordToken], list[PhonemeCue] | None] | str]]:
+    """Run all requested modes; returns mode -> utterance id -> prediction or error text."""
+    from subtitle_workbench.aligner import AlignmentFailure, AlignmentRequest
+    from subtitle_workbench.pipeline import prepare_alignment_job
+
+    scenarios = {MODES[m].scenario for m in modes}
+    cached = CachedTranscriber(transcriber)
+    jobs: dict[str, dict[str, Any]] = {"A": {}, "B": {}}
+
+    # Stage 1: VAD + Whisper (+ anchoring + chunking), one loaded ASR model
+    log(f"[*] Stage 1/2: ASR and chunking for {len(utterances)} utterances")
+    try:
+        for utt in utterances:
+            for scenario in sorted(scenarios):
+                try:
+                    jobs[scenario][utt.id] = prepare_alignment_job(
+                        utt.wav_path,
+                        transcriber=cached,
+                        transcript_text=utt.transcript if scenario == "A" else None,
+                        speaker=utt.speaker_id,
+                        vad_backend=vad_backend,
+                    )
+                except Exception as err:  # recorded, not dropped
+                    jobs[scenario][utt.id] = _error_text(err)
+    finally:
+        cached.unload()
+
+    results: dict[str, dict[str, Any]] = {m: {} for m in modes}
+
+    # Whisper-only baseline
+    if "B0_whisper" in modes:
+        for utt in utterances:
+            job = jobs["B"][utt.id]
+            results["B0_whisper"][utt.id] = (
+                job if isinstance(job, str) else (list(job.hypothesis_words), None)
+            )
+
+    # Stage 2: forced alignment, one batch per (scenario, engine)
+    log("[*] Stage 2/2: forced alignment")
+    for mode in modes:
+        spec = MODES[mode]
+        if spec.engine is None:
+            continue
+        ready = [
+            (utt, jobs[spec.scenario][utt.id])
+            for utt in utterances
+            if not isinstance(jobs[spec.scenario][utt.id], str)
+        ]
+        for utt in utterances:
+            job = jobs[spec.scenario][utt.id]
+            if isinstance(job, str):
+                results[mode][utt.id] = job
+        if not ready:
+            continue
+        requests = [
+            AlignmentRequest(audio_path=job.audio_path, chunks=job.chunks, speaker=job.speaker)
+            for _, job in ready
+        ]
+        log(f"[*]   {mode}: {len(requests)} utterances via {spec.engine}")
+        aligned = aligner.align_requests(requests, engine=spec.engine)
+        for (utt, _), out in zip(ready, aligned, strict=True):
+            if isinstance(out, AlignmentFailure):
+                results[mode][utt.id] = _error_text(out)
+            else:
+                phones = [p for w in out for p in w.phonemes] if spec.has_phones else None
+                results[mode][utt.id] = (out, phones)
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Aggregation
+# ---------------------------------------------------------------------------
+
+
+def _ci(
+    errors: list[float], clusters: list[str], resamples: int, seed: int
+) -> tuple[list[float] | None, int]:
+    n_clusters = len(set(clusters))
+    if n_clusters < 2:
+        return None, n_clusters
+    lo, hi = clustered_bootstrap_ci(errors, clusters, num_resamples=resamples, seed=seed)
+    return [round(lo, 2), round(hi, 2)], n_clusters
+
+
+def _tier_summary(
+    errors: list[float],
+    spk_clusters: list[str],
+    utt_clusters: list[str],
+    ci_unit: str,
+    resamples: int,
+    seed: int,
+    n_matched: int,
+    n_reference: int,
+) -> dict[str, Any] | None:
+    if not errors:
+        return None
+    arr = np.asarray(errors, dtype=np.float64)
+    clusters = spk_clusters if ci_unit == "speaker" else utt_clusters
+    ci, n_clusters = _ci(errors, clusters, resamples, seed)
+    return {
+        "mae_ms": round(float(arr.mean()), 2),
+        "acc_20ms": round(float(np.mean(arr <= 20.0 + BOUNDARY_EPSILON_MS) * 100.0), 2),
+        "ci_95": ci,
+        "ci_unit": ci_unit,
+        "n_clusters": n_clusters,
+        "n_boundaries": int(arr.size),
+        "num_matched": n_matched,
+        "num_reference": n_reference,
+        "coverage": round(n_matched / n_reference, 4) if n_reference else 0.0,
+    }
+
+
+def evaluate_mode(
+    mode: str,
+    utterances: list[BenchmarkUtterance],
+    predictions: dict[str, Any],
+    ci_unit: str,
+    resamples: int,
+    seed: int,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    w_err: list[float] = []
+    w_spk: list[str] = []
+    w_utt: list[str] = []
+    p_err: list[float] = []
+    p_spk: list[str] = []
+    p_utt: list[str] = []
+    w_match = w_ref = p_match = p_ref = 0
+    rows: list[dict[str, Any]] = []
+
+    for utt in utterances:
+        row: dict[str, Any] = {"mode": mode, "utterance": utt.id, "speaker": utt.speaker_id}
+        pred = predictions.get(utt.id)
+        if pred is None or isinstance(pred, str):
+            row.update({"status": "failed", "error": pred or "not executed"})
+            rows.append(row)
+            continue
+        words, phones = pred
+        try:
+            w_eval = evaluate_alignment_boundaries(words, utt.ref_words)
+        except MetricComputationError as err:
+            row.update({"status": "failed", "error": _error_text(err)})
+            rows.append(row)
+            continue
+        w_err += w_eval.boundary_errors_ms
+        w_spk += [utt.speaker_id] * len(w_eval.boundary_errors_ms)
+        w_utt += [utt.id] * len(w_eval.boundary_errors_ms)
+        w_match += w_eval.num_matched
+        w_ref += len(utt.ref_words)
+        row.update(
+            {
+                "status": "ok",
+                "word_mae_ms": round(w_eval.mae, 3),
+                "word_acc_20ms": round(w_eval.acc_20ms, 2),
+                "word_matched": w_eval.num_matched,
+                "word_reference": len(utt.ref_words),
+            }
+        )
+        if phones and utt.ref_phones:
+            pred_ph, ref_ph = fold_phones(phones), fold_phones(utt.ref_phones)
+            if pred_ph and ref_ph:
+                try:
+                    p_eval = evaluate_alignment_boundaries(pred_ph, ref_ph)
+                    p_err += p_eval.boundary_errors_ms
+                    p_spk += [utt.speaker_id] * len(p_eval.boundary_errors_ms)
+                    p_utt += [utt.id] * len(p_eval.boundary_errors_ms)
+                    p_match += p_eval.num_matched
+                    p_ref += len(ref_ph)
+                    row["phone_mae_ms"] = round(p_eval.mae, 3)
+                except MetricComputationError as err:
+                    row["phone_error"] = _error_text(err)
+        rows.append(row)
+
+    n_ok = sum(1 for r in rows if r["status"] == "ok")
+    summary = {
+        "name": MODES[mode].name,
+        "scenario": MODES[mode].scenario,
+        "engine": MODES[mode].engine,
+        "n_utterances_ok": n_ok,
+        "n_utterances_failed": len(rows) - n_ok,
+        "word_metrics": _tier_summary(
+            w_err, w_spk, w_utt, ci_unit, resamples, seed, w_match, w_ref
+        ),
+        "phone_metrics": _tier_summary(
+            p_err, p_spk, p_utt, ci_unit, resamples, seed, p_match, p_ref
+        ),
+    }
+    return summary, rows
+
+
+def compare_modes(rows: list[dict[str, Any]], modes: list[str], n_speakers: int) -> dict[str, Any]:
+    by_mode: dict[str, dict[str, float]] = {m: {} for m in modes}
+    for r in rows:
+        if r["status"] == "ok" and r["mode"] in by_mode:
+            by_mode[r["mode"]][r["utterance"]] = r["word_mae_ms"]
+
+    tests: list[tuple[str, str, str, Any, int]] = []
+    for key, baseline, proposed in COMPARISONS:
+        if baseline not in by_mode or proposed not in by_mode:
+            continue
+        common = sorted(set(by_mode[baseline]) & set(by_mode[proposed]))
+        if not common:
+            continue
+        excluded = len(set(by_mode[baseline]) ^ set(by_mode[proposed]))
+        res = paired_wilcoxon_test(
+            [by_mode[baseline][u] for u in common], [by_mode[proposed][u] for u in common]
+        )
+        tests.append((key, baseline, proposed, res, excluded))
+
+    out: dict[str, Any] = {}
+    if not tests:
+        return out
+    adjusted = bonferroni_holm_adjustment([t[3].p_value for t in tests])
+    for (key, baseline, proposed, res, excluded), p_adj in zip(tests, adjusted, strict=True):
+        out[key] = {
+            "baseline": baseline,
+            "proposed": proposed,
+            "metric": "word_mae",
+            "aggregation": "utterance_mean",
+            "pairing": "utterance_id",
+            "n_pairs": res.n_pairs,
+            "n_unpaired_excluded": excluded,
+            "n_speakers": n_speakers,
+            "wilcoxon_w": round(res.statistic, 2),
+            "p_value_raw": float(res.p_value),
+            "p_value_holm": float(p_adj),
+            "p_value": float(p_adj),
+            "cliffs_delta": round(res.cliffs_delta, 4),
+            "effect_size": res.effect_size,
+            "significant_0_05": bool(p_adj < 0.05),
+        }
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Orchestration
+# ---------------------------------------------------------------------------
+
+
+def _resolve_utterances(
+    corpus: str, data_dir: Path | str | None, offline_synthetic: bool, tmp: list[Any]
+) -> tuple[list[BenchmarkUtterance], str]:
+    if offline_synthetic or corpus == "synthetic":
+        has_wrd = bool(data_dir and Path(data_dir).is_dir() and any(Path(data_dir).glob("*.wrd")))
+        if has_wrd:
+            synth_path = Path(data_dir)  # type: ignore[arg-type]
+        else:
+            tmp.append(tempfile.TemporaryDirectory(prefix="bench_synth_"))
+            synth_path = stage_synthetic_benchmark(tmp[-1].name)
+        return load_synthetic_utterances(synth_path), "synthetic" if offline_synthetic else corpus
+    resolved = Path(data_dir) if data_dir else Path(f"data/corpora/{corpus}")
+    if not resolved.is_dir():
+        raise BenchmarkError(
+            f"Corpus directory not found: {resolved}. "
+            "Use --offline-synthetic for offline benchmarking without external datasets."
+        )
+    if corpus == "timit":
+        return load_timit_utterances(resolved), corpus
+    if corpus in ("buckeye", "librispeech", "l2arctic"):
+        return load_textgrid_utterances(resolved, corpus), corpus
+    raise BenchmarkError(f"Unsupported corpus: {corpus}")
 
 
 def run_benchmark(
@@ -532,527 +616,207 @@ def run_benchmark(
     offline_synthetic: bool = False,
     seed: int = 42,
     bootstrap_resamples: int = 2000,
-    device: str = "auto",
+    device: str = "cuda",
     max_utterances: int | None = None,
     modes: list[str] | None = None,
+    asr_model: str = "large-v3",
+    transcriber: Any | None = None,
+    aligner: Any | None = None,
+    vad_backend: Any | None = None,
 ) -> dict[str, Any]:
-    """Execute speech benchmark suite across 3 ablation modes.
-
-    Returns the complete benchmark evaluation result dictionary and writes
-    benchmark_results.json and manifest.json into output_dir.
-    """
+    """Execute the benchmark and write benchmark_results.json, benchmark_utterances.json,
+    and manifest.json into ``output_dir``."""
     if seed < 0:
         raise BenchmarkError(f"Random seed must be non-negative, got {seed}")
     if bootstrap_resamples < 1:
         raise BenchmarkError(f"bootstrap_resamples must be >= 1, got {bootstrap_resamples}")
+    selected = list(modes) if modes is not None else list(DEFAULT_MODES)
+    if not selected:
+        raise BenchmarkError("At least one mode must be selected")
+    unknown = [m for m in selected if m not in MODES]
+    if unknown:
+        raise BenchmarkError(f"Unknown mode(s): {unknown}; choose from {list(MODES)}")
 
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
-
-    if modes is None:
-        selected_modes = ["mode1_whisper", "mode2_ctc", "mode3_hybrid"]
-    else:
-        selected_modes = list(modes)
-
-    print("[*] Speech Alignment Benchmark Suite")
-    print(f"[*] Corpus: {corpus} (offline_synthetic={offline_synthetic})")
-    print(f"[*] Output directory: {out_path}")
-    print(f"[*] Random seed: {seed}, Bootstrap resamples: {bootstrap_resamples}")
-    print(f"[*] Selected modes: {', '.join(selected_modes)}")
-
-    rng = np.random.default_rng(seed)
-    temp_dir_obj: tempfile.TemporaryDirectory | None = None
-
+    tmp: list[Any] = []
     try:
-        # Resolve dataset
-        if offline_synthetic or corpus == "synthetic":
-            has_wrd = bool(
-                data_dir and Path(data_dir).is_dir() and any(Path(data_dir).glob("*.wrd"))
-            )
-            if has_wrd:
-                synth_path = Path(data_dir)
-            else:
-                temp_dir_obj = tempfile.TemporaryDirectory(prefix="bench_synth_")
-                synth_path = stage_synthetic_benchmark(temp_dir_obj.name)
-            utterances = load_synthetic_utterances(synth_path)
-            is_offline = bool(offline_synthetic)
-            if is_offline:
-                corpus = "synthetic"
-        else:
-            is_offline = False
-            resolved_dir = Path(data_dir) if data_dir else Path(f"data/corpora/{corpus}")
-            if not resolved_dir.is_dir():
-                raise BenchmarkError(
-                    f"Corpus directory not found: {resolved_dir}. "
-                    "Use --offline-synthetic for offline benchmarking without external datasets."
-                )
-            if corpus == "timit":
-                utterances = load_timit_utterances(resolved_dir)
-            elif corpus in ("buckeye", "librispeech", "l2arctic"):
-                utterances = load_buckeye_utterances(resolved_dir)
-            else:
-                raise BenchmarkError(f"Unsupported corpus: {corpus}")
-
+        utterances, corpus = _resolve_utterances(corpus, data_dir, offline_synthetic, tmp)
         if max_utterances is not None and max_utterances > 0:
             utterances = utterances[:max_utterances]
-
         if not utterances:
             raise BenchmarkError(
                 f"No valid utterances found for corpus '{corpus}'. "
                 "Use --offline-synthetic to generate offline benchmark data."
             )
+        ids = [u.id for u in utterances]
+        if len(ids) != len(set(ids)):
+            raise BenchmarkError("Utterance IDs are not unique; pairing would be ambiguous")
 
-        total_audio_sec = round(sum(u.duration for u in utterances), 3)
-        print(
-            f"[+] Loaded {len(utterances)} utterances "
-            f"(total audio duration: {total_audio_sec:.2f}s)"
-        )
+        n_spk = len({u.speaker_id for u in utterances})
+        ci_unit = "speaker" if n_spk >= MIN_SPEAKERS_FOR_SPEAKER_CLUSTERS else "utterance"
+        total_audio = round(sum(u.duration for u in utterances), 3)
+        print(f"[*] Corpus {corpus}: {len(utterances)} utterances, {n_spk} speakers")
+
+        config: dict[str, Any] = {"modes": selected, "ci_unit": ci_unit}
+        if offline_synthetic:
+            rng = np.random.default_rng(seed)
+            predictions = {
+                m: {
+                    u.id: simulate_predictions_for_pipeline_selftest(
+                        u.ref_words, u.ref_phones, m, rng
+                    )
+                    for u in utterances
+                }
+                for m in selected
+            }
+        else:
+            if transcriber is None:
+                from subtitle_workbench.asr import WhisperTranscriber
+
+                transcriber = WhisperTranscriber(model_size_or_path=asr_model, device=device)
+            if aligner is None:
+                from subtitle_workbench.aligner import ForcedAligner
+
+                aligner = ForcedAligner()
+            config["asr"] = {
+                "model": getattr(transcriber, "model_size_or_path", asr_model),
+                "device": getattr(transcriber, "device", device),
+                "compute_type": getattr(transcriber, "compute_type", None),
+            }
+            describe = getattr(aligner, "describe", None)
+            if callable(describe):
+                config["aligners"] = {e: describe(e) for e in ("mfa", "ctc")}
+            predictions = execute_modes(
+                utterances, selected, transcriber, aligner, vad_backend=vad_backend
+            )
 
         modes_output: dict[str, Any] = {}
-        mode_word_errors_map: dict[str, list[float]] = {}
-        mode_utt_word_maes: dict[str, list[float]] = {m: [] for m in selected_modes}
-
-        for mode_id in selected_modes:
-            mode_display_name = MODE_NAMES.get(mode_id, mode_id)
-            print(f"[*] Executing {mode_display_name}...")
-
-            reset_peak_vram()
-            t0 = time.perf_counter()
-
-            all_word_errors: list[float] = []
-            all_word_clusters: list[str] = []
-            all_phone_errors: list[float] = []
-            all_phone_clusters: list[str] = []
-            matched_words_count = 0
-            unmatched_words_count = 0
-            matched_phones_count = 0
-            unmatched_phones_count = 0
-
-            for utt in utterances:
-                if is_offline:
-                    pred_words, pred_phones = simulate_predictions_for_pipeline_selftest(
-                        utt.ref_words, utt.ref_phones, mode_id, rng
-                    )
-                else:
-                    # In real production mode, dispatch to actual models if available
-                    if mode_id == "mode1_whisper":
-                        try:
-                            from subtitle_workbench.asr import WhisperTranscriber
-
-                            t_mode = WhisperTranscriber(
-                                device=None if device == "auto" else device,
-                                compute_type="int8",
-                            )
-                            segs = t_mode.transcribe(utt.wav_path)
-                            pred_words = [w for s in segs for w in s.words]
-                            t_mode.unload()
-                            pred_phones = None
-                        except Exception as err:
-                            msg = f"Mode 1 production execution failed: {err}"
-                            raise BenchmarkError(msg) from err
-                    elif mode_id == "mode2_ctc":
-                        try:
-                            from subtitle_workbench.pipeline import run_speech_pipeline
-
-                            ref_transcript = (
-                                " ".join(w.normalized for w in utt.ref_words)
-                                if utt.ref_words
-                                else None
-                            )
-                            with tempfile.TemporaryDirectory() as p_tmp:
-                                run_speech_pipeline(
-                                    utt.wav_path,
-                                    output_dir=p_tmp,
-                                    transcript=ref_transcript,
-                                    engine="ctc",
-                                )
-                                raw_file = Path(p_tmp) / "alignment_raw.json"
-                                pred_words = _deserialize_raw_alignment(raw_file)
-                                pred_phones = [p for w in pred_words for p in w.phonemes]
-                        except Exception as err:
-                            msg = f"Mode 2 production execution failed: {err}"
-                            raise BenchmarkError(msg) from err
-                    elif mode_id == "mode3_hybrid":
-                        try:
-                            from subtitle_workbench.pipeline import run_speech_pipeline
-
-                            ref_transcript = (
-                                " ".join(w.normalized for w in utt.ref_words)
-                                if utt.ref_words
-                                else None
-                            )
-                            with tempfile.TemporaryDirectory() as p_tmp:
-                                run_speech_pipeline(
-                                    utt.wav_path,
-                                    output_dir=p_tmp,
-                                    transcript=ref_transcript,
-                                    engine="mfa",
-                                )
-                                raw_file = Path(p_tmp) / "alignment_raw.json"
-                                pred_words = _deserialize_raw_alignment(raw_file)
-                                pred_phones = [p for w in pred_words for p in w.phonemes]
-                        except Exception as err:
-                            msg = f"Mode 3 production execution failed: {err}"
-                            raise BenchmarkError(msg) from err
-                    else:
-                        raise BenchmarkError(f"Unknown mode: {mode_id}")
-
-                # Evaluate word boundaries
-                if pred_words and utt.ref_words:
-                    try:
-                        w_eval = evaluate_alignment_boundaries(pred_words, utt.ref_words)
-                        all_word_errors.extend(w_eval.boundary_errors_ms)
-                        all_word_clusters.extend([utt.speaker_id] * len(w_eval.boundary_errors_ms))
-                        matched_words_count += w_eval.num_matched
-                        unmatched_words_count += w_eval.num_unmatched
-                        mode_utt_word_maes[mode_id].append(float(w_eval.mae))
-                    except BenchmarkError:
-                        pass
-
-                # Evaluate phone boundaries
-                if pred_phones and utt.ref_phones:
-                    try:
-                        p_eval = evaluate_alignment_boundaries(pred_phones, utt.ref_phones)
-                        all_phone_errors.extend(p_eval.boundary_errors_ms)
-                        all_phone_clusters.extend([utt.speaker_id] * len(p_eval.boundary_errors_ms))
-                        matched_phones_count += p_eval.num_matched
-                        unmatched_phones_count += p_eval.num_unmatched
-                    except BenchmarkError:
-                        pass
-
-            t1 = time.perf_counter()
-            elapsed_sec = round(t1 - t0, 4)
-            rtf = round(elapsed_sec / total_audio_sec, 4) if total_audio_sec > 0.0 else 0.0
-            peak_vram = round(get_peak_vram_mb(), 2)
-            peak_ram = round(get_peak_host_ram_mb(), 2)
-
-            # Word metrics aggregation
-            if all_word_errors:
-                w_arr = np.asarray(all_word_errors, dtype=np.float64)
-                w_mae = round(float(np.mean(w_arr)), 2)
-                w_medae = round(float(np.median(w_arr)), 2)
-                w_rmse = round(float(np.sqrt(np.mean(w_arr**2))), 2)
-                w_acc_20 = round(float(np.mean(w_arr <= (20.0 + BOUNDARY_EPSILON_MS)) * 100.0), 2)
-                w_acc_50 = round(float(np.mean(w_arr <= (50.0 + BOUNDARY_EPSILON_MS)) * 100.0), 2)
-                w_acc_100 = round(float(np.mean(w_arr <= (100.0 + BOUNDARY_EPSILON_MS)) * 100.0), 2)
-
-                unique_spk = np.unique(all_word_clusters)
-                if len(unique_spk) >= 2:
-                    ci_l, ci_u = clustered_bootstrap_ci(
-                        w_arr, all_word_clusters, num_resamples=bootstrap_resamples, seed=seed
-                    )
-                    w_ci = [round(ci_l, 2), round(ci_u, 2)]
-                else:
-                    w_ci = [w_mae, w_mae]
-
-                word_metrics_entry: dict[str, Any] = {
-                    "mae_ms": w_mae,
-                    "medae_ms": w_medae,
-                    "rmse_ms": w_rmse,
-                    "acc_20ms": w_acc_20,
-                    "acc_50ms": w_acc_50,
-                    "acc_100ms": w_acc_100,
-                    "ci_95": w_ci,
-                    "num_matched": matched_words_count,
-                    "num_unmatched": unmatched_words_count,
-                }
-                mode_word_errors_map[mode_id] = all_word_errors
-            else:
-                word_metrics_entry = {
-                    "mae_ms": 0.0,
-                    "medae_ms": 0.0,
-                    "rmse_ms": 0.0,
-                    "acc_20ms": 0.0,
-                    "acc_50ms": 0.0,
-                    "acc_100ms": 0.0,
-                    "ci_95": [0.0, 0.0],
-                    "num_matched": 0,
-                    "num_unmatched": 0,
-                }
-
-            # Phone metrics aggregation
-            if all_phone_errors:
-                p_arr = np.asarray(all_phone_errors, dtype=np.float64)
-                p_mae = round(float(np.mean(p_arr)), 2)
-                p_medae = round(float(np.median(p_arr)), 2)
-                p_rmse = round(float(np.sqrt(np.mean(p_arr**2))), 2)
-                p_acc_20 = round(float(np.mean(p_arr <= (20.0 + BOUNDARY_EPSILON_MS)) * 100.0), 2)
-                p_acc_50 = round(float(np.mean(p_arr <= (50.0 + BOUNDARY_EPSILON_MS)) * 100.0), 2)
-                p_acc_100 = round(float(np.mean(p_arr <= (100.0 + BOUNDARY_EPSILON_MS)) * 100.0), 2)
-
-                unique_spk = np.unique(all_phone_clusters)
-                if len(unique_spk) >= 2:
-                    ci_l, ci_u = clustered_bootstrap_ci(
-                        p_arr, all_phone_clusters, num_resamples=bootstrap_resamples, seed=seed
-                    )
-                    p_ci = [round(ci_l, 2), round(ci_u, 2)]
-                else:
-                    p_ci = [p_mae, p_mae]
-
-                phone_metrics_entry: dict[str, Any] | None = {
-                    "mae_ms": p_mae,
-                    "medae_ms": p_medae,
-                    "rmse_ms": p_rmse,
-                    "acc_20ms": p_acc_20,
-                    "acc_50ms": p_acc_50,
-                    "acc_100ms": p_acc_100,
-                    "ci_95": p_ci,
-                    "num_matched": matched_phones_count,
-                    "num_unmatched": unmatched_phones_count,
-                }
-            else:
-                phone_metrics_entry = None
-
-            if is_offline:
-                perf_dict: dict[str, Any] = {
-                    "rtf": None,
-                    "peak_vram_mb": None,
-                    "peak_ram_mb": None,
-                    "elapsed_seconds": elapsed_sec,
-                    "note": "simulated mode - resource metrics nullified",
-                }
-            else:
-                perf_dict = {
-                    "rtf": rtf,
-                    "peak_vram_mb": peak_vram,
-                    "peak_ram_mb": peak_ram,
-                    "elapsed_seconds": elapsed_sec,
-                }
-
-            modes_output[mode_id] = {
-                "name": mode_display_name,
-                "word_metrics": word_metrics_entry,
-                "phone_metrics": phone_metrics_entry,
-                "performance": perf_dict,
-            }
-
-            p_summary = (
-                f", Phone MAE = {phone_metrics_entry['mae_ms']:.1f} ms"
-                if phone_metrics_entry
-                else ""
+        all_rows: list[dict[str, Any]] = []
+        for m in selected:
+            summary, rows = evaluate_mode(
+                m, utterances, predictions[m], ci_unit, bootstrap_resamples, seed
             )
-            print(
-                f"[+] {mode_id} complete: Word MAE = {word_metrics_entry['mae_ms']:.1f} ms, "
-                f"Acc@20ms = {word_metrics_entry['acc_20ms']:.1f}%, "
-                f"Acc@50ms = {word_metrics_entry['acc_50ms']:.1f}%{p_summary}"
-            )
-
-        # Statistical hypothesis testing (paired Wilcoxon & Cliff's Delta on utterance-level MAEs with Holm correction)
-        stat_significance: dict[str, Any] = {}
-        candidate_pairs: list[tuple[str, list[float], list[float]]] = []
-        if "mode3_hybrid" in mode_utt_word_maes:
-            m3_errs = mode_utt_word_maes["mode3_hybrid"]
-            if "mode1_whisper" in mode_utt_word_maes:
-                candidate_pairs.append(
-                    ("proposed_vs_whisper", mode_utt_word_maes["mode1_whisper"], m3_errs)
-                )
-            if "mode2_ctc" in mode_utt_word_maes:
-                candidate_pairs.append(
-                    ("proposed_vs_ctc", mode_utt_word_maes["mode2_ctc"], m3_errs)
-                )
-        elif "mode1_whisper" in mode_utt_word_maes and "mode2_ctc" in mode_utt_word_maes:
-            candidate_pairs.append(
-                (
-                    "ctc_vs_whisper",
-                    mode_utt_word_maes["mode1_whisper"],
-                    mode_utt_word_maes["mode2_ctc"],
-                )
-            )
-
-        executed_tests: list[tuple[str, Any]] = []
-        for pair_key, baseline_errs, proposed_errs in candidate_pairs:
-            if len(baseline_errs) == len(proposed_errs) and len(proposed_errs) > 0:
-                w_res = paired_wilcoxon_test(baseline_errs, proposed_errs)
-                executed_tests.append((pair_key, w_res))
-
-        if executed_tests:
-            raw_p_values = [res.p_value for _, res in executed_tests]
-            adj_p_values = bonferroni_holm_adjustment(raw_p_values)
-            n_spk = len(set(u.speaker_id for u in utterances))
-            for (pair_key, w_res), p_adj in zip(executed_tests, adj_p_values, strict=True):
-                stat_significance[pair_key] = {
-                    "metric": "word_mae",
-                    "aggregation": "utterance_mean",
-                    "n_utterances": len(utterances),
-                    "n_speakers": n_spk,
-                    "wilcoxon_w": round(w_res.statistic, 2),
-                    "p_value_raw": float(w_res.p_value),
-                    "p_value_holm": float(p_adj),
-                    "p_value": float(p_adj),
-                    "cliffs_delta": round(w_res.cliffs_delta, 4),
-                    "effect_size": w_res.effect_size,
-                    "significant_0_05": bool(p_adj < 0.05),
-                    "significant_0_001": bool(p_adj < 0.001),
-                }
-                disp_name = (
-                    "Proposed vs Whisper"
-                    if pair_key == "proposed_vs_whisper"
-                    else "Proposed vs CTC"
-                    if pair_key == "proposed_vs_ctc"
-                    else "CTC vs Whisper"
-                    if pair_key == "ctc_vs_whisper"
-                    else pair_key.replace("_vs_", " vs ").title()
-                )
+            modes_output[m] = summary
+            all_rows += rows
+            wm = summary["word_metrics"]
+            if wm:
                 print(
-                    f"[+] {disp_name}: W = {w_res.statistic:.1f}, "
-                    f"p_raw = {w_res.p_value:.4e}, p_holm = {p_adj:.4e}, "
-                    f"Cliff's Delta = {w_res.cliffs_delta:+.2f} ({w_res.effect_size})"
+                    f"[+] {m}: word MAE {wm['mae_ms']:.1f} ms, Acc@20ms {wm['acc_20ms']:.1f}%, "
+                    f"coverage {wm['coverage'] * 100:.1f}%, failed {summary['n_utterances_failed']}"
                 )
+            else:
+                print(f"[!] {m}: no successful utterances")
 
-        hardware_profile = get_hardware_info()
+        stats = compare_modes(all_rows, selected, n_spk)
         now_utc = datetime.datetime.now(datetime.UTC).isoformat()
-        n_spk = len(set(u.speaker_id for u in utterances))
-        data_provenance = "SIMULATED_PREDICTIONS" if is_offline else "MODEL_EXECUTION"
-        warning = (
-            "Predictions are simulated; not model output; not citable." if is_offline else None
-        )
-
-        benchmark_results = {
-            "schema_version": 1,
+        hardware = get_hardware_info()
+        provenance = "SIMULATED_PREDICTIONS" if offline_synthetic else "MODEL_EXECUTION"
+        results = {
+            "schema_version": 2,
             "timestamp": now_utc,
             "corpus": corpus,
-            "data_provenance": data_provenance,
-            "warning": warning,
-            "offline_synthetic": is_offline,
+            "reference_type": REFERENCE_TYPES.get(corpus, "unknown"),
+            "data_provenance": provenance,
+            "warning": (
+                "Predictions are simulated; not model output; not citable."
+                if offline_synthetic
+                else None
+            ),
+            "offline_synthetic": offline_synthetic,
             "seed": seed,
             "bootstrap_resamples": bootstrap_resamples,
-            "utterance_count": len(utterances),
             "n_utterances": len(utterances),
             "n_speakers": n_spk,
-            "total_audio_duration_seconds": total_audio_sec,
+            "total_audio_duration_seconds": total_audio,
+            "config": config,
             "modes": modes_output,
-            "statistical_significance": stat_significance,
-            "hardware": hardware_profile,
+            "statistical_significance": stats,
+            "hardware": hardware,
         }
-
-        # Write benchmark_results.json
         results_file = out_path / "benchmark_results.json"
-        print(f"[*] Writing {results_file}...")
-        results_file.write_text(
-            json.dumps(benchmark_results, indent=2) + "\n",
-            encoding="utf-8",
-        )
-
-        # Build cryptographic manifest
-        input_hashes: dict[str, str] = {}
-        for utt in utterances:
-            if utt.wav_path.is_file():
-                input_hashes[utt.wav_path.name] = sha256(utt.wav_path)
+        results_file.write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
+        utt_file = out_path / "benchmark_utterances.json"
+        utt_file.write_text(json.dumps(all_rows, indent=2) + "\n", encoding="utf-8")
 
         manifest = {
-            "schema_version": 1,
-            "tool": {
-                "name": "local-subtitle-workbench",
-                "version": __version__,
-            },
+            "schema_version": 2,
+            "tool": {"name": "local-subtitle-workbench", "version": __version__},
             "code": code_provenance(),
             "timestamp": now_utc,
             "inputs": {
                 "corpus": corpus,
-                "data_provenance": data_provenance,
-                "offline_synthetic": is_offline,
-                "utterance_count": len(utterances),
+                "reference_type": results["reference_type"],
+                "data_provenance": provenance,
+                "offline_synthetic": offline_synthetic,
+                "n_utterances": len(utterances),
                 "n_speakers": n_spk,
-                "audio_files": input_hashes,
+                "audio_files": {u.id: sha256(u.wav_path) for u in utterances},
             },
+            "config": config,
             "outputs": {
-                "benchmark_results.json": {
-                    "sha256": sha256(results_file),
-                }
+                results_file.name: {"sha256": sha256(results_file)},
+                utt_file.name: {"sha256": sha256(utt_file)},
             },
             "runtime": {
                 "python": platform.python_version(),
                 "numpy": np.__version__,
                 "platform": platform.platform(),
             },
-            "hardware": hardware_profile,
+            "hardware": hardware,
         }
-
-        manifest_file = out_path / "manifest.json"
-        print(f"[*] Writing {manifest_file}...")
-        manifest_file.write_text(
-            json.dumps(manifest, indent=2) + "\n",
-            encoding="utf-8",
+        (out_path / "manifest.json").write_text(
+            json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
         )
-
-        print("[OK] Benchmark execution and artifact generation completed successfully.")
-        return benchmark_results
-
+        print(f"[OK] Results written to {out_path}")
+        return results
     finally:
-        if temp_dir_obj is not None:
-            temp_dir_obj.cleanup()
+        for t in tmp:
+            t.cleanup()
 
 
 # ---------------------------------------------------------------------------
-# CLI Entry Point
+# CLI
 # ---------------------------------------------------------------------------
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Speech Alignment Empirical Benchmark Suite Runner."
-    )
+    parser = argparse.ArgumentParser(description="Speech alignment benchmark runner.")
     parser.add_argument(
         "--corpus",
         choices=["timit", "buckeye", "librispeech", "l2arctic", "synthetic"],
         default="timit",
-        help="Corpus type for evaluation (default: timit)",
     )
-    parser.add_argument(
-        "--data-dir",
-        type=Path,
-        default=None,
-        help="Path to corpus directory (default: data/corpora/<corpus>)",
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=Path("reports/benchmark"),
-        help="Directory to place benchmark report artifacts (default: reports/benchmark)",
-    )
+    parser.add_argument("--data-dir", type=Path, default=None)
+    parser.add_argument("--output-dir", type=Path, default=Path("reports/benchmark"))
     parser.add_argument(
         "--offline-synthetic",
         action="store_true",
         default=False,
-        help="Execute offline benchmark on synthetic dataset with empirical ablation shifts",
+        help="Simulated predictions to test metric/table plumbing (never citable)",
     )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        default=42,
-        help="Random seed for bootstrap resampling and simulation (default: 42)",
-    )
-    parser.add_argument(
-        "--bootstrap-resamples",
-        type=int,
-        default=2000,
-        help="Number of bootstrap resamples for cluster-robust 95%% CIs (default: 2000)",
-    )
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--bootstrap-resamples", type=int, default=2000)
     parser.add_argument(
         "--device",
-        choices=["auto", "cuda", "cpu"],
-        default="auto",
-        help="Computation device selector (default: auto)",
+        choices=["cuda", "cpu"],
+        default="cuda",
+        help="Whisper device (default: cuda; fails instead of silently using CPU)",
     )
-    parser.add_argument(
-        "--max-utterances",
-        type=int,
-        default=None,
-        help="Limit number of utterances for fast testing (default: None)",
-    )
+    parser.add_argument("--asr-model", type=str, default="large-v3")
+    parser.add_argument("--max-utterances", type=int, default=None)
     parser.add_argument(
         "--modes",
         type=str,
         default=None,
-        help="Comma-separated list of modes (default: mode1_whisper,mode2_ctc,mode3_hybrid)",
+        help=f"Comma-separated subset of {','.join(MODES)} (default: all)",
     )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    modes_list = [m.strip() for m in args.modes.split(",")] if args.modes else None
-
+    modes_list = [m.strip() for m in args.modes.split(",") if m.strip()] if args.modes else None
     try:
         run_benchmark(
             corpus=args.corpus,
@@ -1064,12 +828,13 @@ def main(argv: list[str] | None = None) -> int:
             device=args.device,
             max_utterances=args.max_utterances,
             modes=modes_list,
+            asr_model=args.asr_model,
         )
         return 0
     except BenchmarkError as err:
         sys.stderr.write(f"[-] Benchmark Error: {err}\n")
         return 1
-    except (ValueError, Exception) as err:
+    except Exception as err:
         sys.stderr.write(f"error: {err}\n")
         return 1
 

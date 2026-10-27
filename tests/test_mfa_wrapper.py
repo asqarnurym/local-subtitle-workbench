@@ -525,14 +525,16 @@ def test_run_mfa_batch_success_five_chunks(monkeypatch: pytest.MonkeyPatch, tmp_
         corpus_arg = Path(cmd[2])
         out_arg = Path(cmd[5])
         assert "--clean" in cmd
-        assert "--single_speaker" in cmd
+        assert "--single_speaker" not in cmd  # keep MFA speaker adaptation
         assert "--num_jobs" in cmd
+        assert "--fine_tune" in cmd
+        assert "--g2p_model_path" in cmd
         staging_dir_observed.append(corpus_arg.parent)
 
-        # Check that corpus contains 5 wav and 5 lab files
+        # Check that corpus contains 5 wav and 5 lab files (one speaker directory)
         for i in range(5):
-            wav_file = corpus_arg / f"chunk_{i:04d}.wav"
-            lab_file = corpus_arg / f"chunk_{i:04d}.lab"
+            wav_file = corpus_arg / "speaker" / f"chunk_{i:04d}.wav"
+            lab_file = corpus_arg / "speaker" / f"chunk_{i:04d}.lab"
             assert wav_file.is_file()
             assert lab_file.is_file()
             assert lab_file.read_text(encoding="utf-8") == f"hello world {i}"
@@ -595,7 +597,9 @@ def test_run_mfa_batch_passes_timeout(monkeypatch: pytest.MonkeyPatch, tmp_path:
         args=[], returncode=0, stdout="", stderr=""
     )
 
-    run_mfa_batch([(dummy_wav, "hello")], timeout=45.0, runner=mock_runner)
+    # MFA returned without writing a TextGrid: strict wrapper reports it
+    with pytest.raises(MFAExecutionError, match="no alignment"):
+        run_mfa_batch([(dummy_wav, "hello")], timeout=45.0, runner=mock_runner)
     assert mock_runner.run.call_count == 1
     _, kwargs = mock_runner.run.call_args
     assert kwargs.get("timeout") == 45.0

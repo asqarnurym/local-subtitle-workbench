@@ -161,9 +161,14 @@ def test_timit_wrd_parser_malformed_and_monotonicity(tmp_path: Path) -> None:
     with pytest.raises(CorpusFormatError, match="Malformed TIMIT .wrd.*expected 3 tokens, got 5"):
         parse_timit_wrd(extra_file)
 
+    # Overlapping words (shared phone) are valid TIMIT annotation and must be kept
+    overlap_file = tmp_path / "overlap.wrd"
+    overlap_file.write_text("1600 6400 she\n6000 8000 had\n", encoding="utf-8")
+    assert [w.text for w in parse_timit_wrd(overlap_file)] == ["she", "had"]
+
     non_mono_file = tmp_path / "non_mono.wrd"
-    non_mono_file.write_text("1600 6400 she\n6000 8000 had\n", encoding="utf-8")
-    with pytest.raises(CorpusFormatError, match="Non-monotonic timestamp"):
+    non_mono_file.write_text("6000 8000 had\n1600 6400 she\n", encoding="utf-8")
+    with pytest.raises(CorpusFormatError, match="Non-monotonic word onset"):
         parse_timit_wrd(non_mono_file)
 
 
@@ -325,11 +330,7 @@ def test_boundary_evaluation_oracle_offsets_15ms() -> None:
     eval_res = evaluate_alignment_boundaries(pred, ref)
     assert isinstance(eval_res, BoundaryEvaluation)
     assert math.isclose(eval_res.mae, 15.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.medae, 15.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.rmse, 15.0, abs_tol=1e-5)
     assert math.isclose(eval_res.acc_20ms, 100.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.acc_50ms, 100.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.acc_100ms, 100.0, abs_tol=1e-5)
     assert eval_res.num_matched == 4
     assert eval_res.num_unmatched == 0
 
@@ -343,11 +344,7 @@ def test_boundary_evaluation_oracle_offsets_25ms() -> None:
     eval_res = evaluate_alignment_boundaries(pred, ref)
     assert isinstance(eval_res, BoundaryEvaluation)
     assert math.isclose(eval_res.mae, 25.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.medae, 25.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.rmse, 25.0, abs_tol=1e-5)
     assert math.isclose(eval_res.acc_20ms, 0.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.acc_50ms, 100.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.acc_100ms, 100.0, abs_tol=1e-5)
 
 
 def test_boundary_evaluation_oracle_offsets_60ms() -> None:
@@ -359,11 +356,7 @@ def test_boundary_evaluation_oracle_offsets_60ms() -> None:
     eval_res = evaluate_alignment_boundaries(pred, ref)
     assert isinstance(eval_res, BoundaryEvaluation)
     assert math.isclose(eval_res.mae, 60.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.medae, 60.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.rmse, 60.0, abs_tol=1e-5)
     assert math.isclose(eval_res.acc_20ms, 0.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.acc_50ms, 0.0, abs_tol=1e-5)
-    assert math.isclose(eval_res.acc_100ms, 100.0, abs_tol=1e-5)
 
 
 def test_boundary_evaluation_phoneme_cues() -> None:
@@ -452,8 +445,6 @@ def test_boundary_evaluation_exact_sample_boundaries_precision() -> None:
     ]
     eval_exact = evaluate_alignment_boundaries(pred_exact, ref)
     assert eval_exact.acc_20ms == 100.0
-    assert eval_exact.acc_50ms == 100.0
-    assert eval_exact.acc_100ms == 100.0
 
     # 321 samples at 16000 Hz is 20.0625 ms (> 20.0 ms), must be rejected by Acc@20ms
     pred_excess = [
@@ -468,8 +459,6 @@ def test_boundary_evaluation_exact_sample_boundaries_precision() -> None:
     ]
     eval_excess = evaluate_alignment_boundaries(pred_excess, ref)
     assert eval_excess.acc_20ms == 0.0
-    assert eval_excess.acc_50ms == 100.0
-    assert eval_excess.acc_100ms == 100.0
 
 
 # ---------------------------------------------------------------------------
@@ -559,11 +548,7 @@ def test_benchmark_contracts_and_exception_hierarchy() -> None:
 
     word_eval = BoundaryEvaluation(
         mae=15.0,
-        medae=14.0,
-        rmse=16.0,
         acc_20ms=100.0,
-        acc_50ms=100.0,
-        acc_100ms=100.0,
         boundary_errors_ms=[15.0, 15.0],
         num_matched=1,
         num_unmatched=0,
@@ -571,17 +556,12 @@ def test_benchmark_contracts_and_exception_hierarchy() -> None:
     result = AlignmentEvaluationResult(
         word_metrics=word_eval,
         phone_metrics=None,
-        rtf=0.08,
-        peak_vram_mb=1850.0,
-        peak_ram_mb=420.0,
         bootstrap_ci_95={"word_mae": (13.5, 16.5)},
         metadata={"corpus": "timit_core"},
     )
     d = result.to_dict()
     assert d["word_mae"] == 15.0
     assert d["phone_mae"] is None
-    assert d["rtf"] == 0.08
-    assert d["peak_vram_mb"] == 1850.0
     assert d["bootstrap_ci_95"]["word_mae"] == [13.5, 16.5]
     assert d["metadata"]["corpus"] == "timit_core"
 
@@ -615,36 +595,8 @@ def test_cli_download_reference_corpora_offline(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_speech_benchmark_hardware_profiling() -> None:
-    """Verify hardware and resource profiling helpers return valid metrics."""
-    from scripts.speech_benchmark import (
-        get_hardware_info,
-        get_peak_host_ram_mb,
-        get_peak_vram_mb,
-        reset_peak_vram,
-    )
-
-    vram = get_peak_vram_mb()
-    assert isinstance(vram, float)
-    assert vram >= 0.0
-
-    reset_peak_vram()
-
-    ram = get_peak_host_ram_mb()
-    assert isinstance(ram, float)
-    assert ram > 0.0
-
-    hw = get_hardware_info()
-    assert isinstance(hw, dict)
-    assert "platform" in hw
-    assert "processor" in hw
-    assert "python_version" in hw
-    assert "cuda_available" in hw
-    assert isinstance(hw["cuda_available"], bool)
-
-
 def test_speech_benchmark_simulation_profiles() -> None:
-    """Verify simulate_predictions_for_pipeline_selftest generates shifts for pipeline testing."""
+    """Verify simulated self-test predictions have mode-specific noise and phone tiers."""
     from scripts.speech_benchmark import simulate_predictions_for_pipeline_selftest
 
     rng = np.random.default_rng(42)
@@ -663,43 +615,30 @@ def test_speech_benchmark_simulation_profiles() -> None:
             phonemes=ref_phones,
         )
     ]
-
-    # Mode 1: ~120 ms shift, words only
-    m1_words, m1_phones = simulate_predictions_for_pipeline_selftest(
-        ref_words, ref_phones, "mode1_whisper", rng
+    b0_words, b0_phones = simulate_predictions_for_pipeline_selftest(
+        ref_words, ref_phones, "B0_whisper", rng
     )
-    assert len(m1_words) == 1
-    assert m1_phones is None
-    assert 0.16 <= m1_words[0].start <= 0.35
-    assert m1_words[0].start < m1_words[0].end
+    assert b0_phones is None
+    assert 0.16 <= b0_words[0].start <= 0.6
 
-    # Mode 2: ~35 ms shift, words and phones
-    m2_words, m2_phones = simulate_predictions_for_pipeline_selftest(
-        ref_words, ref_phones, "mode2_ctc", rng
+    a1_words, a1_phones = simulate_predictions_for_pipeline_selftest(
+        ref_words, ref_phones, "A1_ctc", rng
     )
-    assert len(m2_words) == 1
-    assert m2_phones is not None
-    assert len(m2_phones) == 2
-    assert 0.108 <= m2_words[0].start <= 0.20
-    assert m2_words[0].start < m2_words[0].end
+    assert a1_phones is None  # CTC (MMS_FA) has no phone tier
+    assert a1_words[0].start < a1_words[0].end
 
-    # Mode 3: ~12 ms shift, words and phones
-    m3_words, m3_phones = simulate_predictions_for_pipeline_selftest(
-        ref_words, ref_phones, "mode3_hybrid", rng
+    a2_words, a2_phones = simulate_predictions_for_pipeline_selftest(
+        ref_words, ref_phones, "A2_proposed", rng
     )
-    assert len(m3_words) == 1
-    assert m3_phones is not None
-    assert len(m3_phones) == 2
-    assert 0.102 <= m3_words[0].start <= 0.13
-    assert m3_words[0].start < m3_words[0].end
+    assert a2_phones is not None and len(a2_phones) == 2
+    assert 0.1 < a2_words[0].start <= 0.15
 
-    # Unsupported mode
     with pytest.raises(BenchmarkError, match="Unsupported ablation mode"):
         simulate_predictions_for_pipeline_selftest(ref_words, ref_phones, "invalid_mode", rng)
 
 
 def test_speech_benchmark_programmatic_offline_synthetic(tmp_path: Path) -> None:
-    """Verify programmatic speech_benchmark execution produces valid schema and stats."""
+    """Simulated self-test produces the v2 schema, per-utterance rows and paired tests."""
     from scripts.speech_benchmark import run_benchmark
 
     bench_dir = tmp_path / "bench_report"
@@ -711,98 +650,57 @@ def test_speech_benchmark_programmatic_offline_synthetic(tmp_path: Path) -> None
         bootstrap_resamples=500,
     )
 
-    assert res["schema_version"] == 1
+    assert res["schema_version"] == 2
     assert res["offline_synthetic"] is True
     assert res["corpus"] == "synthetic"
+    assert res["reference_type"] == "synthetic"
     assert res["data_provenance"] == "SIMULATED_PREDICTIONS"
     assert "Predictions are simulated" in res["warning"]
-    assert res["utterance_count"] == 10
     assert res["n_utterances"] == 10
     assert res["n_speakers"] == 3
-    assert res["total_audio_duration_seconds"] > 0.0
+    # Fewer than 10 speakers: CI resamples utterances, not speakers
+    assert res["config"]["ci_unit"] == "utterance"
 
     modes = res["modes"]
-    assert "mode1_whisper" in modes
-    assert "mode2_ctc" in modes
-    assert "mode3_hybrid" in modes
-
-    m1 = modes["mode1_whisper"]
-    m2 = modes["mode2_ctc"]
-    m3 = modes["mode3_hybrid"]
-
-    # Invariant: Mode 3 Acc@20ms > Mode 2 Acc@20ms > Mode 1 Acc@20ms
+    assert list(modes) == ["B0_whisper", "B1_whisper_ctc", "B2_proposed", "A1_ctc", "A2_proposed"]
+    b0, b1, b2 = modes["B0_whisper"], modes["B1_whisper_ctc"], modes["B2_proposed"]
+    a1, a2 = modes["A1_ctc"], modes["A2_proposed"]
     assert (
-        m3["word_metrics"]["acc_20ms"]
-        > m2["word_metrics"]["acc_20ms"]
-        > m1["word_metrics"]["acc_20ms"]
+        b2["word_metrics"]["mae_ms"] < b1["word_metrics"]["mae_ms"] < b0["word_metrics"]["mae_ms"]
     )
+    assert a2["word_metrics"]["mae_ms"] < a1["word_metrics"]["mae_ms"]
+    for m in (b0, b1, a1):
+        assert m["phone_metrics"] is None
+    for m in (b2, a2):
+        assert m["phone_metrics"] is not None
+        assert m["word_metrics"]["ci_unit"] == "utterance"
+        assert m["word_metrics"]["n_clusters"] == 10
+        assert m["word_metrics"]["coverage"] == 1.0
+    for m in modes.values():
+        assert "performance" not in m
+        assert set(m["word_metrics"]) >= {"mae_ms", "acc_20ms", "ci_95", "coverage"}
+        assert "medae_ms" not in m["word_metrics"]
 
-    # Invariant: Mode 3 MAE < 20 ms
-    assert m3["word_metrics"]["mae_ms"] < 20.0
-    assert (
-        m3["word_metrics"]["mae_ms"] < m2["word_metrics"]["mae_ms"] < m1["word_metrics"]["mae_ms"]
-    )
-
-    # Invariant: Mode 1 phone_metrics is None, Mode 2 and Mode 3 have phone metrics
-    assert m1["phone_metrics"] is None
-    assert m2["phone_metrics"] is not None
-    assert m3["phone_metrics"] is not None
-    assert m3["phone_metrics"]["acc_20ms"] > m2["phone_metrics"]["acc_20ms"]
-    assert m3["phone_metrics"]["mae_ms"] < 20.0
-
-    # Invariant: Resource profiling in simulated mode is nullified
-    for m in (m1, m2, m3):
-        assert m["performance"]["rtf"] is None
-        assert m["performance"]["peak_ram_mb"] is None
-        assert m["performance"]["peak_vram_mb"] is None
-        assert m["performance"]["elapsed_seconds"] >= 0.0
-        assert "simulated mode" in m["performance"]["note"]
-
-    # Invariant: Paired Wilcoxon hypothesis tests on utterance-level MAEs with Holm correction
     sig = res["statistical_significance"]
-    assert "proposed_vs_whisper" in sig
-    assert "proposed_vs_ctc" in sig
+    assert set(sig) == {"B2_vs_B0", "B2_vs_B1", "A2_vs_A1"}
+    for test in sig.values():
+        assert test["pairing"] == "utterance_id"
+        assert test["n_pairs"] == 10
+        assert test["n_unpaired_excluded"] == 0
+        assert test["p_value_holm"] < 0.05
+        assert test["effect_size"] == "large"
 
-    w_whisper = sig["proposed_vs_whisper"]
-    assert w_whisper["metric"] == "word_mae"
-    assert w_whisper["aggregation"] == "utterance_mean"
-    assert w_whisper["n_utterances"] == 10
-    assert w_whisper["n_speakers"] == 3
-    assert w_whisper["p_value"] < 0.05
-    assert w_whisper["p_value_holm"] < 0.05
-    assert "p_value_raw" in w_whisper
-    assert w_whisper["effect_size"] == "large"
-    assert w_whisper["cliffs_delta"] > 0.8
-    assert w_whisper["significant_0_05"] is True
-
-    w_ctc = sig["proposed_vs_ctc"]
-    assert w_ctc["metric"] == "word_mae"
-    assert w_ctc["aggregation"] == "utterance_mean"
-    assert w_ctc["n_utterances"] == 10
-    assert w_ctc["n_speakers"] == 3
-    assert w_ctc["p_value"] < 0.05
-    assert w_ctc["p_value_holm"] < 0.05
-    assert "p_value_raw" in w_ctc
-    assert w_ctc["effect_size"] == "large"
-    assert w_ctc["cliffs_delta"] > 0.8
-    assert w_ctc["significant_0_05"] is True
-
-    # Artifact verification: benchmark_results.json and manifest.json
     results_path = bench_dir / "benchmark_results.json"
+    utt_path = bench_dir / "benchmark_utterances.json"
     manifest_path = bench_dir / "manifest.json"
-    assert results_path.is_file()
-    assert manifest_path.is_file()
-
-    saved_results = json.loads(results_path.read_text(encoding="utf-8"))
-    assert saved_results == res
-
-    manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
-    assert manifest_data["schema_version"] == 1
-    assert "tool" in manifest_data
-    assert "code" in manifest_data
-    assert len(manifest_data["code"]["source_sha256"]) == 64
-    assert manifest_data["inputs"]["utterance_count"] == 10
-    assert manifest_data["outputs"]["benchmark_results.json"]["sha256"] == sha256(results_path)
+    assert json.loads(results_path.read_text(encoding="utf-8")) == res
+    rows = json.loads(utt_path.read_text(encoding="utf-8"))
+    assert len(rows) == 50 and all(r["status"] == "ok" for r in rows)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["schema_version"] == 2
+    assert len(manifest["code"]["source_sha256"]) == 64
+    assert manifest["outputs"]["benchmark_results.json"]["sha256"] == sha256(results_path)
+    assert manifest["outputs"]["benchmark_utterances.json"]["sha256"] == sha256(utt_path)
 
 
 def test_speech_benchmark_cli_offline_synthetic(tmp_path: Path) -> None:
@@ -814,47 +712,33 @@ def test_speech_benchmark_cli_offline_synthetic(tmp_path: Path) -> None:
         "--offline-synthetic",
         "--output-dir",
         str(out_dir),
-        "--seed",
-        "42",
         "--bootstrap-resamples",
         "500",
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True, check=True)
-    assert proc.returncode == 0
     stdout = proc.stdout
-
-    # Clean ASCII checks
-    assert "[*] Speech Alignment Benchmark Suite" in stdout
-    assert "[+] mode1_whisper complete" in stdout
-    assert "[+] mode2_ctc complete" in stdout
-    assert "[+] mode3_hybrid complete" in stdout
-    assert "[+] Proposed vs Whisper" in stdout
-    assert "[+] Proposed vs CTC" in stdout
-    assert "[OK] Benchmark execution and artifact generation completed successfully." in stdout
-
-    # Zero-emoji rule verification on stdout and stderr
+    assert "[*] Corpus synthetic: 10 utterances, 3 speakers" in stdout
+    for mode in ("B0_whisper", "B1_whisper_ctc", "B2_proposed", "A1_ctc", "A2_proposed"):
+        assert f"[+] {mode}: word MAE" in stdout
+    assert "[OK] Results written to" in stdout
     assert all(ord(char) < 128 for char in stdout)
     assert all(ord(char) < 128 for char in proc.stderr)
-
     assert (out_dir / "benchmark_results.json").is_file()
     assert (out_dir / "manifest.json").is_file()
 
 
 def test_speech_benchmark_cli_help_and_options(tmp_path: Path) -> None:
     """Verify CLI argument parsing, help flags, and subset filtering."""
-    # Help flag
     help_proc = subprocess.run(
         [sys.executable, "scripts/speech_benchmark.py", "--help"],
         capture_output=True,
         text=True,
         check=True,
     )
-    assert help_proc.returncode == 0
     assert "--corpus" in help_proc.stdout
     assert "--offline-synthetic" in help_proc.stdout
-    assert "--bootstrap-resamples" in help_proc.stdout
+    assert "--device" in help_proc.stdout
 
-    # Non-existent corpus directory without --offline-synthetic exits with code 1
     bad_proc = subprocess.run(
         [
             sys.executable,
@@ -870,7 +754,6 @@ def test_speech_benchmark_cli_help_and_options(tmp_path: Path) -> None:
     assert bad_proc.returncode == 1
     assert "[-] Benchmark Error" in bad_proc.stderr
 
-    # Max utterances flag bounding
     limited_out = tmp_path / "limited_out"
     lim_proc = subprocess.run(
         [
@@ -888,20 +771,18 @@ def test_speech_benchmark_cli_help_and_options(tmp_path: Path) -> None:
         text=True,
         check=True,
     )
-    assert lim_proc.returncode == 0
-    assert "Loaded 3 utterances" in lim_proc.stdout
+    assert "3 utterances" in lim_proc.stdout
 
-    # Single mode execution
-    mode3_out = tmp_path / "mode3_only"
-    m3_proc = subprocess.run(
+    a2_out = tmp_path / "a2_only"
+    subprocess.run(
         [
             sys.executable,
             "scripts/speech_benchmark.py",
             "--offline-synthetic",
             "--output-dir",
-            str(mode3_out),
+            str(a2_out),
             "--modes",
-            "mode3_hybrid",
+            "A2_proposed",
             "--bootstrap-resamples",
             "200",
         ],
@@ -909,164 +790,197 @@ def test_speech_benchmark_cli_help_and_options(tmp_path: Path) -> None:
         text=True,
         check=True,
     )
-    assert m3_proc.returncode == 0
-    res_m3 = json.loads((mode3_out / "benchmark_results.json").read_text(encoding="utf-8"))
-    assert list(res_m3["modes"].keys()) == ["mode3_hybrid"]
-    assert "proposed_vs_whisper" not in res_m3["statistical_significance"]
+    res = json.loads((a2_out / "benchmark_results.json").read_text(encoding="utf-8"))
+    assert list(res["modes"]) == ["A2_proposed"]
+    assert res["statistical_significance"] == {}
+
+    bad_mode = subprocess.run(
+        [
+            sys.executable,
+            "scripts/speech_benchmark.py",
+            "--offline-synthetic",
+            "--output-dir",
+            str(tmp_path / "bm"),
+            "--modes",
+            "mode3_hybrid",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert bad_mode.returncode == 1
+    assert "Unknown mode" in bad_mode.stderr
 
 
 def test_speech_benchmark_corpus_synthetic_offline(tmp_path: Path) -> None:
     """Verify synthetic corpus runs with offline simulation when offline_synthetic=True."""
     from scripts.speech_benchmark import run_benchmark
 
-    bench_dir = tmp_path / "synth_corpus"
     res = run_benchmark(
         corpus="synthetic",
-        output_dir=bench_dir,
+        output_dir=tmp_path / "synth_corpus",
         offline_synthetic=True,
-        seed=42,
         bootstrap_resamples=200,
     )
     assert res["corpus"] == "synthetic"
-    assert res["offline_synthetic"] is True
-    assert res["utterance_count"] == 10
+    assert res["n_utterances"] == 10
 
 
-def test_speech_benchmark_real_production_execution(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Verify real production execution path extracts words and phones from alignment_raw.json."""
+class _OracleTranscriber:
+    """Fake Whisper: returns the reference words shifted by +25 ms (counts calls)."""
+
+    def __init__(self) -> None:
+        self.model_size_or_path = "fake"
+        self.device = "cpu"
+        self.compute_type = "int8"
+        self.calls: list[str] = []
+        self.unloaded = 0
+
+    def transcribe(self, audio_path: Path) -> list[ASRSegment]:
+        self.calls.append(Path(audio_path).name)
+        ref = parse_timit_wrd(Path(audio_path).with_suffix(".wrd"))
+        words = [
+            WordToken(
+                id=f"h{i}",
+                text=w.text,
+                normalized=w.normalized,
+                start=round(w.start + 0.025, 4),
+                end=round(w.end + 0.025, 4),
+                confidence=0.9,
+            )
+            for i, w in enumerate(ref)
+        ]
+        return [ASRSegment(id="s0", start=words[0].start, end=words[-1].end, text="x", words=words)]
+
+    def unload(self) -> None:
+        self.unloaded += 1
+
+
+class _OracleAligner:
+    """Fake aligner: reference words (+offset); MFA adds phones; one call per engine."""
+
+    def __init__(self, fail_audio: str | None = None) -> None:
+        self.calls: list[tuple[str, int]] = []
+        self.fail_audio = fail_audio
+
+    def describe(self, engine: str) -> dict[str, str]:
+        return {"engine": engine}
+
+    def align_requests(self, requests, engine="mfa"):  # type: ignore[no-untyped-def]
+        from subtitle_workbench.aligner import AlignmentFailure
+
+        self.calls.append((engine, len(requests)))
+        out = []
+        for req in requests:
+            if self.fail_audio and Path(req.audio_path).name == self.fail_audio:
+                out.append(AlignmentFailure("simulated beam failure"))
+                continue
+            ref_w = parse_timit_wrd(Path(req.audio_path).with_suffix(".wrd"))
+            ref_p = parse_timit_phn(Path(req.audio_path).with_suffix(".phn"))
+            off = 0.005 if engine == "mfa" else 0.03
+            words = []
+            for i, w in enumerate(ref_w):
+                phones = [
+                    PhonemeCue(p.phoneme, round(p.start + off, 4), round(p.end + off, 4), 1.0)
+                    for p in ref_p
+                    if engine == "mfa" and p.start >= w.start - 1e-6 and p.end <= w.end + 1e-6
+                ]
+                words.append(
+                    WordToken(
+                        id=f"a{i}",
+                        text=w.text,
+                        normalized=w.normalized,
+                        start=round(w.start + off, 4),
+                        end=round(w.end + off, 4),
+                        confidence=1.0,
+                        phonemes=phones,
+                    )
+                )
+            out.append(words)
+        return out
+
+
+def _staged_synthetic(tmp_path: Path) -> Path:
+    from subtitle_workbench.corpora import stage_synthetic_benchmark
+
+    return stage_synthetic_benchmark(tmp_path / "synth")
+
+
+def test_speech_benchmark_real_execution_stages_and_batching(tmp_path: Path) -> None:
+    """Real path: one ASR model for all utterances (A and B share one transcription),
+    one aligner batch per (scenario, engine), complete pipeline for every mode."""
     from scripts.speech_benchmark import run_benchmark
 
-    # 1. Mock WhisperTranscriber for Mode 1
-    class MockWhisperTranscriber:
-        def __init__(self, device: str | None = None, compute_type: str = "int8") -> None:
-            self.device = device
-            self.compute_type = compute_type
-            self.unloaded = False
-
-        def transcribe(self, audio_path: Path) -> list[ASRSegment]:
-            wrd_path = Path(audio_path).with_suffix(".wrd")
-            ref_words = parse_timit_wrd(wrd_path)
-            pred_words = [
-                WordToken(
-                    id=f"p_{w.id}",
-                    text=w.text,
-                    normalized=w.normalized,
-                    start=round(w.start + 0.025, 4),
-                    end=round(w.end + 0.025, 4),
-                    confidence=0.92,
-                )
-                for w in ref_words
-            ]
-            return [
-                ASRSegment(
-                    id="seg_0",
-                    start=pred_words[0].start,
-                    end=pred_words[-1].end,
-                    text=" ".join(w.text for w in pred_words),
-                    words=pred_words,
-                )
-            ]
-
-        def unload(self) -> None:
-            self.unloaded = True
-
-    monkeypatch.setattr(
-        "subtitle_workbench.asr.WhisperTranscriber",
-        MockWhisperTranscriber,
-        raising=False,
-    )
-
-    # 2. Mock run_speech_pipeline for Mode 2 (ctc) and Mode 3 (mfa)
-    def mock_run_speech_pipeline(audio_path, output_dir=None, engine="ctc", **kwargs):
-        out = Path(output_dir)
-        out.mkdir(parents=True, exist_ok=True)
-        wrd_path = Path(audio_path).with_suffix(".wrd")
-        phn_path = Path(audio_path).with_suffix(".phn")
-        ref_words = parse_timit_wrd(wrd_path)
-        ref_phones = parse_timit_phn(phn_path)
-
-        offset = 0.015 if engine == "ctc" else 0.005
-        words_data = []
-        for i, w in enumerate(ref_words):
-            w_start = round(w.start + offset, 4)
-            w_end = round(w.end + offset, 4)
-            w_phones = [
-                {
-                    "phoneme": p.phoneme,
-                    "start": round(p.start + offset, 4),
-                    "end": round(p.end + offset, 4),
-                    "confidence": 0.95,
-                }
-                for p in ref_phones
-                if p.start >= w.start - 0.02 and p.end <= w.end + 0.02
-            ]
-            words_data.append(
-                {
-                    "id": f"pred_w_{i}",
-                    "text": w.text,
-                    "normalized": w.normalized,
-                    "start": w_start,
-                    "end": w_end,
-                    "confidence": 0.96,
-                    "char_start": 0,
-                    "char_end": len(w.text),
-                    "phonemes": w_phones,
-                }
-            )
-
-        raw_payload = {
-            "schema_version": 1,
-            "alignment_method": engine,
-            "words": words_data,
-        }
-        (out / "alignment_raw.json").write_text(json.dumps(raw_payload), encoding="utf-8")
-        return {"schema_version": 1, "status": "mock_pipeline_complete"}
-
-    monkeypatch.setattr(
-        "subtitle_workbench.pipeline.run_speech_pipeline",
-        mock_run_speech_pipeline,
-    )
-
-    bench_dir = tmp_path / "prod_bench"
+    data = _staged_synthetic(tmp_path)
+    transcriber, aligner = _OracleTranscriber(), _OracleAligner()
     res = run_benchmark(
         corpus="synthetic",
-        output_dir=bench_dir,
+        data_dir=data,
+        output_dir=tmp_path / "real",
         offline_synthetic=False,
-        max_utterances=2,
         bootstrap_resamples=50,
-        seed=42,
+        transcriber=transcriber,
+        aligner=aligner,
+        vad_backend=lambda *a, **k: [],
     )
-
-    assert res["corpus"] == "synthetic"
-    assert res["offline_synthetic"] is False
-    assert res["utterance_count"] == 2
+    assert res["data_provenance"] == "MODEL_EXECUTION"
+    # Whisper ran exactly once per utterance and was unloaded once
+    assert len(transcriber.calls) == 10 and len(set(transcriber.calls)) == 10
+    assert transcriber.unloaded == 1
+    # B1, B2, A1, A2 -> four batched aligner calls, each with all 10 utterances
+    assert sorted(aligner.calls) == [("ctc", 10), ("ctc", 10), ("mfa", 10), ("mfa", 10)]
 
     modes = res["modes"]
-    assert "mode1_whisper" in modes
-    assert "mode2_ctc" in modes
-    assert "mode3_hybrid" in modes
+    assert modes["B0_whisper"]["word_metrics"]["mae_ms"] == pytest.approx(25.0, abs=0.01)
+    assert modes["A2_proposed"]["word_metrics"]["mae_ms"] == pytest.approx(5.0, abs=0.01)
+    assert modes["A2_proposed"]["phone_metrics"]["mae_ms"] == pytest.approx(5.0, abs=0.01)
+    assert modes["A1_ctc"]["phone_metrics"] is None
+    assert res["config"]["asr"]["model"] == "fake"
 
-    # Mode 1 has word metrics from mock transcribe, phone_metrics is None
-    m1 = modes["mode1_whisper"]
-    assert m1["word_metrics"]["num_matched"] > 0
-    assert m1["phone_metrics"] is None
 
-    # Mode 2 and Mode 3 have word and phone metrics extracted from alignment_raw.json
-    m2 = modes["mode2_ctc"]
-    assert m2["word_metrics"]["num_matched"] > 0
-    assert m2["phone_metrics"] is not None
-    assert m2["phone_metrics"]["num_matched"] > 0
+def test_speech_benchmark_failures_are_recorded_and_pairs_stay_aligned(tmp_path: Path) -> None:
+    """A failed utterance is reported (not dropped) and excluded from pairs by ID."""
+    from scripts.speech_benchmark import run_benchmark
 
-    m3 = modes["mode3_hybrid"]
-    assert m3["word_metrics"]["num_matched"] > 0
-    assert m3["phone_metrics"] is not None
-    assert m3["phone_metrics"]["num_matched"] > 0
+    data = _staged_synthetic(tmp_path)
+    failing = sorted(data.glob("*.wav"))[3].name
+    res = run_benchmark(
+        corpus="synthetic",
+        data_dir=data,
+        output_dir=tmp_path / "real_fail",
+        offline_synthetic=False,
+        bootstrap_resamples=50,
+        transcriber=_OracleTranscriber(),
+        aligner=_OracleAligner(fail_audio=failing),
+        vad_backend=lambda *a, **k: [],
+    )
+    a2 = res["modes"]["A2_proposed"]
+    assert a2["n_utterances_failed"] == 1 and a2["n_utterances_ok"] == 9
+    test = res["statistical_significance"]["A2_vs_A1"]
+    assert test["n_pairs"] == 9
+    rows = json.loads((tmp_path / "real_fail" / "benchmark_utterances.json").read_text())
+    failed = [r for r in rows if r["status"] == "failed"]
+    assert {r["mode"] for r in failed} == {"B1_whisper_ctc", "B2_proposed", "A1_ctc", "A2_proposed"}
+    assert all("simulated beam failure" in r["error"] for r in failed)
 
-    # Verify artifacts were generated
-    assert (bench_dir / "benchmark_results.json").is_file()
-    assert (bench_dir / "manifest.json").is_file()
+
+def test_speech_benchmark_real_execution_requires_unique_ids(tmp_path: Path) -> None:
+    import wave
+
+    from scripts.speech_benchmark import BenchmarkUtterance, load_timit_utterances
+
+    for spk in ("dr1-a", "dr2-b"):
+        d = tmp_path / spk
+        d.mkdir()
+        with wave.open(str(d / "sa1.wav"), "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(16000)
+            w.writeframes(b"\x00\x01" * 16000)
+        (d / "sa1.wrd").write_text("1600 8000 she\n", encoding="utf-8")
+        (d / "sa1.phn").write_text("1600 4000 sh\n4000 8000 iy\n", encoding="utf-8")
+    utts = load_timit_utterances(tmp_path)
+    assert sorted(u.id for u in utts) == ["dr1-a_sa1", "dr2-b_sa1"]
+    assert isinstance(utts[0], BenchmarkUtterance)
 
 
 def test_speech_benchmark_cli_seed_negative_exits_one(tmp_path: Path) -> None:
@@ -1113,23 +1027,6 @@ def test_speech_benchmark_invalid_resamples_validation(tmp_path: Path) -> None:
         )
 
 
-def test_get_peak_host_ram_mb_psutil_exception_fallback(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """Verify get_peak_host_ram_mb falls back cleanly when psutil throws a runtime exception."""
-    from unittest.mock import MagicMock
-
-    from scripts.speech_benchmark import get_peak_host_ram_mb
-
-    mock_psutil = MagicMock()
-    mock_psutil.Process.side_effect = RuntimeError("AccessDenied simulated failure")
-    monkeypatch.setitem(sys.modules, "psutil", mock_psutil)
-
-    ram = get_peak_host_ram_mb()
-    assert isinstance(ram, float)
-    assert ram >= 0.0
-
-
 # ---------------------------------------------------------------------------
 # Publication LaTeX Table Generator Tests (scripts/generate_paper_tables.py)
 # ---------------------------------------------------------------------------
@@ -1137,119 +1034,52 @@ def test_get_peak_host_ram_mb_psutil_exception_fallback(
 
 @pytest.fixture
 def sample_benchmark_payload() -> dict[str, Any]:
-    """Provide valid benchmark results dictionary matching speech_benchmark schema."""
+    """Schema-v2 payload with arbitrary illustrative numbers (not results)."""
+
+    def tier(mae: float, acc: float, ci: list[float]) -> dict[str, Any]:
+        return {"mae_ms": mae, "acc_20ms": acc, "ci_95": ci, "num_matched": 33}
+
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "corpus": "timit",
+        "reference_type": "gold",
         "data_provenance": "MODEL_EXECUTION",
         "offline_synthetic": False,
-        "seed": 42,
-        "bootstrap_resamples": 2000,
-        "utterance_count": 10,
-        "total_audio_duration_seconds": 17.1,
+        "n_utterances": 160,
+        "n_speakers": 16,
         "modes": {
-            "mode1_whisper": {
-                "name": "Whisper Large-v3 INT8 (Internal Timestamps)",
-                "word_metrics": {
-                    "mae_ms": 119.12,
-                    "medae_ms": 121.34,
-                    "rmse_ms": 120.13,
-                    "acc_20ms": 0.0,
-                    "acc_50ms": 0.0,
-                    "acc_100ms": 12.12,
-                    "ci_95": [116.98, 121.73],
-                    "num_matched": 33,
-                    "num_unmatched": 0,
-                },
+            "B0_whisper": {
+                "word_metrics": tier(101.04, 1.5, [95.02, 108.33]),
                 "phone_metrics": None,
-                "performance": {
-                    "rtf": 0.045,
-                    "peak_vram_mb": 0.0,
-                    "peak_ram_mb": 37.8,
-                    "elapsed_seconds": 0.77,
-                },
             },
-            "mode2_ctc": {
-                "name": "CTC Trellis (MMS_FA)",
-                "word_metrics": {
-                    "mae_ms": 35.08,
-                    "medae_ms": 36.37,
-                    "rmse_ms": 37.35,
-                    "acc_20ms": 12.12,
-                    "acc_50ms": 84.85,
-                    "acc_100ms": 100.0,
-                    "ci_95": [33.33, 39.03],
-                    "num_matched": 33,
-                    "num_unmatched": 0,
-                },
-                "phone_metrics": {
-                    "mae_ms": 35.83,
-                    "medae_ms": 35.79,
-                    "rmse_ms": 37.59,
-                    "acc_20ms": 8.73,
-                    "acc_50ms": 89.68,
-                    "acc_100ms": 100.0,
-                    "ci_95": [34.70, 36.60],
-                    "num_matched": 126,
-                    "num_unmatched": 0,
-                },
-                "performance": {
-                    "rtf": 0.025,
-                    "peak_vram_mb": 512.5,
-                    "peak_ram_mb": 42.1,
-                    "elapsed_seconds": 0.43,
-                },
+            "B1_whisper_ctc": {
+                "word_metrics": tier(44.44, 21.0, [40.0, 49.9]),
+                "phone_metrics": None,
             },
-            "mode3_hybrid": {
-                "name": "Proposed Hybrid (Whisper + Bounded DTW + MFA)",
-                "word_metrics": {
-                    "mae_ms": 11.68,
-                    "medae_ms": 12.15,
-                    "rmse_ms": 12.15,
-                    "acc_20ms": 100.0,
-                    "acc_50ms": 100.0,
-                    "acc_100ms": 100.0,
-                    "ci_95": [11.21, 11.91],
-                    "num_matched": 33,
-                    "num_unmatched": 0,
-                },
-                "phone_metrics": {
-                    "mae_ms": 12.86,
-                    "medae_ms": 12.97,
-                    "rmse_ms": 13.44,
-                    "acc_20ms": 97.22,
-                    "acc_50ms": 100.0,
-                    "acc_100ms": 100.0,
-                    "ci_95": [12.79, 12.96],
-                    "num_matched": 126,
-                    "num_unmatched": 0,
-                },
-                "performance": {
-                    "rtf": 0.038,
-                    "peak_vram_mb": 1850.0,
-                    "peak_ram_mb": 48.5,
-                    "elapsed_seconds": 0.65,
-                },
+            "B2_proposed": {
+                "word_metrics": tier(22.22, 61.25, [20.1, 24.4]),
+                "phone_metrics": tier(19.37, 66.0, [18.0, 20.5]),
+            },
+            "A1_ctc": {"word_metrics": tier(40.06, 25.0, [37.0, 43.0]), "phone_metrics": None},
+            "A2_proposed": {
+                "word_metrics": tier(18.81, 70.5, [17.6, 19.9]),
+                "phone_metrics": tier(17.45, 72.0, [16.8, 18.1]),
             },
         },
         "statistical_significance": {
-            "proposed_vs_whisper": {
-                "metric": "word_mae",
+            "B2_vs_B0": {
+                "n_pairs": 160,
                 "wilcoxon_w": 0.0,
-                "p_value": 1.6791013024430868e-12,
+                "p_value": 3.3e-28,
                 "cliffs_delta": 1.0,
                 "effect_size": "large",
-                "significant_0_05": True,
-                "significant_0_001": True,
             },
-            "proposed_vs_ctc": {
-                "metric": "word_mae",
-                "wilcoxon_w": 8.0,
-                "p_value": 2.4222845951271665e-12,
-                "cliffs_delta": 0.9394,
-                "effect_size": "large",
-                "significant_0_05": True,
-                "significant_0_001": True,
+            "A2_vs_A1": {
+                "n_pairs": 158,
+                "wilcoxon_w": 812.0,
+                "p_value": 0.0042,
+                "cliffs_delta": 0.41,
+                "effect_size": "medium",
             },
         },
     }
@@ -1258,136 +1088,71 @@ def sample_benchmark_payload() -> dict[str, Any]:
 def test_generate_alignment_accuracy_table_mock_data(
     sample_benchmark_payload: dict[str, Any],
 ) -> None:
-    """Verify Table 1 contains booktabs tags, clean formatting, and no unescaped percent."""
+    """Verify Table 1 structure, captions with sample size, and escaping."""
     from scripts.generate_paper_tables import generate_alignment_accuracy_table
 
     tex = generate_alignment_accuracy_table(sample_benchmark_payload)
-
-    # Core LaTeX structure
-    assert r"\begin{table}[t]" in tex
-    assert r"\centering" in tex
-    assert r"\caption{TIMIT Core Test Alignment Accuracy Across Ablation Modes}" in tex
+    assert r"\begin{tabular}{lcccc}" in tex
+    assert (
+        r"\caption{Boundary Error on TIMIT (read speech, manual boundaries) "
+        r"(160 utterances, 16 speakers)}" in tex
+    )
     assert r"\label{tab:alignment_accuracy}" in tex
-    assert r"\begin{tabular}{lcccccc}" in tex
-    assert r"\toprule" in tex
-    assert r"\midrule" in tex
-    assert r"\bottomrule" in tex
-    assert r"\end{tabular}" in tex
-    assert r"\end{table}" in tex
-
-    # Methods
-    assert "Whisper Large-v3" in tex
-    assert r"CTC Trellis (MMS\_FA)" in tex
-    assert "Proposed Hybrid" in tex
-
-    # Formatted metrics
-    assert "119.1 [117.0, 121.7]" in tex
-    assert "121.3" in tex
-    assert "35.1 [33.3, 39.0]" in tex
-    assert "35.8" in tex
-    assert "11.7 [11.2, 11.9]" in tex
-    assert "12.9" in tex
-
-    # Mode 1 phone metrics must be '--'
-    assert "--" in tex
-
-    # Escaped percent in tabular headers and cells
+    rows = [line for line in tex.splitlines() if line.startswith("(")]
+    assert [r.split(" & ")[0] for r in rows] == [
+        "(B0) Whisper timestamps",
+        "(B1) Whisper + CTC",
+        "(B2) Proposed: Whisper + MFA",
+        "(A1) Known text + CTC",
+        "(A2) Proposed: known text + MFA",
+    ]
+    assert "101.0 [95.0, 108.3]" in tex
+    assert "18.8 [17.6, 19.9]" in tex
+    assert r"70.5\%" in tex
+    assert "17.4" in tex
     assert r"Word MAE [95\% CI] (ms)" in tex
-    assert r"Acc@20ms (\%)" in tex
-    assert r"100.0\%" in tex
-    assert r"12.1\%" in tex
-    assert r"0.0\%" in tex
-
-    # Invariant: NO unescaped percent sign in the table
     assert re.search(r"(?<!\\)%", tex) is None
 
 
-def test_generate_computational_performance_table_mock_data(
+def test_generate_alignment_accuracy_table_marks_silver_reference(
     sample_benchmark_payload: dict[str, Any],
 ) -> None:
-    """Verify Table 2 contains RTF, VRAM, RAM columns and booktabs formatting."""
-    from scripts.generate_paper_tables import generate_computational_performance_table
+    from scripts.generate_paper_tables import generate_alignment_accuracy_table
 
-    tex = generate_computational_performance_table(sample_benchmark_payload)
-
-    assert r"\begin{table}[t]" in tex
-    assert r"\centering" in tex
-    assert r"\caption{Computational Efficiency Across Ablation Modes}" in tex
-    assert r"\label{tab:computational_performance}" in tex
-    assert r"\begin{tabular}{lccc}" in tex
-    assert r"\toprule" in tex
-    assert r"\midrule" in tex
-    assert r"\bottomrule" in tex
-    assert r"\end{tabular}" in tex
-    assert r"\end{table}" in tex
-
-    # RTF formatted to 3 decimal places with \(\times\)
-    assert r"0.045\(\times\)" in tex
-    assert r"0.025\(\times\)" in tex
-    assert r"0.038\(\times\)" in tex
-
-    # Peak VRAM: Mode 1 is 0.0 -> '--', Mode 2 is 512.5, Mode 3 is 1850.0
-    assert "--" in tex
-    assert "512.5" in tex
-    assert "1850.0" in tex
-
-    # Peak RAM formatted with 1 decimal place
-    assert "37.8" in tex
-    assert "42.1" in tex
-    assert "48.5" in tex
-
-    # Invariant: NO unescaped percent sign in the table
-    assert re.search(r"(?<!\\)%", tex) is None
+    payload = {**sample_benchmark_payload, "corpus": "librispeech"}
+    tex = generate_alignment_accuracy_table(payload)
+    assert "silver reference: MFA alignments" in tex
 
 
 def test_generate_statistical_significance_table_mock_data(
     sample_benchmark_payload: dict[str, Any],
 ) -> None:
-    """Verify Table 3 contains Wilcoxon W, p-value in math mode, signed Cliff's delta."""
+    """Verify Table 2 contains n, Wilcoxon W, Holm p-value, signed Cliff's delta."""
     from scripts.generate_paper_tables import generate_statistical_significance_table
 
     tex = generate_statistical_significance_table(sample_benchmark_payload)
-
-    assert r"\begin{table}[t]" in tex
-    assert r"\centering" in tex
-    assert r"\caption{Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size}" in tex
-    assert r"\label{tab:statistical_significance}" in tex
-    assert r"\begin{tabular}{lcccc}" in tex
-    assert r"\toprule" in tex
-    assert r"\midrule" in tex
-    assert r"\bottomrule" in tex
-    assert r"\end{tabular}" in tex
-    assert r"\end{table}" in tex
-
-    # Comparison pairs
-    assert "Proposed Hybrid vs. Whisper Large-v3" in tex
-    assert "Proposed Hybrid vs. CTC Trellis" in tex
-
-    # Wilcoxon W
-    assert "0.0" in tex
-    assert "8.0" in tex
-
-    # p-values formatted in scientific math mode
-    assert r"$1.68 \times 10^{-12}$" in tex
-    assert r"$2.42 \times 10^{-12}$" in tex
-
-    # Cliff's delta with sign
-    assert "+1.00" in tex
-    assert "+0.94" in tex
-
-    # Effect size capitalized
-    assert "Large" in tex
-
-    # Invariant: NO unescaped percent sign in the table
+    assert r"\begin{tabular}{lccccc}" in tex
+    assert "B2 Proposed vs. B0 Whisper & 160 & 0.0 & $3.30 \\times 10^{-28}$" in tex
+    assert "A2 Proposed vs. A1 CTC & 158 & 812.0 & 0.004 & +0.41 & Medium" in tex
     assert re.search(r"(?<!\\)%", tex) is None
 
 
-def test_generate_all_tables_from_json_file(tmp_path: Path) -> None:
+@pytest.fixture(scope="module")
+def simulated_benchmark_json(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Generate a simulated self-test benchmark JSON (no dependency on prior manual runs)."""
+    from scripts.speech_benchmark import run_benchmark
+
+    out_dir = tmp_path_factory.mktemp("benchmark_demo")
+    run_benchmark(corpus="synthetic", output_dir=out_dir, offline_synthetic=True)
+    return out_dir / "benchmark_results.json"
+
+
+def test_generate_all_tables_from_json_file(tmp_path: Path, simulated_benchmark_json: Path) -> None:
     """Verify generate_all_tables enforces provenance guard and --allow-simulated."""
     from scripts.generate_paper_tables import generate_all_tables
 
-    input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
-    assert input_file.is_file(), f"Expected test artifact {input_file} to exist"
+    input_file = simulated_benchmark_json
+    assert input_file.is_file()
 
     out_dir = tmp_path / "paper_tables"
 
@@ -1400,15 +1165,13 @@ def test_generate_all_tables_from_json_file(tmp_path: Path) -> None:
 
     assert set(result_paths.keys()) == {
         "alignment_accuracy",
-        "computational_performance",
         "statistical_significance",
     }
 
     t1_file = out_dir / "table_alignment_accuracy.tex"
-    t2_file = out_dir / "table_computational_performance.tex"
     t3_file = out_dir / "table_statistical_significance.tex"
 
-    for f in (t1_file, t2_file, t3_file):
+    for f in (t1_file, t3_file):
         assert f.is_file()
         content = f.read_text(encoding="utf-8")
         assert len(content) > 100
@@ -1424,9 +1187,11 @@ def test_generate_all_tables_from_json_file(tmp_path: Path) -> None:
         assert re.search(r"(?<!\\)%", content) is None
 
 
-def test_generate_paper_tables_cli_execution(tmp_path: Path) -> None:
+def test_generate_paper_tables_cli_execution(
+    tmp_path: Path, simulated_benchmark_json: Path
+) -> None:
     """Verify scripts/generate_paper_tables.py CLI refuses simulated data without flag."""
-    input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
+    input_file = simulated_benchmark_json
     out_dir = tmp_path / "cli_tables"
 
     # Without --allow-simulated: exits 1 with refusal error
@@ -1457,7 +1222,6 @@ def test_generate_paper_tables_cli_execution(tmp_path: Path) -> None:
     assert proc_allow.returncode == 0
     stdout = proc_allow.stdout
     assert "[+] Generated alignment_accuracy table" in stdout
-    assert "[+] Generated computational_performance table" in stdout
     assert "[+] Generated statistical_significance table" in stdout
     assert "[OK] All publication LaTeX tables generated successfully." in stdout
 
@@ -1466,7 +1230,6 @@ def test_generate_paper_tables_cli_execution(tmp_path: Path) -> None:
     assert all(ord(c) < 128 for c in proc_allow.stderr)
 
     assert (out_dir / "table_alignment_accuracy.tex").is_file()
-    assert (out_dir / "table_computational_performance.tex").is_file()
     assert (out_dir / "table_statistical_significance.tex").is_file()
     assert "SIMULATED SELF-TEST" in (out_dir / "table_alignment_accuracy.tex").read_text(
         encoding="utf-8"
@@ -1523,7 +1286,6 @@ def test_generate_paper_tables_missing_required_keys() -> None:
     """Verify validation errors when required JSON structures are missing."""
     from scripts.generate_paper_tables import (
         generate_alignment_accuracy_table,
-        generate_computational_performance_table,
         generate_statistical_significance_table,
     )
 
@@ -1531,9 +1293,6 @@ def test_generate_paper_tables_missing_required_keys() -> None:
 
     with pytest.raises(ValueError, match="missing 'modes'"):
         generate_alignment_accuracy_table(valid_prov)
-
-    with pytest.raises(ValueError, match="missing 'modes'"):
-        generate_computational_performance_table(valid_prov)
 
     with pytest.raises(ValueError, match="missing 'statistical_tests'"):
         generate_statistical_significance_table({**valid_prov, "modes": {}})
@@ -1553,7 +1312,7 @@ def test_generate_paper_tables_buckeye_corpus_caption(
     payload = dict(sample_benchmark_payload)
     payload["corpus"] = "buckeye"
     tex = generate_alignment_accuracy_table(payload)
-    assert r"\caption{Buckeye Speech Corpus Alignment Accuracy Across Ablation Modes}" in tex
+    assert "Buckeye (spontaneous speech, manual boundaries)" in tex
 
 
 def test_generate_paper_tables_synthetic_corpus_caption(
@@ -1565,7 +1324,7 @@ def test_generate_paper_tables_synthetic_corpus_caption(
     payload = dict(sample_benchmark_payload)
     payload["corpus"] = "synthetic"
     tex = generate_alignment_accuracy_table(payload)
-    assert r"\caption{Synthetic Benchmark Alignment Accuracy Across Ablation Modes}" in tex
+    assert "Synthetic self-test" in tex
 
 
 def test_bonferroni_holm_adjustment_properties() -> None:
@@ -1611,9 +1370,9 @@ def test_generate_paper_tables_escape_latex_edge_cases() -> None:
 
 
 def test_generate_paper_tables_alternative_schema_keys() -> None:
-    """Verify generator supports schema variants (computational_metrics, statistical_tests)."""
+    """Verify generator supports schema variants (statistical_tests)."""
     from scripts.generate_paper_tables import (
-        generate_computational_performance_table,
+        generate_alignment_accuracy_table,
         generate_statistical_significance_table,
     )
 
@@ -1623,16 +1382,11 @@ def test_generate_paper_tables_alternative_schema_keys() -> None:
         "modes": {
             "mode1_whisper": {
                 "description": "Whisper Baseline",
-                "word_metrics": {"mae_ms": 110.0, "medae_ms": 112.0},
-                "computational_metrics": {
-                    "rtf": 0.05,
-                    "peak_vram_mb": 1200.0,
-                    "peak_host_ram_mb": 500.0,
-                },
+                "word_metrics": {"mae_ms": 110.0},
             }
         },
         "statistical_tests": {
-            "mode3_vs_mode1": {
+            "B2_vs_B0": {
                 "w_statistic": 4.5,
                 "p_value": 0.042,
                 "cliffs_delta": 0.75,
@@ -1641,25 +1395,25 @@ def test_generate_paper_tables_alternative_schema_keys() -> None:
         },
     }
 
-    t2 = generate_computational_performance_table(alt_payload)
-    assert "Whisper Baseline" in t2
-    assert r"0.050\(\times\)" in t2
-    assert "1200.0" in t2
-    assert "500.0" in t2
+    t1 = generate_alignment_accuracy_table(alt_payload)
+    assert "Whisper Baseline" in t1
+    assert "110.0" in t1
 
     t3 = generate_statistical_significance_table(alt_payload)
-    assert "Proposed Hybrid vs. Whisper Large-v3" in t3
+    assert "B2 Proposed vs. B0 Whisper" in t3
     assert "4.5" in t3
     assert "0.042" in t3
     assert "+0.75" in t3
     assert "Medium" in t3
 
 
-def test_generate_paper_tables_programmatic_main_dispatch(tmp_path: Path) -> None:
+def test_generate_paper_tables_programmatic_main_dispatch(
+    tmp_path: Path, simulated_benchmark_json: Path
+) -> None:
     """Verify main() return codes in-process for 0, 1, and 2."""
     from scripts.generate_paper_tables import main
 
-    input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
+    input_file = simulated_benchmark_json
     out_dir = tmp_path / "main_dispatch"
 
     # Exit code 1 when attempting to generate tables on simulated input without --allow-simulated

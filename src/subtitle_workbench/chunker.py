@@ -26,6 +26,18 @@ class MonotonicityError(ChunkingError):
     """Raised when word timestamp chronology or global monotonicity invariant is violated."""
 
 
+def aligner_text(word: WordToken) -> str:
+    """Text handed to the forced aligner for one word.
+
+    Words containing digits are spelled out ("42" -> "forty two") because acoustic
+    dictionaries have no pronunciation for digits; other words keep their surface
+    form so that dictionary entries such as contractions are used.
+    """
+    if any(c.isdigit() for c in word.text) and word.normalized:
+        return word.normalized
+    return word.text
+
+
 def partition_into_chunks(
     segments: list[ASRSegment],
     silences: list[tuple[float, float]],
@@ -204,7 +216,7 @@ def partition_into_chunks(
         if padded_end > total_dur or chunk_end == total_dur:
             padded_end = total_dur
         padded_end = max(chunk_end, padded_end)
-        chunk_text = " ".join(w.text for w in chunk_words)
+        chunk_text = " ".join(aligner_text(w) for w in chunk_words)
 
         chunk = AudioChunk(
             id=f"chunk_{chunk_idx}",

@@ -196,7 +196,7 @@ def test_vram_cleanup_when_no_segments_detected(
 def test_vram_cleanup_when_vad_silences_throws(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """VAD silence extractor failure should be swallowed to [] and transcribe+unload still run."""
+    """A VAD failure is a pipeline error (no silent fallback); the model is still unloaded."""
     wav_path = tmp_path / "audio.wav"
     out_dir = tmp_path / "out_vad_fail"
     create_pcm16_wav(wav_path, duration_sec=1.0)
@@ -209,17 +209,17 @@ def test_vram_cleanup_when_vad_silences_throws(
     mock_transcriber = make_mock_transcriber([("hello", "hello", 0.1, 0.9)])
     mock_aligner = make_mock_aligner([("hello", "hello", 0.1, 0.9)])
 
-    manifest = run_speech_pipeline(
-        audio_path=wav_path,
-        output_dir=out_dir,
-        transcriber=mock_transcriber,
-        aligner=mock_aligner,
-    )
+    with pytest.raises(RuntimeError, match="Silero VAD model failed to initialize"):
+        run_speech_pipeline(
+            audio_path=wav_path,
+            output_dir=out_dir,
+            transcriber=mock_transcriber,
+            aligner=mock_aligner,
+        )
 
-    mock_transcriber.transcribe.assert_called_once()
     mock_transcriber.unload.assert_called_once()
-    assert (out_dir / "manifest.json").is_file()
-    assert manifest["metrics"]["word_count"] == 1
+    mock_aligner.align_chunks.assert_not_called()
+    assert not (out_dir / "manifest.json").exists()
 
 
 def test_transcriber_duck_typing_without_unload(
@@ -272,7 +272,7 @@ def test_collision_when_output_dir_is_input_audio_exact(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=wav_path,
-            transcript="test transcript",
+            transcript_text="test transcript",
         )
 
 
@@ -286,7 +286,7 @@ def test_collision_when_output_dir_is_input_audio_via_relative_path(tmp_path: Pa
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=relative_output,
-            transcript="test transcript",
+            transcript_text="test transcript",
         )
 
 
@@ -308,7 +308,7 @@ def test_collision_when_audio_file_named_as_output_artifact(
         run_speech_pipeline(
             audio_path=audio_as_artifact,
             output_dir=out_dir,
-            transcript="test transcript",
+            transcript_text="test transcript",
         )
 
 
@@ -323,7 +323,7 @@ def test_collision_when_output_dir_is_transcript_file(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=transcript_file,
-            transcript=transcript_file,
+            transcript_path=transcript_file,
         )
 
 
@@ -348,7 +348,7 @@ def test_collision_when_transcript_file_named_as_output_artifact(
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=out_dir,
-            transcript=transcript_as_artifact,
+            transcript_path=transcript_as_artifact,
         )
 
 
@@ -376,7 +376,7 @@ def test_reject_existing_single_artifact(tmp_path: Path, existing_file: str) -> 
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=out_dir,
-            transcript="hello world",
+            transcript_text="hello world",
             aligner=make_mock_aligner(),
         )
 
@@ -397,7 +397,7 @@ def test_reject_all_existing_artifacts(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=out_dir,
-            transcript="hello world",
+            transcript_text="hello world",
             aligner=make_mock_aligner(),
         )
 
@@ -415,7 +415,7 @@ def test_permit_output_dir_with_unrelated_files(tmp_path: Path) -> None:
     manifest = run_speech_pipeline(
         audio_path=wav_path,
         output_dir=out_dir,
-        transcript="hello",
+        transcript_text="hello",
         aligner=mock_aligner,
     )
     assert (out_dir / "manifest.json").is_file()
@@ -435,7 +435,7 @@ def test_missing_audio_raises_filenotfound(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=missing_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -447,7 +447,7 @@ def test_directory_as_audio_path_raises_filenotfound(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=audio_dir,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -459,7 +459,7 @@ def test_zero_byte_audio_file_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=empty_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -476,7 +476,7 @@ def test_zero_frames_valid_header_wav_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=zero_frame_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -506,7 +506,7 @@ def test_truncated_wav_data_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=trunc_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -518,7 +518,7 @@ def test_corrupt_riff_header_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=corrupt_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -531,7 +531,7 @@ def test_stereo_wav_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=stereo_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -544,7 +544,7 @@ def test_unsupported_sample_rate_wav_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=rate_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -561,7 +561,7 @@ def test_unsupported_sample_width_wav_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=width_wav,
             output_dir=tmp_path / "out",
-            transcript="test",
+            transcript_text="test",
         )
 
 
@@ -579,7 +579,7 @@ def test_empty_transcript_string_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript="",
+            transcript_text="",
         )
 
 
@@ -592,7 +592,7 @@ def test_whitespace_only_transcript_string_raises_valueerror(tmp_path: Path) -> 
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript="   \n\t\r  \n  ",
+            transcript_text="   \n\t\r  \n  ",
         )
 
 
@@ -607,7 +607,7 @@ def test_empty_transcript_file_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript=empty_file,
+            transcript_path=empty_file,
         )
 
 
@@ -622,7 +622,7 @@ def test_whitespace_only_transcript_file_raises_valueerror(tmp_path: Path) -> No
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript=ws_file,
+            transcript_path=ws_file,
         )
 
 
@@ -636,7 +636,7 @@ def test_missing_transcript_path_object_raises_filenotfound(tmp_path: Path) -> N
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript=missing_file,
+            transcript_path=missing_file,
         )
 
 
@@ -650,7 +650,7 @@ def test_missing_transcript_string_path_raises_filenotfound(tmp_path: Path) -> N
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript=missing_str,
+            transcript_path=missing_str,
         )
 
 
@@ -663,7 +663,7 @@ def test_punctuation_only_transcript_raises_valueerror(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript="... --- !!! ??? *** ,,, ::: ;;;",
+            transcript_text="... --- !!! ??? *** ,,, ::: ;;;",
         )
 
 
@@ -676,11 +676,11 @@ def test_punctuation_only_transcript_raises_valueerror(tmp_path: Path) -> None:
     ("engine", "vad_silence", "max_chunk", "chunk_pad", "match_str"),
     [
         ("invalid", 0.4, 30.0, 0.5, "unsupported engine"),
-        ("auto", 0.0, 30.0, 0.5, "vad_silence_min_sec must be positive"),
-        ("auto", -0.1, 30.0, 0.5, "vad_silence_min_sec must be positive"),
-        ("auto", 0.4, 0.0, 0.5, "max_chunk_sec must be positive"),
-        ("auto", 0.4, -5.0, 0.5, "max_chunk_sec must be positive"),
-        ("auto", 0.4, 30.0, -0.01, "chunk_padding_sec must be nonnegative"),
+        ("mfa", 0.0, 30.0, 0.5, "vad_silence_min_sec must be positive"),
+        ("mfa", -0.1, 30.0, 0.5, "vad_silence_min_sec must be positive"),
+        ("mfa", 0.4, 0.0, 0.5, "max_chunk_sec must be positive"),
+        ("mfa", 0.4, -5.0, 0.5, "max_chunk_sec must be positive"),
+        ("mfa", 0.4, 30.0, -0.01, "chunk_padding_sec must be nonnegative"),
     ],
 )
 def test_pipeline_parameter_boundary_guards(
@@ -699,7 +699,7 @@ def test_pipeline_parameter_boundary_guards(
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript="hello world",
+            transcript_text="hello world",
             engine=engine,  # type: ignore[arg-type]
             vad_silence_min_sec=vad_silence,
             max_chunk_sec=max_chunk,
@@ -726,7 +726,7 @@ def test_monotonicity_and_hash_integrity_property(tmp_path: Path) -> None:
     manifest = run_speech_pipeline(
         audio_path=wav_path,
         output_dir=out_dir,
-        transcript="first second third fourth fifth",
+        transcript_text="first second third fourth fifth",
         aligner=mock_aligner,
     )
 
@@ -778,7 +778,7 @@ def test_cli_align_speech_missing_audio_exits_2(
             str(tmp_path / "not_there.wav"),
             "-o",
             str(tmp_path / "out"),
-            "--transcript",
+            "--transcript-text",
             "sample text",
         ]
     )
@@ -801,7 +801,7 @@ def test_cli_align_speech_empty_transcript_exits_2(
             str(wav_path),
             "-o",
             str(tmp_path / "out"),
-            "--transcript",
+            "--transcript-text",
             "   ",
         ]
     )
@@ -824,7 +824,7 @@ def test_cli_align_speech_missing_transcript_file_exits_2(
             str(wav_path),
             "-o",
             str(tmp_path / "out"),
-            "--transcript",
+            "--transcript-file",
             str(tmp_path / "missing.txt"),
         ]
     )
@@ -847,7 +847,7 @@ def test_cli_align_speech_output_collision_exits_2(
             str(wav_path),
             "-o",
             str(wav_path),
-            "--transcript",
+            "--transcript-text",
             "hello",
         ]
     )
@@ -873,7 +873,7 @@ def test_cli_align_speech_existing_output_exits_2(
             str(wav_path),
             "-o",
             str(out_dir),
-            "--transcript",
+            "--transcript-text",
             "hello",
         ]
     )

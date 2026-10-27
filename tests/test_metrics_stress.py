@@ -84,8 +84,6 @@ def test_evaluate_alignment_boundaries_zero_duration() -> None:
     res = evaluate_alignment_boundaries([w_pred], [w_ref])
     assert isinstance(res, BoundaryEvaluation)
     assert res.mae == 0.0
-    assert res.medae == 0.0
-    assert res.rmse == 0.0
     assert res.acc_20ms == 100.0
 
 
@@ -98,11 +96,7 @@ def test_evaluate_alignment_boundaries_extreme_discrepancy() -> None:
 
     res = evaluate_alignment_boundaries(pred, ref)
     assert math.isclose(res.mae, 1_000_000.0, abs_tol=1e-3)
-    assert math.isclose(res.medae, 1_000_000.0, abs_tol=1e-3)
-    assert math.isclose(res.rmse, 1_000_000.0, abs_tol=1e-3)
     assert res.acc_20ms == 0.0
-    assert res.acc_50ms == 0.0
-    assert res.acc_100ms == 0.0
 
 
 def test_evaluate_alignment_boundaries_high_volume_100k() -> None:
@@ -123,7 +117,7 @@ def test_evaluate_alignment_boundaries_high_volume_100k() -> None:
 
 
 def test_evaluate_alignment_boundaries_distribution_accuracy() -> None:
-    """Verify mathematical accuracy of Acc@20ms, Acc@50ms, Acc@100ms on constructed distribution."""
+    """Verify mathematical accuracy of MAE and Acc@20ms on constructed distribution."""
     # 5 tokens -> 10 boundaries:
     # 5.0, 15.0 (both <= 20ms) -> 2
     # 25.0, 45.0 (both <= 50ms) -> 2
@@ -162,17 +156,10 @@ def test_evaluate_alignment_boundaries_distribution_accuracy() -> None:
 
     res = evaluate_alignment_boundaries(pred_tokens, ref_tokens)
     assert math.isclose(res.acc_20ms, 20.0, abs_tol=1e-5)
-    assert math.isclose(res.acc_50ms, 40.0, abs_tol=1e-5)
-    assert math.isclose(res.acc_100ms, 80.0, abs_tol=1e-5)
 
     expected_mae = sum(target_errors_ms) / len(target_errors_ms)
-    sorted_errs = sorted(target_errors_ms)
-    expected_medae = (sorted_errs[4] + sorted_errs[5]) / 2.0
-    expected_rmse = math.sqrt(sum(x**2 for x in target_errors_ms) / len(target_errors_ms))
 
     assert math.isclose(res.mae, expected_mae, abs_tol=1e-3)
-    assert math.isclose(res.medae, expected_medae, abs_tol=1e-3)
-    assert math.isclose(res.rmse, expected_rmse, abs_tol=1e-3)
 
 
 def test_evaluate_alignment_boundaries_exact_sample_shift() -> None:

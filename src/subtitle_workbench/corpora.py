@@ -128,7 +128,7 @@ def parse_timit_wrd(wrd_path: Path | str, sample_rate: int = 16000) -> list[Word
         raise CorpusFormatError(f"Failed to read {path}: {err}") from err
 
     words: list[WordToken] = []
-    prev_end: int | None = None
+    prev_start: int | None = None
 
     lines = content.splitlines()
     w_idx = 0
@@ -161,12 +161,14 @@ def parse_timit_wrd(wrd_path: Path | str, sample_rate: int = 16000) -> list[Word
                 f"Non-positive interval [{start_sample}, {end_sample}] "
                 f"on line {line_idx} in {path.name}"
             )
-        if prev_end is not None and start_sample < prev_end:
+        # TIMIT word boundaries may legitimately overlap when adjacent words share a
+        # phone (e.g. "...wash water..."). Only word onsets must be non-decreasing.
+        if prev_start is not None and start_sample < prev_start:
             raise CorpusFormatError(
-                f"Non-monotonic timestamp on line {line_idx} in {path.name}: "
-                f"start {start_sample} < previous end {prev_end}"
+                f"Non-monotonic word onset on line {line_idx} in {path.name}: "
+                f"start {start_sample} < previous start {prev_start}"
             )
-        prev_end = end_sample
+        prev_start = start_sample
 
         spans = normalize_text_spans(word_text)
         norm_text = " ".join(s.normalized for s in spans) if spans else word_text.lower()

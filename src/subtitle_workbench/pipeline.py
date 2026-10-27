@@ -3,8 +3,7 @@
 import hashlib
 import json
 import platform
-import time
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from math import ceil
 from pathlib import Path
 from typing import Any, Literal
@@ -12,10 +11,11 @@ from typing import Any, Literal
 import numpy as np
 
 from . import __version__
-from .aligner import ForcedAligner
+from .aligner import SUPPORTED_ENGINES, ForcedAligner
+from .anchoring import anchor_transcript
 from .asr import WhisperTranscriber, extract_vad_silences
 from .audio import extract_features, get_duration, load_wav, validate_wav
-from .chunker import ChunkConfig, partition_into_chunks, reconcile_chunk_alignments
+from .chunker import ChunkConfig, partition_into_chunks
 from .dtw import banded_dtw
 from .export import (
     export_jsonld,
@@ -25,12 +25,14 @@ from .export import (
     jsonld,
     webvtt,
 )
-from .models import ASRSegment, Config, Cue, WordToken, validate_cues
+from .models import ASRSegment, AudioChunk, Config, Cue, WordToken, validate_cues
 from .provenance import code_provenance, sha256
 from .text_norm import normalize_transcript
 
 __all__ = [
+    "AlignmentJob",
     "align",
+    "prepare_alignment_job",
     "code_provenance",
     "run_speech_pipeline",
     "sha256",
@@ -45,7 +47,6 @@ def align(
     config: Config | None = None,
 ) -> dict:
     config = config or Config()
-    started = time.perf_counter()
     paths = [Path(reference_path), Path(target_path), Path(cues_path)]
     output_dir = Path(output_dir)
     outputs = [
@@ -96,7 +97,6 @@ def align(
     vtt = webvtt(aligned)
     target_hash = sha256(paths[1])
     timeline = jsonld(aligned, target.duration, f"urn:local-subtitle-workbench:video:{target_hash}")
-    elapsed = time.perf_counter() - started
     path_data = {
         "columns": ["reference_frame", "target_frame"],
         "frame_hop_seconds": config.hop_seconds,
@@ -137,8 +137,6 @@ def align(
             "path_length": len(result.path),
             "mean_path_cost": result.cost / len(result.path),
             "cue_count": len(aligned),
-            "alignment_elapsed_seconds": elapsed,
-            "alignment_rtf": elapsed / target.duration,
         },
         "limitations": [
             "Reference cues must already be correctly timed and labelled English.",
@@ -154,21 +152,26 @@ def align(
     return manifest
 
 
-def run_speech_pipeline(
-    audio_path: Path | str,
-    output_dir: Path | str,
-    transcript: str | Path | None = None,
-    engine: Literal["auto", "mfa", "ctc"] = "auto",
-    vad_silence_min_sec: float = 0.4,
-    max_chunk_sec: float = 30.0,
-    chunk_padding_sec: float = 0.5,
-    fallback_to_ctc: bool = True,
-    transcriber: Any | None = None,
-    aligner: Any | None = None,
-) -> dict:
-    """Execute end-to-end speech alignment pipeline across 7 stages."""
-    if engine not in ("auto", "mfa", "ctc"):
-        raise ValueError(f"unsupported engine: {engine!r}; choose from 'auto', 'mfa', 'ctc'")
+@dataclass
+class AlignmentJob:
+    """Everything prepared for one recording before forced alignment.
+
+    Produced by :func:`prepare_alignment_job` (VAD, Whisper ASR, transcript anchoring,
+    chunking). Many jobs can then be aligned together in one MFA batch.
+    """
+
+    audio_path: Path
+    duration: float
+    speaker: str
+    scenario: str  # "A" (transcript known) or "B" (ASR transcript)
+    hypothesis_words: list[WordToken]
+    seeded_words: list[WordToken]
+    chunks: list[AudioChunk]
+    silences: list[tuple[float, float]]
+    anchoring: dict[str, Any] | None = None
+
+
+def _validate_timing(vad_silence_min_sec: float, max_chunk_sec: float, chunk_padding_sec: float):
     if vad_silence_min_sec <= 0.0:
         raise ValueError("vad_silence_min_sec must be positive")
     if max_chunk_sec <= 0.0:
@@ -176,10 +179,134 @@ def run_speech_pipeline(
     if chunk_padding_sec < 0.0:
         raise ValueError("chunk_padding_sec must be nonnegative")
 
+
+SEED_SEGMENT_WORDS = 40
+
+
+def _segments_from_words(words: list[WordToken]) -> list[ASRSegment]:
+    """Group anchored transcript words into bounded pseudo-segments.
+
+    Long lecture transcripts exceed the per-segment text limit, so the seeded words are
+    grouped into consecutive segments of at most SEED_SEGMENT_WORDS words.
+    """
+    segments: list[ASRSegment] = []
+    for idx in range(0, len(words), SEED_SEGMENT_WORDS):
+        group = words[idx : idx + SEED_SEGMENT_WORDS]
+        segments.append(
+            ASRSegment(
+                id=f"seg_{idx // SEED_SEGMENT_WORDS}",
+                start=group[0].start,
+                end=max(w.end for w in group),
+                text=" ".join(w.text for w in group),
+                words=group,
+            )
+        )
+    return segments
+
+
+def prepare_alignment_job(
+    audio_path: Path | str,
+    transcriber: Any,
+    transcript_text: str | None = None,
+    speaker: str = "speaker",
+    vad_silence_min_sec: float = 0.4,
+    max_chunk_sec: float = 30.0,
+    chunk_padding_sec: float = 0.5,
+    vad_backend: Any | None = None,
+) -> AlignmentJob:
+    """Run the pre-alignment stages of the reference pipeline for one recording.
+
+    Stages (none is skipped, none falls back silently):
+      1. Silero-VAD pause detection.
+      2. Whisper ASR with word timestamps (always run; in scenario A it provides anchors).
+      3. Scenario A: banded sequence alignment of the known transcript to the ASR
+         hypothesis (coarse word-level anchoring). Scenario B: ASR words are used.
+      4. Pause-anchored chunking into bounded windows with overlap padding.
+
+    The transcriber is not unloaded here so that one model instance can serve many jobs.
+    """
+    _validate_timing(vad_silence_min_sec, max_chunk_sec, chunk_padding_sec)
+    audio_path = Path(audio_path)
+    validate_wav(audio_path)
+    duration = get_duration(audio_path)
+
+    text: str | None = None
+    if transcript_text is not None:
+        text = str(transcript_text).strip()
+        if not text:
+            raise ValueError("transcript cannot be empty")
+
+    silence_min_ms = int(round(vad_silence_min_sec * 1000))
+    silences = extract_vad_silences(
+        audio_path, min_silence_duration_ms=silence_min_ms, vad_backend=vad_backend
+    )
+    segments = transcriber.transcribe(audio_path)
+    hypothesis_words = [w for seg in segments for w in seg.words]
+
+    anchoring: dict[str, Any] | None = None
+    if text is None:
+        if not segments:
+            raise ValueError("no speech segments detected in audio")
+        seed_segments = segments
+        scenario = "B"
+    else:
+        anchored = anchor_transcript(text, hypothesis_words, duration)
+        anchoring = anchored.to_dict()
+        seed_segments = _segments_from_words(anchored.words)
+        scenario = "A"
+
+    chunks = partition_into_chunks(
+        segments=seed_segments,
+        silences=silences,
+        total_duration=duration,
+        config=ChunkConfig(
+            max_chunk_duration=max_chunk_sec,
+            min_silence_duration=vad_silence_min_sec,
+            overlap_padding=chunk_padding_sec,
+        ),
+    )
+    return AlignmentJob(
+        audio_path=audio_path,
+        duration=duration,
+        speaker=speaker,
+        scenario=scenario,
+        hypothesis_words=hypothesis_words,
+        seeded_words=[w for seg in seed_segments for w in seg.words],
+        chunks=chunks,
+        silences=silences,
+        anchoring=anchoring,
+    )
+
+
+def run_speech_pipeline(
+    audio_path: Path | str,
+    output_dir: Path | str,
+    transcript_text: str | None = None,
+    transcript_path: Path | str | None = None,
+    engine: Literal["mfa", "ctc"] = "mfa",
+    vad_silence_min_sec: float = 0.4,
+    max_chunk_sec: float = 30.0,
+    chunk_padding_sec: float = 0.5,
+    transcriber: Any | None = None,
+    aligner: Any | None = None,
+    vad_backend: Any | None = None,
+    speaker: str = "speaker",
+) -> dict:
+    """Execute the complete reference speech alignment pipeline for one recording.
+
+    Scenario A: ``transcript_text`` or ``transcript_path`` is given (known lecture text).
+    Scenario B: neither is given; the Whisper transcript is aligned.
+    """
+    if engine not in SUPPORTED_ENGINES:
+        raise ValueError(f"unsupported engine: {engine!r}; choose from 'mfa', 'ctc'")
+    _validate_timing(vad_silence_min_sec, max_chunk_sec, chunk_padding_sec)
+    if transcript_text is not None and transcript_path is not None:
+        raise ValueError("pass either transcript_text or transcript_path, not both")
+
     audio_path = Path(audio_path)
     output_dir = Path(output_dir)
 
-    # Stage 1: Audio Validation & Target Pre-flight
+    # Stage 1: Audio validation & output pre-flight
     validate_wav(audio_path)
     audio_duration = get_duration(audio_path)
 
@@ -201,132 +328,55 @@ def run_speech_pipeline(
     ):
         raise ValueError("output may not overwrite an input")
 
-    transcript_file_path: Path | None = None
-    if isinstance(transcript, Path):
-        transcript_file_path = transcript
-    elif isinstance(transcript, str) and (
-        Path(transcript).is_file()
-        or (
-            "\n" not in transcript
-            and (
-                transcript.endswith((".txt", ".vtt", ".srt", ".json", ".transcript"))
-                or ("/" in transcript or "\\" in transcript)
-            )
-        )
-    ):
-        transcript_file_path = Path(transcript)
-
-    if transcript_file_path is not None:
-        if not transcript_file_path.is_file():
-            raise FileNotFoundError(f"Transcript file not found: {transcript_file_path}")
-        resolved_transcript = transcript_file_path.resolve()
+    if transcript_path is not None:
+        transcript_file = Path(transcript_path)
+        if not transcript_file.is_file():
+            raise FileNotFoundError(f"Transcript file not found: {transcript_file}")
+        resolved_transcript = transcript_file.resolve()
         if output_dir.resolve() == resolved_transcript or any(
             p.resolve() == resolved_transcript for p in outputs
         ):
             raise ValueError("output may not overwrite an input")
+        transcript_text = transcript_file.read_text(encoding="utf-8")
 
-    # Stage 2: VAD & ASR / Transcript Handling
-    started = time.perf_counter()
-    silence_min_ms = int(round(vad_silence_min_sec * 1000))
-
-    if transcript is None:
-        transcriber_inst = (
-            transcriber
-            if transcriber is not None
-            else WhisperTranscriber(min_silence_duration_ms=silence_min_ms)
-        )
-        try:
-            try:
-                silences = extract_vad_silences(audio_path, min_silence_duration_ms=silence_min_ms)
-            except Exception:
-                silences = []
-            segments = transcriber_inst.transcribe(audio_path)
-        finally:
-            if hasattr(transcriber_inst, "unload") and callable(transcriber_inst.unload):
-                transcriber_inst.unload()
-    else:
-        if transcript_file_path is not None:
-            raw_text = transcript_file_path.read_text(encoding="utf-8")
-        else:
-            raw_text = str(transcript)
-
-        text = raw_text.strip()
-        if not text:
+    if transcript_text is not None:
+        if not transcript_text.strip():
             raise ValueError("transcript cannot be empty")
-
-        try:
-            silences = extract_vad_silences(audio_path, min_silence_duration_ms=silence_min_ms)
-        except Exception:
-            silences = []
-
-    # Stage 3: Normalization & WordToken Seeding
-    if transcript is not None:
-        spans = normalize_transcript(text)
-        if not spans:
+        if not normalize_transcript(transcript_text):
             raise ValueError("transcript contains no valid words after normalization")
 
-        n_spans = len(spans)
-        step = audio_duration / n_spans
-        initial_words = [
-            WordToken(
-                id=f"w_{i}",
-                text=span.token,
-                normalized=span.normalized,
-                start=i * step,
-                end=(i + 1) * step,
-                confidence=0.9,
-                char_start=span.char_start,
-                char_end=span.char_end,
-            )
-            for i, span in enumerate(spans)
-        ]
-        segments = [
-            ASRSegment(
-                id="seg_0",
-                start=0.0,
-                end=audio_duration,
-                text=text,
-                words=initial_words,
-            )
-        ]
-    else:
-        if not segments:
-            raise ValueError("no speech segments detected in audio")
-
-    # Stage 4: Macro-chunking
-    chunk_cfg = ChunkConfig(
-        max_chunk_duration=max_chunk_sec,
-        min_silence_duration=vad_silence_min_sec,
-        overlap_padding=chunk_padding_sec,
+    # Stages 2-4: VAD, ASR, anchoring, chunking
+    silence_min_ms = int(round(vad_silence_min_sec * 1000))
+    transcriber_inst = (
+        transcriber
+        if transcriber is not None
+        else WhisperTranscriber(min_silence_duration_ms=silence_min_ms)
     )
-    chunks = partition_into_chunks(
-        segments=segments,
-        silences=silences,
-        total_duration=audio_duration,
-        config=chunk_cfg,
-    )
+    try:
+        job = prepare_alignment_job(
+            audio_path,
+            transcriber=transcriber_inst,
+            transcript_text=transcript_text,
+            speaker=speaker,
+            vad_silence_min_sec=vad_silence_min_sec,
+            max_chunk_sec=max_chunk_sec,
+            chunk_padding_sec=chunk_padding_sec,
+            vad_backend=vad_backend,
+        )
+    finally:
+        # Free GPU memory before the aligner runs
+        if hasattr(transcriber_inst, "unload") and callable(transcriber_inst.unload):
+            transcriber_inst.unload()
 
-    # Stage 5 & 6: Forced Alignment & Global Monotonic Reconciliation
-    if aligner is None:
-        aligner_inst = ForcedAligner()
-    else:
-        aligner_inst = aligner
-
-    aligned_result = aligner_inst.align_chunks(
-        chunks=chunks,
+    # Stages 5-6: forced alignment & global monotonic reconciliation
+    aligner_inst = aligner if aligner is not None else ForcedAligner()
+    reconciled_words = aligner_inst.align_chunks(
+        chunks=job.chunks,
         audio_path=audio_path,
         engine=engine,
-        fallback_to_ctc=fallback_to_ctc,
     )
 
-    if aligned_result and isinstance(aligned_result[0], list):
-        reconciled_words = reconcile_chunk_alignments(
-            chunks, aligned_result, padded_coordinates=True
-        )
-    else:
-        reconciled_words = aligned_result
-
-    # Stage 7: Artifact Export & Cryptographic Manifest
+    # Stage 7: artifact export & manifest
     output_dir.mkdir(parents=True, exist_ok=True)
 
     vtt_text = export_karaoke_vtt(reconciled_words)
@@ -350,34 +400,50 @@ def run_speech_pipeline(
         encoding="utf-8",
     )
 
-    elapsed_sec = time.perf_counter() - started
-    rtf = elapsed_sec / audio_duration if audio_duration > 0.0 else 0.0
     mean_conf = (
         sum(w.confidence for w in reconciled_words) / len(reconciled_words)
         if reconciled_words
         else 0.0
     )
-    metrics = {
+    metrics: dict[str, Any] = {
         "audio_duration_seconds": round(audio_duration, 4),
         "word_count": len(reconciled_words),
-        "chunk_count": len(chunks),
+        "chunk_count": len(job.chunks),
         "mean_word_confidence": round(mean_conf, 4),
-        "pipeline_elapsed_seconds": round(elapsed_sec, 4),
-        "pipeline_rtf": round(rtf, 4),
+        "scenario": job.scenario,
     }
+    if job.anchoring is not None:
+        metrics["anchoring"] = job.anchoring
+
+    config: dict[str, Any] = {
+        "engine": engine,
+        "scenario": job.scenario,
+        "vad_silence_min_sec": vad_silence_min_sec,
+        "max_chunk_sec": max_chunk_sec,
+        "chunk_padding_sec": chunk_padding_sec,
+    }
+    describe = getattr(aligner_inst, "describe", None)
+    if callable(describe):
+        described = describe(engine)
+        if isinstance(described, dict):
+            config["aligner"] = described
+    asr_info = {
+        key: getattr(transcriber_inst, attr, None)
+        for key, attr in (
+            ("model", "model_size_or_path"),
+            ("device", "device"),
+            ("compute_type", "compute_type"),
+        )
+    }
+    if all(isinstance(v, str) for v in asr_info.values()):
+        config["asr"] = asr_info
 
     manifest = generate_manifest(
         input_audio_path=audio_path,
         output_dir=output_dir,
         words=reconciled_words,
         metrics=metrics,
-        config={
-            "engine": engine,
-            "vad_silence_min_sec": vad_silence_min_sec,
-            "max_chunk_sec": max_chunk_sec,
-            "chunk_padding_sec": chunk_padding_sec,
-            "fallback_to_ctc": fallback_to_ctc,
-        },
+        config=config,
     )
 
     return manifest

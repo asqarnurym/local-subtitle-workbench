@@ -4,8 +4,9 @@ Provides:
 - check_mfa_available: host PATH environment discovery
 - parse_textgrid: pure-Python Praat long and short format parser with silence filtering,
   containment association, micro-phoneme duration enforcement, and temporal monotonicity
-- run_mfa_batch: corpus staging batch runner executing MFA CLI in a single batch
-  with automatic temporary staging cleanup and typed exceptions
+- run_mfa_corpus: stages many utterances/chunks (grouped by speaker) as one corpus
+  and aligns them with a single `mfa align` call (G2P for OOVs, boundary fine-tuning)
+- run_mfa_batch: strict single-recording wrapper around run_mfa_corpus
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
 
@@ -79,7 +81,7 @@ def _ensure_mfa_on_path() -> None:
             ]
             for ep in reversed(extra_paths):
                 if ep not in os.environ.get("PATH", ""):
-                    os.environ["PATH"] = ep + ";" + os.environ.get("PATH", "")
+                    os.environ["PATH"] = ep + os.pathsep + os.environ.get("PATH", "")
             break
 
 
@@ -344,22 +346,48 @@ def parse_textgrid(
     return word_tokens
 
 
-def run_mfa_batch(
-    chunk_wavs: list[tuple[Path, str]],
+@dataclass(frozen=True)
+class MFAItem:
+    """One utterance or chunk staged into a Montreal Forced Aligner corpus."""
+
+    wav_path: Path
+    transcript: str
+    speaker: str = "speaker"
+
+
+def _safe_speaker(name: str) -> str:
+    cleaned = "".join(c if (c.isalnum() or c in "-_") else "_" for c in str(name).strip())
+    return cleaned or "speaker"
+
+
+def default_num_jobs() -> int:
+    """Use all physical-ish cores but leave one for the OS; MFA default is 3."""
+    return max(1, min(8, (os.cpu_count() or 4) - 1))
+
+
+def run_mfa_corpus(
+    items: list[MFAItem],
     output_dir: Path | None = None,
     dictionary: str = "english_us_arpa",
     acoustic_model: str = "english_us_arpa",
-    num_jobs: int = 4,
+    g2p_model: str | None = "english_us_arpa",
+    fine_tune: bool = True,
+    num_jobs: int | None = None,
     timeout: float | None = None,
     runner: SubprocessRunner | None = None,
-) -> list[list[WordToken]]:
-    """Stage corpus and execute Montreal Forced Aligner in a single batch subprocess.
+) -> list[list[WordToken] | None]:
+    """Stage all items as one MFA corpus and align them with a single `mfa align` call.
 
-    Stages WAV files and transcript labels into a temporary directory, invokes
-    the `mfa align` command once across all chunks, parses the resulting TextGrid
-    files, and guarantees atomic cleanup of staging resources.
+    Items are grouped into per-speaker directories so that MFA performs speaker
+    adaptation (``--single_speaker`` is deliberately not used). Out-of-vocabulary
+    words are pronounced with the G2P model when ``g2p_model`` is set, and
+    ``fine_tune`` enables MFA boundary fine-tuning below the 10 ms frame shift.
+
+    Returns one entry per item: the parsed word tokens, or ``None`` when MFA
+    produced no TextGrid for that item (e.g. beam failure). Callers decide how a
+    missing item is treated; nothing is silently replaced.
     """
-    if not chunk_wavs:
+    if not items:
         return []
 
     active_runner = runner or SubprocessRunner()
@@ -371,7 +399,8 @@ def run_mfa_batch(
             "'conda create -n aligner -c conda-forge montreal-forced-aligner && "
             "conda activate aligner && "
             "mfa model download acoustic english_us_arpa && "
-            "mfa model download dictionary english_us_arpa'"
+            "mfa model download dictionary english_us_arpa && "
+            "mfa model download g2p english_us_arpa'"
         )
 
     staging_root = Path(tempfile.mkdtemp(prefix="mfa_staging_"))
@@ -381,15 +410,17 @@ def run_mfa_batch(
     target_out_dir = output_dir if output_dir is not None else (staging_root / "output")
     target_out_dir.mkdir(parents=True, exist_ok=True)
 
+    names: list[tuple[str, str]] = []
     try:
-        # 1. Corpus Staging
-        for idx, (wav_path, transcript) in enumerate(chunk_wavs):
-            chunk_name = f"chunk_{idx:04d}"
-            dest_wav = corpus_dir / f"{chunk_name}.wav"
-            shutil.copyfile(wav_path, dest_wav)
-
-            dest_lab = corpus_dir / f"{chunk_name}.lab"
-            dest_lab.write_text(transcript.strip(), encoding="utf-8")
+        # 1. Corpus staging: <corpus>/<speaker>/chunk_NNNN.{wav,lab}
+        for idx, item in enumerate(items):
+            speaker = _safe_speaker(item.speaker)
+            name = f"chunk_{idx:04d}"
+            spk_dir = corpus_dir / speaker
+            spk_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(item.wav_path, spk_dir / f"{name}.wav")
+            (spk_dir / f"{name}.lab").write_text(item.transcript.strip(), encoding="utf-8")
+            names.append((speaker, name))
 
         # 2. Build CLI command
         cmd = [
@@ -400,12 +431,15 @@ def run_mfa_batch(
             acoustic_model,
             str(target_out_dir),
             "--clean",
-            "--single_speaker",
             "--num_jobs",
-            str(num_jobs),
+            str(num_jobs if num_jobs is not None else default_num_jobs()),
         ]
+        if g2p_model:
+            cmd.extend(["--g2p_model_path", g2p_model])
+        if fine_tune:
+            cmd.append("--fine_tune")
 
-        # 3. Single Batch Execution
+        # 3. Single batch execution
         try:
             active_runner.run(cmd, timeout=timeout)
         except FileNotFoundError as err:
@@ -417,20 +451,54 @@ def run_mfa_batch(
                 f"MFA execution failed with exit code {err.returncode}: {err.stderr}"
             ) from err
 
-        # 4. Parse Generated TextGrids
-        results: list[list[WordToken]] = []
-        for idx in range(len(chunk_wavs)):
-            tg_path = target_out_dir / f"chunk_{idx:04d}.TextGrid"
-            if tg_path.is_file():
-                content = tg_path.read_text(encoding="utf-8")
-                chunk_words = parse_textgrid(content, word_id_prefix=f"chunk_{idx:04d}")
-                results.append(chunk_words)
-            else:
-                logger.warning("MFA TextGrid missing for chunk %04d", idx)
-                results.append([])
-
+        # 4. Parse generated TextGrids (MFA mirrors speaker directories)
+        results: list[list[WordToken] | None] = []
+        for idx, (speaker, name) in enumerate(names):
+            candidates = [
+                target_out_dir / speaker / f"{name}.TextGrid",
+                target_out_dir / f"{name}.TextGrid",
+            ]
+            tg_path = next((c for c in candidates if c.is_file()), None)
+            if tg_path is None:
+                logger.warning("MFA produced no TextGrid for item %d (%s)", idx, name)
+                results.append(None)
+                continue
+            content = tg_path.read_text(encoding="utf-8")
+            results.append(parse_textgrid(content, word_id_prefix=name))
         return results
 
     finally:
-        # Atomic Staging Cleanup
         shutil.rmtree(staging_root, ignore_errors=True)
+
+
+def run_mfa_batch(
+    chunk_wavs: list[tuple[Path, str]],
+    output_dir: Path | None = None,
+    dictionary: str = "english_us_arpa",
+    acoustic_model: str = "english_us_arpa",
+    g2p_model: str | None = "english_us_arpa",
+    fine_tune: bool = True,
+    num_jobs: int | None = None,
+    timeout: float | None = None,
+    runner: SubprocessRunner | None = None,
+    speaker: str = "speaker",
+) -> list[list[WordToken]]:
+    """Align chunks of one recording (one speaker) in a single MFA call.
+
+    Strict: raises MFAExecutionError if MFA did not produce output for every chunk.
+    """
+    results = run_mfa_corpus(
+        [MFAItem(Path(w), t, speaker) for w, t in chunk_wavs],
+        output_dir=output_dir,
+        dictionary=dictionary,
+        acoustic_model=acoustic_model,
+        g2p_model=g2p_model,
+        fine_tune=fine_tune,
+        num_jobs=num_jobs,
+        timeout=timeout,
+        runner=runner,
+    )
+    missing = [i for i, r in enumerate(results) if r is None]
+    if missing:
+        raise MFAExecutionError(f"MFA produced no alignment for chunk(s) {missing}")
+    return [r for r in results if r is not None]

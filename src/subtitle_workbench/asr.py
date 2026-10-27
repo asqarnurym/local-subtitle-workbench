@@ -1,12 +1,15 @@
 """Automatic Speech Recognition (Faster-Whisper) and Silero-VAD silence detection.
 
-Strictly manages GPU VRAM lifecycle to guarantee <= 1.85 GB VRAM ceiling on 4 GB laptop GPU.
+Releases GPU memory deterministically after transcription so that the aligner can reuse it.
 All heavy libraries (torch, faster-whisper) are imported lazily to keep base
 installations lightweight.
 """
 
+import contextlib
 import gc
 import math
+import os
+import sys
 import wave
 from pathlib import Path
 from typing import Any
@@ -67,18 +70,77 @@ def _is_vram_allocation_error(exc: Exception) -> bool:
     )
 
 
+_DLL_DIRS_REGISTERED = False
+
+
+def register_nvidia_dll_dirs() -> list[str]:
+    """Expose CUDA runtime DLLs shipped as pip wheels (nvidia-cublas-cu12, nvidia-cudnn-cu12).
+
+    CTranslate2 (used by Faster-Whisper) loads cuBLAS/cuDNN dynamically. On Windows the
+    pip wheels place the DLLs under ``site-packages/nvidia/*/bin``, which is not on the
+    DLL search path by default; without this step Faster-Whisper silently cannot use the GPU.
+    """
+    global _DLL_DIRS_REGISTERED
+    found: list[str] = []
+    if sys.platform != "win32":
+        return found
+    import site
+
+    roots = [Path(p) for p in site.getsitepackages()]
+    try:
+        roots.append(Path(site.getusersitepackages()))
+    except Exception:
+        pass
+    for root in roots:
+        nvidia_base = root / "nvidia"
+        if nvidia_base.is_dir():
+            for sub in nvidia_base.iterdir():
+                bin_dir = sub / "bin"
+                if bin_dir.is_dir():
+                    found.append(str(bin_dir))
+    if not _DLL_DIRS_REGISTERED and found:
+        os.environ["PATH"] = os.pathsep.join(found) + os.pathsep + os.environ.get("PATH", "")
+        for d in found:
+            with contextlib.suppress(OSError):
+                os.add_dll_directory(d)  # type: ignore[attr-defined]
+        _DLL_DIRS_REGISTERED = True
+    return found
+
+
+def whisper_cuda_available() -> bool:
+    """Return True if CTranslate2 can run Whisper on a CUDA GPU (driver + cuBLAS present)."""
+    try:
+        register_nvidia_dll_dirs()
+        import ctranslate2
+
+        if ctranslate2.get_cuda_device_count() < 1:
+            return False
+        if sys.platform == "win32":
+            import ctypes
+
+            ctypes.WinDLL("cublas64_12.dll")  # type: ignore[attr-defined]
+        return True
+    except Exception:
+        return False
+
+
 def _resolve_device_and_compute_type(
     device: str | None,
     compute_type: str | None,
 ) -> tuple[str, str]:
-    """Auto-select execution device and quantization based on CUDA availability."""
-    if device is None:
-        try:
-            import torch
+    """Select the execution device for Faster-Whisper.
 
-            device = "cuda" if torch.cuda.is_available() else "cpu"
-        except (ImportError, Exception):
-            device = "cpu"
+    ``device=None`` picks CUDA when CTranslate2 can use it, otherwise CPU (the choice is
+    recorded in pipeline manifests). An explicit ``device="cuda"`` is strict: it raises
+    instead of silently running on CPU.
+    """
+    if device is None:
+        device = "cuda" if whisper_cuda_available() else "cpu"
+    elif device == "cuda" and not whisper_cuda_available():
+        raise ASRInferenceError(
+            "device='cuda' requested but CTranslate2 cannot use a CUDA GPU. Install the "
+            "'speech' extra (nvidia-cublas-cu12, nvidia-cudnn-cu12) and an NVIDIA driver."
+        )
 
     if compute_type is None:
         compute_type = "int8_float16" if device == "cuda" else "int8"

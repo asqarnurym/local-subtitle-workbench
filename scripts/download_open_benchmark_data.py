@@ -1,8 +1,13 @@
-"""Download and stage open-access speech corpora for alignment benchmark.
+"""Download and stage open-access SILVER-reference corpora for relative comparisons.
 
-Supports two open-access evaluation corpora:
-1. LibriSpeech test-clean (Native English reading speech) via Hugging Face API.
-2. L2-ARCTIC (Non-native accented speech) via Hugging Face chikingsley mirror.
+IMPORTANT: the word/phone boundaries of both corpora were produced by forced alignment
+(Montreal Forced Aligner), not by human annotators. Results on them measure agreement
+with MFA and are reported as "silver" references; they must not be presented as
+accuracy and must not be used to compare an MFA-based method against others.
+
+1. LibriSpeech test-clean (native read English; MFA alignments, gilkeyio/librispeech-alignments),
+   sampled evenly across all 40 speakers.
+2. L2-ARCTIC (non-native English, 24 speakers / 6 L1s; automatic TextGrids).
 
 Produces uncompressed 16 kHz mono PCM16 WAV audio and Praat .TextGrid files
 compatible with the workbench evaluation pipeline.
@@ -151,76 +156,96 @@ def decode_flac_to_pcm16_mono(
     return audio.flatten(), duration
 
 
-def stage_librispeech(target_dir: Path, limit: int = 50) -> int:
-    """Download and stage LibriSpeech test-clean utterances with TextGrids."""
+def stage_librispeech(target_dir: Path, per_speaker: int = 5) -> int:
+    """Stage up to ``per_speaker`` test-clean utterances for every speaker."""
     libri_dir = target_dir / "librispeech"
     libri_dir.mkdir(parents=True, exist_ok=True)
-
-    logger.info(f"Fetching {limit} LibriSpeech test-clean records via HuggingFace API...")
-    url = (
-        f"https://datasets-server.huggingface.co/rows?"
-        f"dataset=gilkeyio/librispeech-alignments&config=default&split=test_clean&offset=0&limit={limit}"
+    base = (
+        "https://datasets-server.huggingface.co/rows?"
+        "dataset=gilkeyio/librispeech-alignments&config=default&split=test_clean"
+    )
+    selected: dict[str, list[dict[str, Any]]] = {}
+    offset, page = 0, 100
+    client = httpx.Client(timeout=60.0)
+    while True:
+        resp = client.get(f"{base}&offset={offset}&limit={page}")
+        if resp.status_code != 200:
+            raise RuntimeError(f"LibriSpeech rows request failed: HTTP {resp.status_code}")
+        rows = resp.json().get("rows", [])
+        if not rows:
+            break
+        for r in rows:
+            row = r["row"]
+            spk = str(row["id"]).split("-")[0]
+            bucket = selected.setdefault(spk, [])
+            if len(bucket) < per_speaker:
+                bucket.append(row)
+        offset += len(rows)
+        if len(rows) < page:
+            break
+    logger.info(
+        f"Selected {sum(map(len, selected.values()))} utterances from {len(selected)} speakers"
     )
 
-    resp = httpx.get(url, timeout=30.0)
-    if resp.status_code != 200:
-        logger.error(f"Failed to fetch LibriSpeech rows: HTTP {resp.status_code}")
-        return 0
-
-    rows = resp.json().get("rows", [])
-    logger.info(f"Received {len(rows)} rows. Downloading audio and formatting TextGrids...")
-
-    saved_count = 0
-    client = httpx.Client(timeout=30.0)
-    for idx, r in enumerate(rows, start=1):
-        row = r["row"]
-        utt_id = row["id"]
-        words = row.get("words", [])
-        phones = row.get("phonemes", [])
-        transcript = row.get("transcript", "")
-        audio_info = row.get("audio", [{}])[0]
-        audio_src = audio_info.get("src")
-
-        if not audio_src:
-            continue
-
-        wav_path = libri_dir / f"{utt_id}.wav"
-        tg_path = libri_dir / f"{utt_id}.TextGrid"
-        txt_path = libri_dir / f"{utt_id}.txt"
-
-        if wav_path.is_file() and tg_path.is_file():
-            saved_count += 1
-            continue
-
-        try:
-            flac_data = client.get(audio_src).content
-            pcm_arr, dur = decode_flac_to_pcm16_mono(flac_data, target_sr=16000)
-
-            # Write WAV
+    saved = 0
+    for rows in selected.values():
+        for row in rows:
+            utt_id = row["id"]
+            wav_path = libri_dir / f"{utt_id}.wav"
+            tg_path = libri_dir / f"{utt_id}.TextGrid"
+            if wav_path.is_file() and tg_path.is_file():
+                saved += 1
+                continue
+            audio_src = (row.get("audio") or [{}])[0].get("src")
+            if not audio_src:
+                raise RuntimeError(f"No audio URL for {utt_id}")
+            pcm_arr, dur = decode_flac_to_pcm16_mono(client.get(audio_src).content, 16000)
             with wave.open(str(wav_path), "wb") as wf:
                 wf.setnchannels(1)
                 wf.setsampwidth(2)
                 wf.setframerate(16000)
                 wf.writeframes(pcm_arr.tobytes())
-
-            # Write TextGrid
-            tg_text = format_textgrid(words, phones, total_duration=dur)
-            tg_path.write_text(tg_text, encoding="utf-8")
-
-            # Write TXT
-            txt_path.write_text(transcript.strip() + "\n", encoding="utf-8")
-
-            saved_count += 1
-            if idx % 10 == 0 or idx == len(rows):
-                logger.info(f"  [{idx}/{len(rows)}] Staged {utt_id} ({dur:.2f}s)")
-        except Exception as err:
-            logger.warning(f"  Failed to process {utt_id}: {err}")
-
-    logger.info(f"[+] LibriSpeech staging complete: {saved_count} utterances in {libri_dir}")
-    return saved_count
+            tg_path.write_text(
+                format_textgrid(row.get("words", []), row.get("phonemes", []), dur),
+                encoding="utf-8",
+            )
+            (libri_dir / f"{utt_id}.txt").write_text(
+                str(row.get("transcript", "")).strip() + "\n", encoding="utf-8"
+            )
+            saved += 1
+    logger.info(f"[+] LibriSpeech staging complete: {saved} utterances in {libri_dir}")
+    return saved
 
 
-def stage_l2arctic(target_dir: Path, limit: int = 50, speaker: str = "RRBI") -> int:
+L2ARCTIC_SPEAKERS = [
+    "ABA",
+    "SKA",
+    "YBAA",
+    "ZHAA",  # Arabic
+    "BWC",
+    "LXC",
+    "NCC",
+    "TXHC",  # Mandarin
+    "ASI",
+    "RRBI",
+    "SVBI",
+    "TNI",  # Hindi
+    "HJK",
+    "HKK",
+    "YDCK",
+    "YKWK",  # Korean
+    "EBVS",
+    "ERMS",
+    "MBMPS",
+    "NJS",  # Spanish
+    "HQTV",
+    "PNV",
+    "THV",
+    "TLV",  # Vietnamese
+]
+
+
+def stage_l2arctic(target_dir: Path, limit: int = 10, speaker: str = "RRBI") -> int:
     """Download and stage L2-ARCTIC accented speech utterances with TextGrids."""
     l2_dir = target_dir / "l2arctic"
     l2_dir.mkdir(parents=True, exist_ok=True)
@@ -286,7 +311,7 @@ def stage_l2arctic(target_dir: Path, limit: int = 50, speaker: str = "RRBI") -> 
             if saved_count % 10 == 0 or saved_count == limit:
                 logger.info(f"  [{saved_count}/{limit}] Staged {out_id}")
         except Exception as err:
-            logger.warning(f"  Failed to process {stem}: {err}")
+            raise RuntimeError(f"Failed to process L2-ARCTIC {speaker}/{stem}: {err}") from err
 
     logger.info(f"[+] L2-ARCTIC staging complete: {saved_count} utterances in {l2_dir}")
     return saved_count
@@ -294,57 +319,47 @@ def stage_l2arctic(target_dir: Path, limit: int = 50, speaker: str = "RRBI") -> 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Download and stage open-access LibriSpeech and L2-ARCTIC speech corpora."
+        description="Stage SILVER-reference corpora (LibriSpeech test-clean, L2-ARCTIC)."
     )
+    parser.add_argument("--corpus", choices=["librispeech", "l2arctic", "all"], default="all")
     parser.add_argument(
-        "--corpus",
-        choices=["librispeech", "l2arctic", "all"],
-        default="all",
-        help="Which open corpus to stage (default: all)",
-    )
-    parser.add_argument(
-        "--librispeech-limit",
+        "--librispeech-per-speaker",
         type=int,
-        default=50,
-        help="Number of LibriSpeech test-clean utterances to stage (default: 50)",
+        default=5,
+        help="Utterances per test-clean speaker (40 speakers; default: 5 -> 200 utterances)",
     )
     parser.add_argument(
-        "--l2arctic-limit",
+        "--l2arctic-per-speaker",
         type=int,
-        default=50,
-        help="Number of L2-ARCTIC utterances to stage (default: 50)",
+        default=10,
+        help="Utterances per L2-ARCTIC speaker (default: 10)",
     )
     parser.add_argument(
-        "--l2arctic-speaker",
+        "--l2arctic-speakers",
         type=str,
-        default="RRBI",
-        help="L2-ARCTIC speaker archive to extract (default: RRBI - Russian Male)",
+        default="all",
+        help="Comma-separated L2-ARCTIC speaker codes or 'all' (24 speakers, 6 L1s)",
     )
-    parser.add_argument(
-        "--target-dir",
-        type=Path,
-        default=Path("data/corpora"),
-        help="Base directory to place corpora (default: data/corpora)",
-    )
+    parser.add_argument("--target-dir", type=Path, default=Path("data/corpora"))
     args = parser.parse_args()
 
     target_dir = args.target_dir.resolve()
     target_dir.mkdir(parents=True, exist_ok=True)
-
-    logger.info("============================================================")
-    logger.info("Open Speech Corpora Staging Utility")
-    logger.info(f"Target Directory: {target_dir}")
-    logger.info(f"Corpus Selection: {args.corpus}")
-    logger.info("============================================================")
+    logger.info(f"Target directory: {target_dir}; corpus: {args.corpus}")
 
     if args.corpus in ("librispeech", "all"):
-        stage_librispeech(target_dir, limit=args.librispeech_limit)
+        stage_librispeech(target_dir, per_speaker=args.librispeech_per_speaker)
 
     if args.corpus in ("l2arctic", "all"):
-        stage_l2arctic(target_dir, limit=args.l2arctic_limit, speaker=args.l2arctic_speaker)
+        speakers = (
+            L2ARCTIC_SPEAKERS
+            if args.l2arctic_speakers == "all"
+            else [s.strip().upper() for s in args.l2arctic_speakers.split(",") if s.strip()]
+        )
+        for spk in speakers:
+            stage_l2arctic(target_dir, limit=args.l2arctic_per_speaker, speaker=spk)
 
-    logger.info("============================================================")
-    logger.info("Corpora staging finished successfully.")
+    logger.info("Silver corpora staging finished.")
     return 0
 
 

@@ -141,8 +141,7 @@ def test_run_speech_pipeline_mocked_end_to_end(
     manifest = run_speech_pipeline(
         audio_path=wav_path,
         output_dir=out_dir,
-        transcript=None,
-        engine="auto",
+        engine="mfa",
         transcriber=mock_transcriber,
         aligner=mock_aligner,
     )
@@ -176,7 +175,7 @@ def test_run_speech_pipeline_mocked_end_to_end(
     # Validate alignment_raw.json content
     raw_data = json.loads((out_dir / "alignment_raw.json").read_text(encoding="utf-8"))
     assert raw_data["schema_version"] == 1
-    assert raw_data["alignment_method"] == "auto"
+    assert raw_data["alignment_method"] == "mfa"
     assert raw_data["summary"]["total_words"] == 2
 
     # Validate returned manifest
@@ -190,7 +189,7 @@ def test_run_speech_pipeline_mocked_end_to_end(
 
 
 def test_run_speech_pipeline_with_explicit_transcript_string(tmp_path: Path) -> None:
-    """Verify ASR is bypassed when an explicit transcript string is provided."""
+    """Scenario A: a known transcript is anchored with ASR output, then force-aligned."""
     wav_path = tmp_path / "audio.wav"
     out_dir = tmp_path / "output_transcript_str"
     create_test_wav(wav_path, duration_sec=2.0)
@@ -205,13 +204,21 @@ def test_run_speech_pipeline_with_explicit_transcript_string(tmp_path: Path) -> 
     manifest = run_speech_pipeline(
         audio_path=wav_path,
         output_dir=out_dir,
-        transcript="explicit transcript",
+        transcript_text="explicit transcript",
         aligner=mock_aligner,
     )
 
     mock_aligner.align_chunks.assert_called_once()
     assert (out_dir / "manifest.json").is_file()
     assert manifest["metrics"]["word_count"] == 2
+    assert manifest["metrics"]["scenario"] == "A"
+    assert manifest["metrics"]["anchoring"]["n_reference_words"] == 2
+
+    # Whisper is never skipped: it supplies the anchors in scenario A
+    from conftest import FakeWhisperTranscriber
+
+    assert FakeWhisperTranscriber.instances[-1].transcribe_calls == 1
+    assert FakeWhisperTranscriber.instances[-1].unload_calls == 1
 
 
 def test_run_speech_pipeline_with_explicit_transcript_file(tmp_path: Path) -> None:
@@ -233,7 +240,7 @@ def test_run_speech_pipeline_with_explicit_transcript_file(tmp_path: Path) -> No
     manifest = run_speech_pipeline(
         audio_path=wav_path,
         output_dir=out_dir,
-        transcript=transcript_file,
+        transcript_path=transcript_file,
         aligner=mock_aligner,
     )
 
@@ -284,7 +291,7 @@ def test_output_overwrite_protection(tmp_path: Path) -> None:
     run_speech_pipeline(
         audio_path=wav_path,
         output_dir=out_dir,
-        transcript="hello world",
+        transcript_text="hello world",
         aligner=mock_aligner,
     )
     assert (out_dir / "manifest.json").is_file()
@@ -296,7 +303,7 @@ def test_output_overwrite_protection(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=out_dir,
-            transcript="hello world",
+            transcript_text="hello world",
             aligner=mock_aligner,
         )
 
@@ -310,7 +317,7 @@ def test_output_collision_with_input_audio(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=wav_path,
-            transcript="hello world",
+            transcript_text="hello world",
         )
 
 
@@ -325,7 +332,7 @@ def test_output_collision_with_input_transcript(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=transcript_file,
-            transcript=transcript_file,
+            transcript_path=transcript_file,
         )
 
 
@@ -341,7 +348,7 @@ def test_missing_audio_file(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=missing_wav,
             output_dir=tmp_path / "out",
-            transcript="hello",
+            transcript_text="hello",
         )
 
 
@@ -354,7 +361,7 @@ def test_corrupt_audio_file(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=corrupt_wav,
             output_dir=tmp_path / "out",
-            transcript="hello",
+            transcript_text="hello",
         )
 
 
@@ -368,7 +375,7 @@ def test_missing_transcript_file(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript=missing_transcript,
+            transcript_path=missing_transcript,
         )
 
 
@@ -381,7 +388,7 @@ def test_empty_transcript_string(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript="   \n\t  ",
+            transcript_text="   \n\t  ",
         )
 
 
@@ -394,7 +401,7 @@ def test_transcript_no_words_after_norm(tmp_path: Path) -> None:
         run_speech_pipeline(
             audio_path=wav_path,
             output_dir=tmp_path / "out",
-            transcript="... --- !!! ;;;",
+            transcript_text="... --- !!! ;;;",
         )
 
 
@@ -441,7 +448,7 @@ def test_cli_align_speech_success(
             str(wav_path),
             "-o",
             str(out_dir),
-            "--transcript",
+            "--transcript-text",
             "hello world",
             "--engine",
             "ctc",

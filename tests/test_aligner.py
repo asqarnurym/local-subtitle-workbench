@@ -216,7 +216,8 @@ def test_forced_aligner_missing_audio(tmp_path: Path) -> None:
         align_chunks([chunk], missing_wav)
 
 
-def test_forced_aligner_transcript_length_mismatch(tmp_path: Path) -> None:
+def test_forced_aligner_rejects_auto_engine(tmp_path: Path) -> None:
+    """There is no implicit 'auto' engine: the caller must choose mfa or ctc."""
     audio_wav = tmp_path / "audio.wav"
     create_dummy_wav(audio_wav)
     chunk = AudioChunk(
@@ -228,9 +229,8 @@ def test_forced_aligner_transcript_length_mismatch(tmp_path: Path) -> None:
         padded_end=1.5,
         text="hello",
     )
-    with pytest.raises(ValueError) as exc_info:
-        align_chunks([chunk], audio_wav, transcripts=["hello", "world"])
-    assert "count" in str(exc_info.value)
+    with pytest.raises(ValueError, match="Unknown alignment engine"):
+        align_chunks([chunk], audio_wav, engine="auto")  # type: ignore[arg-type]
 
 
 def test_forced_aligner_mfa_missing_no_fallback(
@@ -249,9 +249,9 @@ def test_forced_aligner_mfa_missing_no_fallback(
         text="hello",
     )
 
-    # Invariant: when engine="mfa", it must raise MFANotFoundError even if fallback_to_ctc=True
+    # Invariant: when engine="mfa" and MFA is absent, it raises (never falls back to CTC)
     with pytest.raises(MFANotFoundError):
-        align_chunks([chunk], audio_wav, engine="mfa", fallback_to_ctc=True)
+        align_chunks([chunk], audio_wav, engine="mfa")
 
 
 def test_forced_aligner_mfa_success_mock(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -363,10 +363,10 @@ item []:
         assert reconciled[i + 1].start >= reconciled[i].end
 
 
-def test_forced_aligner_auto_fallback_to_mocked_ctc(
+def test_forced_aligner_explicit_ctc_engine_with_mocked_model(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    """Verify that when MFA is absent, 'auto' transparently falls back to CTC aligner."""
+    """Verify the CTC engine runs only when explicitly requested and reuses one model."""
     monkeypatch.setattr("shutil.which", lambda _: None)
     audio_wav = tmp_path / "audio.wav"
     create_dummy_wav(audio_wav, duration_sec=3.0)
@@ -403,7 +403,7 @@ def test_forced_aligner_auto_fallback_to_mocked_ctc(
     ]
 
     aligner = ForcedAligner(ctc_aligner=mock_ctc)
-    reconciled = aligner.align_chunks([chunk], audio_wav, engine="auto", fallback_to_ctc=True)
+    reconciled = aligner.align_chunks([chunk], audio_wav, engine="ctc")
 
     assert len(reconciled) == 2
     assert reconciled[0].text == "test"
@@ -411,8 +411,93 @@ def test_forced_aligner_auto_fallback_to_mocked_ctc(
     assert mock_ctc.align.call_count == 1
 
     # Also verify string path support
-    reconciled_str = aligner.align_chunks([chunk], str(audio_wav), engine="auto")
+    reconciled_str = aligner.align_chunks([chunk], str(audio_wav), engine="ctc")
     assert len(reconciled_str) == 2
+    assert aligner.ctc_aligner is mock_ctc  # model instance reused, not re-created
+
+
+def _tg(words: list[tuple[float, float, str]], xmax: float) -> str:
+    lines = [
+        'File type = "ooTextFile"',
+        'Object class = "TextGrid"',
+        f"xmin = 0.0\nxmax = {xmax}\ntiers? <exists>\nsize = 1\nitem []:",
+        "    item [1]:",
+        '        class = "IntervalTier"\n        name = "words"',
+        f"        xmin = 0.0\n        xmax = {xmax}\n        intervals: size = {len(words)}",
+    ]
+    for i, (s, e, t) in enumerate(words, start=1):
+        lines.append(f"        intervals [{i}]:\n            xmin = {s}\n            xmax = {e}")
+        lines.append(f'            text = "{t}"')
+    return "\n".join(lines) + "\n"
+
+
+def test_align_requests_single_mfa_call_for_many_recordings(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """All chunks of all recordings go into one MFA corpus with per-speaker directories."""
+    from subtitle_workbench.aligner import AlignmentFailure, AlignmentRequest
+
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/mfa")
+    wav_a = tmp_path / "a.wav"
+    wav_b = tmp_path / "b.wav"
+    create_dummy_wav(wav_a, duration_sec=2.0)
+    create_dummy_wav(wav_b, duration_sec=2.0)
+
+    def chunk(text: str) -> AudioChunk:
+        return AudioChunk(
+            id="c0", index=0, start=0.0, end=2.0, padded_start=0.0, padded_end=2.0, text=text
+        )
+
+    seen: dict[str, object] = {}
+
+    def mock_run_fn(cmd: list[str], timeout: float | None = None) -> subprocess.CompletedProcess:
+        corpus, out = Path(cmd[2]), Path(cmd[5])
+        seen["speakers"] = sorted(p.name for p in corpus.iterdir() if p.is_dir())
+        seen["cmd"] = list(cmd)
+        # Recording A aligned, recording B missing (simulated beam failure)
+        (out / "spk1").mkdir(parents=True, exist_ok=True)
+        (out / "spk1" / "chunk_0000.TextGrid").write_text(
+            _tg([(0.1, 0.5, "hello"), (0.6, 1.0, "world")], 2.0), encoding="utf-8"
+        )
+        return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+
+    runner = MagicMock(spec=SubprocessRunner)
+    runner.run.side_effect = mock_run_fn
+    aligner = ForcedAligner(mfa_runner=runner)
+    results = aligner.align_requests(
+        [
+            AlignmentRequest(wav_a, [chunk("hello world")], speaker="spk1"),
+            AlignmentRequest(wav_b, [chunk("good bye")], speaker="spk2"),
+        ],
+        engine="mfa",
+    )
+
+    assert runner.run.call_count == 1
+    assert seen["speakers"] == ["spk1", "spk2"]
+    cmd = seen["cmd"]
+    assert "--single_speaker" not in cmd
+    assert "--fine_tune" in cmd
+    assert cmd[cmd.index("--g2p_model_path") + 1] == "english_us_arpa"
+    assert [w.text for w in results[0]] == ["hello", "world"]
+    assert isinstance(results[1], AlignmentFailure)
+
+
+def test_align_chunks_raises_when_mfa_skips_a_chunk(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Single-recording alignment is strict: a chunk without MFA output is an error."""
+    from subtitle_workbench.aligner import AlignmentFailure
+
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/mfa")
+    wav = tmp_path / "a.wav"
+    create_dummy_wav(wav, duration_sec=2.0)
+    runner = MagicMock(spec=SubprocessRunner)
+    runner.run.return_value = subprocess.CompletedProcess(args=[], returncode=0, stdout="")
+    chunk = AudioChunk(
+        id="c0", index=0, start=0.0, end=2.0, padded_start=0.0, padded_end=2.0, text="hi"
+    )
+    with pytest.raises(AlignmentFailure):
+        ForcedAligner(mfa_runner=runner).align_chunks([chunk], wav, engine="mfa")
 
 
 def test_slice_wav_duration_bounds(tmp_path: Path) -> None:

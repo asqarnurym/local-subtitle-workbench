@@ -44,13 +44,12 @@ async def service_info() -> dict[str, Any]:
     """Return supported alignment engines and export formats."""
     return {
         "version": __version__,
-        "supported_engines": ["auto", "mfa", "ctc"],
-        "default_engine": "auto",
+        "supported_engines": ["mfa", "ctc"],
+        "default_engine": "mfa",
         "constraints": {
             "max_chunk_sec": 30.0,
             "min_silence_sec": 0.4,
             "overlap_padding_sec": 0.5,
-            "vram_limit_gb": 1.85,
         },
         "export_formats": ["vtt", "jsonld", "alignment_raw", "manifest"],
     }
@@ -62,18 +61,18 @@ async def align_speech_endpoint(
     transcript: str | None = Form(  # noqa: B008
         None, description="Verbatim lecture transcript (if omitted, Whisper ASR transcribes)"
     ),
-    engine: Literal["auto", "mfa", "ctc"] = Form(  # noqa: B008
-        "auto", description="Forced alignment engine (auto, mfa, ctc)"
+    engine: Literal["mfa", "ctc"] = Form(  # noqa: B008
+        "mfa", description="Forced alignment engine (mfa, ctc); no implicit fallback"
     ),
     vad_silence_min_sec: float = Form(0.4, description="Minimum silence duration for VAD splits"),  # noqa: B008
     max_chunk_sec: float = Form(30.0, description="Maximum duration per macro chunk"),  # noqa: B008
     chunk_padding_sec: float = Form(0.5, description="Contextual overlap padding"),  # noqa: B008
 ) -> JSONResponse:
     """Execute end-to-end alignment pipeline on uploaded audio."""
-    if engine not in ("auto", "mfa", "ctc"):
+    if engine not in ("mfa", "ctc"):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Unsupported engine: '{engine}'. Must be 'auto', 'mfa', or 'ctc'.",
+            detail=f"Unsupported engine: '{engine}'. Must be 'mfa' or 'ctc'.",
         )
     if vad_silence_min_sec <= 0.0 or max_chunk_sec <= 0.0 or chunk_padding_sec < 0.0:
         raise HTTPException(
@@ -96,12 +95,11 @@ async def align_speech_endpoint(
             manifest = run_speech_pipeline(
                 audio_path=audio_save_path,
                 output_dir=output_dir,
-                transcript=transcript,
+                transcript_text=transcript,
                 engine=engine,
                 vad_silence_min_sec=vad_silence_min_sec,
                 max_chunk_sec=max_chunk_sec,
                 chunk_padding_sec=chunk_padding_sec,
-                fallback_to_ctc=True,
             )
 
             # Read back generated artifacts

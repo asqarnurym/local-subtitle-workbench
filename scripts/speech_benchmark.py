@@ -588,7 +588,7 @@ def run_benchmark(
                 )
             if corpus == "timit":
                 utterances = load_timit_utterances(resolved_dir)
-            elif corpus == "buckeye":
+            elif corpus in ("buckeye", "librispeech", "l2arctic"):
                 utterances = load_buckeye_utterances(resolved_dir)
             else:
                 raise BenchmarkError(f"Unsupported corpus: {corpus}")
@@ -654,10 +654,16 @@ def run_benchmark(
                         try:
                             from subtitle_workbench.pipeline import run_speech_pipeline
 
+                            ref_transcript = (
+                                " ".join(w.normalized for w in utt.ref_words)
+                                if utt.ref_words
+                                else None
+                            )
                             with tempfile.TemporaryDirectory() as p_tmp:
                                 run_speech_pipeline(
                                     utt.wav_path,
                                     output_dir=p_tmp,
+                                    transcript=ref_transcript,
                                     engine="ctc",
                                 )
                                 raw_file = Path(p_tmp) / "alignment_raw.json"
@@ -670,10 +676,16 @@ def run_benchmark(
                         try:
                             from subtitle_workbench.pipeline import run_speech_pipeline
 
+                            ref_transcript = (
+                                " ".join(w.normalized for w in utt.ref_words)
+                                if utt.ref_words
+                                else None
+                            )
                             with tempfile.TemporaryDirectory() as p_tmp:
                                 run_speech_pipeline(
                                     utt.wav_path,
                                     output_dir=p_tmp,
+                                    transcript=ref_transcript,
                                     engine="mfa",
                                 )
                                 raw_file = Path(p_tmp) / "alignment_raw.json"
@@ -972,7 +984,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--corpus",
-        choices=["timit", "buckeye", "synthetic"],
+        choices=["timit", "buckeye", "librispeech", "l2arctic", "synthetic"],
         default="timit",
         help="Corpus type for evaluation (default: timit)",
     )

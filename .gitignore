@@ -13,3 +13,5 @@ test-results.xml
 *.tmp
 .env
 .env.*
+data/
+reports/

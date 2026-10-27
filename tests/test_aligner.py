@@ -178,10 +178,13 @@ def test_torch_audio_aligner_lazy_init() -> None:
     assert aligner._dictionary is None
 
 
-def test_torch_audio_aligner_unavailable_guard() -> None:
-    """Verify TorchAudioAligner raises CTCAlignerUnavailableError when torch is absent."""
+def test_torch_audio_aligner_unavailable_guard(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify TorchAudioAligner raises CTCAlignerUnavailableError when torch/torchaudio is absent."""
+    import sys
+
+    monkeypatch.setitem(sys.modules, "torchaudio", None)
     aligner = TorchAudioAligner(device="cpu")
-    # In base environment without torch, loading model raises CTCAlignerUnavailableError
+    # In base environment without torch/torchaudio, loading model raises CTCAlignerUnavailableError
     with pytest.raises(CTCAlignerUnavailableError) as exc_info:
         aligner._ensure_model()
     assert "required" in str(exc_info.value).lower() or "failed" in str(exc_info.value).lower()

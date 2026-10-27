@@ -381,7 +381,7 @@ class TorchAudioAligner:
         self._ensure_model()
         import torch
 
-        waveform = torch.from_numpy(audio_samples).float().to(self._device)
+        waveform = torch.from_numpy(np.ascontiguousarray(audio_samples)).float().to(self._device)
         if waveform.ndim == 1:
             waveform = waveform.unsqueeze(0)
 
@@ -401,9 +401,11 @@ class TorchAudioAligner:
         if emissions_np is None:
             return []
 
+        separator = "*" if self._dictionary and "*" in self._dictionary else "|"
         return align_ctc_trellis(
             emissions=emissions_np,
             tokens=transcript,
             dictionary=self._dictionary,
+            separator=separator,
             word_id_prefix=word_id_prefix,
         )

@@ -708,14 +708,13 @@ def test_real_production_execution_mismatched_mode_word_counts(
 
 def test_cli_real_mode_uninstalled_dependencies_clean_exit_code_1() -> None:
     """Verify CLI exits with code 1 and clean ASCII error when optional deps are missing."""
-    cmd = [
-        sys.executable,
-        "scripts/speech_benchmark.py",
-        "--corpus",
-        "synthetic",
-        "--max-utterances",
-        "1",
-    ]
+    code = (
+        "import sys, runpy; "
+        "sys.modules['faster_whisper'] = None; "
+        "sys.argv = ['speech_benchmark.py', '--corpus', 'synthetic', '--max-utterances', '1']; "
+        "runpy.run_path('scripts/speech_benchmark.py', run_name='__main__')"
+    )
+    cmd = [sys.executable, "-c", code]
     proc = subprocess.run(cmd, capture_output=True, text=True)
     assert proc.returncode == 1
     assert any(

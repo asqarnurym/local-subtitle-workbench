@@ -174,6 +174,10 @@ def generate_alignment_accuracy_table(
         base_caption = "TIMIT Core Test Alignment Accuracy Across Ablation Modes"
     elif corpus == "buckeye":
         base_caption = "Buckeye Speech Corpus Alignment Accuracy Across Ablation Modes"
+    elif corpus == "librispeech":
+        base_caption = "LibriSpeech (test-clean) Alignment Accuracy Across Ablation Modes"
+    elif corpus == "l2arctic":
+        base_caption = "L2-ARCTIC (Accented Speech) Alignment Accuracy Across Ablation Modes"
     elif corpus == "synthetic":
         base_caption = "Synthetic Benchmark Alignment Accuracy Across Ablation Modes"
     else:
@@ -311,11 +315,18 @@ def generate_statistical_significance_table(
 
     prefix = _check_provenance_and_get_prefix(data, allow_simulated=allow_simulated)
 
-    tests_dict = data.get("statistical_tests") or data.get("statistical_significance")
-    if not tests_dict:
+    tests_dict = data.get("statistical_tests")
+    if tests_dict is None:
+        tests_dict = data.get("statistical_significance")
+    if tests_dict is None:
         raise ValueError(
             "Benchmark results JSON missing 'statistical_tests' or "
             "'statistical_significance' dictionary"
+        )
+    if not tests_dict:
+        return (
+            "% Table 3 omitted: paired statistical significance testing requires "
+            "at least two evaluated ablation modes.\n"
         )
 
     caption = f"{prefix}Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size"

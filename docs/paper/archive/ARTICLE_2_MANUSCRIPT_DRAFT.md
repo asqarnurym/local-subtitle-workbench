@@ -1,3 +1,8 @@
+> [!CAUTION]
+> **CONTAINS SIMULATED NUMBERS -- NOT CITABLE -- see INCREMENT_6R**
+>
+> All empirical metrics, alignment accuracies, Wilcoxon statistics, and hardware resource values in this archived draft are unbacked simulated numbers from Increment 6. They have been retracted and marked `UNMEASURED / PENDING_EXPERIMENT`.
+
 # Algorithmic Approach to Improving Video Material Accessibility Based on Automatic Speech-Text Alignment
 
 **UDC:** 004.934:004.032.6:37.018.43  
@@ -14,7 +19,7 @@ Email: t.zhukabayeva@astanait.edu.kz | ORCID: 0000-0002-8611-3942
 ---
 
 ### Abstract
-Multimedia video lectures have become the dominant pedagogical medium in higher education. However, current automated subtitle generation workflows produce cumulative temporal desynchronization (100–300 ms), disrupting the cognitive reading cadence of deaf and hard-of-hearing (DHH), second-language (L2), and neurodivergent learners. This study proposes an offline, two-tier hierarchical forced alignment architecture combining transformer-based automatic speech recognition (OpenAI Whisper Large-v3 INT8), bounded macro-segmentation via Dynamic Time Warping (DTW) with contextual overlap padding, and Montreal Forced Aligner (Kaldi GMM-HMM) phonetic acoustic modeling. The architecture is integrated with an invertible token-span normalization contract to reconcile acoustic pronunciation lexicons with verbatim on-screen subtitle formatting. Empirical evaluation on the DARPA/NIST TIMIT Core Test benchmark demonstrates that the proposed hybrid method achieves a mean word absolute error (Word MAE) of 11.7 ms (95% CI: [11.2, 11.9] ms) and a mean phone absolute error (Phone MAE) of 12.9 ms, reaching 100.0% accuracy within the 20 ms human phonetic annotator noise ceiling (Acc@20ms) and 100.0% within the 50 ms broadcast imperceptibility window (Acc@50ms). Non-parametric paired Wilcoxon signed-rank testing confirms statistically significant superiority over baseline Whisper timestamps (W = 0.0, p = 1.68e-12, Cliff's delta = +1.00) and connectionist temporal classification (W = 8.0, p = 2.42e-12, Cliff's delta = +0.94). The complete pipeline executes with linear memory complexity O(N), maintaining a Real-Time Factor (RTF) of 0.015 and a peak VRAM footprint of 1.85 GB, ensuring fully private execution on standard student laptops. Bimodal exports directly comply with W3C WCAG 2.1 Media Accessibility Guidelines and WebVTT karaoke rendering for university Learning Management Systems.
+Multimedia video lectures have become the dominant pedagogical medium in higher education. However, current automated subtitle generation workflows produce cumulative temporal desynchronization (100–300 ms), disrupting the cognitive reading cadence of deaf and hard-of-hearing (DHH), second-language (L2), and neurodivergent learners. This study proposes an offline, two-tier hierarchical forced alignment architecture combining transformer-based automatic speech recognition (OpenAI Whisper Large-v3 INT8), bounded macro-segmentation via Dynamic Time Warping (DTW) with contextual overlap padding, and Montreal Forced Aligner (Kaldi GMM-HMM) phonetic acoustic modeling. The architecture is integrated with an invertible token-span normalization contract to reconcile acoustic pronunciation lexicons with verbatim on-screen subtitle formatting. Empirical evaluation on speech corpora benchmarks targets sub-20ms alignment accuracy (Word MAE: UNMEASURED / PENDING_EXPERIMENT, Phone MAE: UNMEASURED / PENDING_EXPERIMENT; Acc@20ms: UNMEASURED / PENDING_EXPERIMENT; Acc@50ms: UNMEASURED / PENDING_EXPERIMENT; paired Wilcoxon test: UNMEASURED / PENDING_EXPERIMENT). Computational metrics (RTF: UNMEASURED / PENDING_EXPERIMENT, peak VRAM: UNMEASURED / PENDING_EXPERIMENT) are pending execution on real corpus datasets under INCREMENT_6R. Bimodal exports directly comply with W3C WCAG 2.1 Media Accessibility Guidelines and WebVTT karaoke rendering for university Learning Management Systems.
 
 **Keywords:** Automatic speech recognition, forced alignment, dynamic time warping, educational accessibility, Whisper, Montreal Forced Aligner, WebVTT, cognitive load theory.
 
@@ -90,7 +95,7 @@ The Local Subtitle Alignment Workbench is architected around a strict sequential
                                             ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                              STAGE 2: ASR & TEXT EXTRACTION                            │
-│  Faster-Whisper Large-v3 INT8 (GPU) ──► Initial Segments & Words (VRAM Peak: 1.85 GB)  │
+│  Faster-Whisper Large-v3 INT8 (GPU) ──► Initial Segments & Words (VRAM Peak: UNMEASURED) │
 │  ──► Eager VRAM Purge: del model; gc.collect(); torch.cuda.empty_cache() (VRAM: <0.1 GB)│
 └───────────────────────────────────────────┬────────────────────────────────────────────┘
                                             ▼
@@ -159,75 +164,75 @@ Table 1 presents the empirical alignment accuracy across the three evaluated abl
 
 \begin{table}[t]
 \centering
-\caption{TIMIT Core Test Alignment Accuracy Across Ablation Modes}
+\caption{TIMIT Core Test Alignment Accuracy Across Ablation Modes (Pending Real Corpus Execution)}
 \label{tab:alignment_accuracy}
 \begin{tabular}{lcccccc}
 \toprule
 Method & Word MAE [95\% CI] (ms) & Word MedAE (ms) & Phone MAE (ms) & Acc@20ms (\%) & Acc@50ms (\%) & Acc@100ms (\%) \\
 \midrule
-Whisper Large-v3 & 119.1 [117.0, 121.7] & 121.3 & -- & 0.0\% & 0.0\% & 12.1\% \\
-CTC Trellis (MMS\_FA) & 35.1 [33.3, 39.0] & 36.4 & 35.8 & 12.1\% & 84.8\% & 100.0\% \\
-Proposed Hybrid & 11.7 [11.2, 11.9] & 12.2 & 12.9 & 100.0\% & 100.0\% & 100.0\% \\
+Whisper Large-v3 & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & -- & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+CTC Trellis (MMS\_FA) & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+Proposed Hybrid & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-As documented in Table 1, baseline Whisper cross-attention timestamps exhibit an average Word MAE of 119.1 ms, achieving **0.0% accuracy within the 20 ms human noise floor** and **0.0% within the 50 ms broadcast imperceptibility collar**. Only 12.1% of boundaries fell within the 100 ms cognitive split-attention threshold, quantitatively proving that raw Whisper timestamps induce cognitive overload.
+As documented in Table 1, baseline Whisper cross-attention timestamps exhibit an average Word MAE of UNMEASURED / PENDING_EXPERIMENT, achieving UNMEASURED / PENDING_EXPERIMENT within the 20 ms human noise floor and UNMEASURED / PENDING_EXPERIMENT within the 50 ms broadcast imperceptibility collar. Only UNMEASURED / PENDING_EXPERIMENT of boundaries fell within the 100 ms cognitive split-attention threshold.
 
-Mode 2 (CTC Trellis) reduces Word MAE to 35.1 ms and achieves 84.8% accuracy within 50 ms. However, due to the 20 ms frame stride of the Wav2Vec2 encoder, CTC Trellis achieves only 12.1% accuracy within the sub-20ms threshold.
+Mode 2 (CTC Trellis) achieves Word MAE of UNMEASURED / PENDING_EXPERIMENT and UNMEASURED / PENDING_EXPERIMENT accuracy within 50 ms. Due to the 20 ms frame stride of the Wav2Vec2 encoder, CTC Trellis achieves UNMEASURED / PENDING_EXPERIMENT accuracy within the sub-20ms threshold.
 
-The **Proposed Hybrid (Mode 3)** achieves an outstanding **Word MAE of 11.7 ms (95% CI: [11.2, 11.9] ms)** and a **Phone MAE of 12.9 ms**. It achieves **100.0% accuracy within Acc@20ms**, successfully converging within the 10–16 ms human inter-annotator disagreement distribution, and **100.0% within Acc@50ms**.
+The **Proposed Hybrid (Mode 3)** achieves a Word MAE of UNMEASURED / PENDING_EXPERIMENT and Phone MAE of UNMEASURED / PENDING_EXPERIMENT. It achieves UNMEASURED / PENDING_EXPERIMENT accuracy within Acc@20ms and UNMEASURED / PENDING_EXPERIMENT within Acc@50ms.
 
 ### 5.2 Computational Performance and Hardware Footprint
 Table 2 summarizes the computational efficiency, runtime throughput, and memory consumption evaluated on an AMD Ryzen 9 5900HX workstation equipped with an NVIDIA GeForce RTX 3050 Laptop GPU (4 GB VRAM limit, Windows 11).
 
 \begin{table}[t]
 \centering
-\caption{Computational Efficiency Across Ablation Modes}
+\caption{Computational Efficiency Across Ablation Modes (Pending Real Hardware Profiling)}
 \label{tab:computational_performance}
 \begin{tabular}{lccc}
 \toprule
 Method & Real-Time Factor (RTF) & Peak VRAM (MB) & Peak Host RAM (MB) \\
 \midrule
-Whisper Large-v3 & 0.001\(\times\) & -- & 37.9 \\
-CTC Trellis (MMS\_FA) & 0.000\(\times\) & -- & 38.1 \\
-Proposed Hybrid & 0.000\(\times\) & -- & 38.1 \\
+Whisper Large-v3 & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+CTC Trellis (MMS\_FA) & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+Proposed Hybrid & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-In end-to-end benchmark execution, the proposed hybrid pipeline achieved an alignment Real-Time Factor (RTF) of 0.015 (processing 1 hour of speech in under 55 seconds). Sequential VRAM management capped GPU allocation at 1.85 GB during Whisper transcription, dropping to zero VRAM during CPU-based MFA Kaldi processing. Host RAM remained strictly bounded below 45 MB across all stages.
+In end-to-end benchmark execution, the proposed hybrid pipeline achieves an alignment Real-Time Factor (RTF) of UNMEASURED / PENDING_EXPERIMENT. Sequential VRAM management caps GPU allocation at UNMEASURED / PENDING_EXPERIMENT during Whisper transcription, dropping to zero VRAM during CPU-based MFA Kaldi processing. Host RAM metrics remain UNMEASURED / PENDING_EXPERIMENT across all stages.
 
 ### 5.3 Non-Parametric Statistical Significance
 To verify that observed accuracy gains are not artifacts of sample variance, paired non-parametric statistical testing was conducted. Table 3 details the Paired Wilcoxon Signed-Rank Test and Cliff's Delta non-parametric effect size.
 
 \begin{table}[t]
 \centering
-\caption{Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size}
+\caption{Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size (Pending Real Empirical Data)}
 \label{tab:statistical_significance}
 \begin{tabular}{lcccc}
 \toprule
 Comparison Pair & Wilcoxon \(W\) & \(p\)-value & Cliff's \(\delta\) & Effect Size \\
 \midrule
-Proposed Hybrid vs. Whisper Large-v3 & 0.0 & $1.68 \times 10^{-12}$ & +1.00 & Large \\
-Proposed Hybrid vs. CTC Trellis & 8.0 & $2.42 \times 10^{-12}$ & +0.94 & Large \\
+Proposed Hybrid vs. Whisper Large-v3 & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+Proposed Hybrid vs. CTC Trellis & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The Wilcoxon signed-rank test confirmed that the proposed hybrid method demonstrates statistically significant superiority over baseline Whisper ($W = 0.0, p = 1.68 \times 10^{-12}$) and CTC Trellis ($W = 8.0, p = 2.42 \times 10^{-12}$). In both cases, Cliff's delta ($\delta \ge +0.94$) confirms an overwhelmingly large experimental effect size.
+The Wilcoxon signed-rank test confirmed that statistical comparisons between proposed hybrid and baselines are UNMEASURED / PENDING_EXPERIMENT (W = UNMEASURED / PENDING_EXPERIMENT, p = UNMEASURED / PENDING_EXPERIMENT, Cliff's delta = UNMEASURED / PENDING_EXPERIMENT).
 
 ---
 
 ## 6. Discussion of Results
 
 ### 6.1 Alignment with Psychoacoustic Standards and Cognitive Ergonomics
-The empirical confirmation of an 11.7 ms Word MAE and 12.9 ms Phone MAE directly answers **RQ1**. By achieving $\text{Acc}@20\text{ms} = 100.0\%$ on the TIMIT benchmark, the proposed architecture proves that automated synchronization can match the physical noise floor of human expert transcribers ($\sigma \approx 10\text{--}16$ ms, Raymond et al. [29]). Pushing for sub-10ms precision is statistically unwarranted, as manual phonetic labels themselves exhibit acoustic transition uncertainty.
+Empirical confirmation of Word MAE and Phone MAE remains UNMEASURED / PENDING_EXPERIMENT to answer **RQ1**. Target validity thresholds established in the literature ($\sigma \approx 10\text{--}16$ ms human inter-annotator disagreement ceiling, Raymond et al. [29]) will be tested upon real dataset execution.
 
-With respect to **RQ2**, achieving 100.0% boundary compliance within $\le 50$ ms satisfies the rigorous broadcast synchronization criteria established by ITU-R BT.1359-1 ($+45$ ms detectability boundary) [31] and EBU R37 ($+40$ ms audio lead limit) [32]. When deployed in educational video playback, the resulting WebVTT karaoke subtitles ensure that word highlights occur synchronously with acoustic release, completely eliminating the cognitive split-attention effect described by Sweller [13] and Mayer [14].
+With respect to **RQ2**, boundary compliance within $\le 50$ ms targets broadcast synchronization criteria established by ITU-R BT.1359-1 ($+45$ ms detectability boundary) [31] and EBU R37 ($+40$ ms audio lead limit) [32]. When deployed in educational video playback, the resulting WebVTT karaoke subtitles ensure that word highlights occur synchronously with acoustic release, completely eliminating the cognitive split-attention effect described by Sweller [13] and Mayer [14].
 
 ### 6.2 Comparison Between Classical GMM-HMM and Neural CTC Trellis
-The ablation study uncovers a crucial theoretical trade-off between GMM-HMM acoustic models and neural CTC models. While CTC Trellis (Mode A) provides seamless in-process PyTorch execution without external C++ compilation dependencies, its 20 ms convolutional stride bounds its boundary localization accuracy: only 12.1% of CTC boundaries achieved the sub-20ms threshold. In contrast, Montreal Forced Aligner (Mode B) models sub-phonemic states via continuous triphone Gaussian mixtures at a 10 ms hop rate, enabling true sub-20ms phonetic resolution. The workbench successfully resolves this dichotomy through its dual-engine facade: deploying MFA as the primary scientific benchmark while maintaining CTC Trellis as a robust zero-dependency offline fallback.
+The ablation study analyzes the theoretical trade-off between GMM-HMM acoustic models and neural CTC models. While CTC Trellis (Mode A) provides seamless in-process PyTorch execution without external C++ compilation dependencies, its 20 ms convolutional stride bounds its boundary localization accuracy (Acc@20ms: UNMEASURED / PENDING_EXPERIMENT). In contrast, Montreal Forced Aligner (Mode B) models sub-phonemic states via continuous triphone Gaussian mixtures at a 10 ms hop rate, enabling sub-20ms phonetic resolution. The workbench resolves this dichotomy through its dual-engine facade: deploying MFA as the primary scientific benchmark while maintaining CTC Trellis as a robust zero-dependency offline fallback.
 
 ### 6.3 Threats to Validity
 1. **Acoustic Reverberation and Microphone Distance:** TIMIT recordings were acquired in pristine acoustic booth environments with close-talking noise-canceling microphones. In real university lecture halls, acoustic room reverberation ($RT_{60} > 0.6$ s) and distant boundary microphones introduce spectral smearing. While Silero-VAD and banded DTW mitigate pause truncation, severe classroom reverberation represents an external boundary condition.
@@ -239,7 +244,7 @@ The ablation study uncovers a crucial theoretical trade-off between GMM-HMM acou
 
 This research developed, implemented, and empirically validated the **Local Subtitle Alignment Workbench**, an offline hierarchical synchronization system designed to eliminate long-form temporal drift and deliver millisecond-accurate educational subtitles on consumer workstation hardware. By orchestrating Faster-Whisper ASR, bounded banded DTW with contextual overlap padding, and Montreal Forced Aligner batch staging, the proposed architecture resolves the persistent trade-off between transcription fidelity and acoustic boundary sharpness.
 
-On the standardized DARPA/NIST TIMIT Core Test benchmark, the proposed method achieved a Word MAE of 11.7 ms and a Phone MAE of 12.9 ms, guaranteeing 100.0% boundary accuracy within both the 20 ms human phonetic noise ceiling and the 50 ms international broadcast imperceptibility envelope (ITU-R BT.1359-1). Non-parametric statistical testing confirmed significant superiority over baseline Whisper timestamps ($p = 1.68 \times 10^{-12}$, Cliff's $\delta = +1.00$) and neural CTC Trellis ($p = 2.42 \times 10^{-12}$, Cliff's $\delta = +0.94$). Operating with an RTF of 0.015 and a peak VRAM ceiling of 1.85 GB, the workbench runs entirely offline, eliminating cloud API costs and preserving student privacy. The system exports directly to W3C WCAG 2.1 Media Accessibility JSON-LD and WebVTT karaoke subtitles, providing an accessible foundation for automated lecture indexing in university LMS platforms.
+On standardized benchmark evaluation, target metrics for Word MAE, Phone MAE, Acc@20ms, Acc@50ms, and paired Wilcoxon hypothesis testing are UNMEASURED / PENDING_EXPERIMENT pending real speech corpus execution (see INCREMENT_6R). Operating with an RTF of UNMEASURED / PENDING_EXPERIMENT and peak VRAM of UNMEASURED / PENDING_EXPERIMENT, the workbench runs entirely offline, eliminating cloud API costs and preserving student privacy. The system exports directly to W3C WCAG 2.1 Media Accessibility JSON-LD and WebVTT karaoke subtitles, providing an accessible foundation for automated lecture indexing in university LMS platforms.
 
 ---
 

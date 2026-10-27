@@ -37,8 +37,12 @@ def set_cell_borders(cell, top=None, bottom=None, left=None, right=None):
 
 def compile_manuscript():
     repo_root = Path(__file__).resolve().parent.parent
-    md_path = repo_root / "docs" / "paper" / "ARTICLE_2_MANUSCRIPT_DRAFT.md"
-    docx_path = repo_root / "docs" / "paper" / "ARTICLE_2_MANUSCRIPT_AITU.docx"
+    md_path = repo_root / "docs" / "paper" / "archive" / "ARTICLE_2_MANUSCRIPT_DRAFT.md"
+    if not md_path.exists():
+        md_path = repo_root / "docs" / "paper" / "ARTICLE_2_MANUSCRIPT_DRAFT.md"
+    docx_path = repo_root / "docs" / "paper" / "archive" / "ARTICLE_2_MANUSCRIPT_AITU.docx"
+    if not docx_path.parent.exists():
+        docx_path = repo_root / "docs" / "paper" / "ARTICLE_2_MANUSCRIPT_AITU.docx"
 
     if not md_path.exists():
         raise FileNotFoundError(f"Markdown manuscript not found at {md_path}")

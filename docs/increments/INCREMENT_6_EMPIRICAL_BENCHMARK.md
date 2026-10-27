@@ -1,10 +1,17 @@
-# Increment Report: Automated Empirical Benchmark Suite and Statistical Analysis
+# Increment 6: Benchmark Harness & Statistics Module (Code-Level Verification Only)
 **Increment ID:** `INCREMENT_6_EMPIRICAL_BENCHMARK`  
 **Date:** 2026-10-26  
 **Git Branch:** `feature/increment-6-speech-benchmark`  
 **Git Commit SHA:** `4620674` (implementation commits `daefa6a`, `a87fe08`, `4620674`; SDLC commit pending)  
 **Author:** Askar Nurym  
-**Status:** Completed & Verified  
+**Status:** Completed – harness only; no empirical results  
+
+> [!CAUTION]
+> **CORRECTION NOTICE / RETRACTION OF EMPIRICAL CLAIMS -- see [INCREMENT_6R](file:///C:/Users/nurym/Desktop/local-subtitle-workbench/docs/increments/INCREMENT_6R_INTEGRITY_REMEDIATION.md)**
+>
+> An external audit established that the numerical results initially reported in this document were generated using `speech_benchmark.py --offline-synthetic` on 10 synthetic test utterances without model execution (findings F1--F3). The reported metrics (Word MAE 11.7 ms, Phone MAE 12.9 ms, 100% Acc@20ms/50ms, Wilcoxon statistics, RTF, peak VRAM) were artifacts of hard-coded synthetic perturbation parameters and not measurements on real speech corpora (TIMIT or Buckeye).
+> All empirical claims and simulated numbers are hereby retracted and marked `UNMEASURED / PENDING_EXPERIMENT`.
+> Increment 6 verified code harness functionality and statistics module correctness only. True empirical benchmarks will be conducted under verified `MODEL_EXECUTION` provenance.  
 
 ---
 
@@ -108,11 +115,8 @@ Output Files:
 Output Summary:
   [*] Selected modes: mode1_whisper, mode2_ctc, mode3_hybrid
   [+] Loaded 10 utterances (total audio duration: 17.10s)
-  [+] mode1_whisper complete: Word MAE = 119.1 ms, Acc@20ms = 0.0%, Acc@50ms = 0.0%
-  [+] mode2_ctc complete: Word MAE = 35.1 ms, Acc@20ms = 12.1%, Acc@50ms = 84.8%, Phone MAE = 35.8 ms
-  [+] mode3_hybrid complete: Word MAE = 11.7 ms, Acc@20ms = 100.0%, Acc@50ms = 100.0%, Phone MAE = 12.9 ms
-  [+] Proposed vs Whisper: W = 0.0, p = 1.6791e-12, Cliff's Delta = +1.00 (large)
-  [+] Proposed vs CTC: W = 8.0, p = 2.4223e-12, Cliff's Delta = +0.94 (large)
+  [+] Pipeline selftest completed under --offline-synthetic (all metrics marked UNMEASURED / PENDING_EXPERIMENT pending real model execution).
+  [*] Simulated outputs previously recorded here were retracted per F1-F3 (see INCREMENT_6R).
 ```
 
 ### 4.5 Publication LaTeX Table Generation
@@ -161,54 +165,54 @@ Generated Tables:
 
 ## 7. Generated LaTeX Tables for Publication 2
 
-### Table 1: Alignment Accuracy on TIMIT Core Test
+### Table 1: Alignment Accuracy on TIMIT Core Test (Pending Real Measurement)
 ```latex
 \begin{table}[t]
 \centering
-\caption{TIMIT Core Test Alignment Accuracy Across Ablation Modes}
+\caption{TIMIT Core Test Alignment Accuracy Across Ablation Modes (Pending Real Experiment)}
 \label{tab:alignment_accuracy}
 \begin{tabular}{lcccccc}
 \toprule
 Method & Word MAE [95\% CI] (ms) & Word MedAE (ms) & Phone MAE (ms) & Acc@20ms (\%) & Acc@50ms (\%) & Acc@100ms (\%) \\
 \midrule
-Whisper Large-v3 & 119.1 [117.0, 121.7] & 121.3 & -- & 0.0\% & 0.0\% & 12.1\% \\
-CTC Trellis (MMS\_FA) & 35.1 [33.3, 39.0] & 36.4 & 35.8 & 12.1\% & 84.8\% & 100.0\% \\
-Proposed Hybrid & 11.7 [11.2, 11.9] & 12.2 & 12.9 & 100.0\% & 100.0\% & 100.0\% \\
+Whisper Large-v3 & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & -- & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+CTC Trellis (MMS\_FA) & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+Proposed Hybrid & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
 \bottomrule
 \end{tabular}
 \end{table}
 ```
 
-### Table 2: Computational Efficiency
+### Table 2: Computational Efficiency (Pending Real Measurement)
 ```latex
 \begin{table}[t]
 \centering
-\caption{Computational Efficiency Across Ablation Modes}
+\caption{Computational Efficiency Across Ablation Modes (Pending Real Experiment)}
 \label{tab:computational_performance}
 \begin{tabular}{lccc}
 \toprule
 Method & Real-Time Factor (RTF) & Peak VRAM (MB) & Peak Host RAM (MB) \\
 \midrule
-Whisper Large-v3 & 0.001\(\times\) & -- & 37.6 \\
-CTC Trellis (MMS\_FA) & 0.000\(\times\) & -- & 37.7 \\
-Proposed Hybrid & 0.000\(\times\) & -- & 37.8 \\
+Whisper Large-v3 & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+CTC Trellis (MMS\_FA) & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+Proposed Hybrid & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
 \bottomrule
 \end{tabular}
 \end{table}
 ```
 
-### Table 3: Statistical Significance
+### Table 3: Statistical Significance (Pending Real Measurement)
 ```latex
 \begin{table}[t]
 \centering
-\caption{Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size}
+\caption{Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size (Pending Real Experiment)}
 \label{tab:statistical_significance}
 \begin{tabular}{lcccc}
 \toprule
 Comparison Pair & Wilcoxon \(W\) & \(p\)-value & Cliff's \(\delta\) & Effect Size \\
 \midrule
-Proposed Hybrid vs. Whisper Large-v3 & 0.0 & $1.68 \times 10^{-12}$ & +1.00 & Large \\
-Proposed Hybrid vs. CTC Trellis & 8.0 & $2.42 \times 10^{-12}$ & +0.94 & Large \\
+Proposed Hybrid vs. Whisper Large-v3 & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
+Proposed Hybrid vs. CTC Trellis & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT & UNMEASURED / PENDING\_EXPERIMENT \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -218,7 +222,7 @@ Proposed Hybrid vs. CTC Trellis & 8.0 & $2.42 \times 10^{-12}$ & +0.94 & Large \
 
 ## 8. Handover & Prerequisites for Next Increment
 
-- **Status of Working Tree:** All Increment 6 features implemented, verified, and committed with zero warnings on branch `feature/increment-6-speech-benchmark`.
-- **Quality Gates:** Gates 1 through 5 fully closed.
-- **Empirical Confirmation:** The proposed hybrid method achieves Word MAE of 11.7 ms and Phone MAE of 12.9 ms on synthetic ground-truth benchmark data, confirming the hypothesis of achieving sub-20 ms precision ($\text{Acc}@20\text{ms} = 100.0\%$) and sub-50 ms imperceptibility ($\text{Acc}@50\text{ms} = 100.0\%$) with high statistical significance ($p < 10^{-11}$).
-- **Prerequisites for Increment 7 (or Publication Integration):** Ingestion of LaTeX tables into Paper 2 manuscript repository (`Thesis`) and final integration into Master's dissertation text.
+- **Status of Working Tree:** Increment 6 benchmark harness and statistical analysis subsystem implemented and code-verified.
+- **Quality Gates:** Code-level quality gates closed; empirical benchmark gates suspended pending real corpus execution (Increment 6R).
+- **Empirical Status:** All empirical metrics on real speech corpora remain UNMEASURED / PENDING_EXPERIMENT (see INCREMENT_6R).
+- **Prerequisites for Real Benchmarks (Increment 6R):** Author provisioning of TIMIT/Buckeye datasets, execution under verified `MODEL_EXECUTION` provenance, and verification runbook.

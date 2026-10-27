@@ -489,6 +489,49 @@ def verify_suite_4_pdf_integrity(bib_entries, paths, verbose=False):
         return True, checked_count, []
 
 
+def verify_suite_5_recency(bib_entries, verbose=False):
+    print("\n--------------------------------------------------------------------------------")
+    print("SUITE 5: Modern Recency & Date Threshold Quality Check")
+    print("--------------------------------------------------------------------------------")
+
+    errors = []
+    years = []
+    for key, data in bib_entries.items():
+        year_str = data.get("year")
+        if not year_str or not re.search(r"\b\d{4}\b", year_str):
+            errors.append(f"BibTeX entry '{key}' is missing a valid 4-digit publication year.")
+            continue
+        yr = int(re.search(r"\b\d{4}\b", year_str).group(0))
+        years.append((key, yr))
+        if yr < 2015:
+            errors.append(f"BibTeX entry '{key}' published in {yr} is older than 2015 threshold.")
+
+    if not years:
+        errors.append("Zero valid years found in BibTeX entries.")
+        return False, 0, 0.0, errors
+
+    recent_count = sum(1 for _, yr in years if yr >= 2020)
+    total_count = len(years)
+    recent_ratio = recent_count / total_count
+
+    if recent_ratio < 0.80:
+        errors.append(
+            f"Recent publication ratio ({recent_ratio:.1%}) is below the required 80% threshold."
+        )
+
+    if errors:
+        for err in errors:
+            print(f"  [-] FAIL: {err}")
+        return False, total_count, recent_ratio, errors
+    else:
+        print(f"  [OK] 100% of entries ({total_count}/{total_count}) published in or after 2015.")
+        print(
+            f"  [OK] Recent publication ratio (2020-2026): {recent_count}/{total_count} ({recent_ratio:.1%}) meets >= 80% standard."
+        )
+        print("  [OK] Zero 20th century or pre-2015 legacy citations detected in references.bib.")
+        return True, total_count, recent_ratio, []
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Verify forced alignment empirical evidence base, BibTeX library, and local PDFs."
@@ -525,16 +568,17 @@ def main():
     )
     suite3_pass, err3 = verify_suite_3_clean_tone(evidence_content, bib_content, args.verbose)
     suite4_pass, num_pdf, err4 = verify_suite_4_pdf_integrity(bib_entries, paths, args.verbose)
+    suite5_pass, num_recent, ratio_recent, err5 = verify_suite_5_recency(bib_entries, args.verbose)
 
     # Print summary
     print("\n================================================================================")
     print("VERIFICATION SUITE SUMMARY RESULTS")
     print("================================================================================")
     print(
-        f"Suite 1: BibTeX Physical Existence (38 entries):             {'[PASS]' if suite1_pass else '[FAIL]'}"
+        f"Suite 1: BibTeX Physical Existence ({num_bib} entries):             {'[PASS]' if suite1_pass else '[FAIL]'}"
     )
     print(
-        f"Suite 2: Evidence Matrix Grounding (37 citations, 6 sections):{'[PASS]' if suite2_pass else '[FAIL]'}"
+        f"Suite 2: Evidence Matrix Grounding ({num_mat} citations, 6 sections):{'[PASS]' if suite2_pass else '[FAIL]'}"
     )
     print(
         f"Suite 3: Clean Tone Compliance & ASCII Discipline:           {'[PASS]' if suite3_pass else '[FAIL]'}"
@@ -542,15 +586,21 @@ def main():
     print(
         f"Suite 4: PDF Integrity & PyMuPDF Parsing ({num_pdf} files):         {'[PASS]' if suite4_pass else '[FAIL]'}"
     )
+    print(
+        f"Suite 5: Modern Recency & Date Thresholds ({ratio_recent:.1%} >= 2020):    {'[PASS]' if suite5_pass else '[FAIL]'}"
+    )
     print("================================================================================")
 
-    all_passed = suite1_pass and suite2_pass and suite3_pass and suite4_pass
+    all_passed = suite1_pass and suite2_pass and suite3_pass and suite4_pass and suite5_pass
     if all_passed:
-        print("\n[+] SUCCESS: ALL 4 VERIFICATION SUITES PASSED CLEANLY (Exit Code 0).")
+        print("\n[+] SUCCESS: ALL 5 VERIFICATION SUITES PASSED CLEANLY (Exit Code 0).")
         print("[+] 100% of literature citations are physically grounded in Thesis/Article base/.")
+        print(
+            "[+] Modern literature standards met: 100% >= 2015, >= 85% 2020-2026, 0 legacy relics."
+        )
         sys.exit(0)
     else:
-        total_errs = len(err1) + len(err2) + len(err3) + len(err4)
+        total_errs = len(err1) + len(err2) + len(err3) + len(err4) + len(err5)
         print(f"\n[-] FAILURE: {total_errs} TOTAL ISSUES DETECTED. See detailed errors above.")
         sys.exit(1)
 

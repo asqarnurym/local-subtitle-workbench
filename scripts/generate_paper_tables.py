@@ -31,6 +31,8 @@ COMPARISON_DISPLAY_NAMES: dict[str, str] = {
     "mode3_vs_mode1": "Proposed Hybrid vs. Whisper Large-v3",
     "proposed_vs_ctc": "Proposed Hybrid vs. CTC Trellis",
     "mode3_vs_mode2": "Proposed Hybrid vs. CTC Trellis",
+    "ctc_vs_whisper": "CTC Trellis vs. Whisper Large-v3",
+    "mode2_vs_mode1": "CTC Trellis vs. Whisper Large-v3",
 }
 
 PREFERRED_MODE_ORDER: list[str] = [

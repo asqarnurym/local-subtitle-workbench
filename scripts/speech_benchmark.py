@@ -839,9 +839,9 @@ def run_benchmark(
 
         # Statistical hypothesis testing (paired Wilcoxon & Cliff's Delta on utterance-level MAEs with Holm correction)
         stat_significance: dict[str, Any] = {}
+        candidate_pairs: list[tuple[str, list[float], list[float]]] = []
         if "mode3_hybrid" in mode_utt_word_maes:
             m3_errs = mode_utt_word_maes["mode3_hybrid"]
-            candidate_pairs: list[tuple[str, list[float], list[float]]] = []
             if "mode1_whisper" in mode_utt_word_maes:
                 candidate_pairs.append(
                     ("proposed_vs_whisper", mode_utt_word_maes["mode1_whisper"], m3_errs)
@@ -850,44 +850,54 @@ def run_benchmark(
                 candidate_pairs.append(
                     ("proposed_vs_ctc", mode_utt_word_maes["mode2_ctc"], m3_errs)
                 )
+        elif "mode1_whisper" in mode_utt_word_maes and "mode2_ctc" in mode_utt_word_maes:
+            candidate_pairs.append(
+                (
+                    "ctc_vs_whisper",
+                    mode_utt_word_maes["mode1_whisper"],
+                    mode_utt_word_maes["mode2_ctc"],
+                )
+            )
 
-            executed_tests: list[tuple[str, Any]] = []
-            for pair_key, baseline_errs, proposed_errs in candidate_pairs:
-                if len(baseline_errs) == len(proposed_errs) and len(proposed_errs) > 0:
-                    w_res = paired_wilcoxon_test(baseline_errs, proposed_errs)
-                    executed_tests.append((pair_key, w_res))
+        executed_tests: list[tuple[str, Any]] = []
+        for pair_key, baseline_errs, proposed_errs in candidate_pairs:
+            if len(baseline_errs) == len(proposed_errs) and len(proposed_errs) > 0:
+                w_res = paired_wilcoxon_test(baseline_errs, proposed_errs)
+                executed_tests.append((pair_key, w_res))
 
-            if executed_tests:
-                raw_p_values = [res.p_value for _, res in executed_tests]
-                adj_p_values = bonferroni_holm_adjustment(raw_p_values)
-                n_spk = len(set(u.speaker_id for u in utterances))
-                for (pair_key, w_res), p_adj in zip(executed_tests, adj_p_values, strict=True):
-                    stat_significance[pair_key] = {
-                        "metric": "word_mae",
-                        "aggregation": "utterance_mean",
-                        "n_utterances": len(m3_errs),
-                        "n_speakers": n_spk,
-                        "wilcoxon_w": round(w_res.statistic, 2),
-                        "p_value_raw": float(w_res.p_value),
-                        "p_value_holm": float(p_adj),
-                        "p_value": float(p_adj),
-                        "cliffs_delta": round(w_res.cliffs_delta, 4),
-                        "effect_size": w_res.effect_size,
-                        "significant_0_05": bool(p_adj < 0.05),
-                        "significant_0_001": bool(p_adj < 0.001),
-                    }
-                    disp_name = (
-                        "Proposed vs Whisper"
-                        if pair_key == "proposed_vs_whisper"
-                        else "Proposed vs CTC"
-                        if pair_key == "proposed_vs_ctc"
-                        else pair_key.replace("_vs_", " vs ").title()
-                    )
-                    print(
-                        f"[+] {disp_name}: W = {w_res.statistic:.1f}, "
-                        f"p_raw = {w_res.p_value:.4e}, p_holm = {p_adj:.4e}, "
-                        f"Cliff's Delta = {w_res.cliffs_delta:+.2f} ({w_res.effect_size})"
-                    )
+        if executed_tests:
+            raw_p_values = [res.p_value for _, res in executed_tests]
+            adj_p_values = bonferroni_holm_adjustment(raw_p_values)
+            n_spk = len(set(u.speaker_id for u in utterances))
+            for (pair_key, w_res), p_adj in zip(executed_tests, adj_p_values, strict=True):
+                stat_significance[pair_key] = {
+                    "metric": "word_mae",
+                    "aggregation": "utterance_mean",
+                    "n_utterances": len(utterances),
+                    "n_speakers": n_spk,
+                    "wilcoxon_w": round(w_res.statistic, 2),
+                    "p_value_raw": float(w_res.p_value),
+                    "p_value_holm": float(p_adj),
+                    "p_value": float(p_adj),
+                    "cliffs_delta": round(w_res.cliffs_delta, 4),
+                    "effect_size": w_res.effect_size,
+                    "significant_0_05": bool(p_adj < 0.05),
+                    "significant_0_001": bool(p_adj < 0.001),
+                }
+                disp_name = (
+                    "Proposed vs Whisper"
+                    if pair_key == "proposed_vs_whisper"
+                    else "Proposed vs CTC"
+                    if pair_key == "proposed_vs_ctc"
+                    else "CTC vs Whisper"
+                    if pair_key == "ctc_vs_whisper"
+                    else pair_key.replace("_vs_", " vs ").title()
+                )
+                print(
+                    f"[+] {disp_name}: W = {w_res.statistic:.1f}, "
+                    f"p_raw = {w_res.p_value:.4e}, p_holm = {p_adj:.4e}, "
+                    f"Cliff's Delta = {w_res.cliffs_delta:+.2f} ({w_res.effect_size})"
+                )
 
         hardware_profile = get_hardware_info()
         now_utc = datetime.datetime.now(datetime.UTC).isoformat()

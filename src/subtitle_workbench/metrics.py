@@ -447,3 +447,43 @@ def paired_wilcoxon_test(
         n_pairs=n_pairs,
         n_non_zero=n_r,
     )
+
+
+def bonferroni_holm_adjustment(p_values: Sequence[float]) -> list[float]:
+    """Apply the Bonferroni-Holm (Holm 1979) step-down multiple comparison adjustment.
+
+    Controls the Family-Wise Error Rate (FWER) under arbitrary dependence.
+    Given m hypothesis tests with unadjusted p-values:
+    1. Sort p-values in ascending order: p_(1) <= p_(2) <= ... <= p_(m).
+    2. Adjusted p-values: p'_(i) = min(1.0, max(p'_(i-1), (m - i + 1) * p_(i))),
+       with p'_(1) = min(1.0, m * p_(1)).
+    3. Restore original input ordering.
+    """
+    m = len(p_values)
+    if m == 0:
+        return []
+
+    # Validate inputs
+    for idx, p in enumerate(p_values):
+        val = finite_number(p, f"p_values[{idx}]")
+        if not (0.0 <= val <= 1.0):
+            raise ValueError(f"p_value at index {idx} must be between 0.0 and 1.0, got {p}")
+
+    # Indexed sort
+    sorted_indices = sorted(range(m), key=lambda i: p_values[i])
+    adjusted_sorted = [0.0] * m
+
+    running_max = 0.0
+    for rank_idx, orig_idx in enumerate(sorted_indices):
+        # rank_idx is 0-based, multiplier is (m - rank_idx)
+        mult = m - rank_idx
+        adj_val = min(1.0, mult * float(p_values[orig_idx]))
+        running_max = max(running_max, adj_val)
+        adjusted_sorted[rank_idx] = running_max
+
+    # Restore original ordering
+    result = [0.0] * m
+    for rank_idx, orig_idx in enumerate(sorted_indices):
+        result[orig_idx] = adjusted_sorted[rank_idx]
+
+    return result

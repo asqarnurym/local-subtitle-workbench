@@ -644,8 +644,8 @@ def test_speech_benchmark_hardware_profiling() -> None:
 
 
 def test_speech_benchmark_simulation_profiles() -> None:
-    """Verify simulate_predictions reproduces empirical ablation shifts."""
-    from scripts.speech_benchmark import simulate_predictions
+    """Verify simulate_predictions_for_pipeline_selftest generates shifts for pipeline testing."""
+    from scripts.speech_benchmark import simulate_predictions_for_pipeline_selftest
 
     rng = np.random.default_rng(42)
     ref_phones = [
@@ -665,14 +665,18 @@ def test_speech_benchmark_simulation_profiles() -> None:
     ]
 
     # Mode 1: ~120 ms shift, words only
-    m1_words, m1_phones = simulate_predictions(ref_words, ref_phones, "mode1_whisper", rng)
+    m1_words, m1_phones = simulate_predictions_for_pipeline_selftest(
+        ref_words, ref_phones, "mode1_whisper", rng
+    )
     assert len(m1_words) == 1
     assert m1_phones is None
     assert 0.16 <= m1_words[0].start <= 0.35
     assert m1_words[0].start < m1_words[0].end
 
     # Mode 2: ~35 ms shift, words and phones
-    m2_words, m2_phones = simulate_predictions(ref_words, ref_phones, "mode2_ctc", rng)
+    m2_words, m2_phones = simulate_predictions_for_pipeline_selftest(
+        ref_words, ref_phones, "mode2_ctc", rng
+    )
     assert len(m2_words) == 1
     assert m2_phones is not None
     assert len(m2_phones) == 2
@@ -680,7 +684,9 @@ def test_speech_benchmark_simulation_profiles() -> None:
     assert m2_words[0].start < m2_words[0].end
 
     # Mode 3: ~12 ms shift, words and phones
-    m3_words, m3_phones = simulate_predictions(ref_words, ref_phones, "mode3_hybrid", rng)
+    m3_words, m3_phones = simulate_predictions_for_pipeline_selftest(
+        ref_words, ref_phones, "mode3_hybrid", rng
+    )
     assert len(m3_words) == 1
     assert m3_phones is not None
     assert len(m3_phones) == 2
@@ -689,7 +695,7 @@ def test_speech_benchmark_simulation_profiles() -> None:
 
     # Unsupported mode
     with pytest.raises(BenchmarkError, match="Unsupported ablation mode"):
-        simulate_predictions(ref_words, ref_phones, "invalid_mode", rng)
+        simulate_predictions_for_pipeline_selftest(ref_words, ref_phones, "invalid_mode", rng)
 
 
 def test_speech_benchmark_programmatic_offline_synthetic(tmp_path: Path) -> None:
@@ -707,7 +713,12 @@ def test_speech_benchmark_programmatic_offline_synthetic(tmp_path: Path) -> None
 
     assert res["schema_version"] == 1
     assert res["offline_synthetic"] is True
+    assert res["corpus"] == "synthetic"
+    assert res["data_provenance"] == "SIMULATED_PREDICTIONS"
+    assert "Predictions are simulated" in res["warning"]
     assert res["utterance_count"] == 10
+    assert res["n_utterances"] == 10
+    assert res["n_speakers"] == 3
     assert res["total_audio_duration_seconds"] > 0.0
 
     modes = res["modes"]
@@ -739,26 +750,39 @@ def test_speech_benchmark_programmatic_offline_synthetic(tmp_path: Path) -> None
     assert m3["phone_metrics"]["acc_20ms"] > m2["phone_metrics"]["acc_20ms"]
     assert m3["phone_metrics"]["mae_ms"] < 20.0
 
-    # Invariant: Resource profiling
+    # Invariant: Resource profiling in simulated mode is nullified
     for m in (m1, m2, m3):
-        assert m["performance"]["rtf"] >= 0.0
-        assert m["performance"]["peak_ram_mb"] > 0.0
-        assert m["performance"]["peak_vram_mb"] >= 0.0
+        assert m["performance"]["rtf"] is None
+        assert m["performance"]["peak_ram_mb"] is None
+        assert m["performance"]["peak_vram_mb"] is None
         assert m["performance"]["elapsed_seconds"] >= 0.0
+        assert "simulated mode" in m["performance"]["note"]
 
-    # Invariant: Paired Wilcoxon hypothesis tests
+    # Invariant: Paired Wilcoxon hypothesis tests on utterance-level MAEs with Holm correction
     sig = res["statistical_significance"]
     assert "proposed_vs_whisper" in sig
     assert "proposed_vs_ctc" in sig
 
     w_whisper = sig["proposed_vs_whisper"]
+    assert w_whisper["metric"] == "word_mae"
+    assert w_whisper["aggregation"] == "utterance_mean"
+    assert w_whisper["n_utterances"] == 10
+    assert w_whisper["n_speakers"] == 3
     assert w_whisper["p_value"] < 0.05
+    assert w_whisper["p_value_holm"] < 0.05
+    assert "p_value_raw" in w_whisper
     assert w_whisper["effect_size"] == "large"
     assert w_whisper["cliffs_delta"] > 0.8
     assert w_whisper["significant_0_05"] is True
 
     w_ctc = sig["proposed_vs_ctc"]
+    assert w_ctc["metric"] == "word_mae"
+    assert w_ctc["aggregation"] == "utterance_mean"
+    assert w_ctc["n_utterances"] == 10
+    assert w_ctc["n_speakers"] == 3
     assert w_ctc["p_value"] < 0.05
+    assert w_ctc["p_value_holm"] < 0.05
+    assert "p_value_raw" in w_ctc
     assert w_ctc["effect_size"] == "large"
     assert w_ctc["cliffs_delta"] > 0.8
     assert w_ctc["significant_0_05"] is True
@@ -1117,7 +1141,8 @@ def sample_benchmark_payload() -> dict[str, Any]:
     return {
         "schema_version": 1,
         "corpus": "timit",
-        "offline_synthetic": True,
+        "data_provenance": "MODEL_EXECUTION",
+        "offline_synthetic": False,
         "seed": 42,
         "bootstrap_resamples": 2000,
         "utterance_count": 10,
@@ -1358,14 +1383,20 @@ def test_generate_statistical_significance_table_mock_data(
 
 
 def test_generate_all_tables_from_json_file(tmp_path: Path) -> None:
-    """Verify generate_all_tables produces all 3 .tex files from benchmark_results.json."""
+    """Verify generate_all_tables enforces provenance guard and --allow-simulated."""
     from scripts.generate_paper_tables import generate_all_tables
 
     input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
     assert input_file.is_file(), f"Expected test artifact {input_file} to exist"
 
     out_dir = tmp_path / "paper_tables"
-    result_paths = generate_all_tables(input_file, out_dir)
+
+    # Must refuse without allow_simulated=True on simulated data
+    with pytest.raises(ValueError, match="Refusing to generate publication tables"):
+        generate_all_tables(input_file, out_dir, allow_simulated=False)
+
+    # Must succeed with allow_simulated=True
+    result_paths = generate_all_tables(input_file, out_dir, allow_simulated=True)
 
     assert set(result_paths.keys()) == {
         "alignment_accuracy",
@@ -1388,16 +1419,18 @@ def test_generate_all_tables_from_json_file(tmp_path: Path) -> None:
         assert r"\bottomrule" in content
         assert r"\end{tabular}" in content
         assert r"\end{table}" in content
+        assert "SIMULATED SELF-TEST" in content
         # Zero unescaped percent signs
         assert re.search(r"(?<!\\)%", content) is None
 
 
 def test_generate_paper_tables_cli_execution(tmp_path: Path) -> None:
-    """Verify scripts/generate_paper_tables.py CLI generates 3 tables and pure ASCII output."""
+    """Verify scripts/generate_paper_tables.py CLI refuses simulated data without flag."""
     input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
     out_dir = tmp_path / "cli_tables"
 
-    cmd = [
+    # Without --allow-simulated: exits 1 with refusal error
+    cmd_refuse = [
         sys.executable,
         "scripts/generate_paper_tables.py",
         "--input",
@@ -1405,10 +1438,24 @@ def test_generate_paper_tables_cli_execution(tmp_path: Path) -> None:
         "--output-dir",
         str(out_dir),
     ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    proc_refuse = subprocess.run(cmd_refuse, capture_output=True, text=True)
+    assert proc_refuse.returncode == 1
+    assert "Refusing to generate publication tables" in proc_refuse.stderr
 
-    assert proc.returncode == 0
-    stdout = proc.stdout
+    # With --allow-simulated: succeeds with code 0
+    cmd_allow = [
+        sys.executable,
+        "scripts/generate_paper_tables.py",
+        "--input",
+        str(input_file),
+        "--output-dir",
+        str(out_dir),
+        "--allow-simulated",
+    ]
+    proc_allow = subprocess.run(cmd_allow, capture_output=True, text=True, check=True)
+
+    assert proc_allow.returncode == 0
+    stdout = proc_allow.stdout
     assert "[+] Generated alignment_accuracy table" in stdout
     assert "[+] Generated computational_performance table" in stdout
     assert "[+] Generated statistical_significance table" in stdout
@@ -1416,11 +1463,14 @@ def test_generate_paper_tables_cli_execution(tmp_path: Path) -> None:
 
     # Zero-Emoji discipline: pure ASCII on stdout and stderr
     assert all(ord(c) < 128 for c in stdout)
-    assert all(ord(c) < 128 for c in proc.stderr)
+    assert all(ord(c) < 128 for c in proc_allow.stderr)
 
     assert (out_dir / "table_alignment_accuracy.tex").is_file()
     assert (out_dir / "table_computational_performance.tex").is_file()
     assert (out_dir / "table_statistical_significance.tex").is_file()
+    assert "SIMULATED SELF-TEST" in (out_dir / "table_alignment_accuracy.tex").read_text(
+        encoding="utf-8"
+    )
 
 
 def test_generate_paper_tables_cli_arg_error(tmp_path: Path) -> None:
@@ -1477,17 +1527,21 @@ def test_generate_paper_tables_missing_required_keys() -> None:
         generate_statistical_significance_table,
     )
 
-    with pytest.raises(ValueError, match="missing 'modes'"):
-        generate_alignment_accuracy_table({})
+    valid_prov = {"data_provenance": "MODEL_EXECUTION", "offline_synthetic": False}
 
     with pytest.raises(ValueError, match="missing 'modes'"):
-        generate_computational_performance_table({})
+        generate_alignment_accuracy_table(valid_prov)
+
+    with pytest.raises(ValueError, match="missing 'modes'"):
+        generate_computational_performance_table(valid_prov)
 
     with pytest.raises(ValueError, match="missing 'statistical_tests'"):
-        generate_statistical_significance_table({"modes": {}})
+        generate_statistical_significance_table({**valid_prov, "modes": {}})
 
     with pytest.raises(ValueError, match="Unsupported table format"):
-        generate_alignment_accuracy_table({"modes": {"m1": {}}}, table_format="markdown")
+        generate_alignment_accuracy_table(
+            {**valid_prov, "modes": {"m1": {}}}, table_format="markdown"
+        )
 
 
 def test_generate_paper_tables_buckeye_corpus_caption(
@@ -1500,6 +1554,49 @@ def test_generate_paper_tables_buckeye_corpus_caption(
     payload["corpus"] = "buckeye"
     tex = generate_alignment_accuracy_table(payload)
     assert r"\caption{Buckeye Speech Corpus Alignment Accuracy Across Ablation Modes}" in tex
+
+
+def test_generate_paper_tables_synthetic_corpus_caption(
+    sample_benchmark_payload: dict[str, Any],
+) -> None:
+    """Verify caption updates cleanly when corpus is synthetic."""
+    from scripts.generate_paper_tables import generate_alignment_accuracy_table
+
+    payload = dict(sample_benchmark_payload)
+    payload["corpus"] = "synthetic"
+    tex = generate_alignment_accuracy_table(payload)
+    assert r"\caption{Synthetic Benchmark Alignment Accuracy Across Ablation Modes}" in tex
+
+
+def test_bonferroni_holm_adjustment_properties() -> None:
+    """Verify Bonferroni-Holm step-down adjustments match theoretical bounds."""
+    from subtitle_workbench.metrics import bonferroni_holm_adjustment
+
+    # Empty
+    assert bonferroni_holm_adjustment([]) == []
+
+    # Single p-value
+    assert bonferroni_holm_adjustment([0.04]) == [0.04]
+
+    # Two p-values: [0.02, 0.04] -> rank1 = min(1, 2 * 0.02) = 0.04; rank2 = min(1, max(0.04, 1 * 0.04)) = 0.04
+    adj = bonferroni_holm_adjustment([0.02, 0.04])
+    assert math.isclose(adj[0], 0.04, abs_tol=1e-7)
+    assert math.isclose(adj[1], 0.04, abs_tol=1e-7)
+
+    # Order preservation: larger p-value first
+    adj_rev = bonferroni_holm_adjustment([0.04, 0.02])
+    assert math.isclose(adj_rev[0], 0.04, abs_tol=1e-7)
+    assert math.isclose(adj_rev[1], 0.04, abs_tol=1e-7)
+
+    # Extreme values clamp at 1.0
+    adj_large = bonferroni_holm_adjustment([0.6, 0.8])
+    assert adj_large == [1.0, 1.0]
+
+    # Invalid input validation
+    with pytest.raises(ValueError, match="between 0.0 and 1.0"):
+        bonferroni_holm_adjustment([-0.1, 0.5])
+    with pytest.raises(ValueError, match="between 0.0 and 1.0"):
+        bonferroni_holm_adjustment([0.1, 1.5])
 
 
 def test_generate_paper_tables_escape_latex_edge_cases() -> None:
@@ -1521,6 +1618,8 @@ def test_generate_paper_tables_alternative_schema_keys() -> None:
     )
 
     alt_payload = {
+        "data_provenance": "MODEL_EXECUTION",
+        "offline_synthetic": False,
         "modes": {
             "mode1_whisper": {
                 "description": "Whisper Baseline",
@@ -1563,8 +1662,20 @@ def test_generate_paper_tables_programmatic_main_dispatch(tmp_path: Path) -> Non
     input_file = PROJECT_ROOT / "dist" / "benchmark_demo" / "benchmark_results.json"
     out_dir = tmp_path / "main_dispatch"
 
-    # Exit code 0 on valid run
-    code0 = main(["--input", str(input_file), "--output-dir", str(out_dir)])
+    # Exit code 1 when attempting to generate tables on simulated input without --allow-simulated
+    code_refuse = main(["--input", str(input_file), "--output-dir", str(out_dir)])
+    assert code_refuse == 1
+
+    # Exit code 0 on valid run with --allow-simulated
+    code0 = main(
+        [
+            "--input",
+            str(input_file),
+            "--output-dir",
+            str(out_dir),
+            "--allow-simulated",
+        ]
+    )
     assert code0 == 0
 
     # Exit code 1 on missing file

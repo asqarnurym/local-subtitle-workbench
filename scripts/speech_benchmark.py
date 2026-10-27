@@ -33,6 +33,7 @@ from subtitle_workbench.corpora import (
 from subtitle_workbench.metrics import (
     BOUNDARY_EPSILON_MS,
     BenchmarkError,
+    bonferroni_holm_adjustment,
     clustered_bootstrap_ci,
     evaluate_alignment_boundaries,
     paired_wilcoxon_test,
@@ -212,21 +213,21 @@ def get_audio_duration_seconds(wav_path: Path | str) -> float:
 
 
 # ---------------------------------------------------------------------------
-# Offline Empirical Simulation
+# Offline Pipeline Self-Test Simulation
 # ---------------------------------------------------------------------------
 
 
-def simulate_predictions(
+def simulate_predictions_for_pipeline_selftest(
     ref_words: list[WordToken],
     ref_phones: list[PhonemeCue],
     mode: str,
     rng: np.random.Generator,
 ) -> tuple[list[WordToken], list[PhonemeCue] | None]:
-    """Generate realistic empirical predictions for offline synthetic evaluation.
+    """Generate synthetic perturbations exclusively for pipeline self-testing.
 
-    - Mode 1: ~120 ms shift (cross-attention timestamp dispersion). Words only (phone_metrics=None).
-    - Mode 2: ~35 ms shift (CTC frame quantization). Words and phones.
-    - Mode 3: ~12 ms shift (sub-20ms MFA triphone precision). Words and phones.
+    CAUTION: This function does NOT model any real ASR or alignment system.
+    Its outputs reflect only hard-coded random distributions and must NOT
+    be cited or reported as empirical results.
     """
     if mode == "mode1_whisper":
         pred_words: list[WordToken] = []
@@ -575,6 +576,8 @@ def run_benchmark(
                 synth_path = stage_synthetic_benchmark(temp_dir_obj.name)
             utterances = load_synthetic_utterances(synth_path)
             is_offline = bool(offline_synthetic)
+            if is_offline:
+                corpus = "synthetic"
         else:
             is_offline = False
             resolved_dir = Path(data_dir) if data_dir else Path(f"data/corpora/{corpus}")
@@ -607,6 +610,7 @@ def run_benchmark(
 
         modes_output: dict[str, Any] = {}
         mode_word_errors_map: dict[str, list[float]] = {}
+        mode_utt_word_maes: dict[str, list[float]] = {m: [] for m in selected_modes}
 
         for mode_id in selected_modes:
             mode_display_name = MODE_NAMES.get(mode_id, mode_id)
@@ -626,7 +630,7 @@ def run_benchmark(
 
             for utt in utterances:
                 if is_offline:
-                    pred_words, pred_phones = simulate_predictions(
+                    pred_words, pred_phones = simulate_predictions_for_pipeline_selftest(
                         utt.ref_words, utt.ref_phones, mode_id, rng
                     )
                 else:
@@ -683,19 +687,26 @@ def run_benchmark(
 
                 # Evaluate word boundaries
                 if pred_words and utt.ref_words:
-                    w_eval = evaluate_alignment_boundaries(pred_words, utt.ref_words)
-                    all_word_errors.extend(w_eval.boundary_errors_ms)
-                    all_word_clusters.extend([utt.speaker_id] * len(w_eval.boundary_errors_ms))
-                    matched_words_count += w_eval.num_matched
-                    unmatched_words_count += w_eval.num_unmatched
+                    try:
+                        w_eval = evaluate_alignment_boundaries(pred_words, utt.ref_words)
+                        all_word_errors.extend(w_eval.boundary_errors_ms)
+                        all_word_clusters.extend([utt.speaker_id] * len(w_eval.boundary_errors_ms))
+                        matched_words_count += w_eval.num_matched
+                        unmatched_words_count += w_eval.num_unmatched
+                        mode_utt_word_maes[mode_id].append(float(w_eval.mae))
+                    except BenchmarkError:
+                        pass
 
                 # Evaluate phone boundaries
                 if pred_phones and utt.ref_phones:
-                    p_eval = evaluate_alignment_boundaries(pred_phones, utt.ref_phones)
-                    all_phone_errors.extend(p_eval.boundary_errors_ms)
-                    all_phone_clusters.extend([utt.speaker_id] * len(p_eval.boundary_errors_ms))
-                    matched_phones_count += p_eval.num_matched
-                    unmatched_phones_count += p_eval.num_unmatched
+                    try:
+                        p_eval = evaluate_alignment_boundaries(pred_phones, utt.ref_phones)
+                        all_phone_errors.extend(p_eval.boundary_errors_ms)
+                        all_phone_clusters.extend([utt.speaker_id] * len(p_eval.boundary_errors_ms))
+                        matched_phones_count += p_eval.num_matched
+                        unmatched_phones_count += p_eval.num_unmatched
+                    except BenchmarkError:
+                        pass
 
             t1 = time.perf_counter()
             elapsed_sec = round(t1 - t0, 4)
@@ -780,16 +791,27 @@ def run_benchmark(
             else:
                 phone_metrics_entry = None
 
-            modes_output[mode_id] = {
-                "name": mode_display_name,
-                "word_metrics": word_metrics_entry,
-                "phone_metrics": phone_metrics_entry,
-                "performance": {
+            if is_offline:
+                perf_dict: dict[str, Any] = {
+                    "rtf": None,
+                    "peak_vram_mb": None,
+                    "peak_ram_mb": None,
+                    "elapsed_seconds": elapsed_sec,
+                    "note": "simulated mode - resource metrics nullified",
+                }
+            else:
+                perf_dict = {
                     "rtf": rtf,
                     "peak_vram_mb": peak_vram,
                     "peak_ram_mb": peak_ram,
                     "elapsed_seconds": elapsed_sec,
-                },
+                }
+
+            modes_output[mode_id] = {
+                "name": mode_display_name,
+                "word_metrics": word_metrics_entry,
+                "phone_metrics": phone_metrics_entry,
+                "performance": perf_dict,
             }
 
             p_summary = (
@@ -803,59 +825,78 @@ def run_benchmark(
                 f"Acc@50ms = {word_metrics_entry['acc_50ms']:.1f}%{p_summary}"
             )
 
-        # Statistical hypothesis testing (paired Wilcoxon & Cliff's Delta)
+        # Statistical hypothesis testing (paired Wilcoxon & Cliff's Delta on utterance-level MAEs with Holm correction)
         stat_significance: dict[str, Any] = {}
-        if "mode3_hybrid" in mode_word_errors_map:
-            m3_errs = mode_word_errors_map["mode3_hybrid"]
-            if "mode1_whisper" in mode_word_errors_map:
-                m1_errs = mode_word_errors_map["mode1_whisper"]
-                if len(m1_errs) == len(m3_errs) and len(m3_errs) > 0:
-                    w1 = paired_wilcoxon_test(m1_errs, m3_errs)
-                    stat_significance["proposed_vs_whisper"] = {
-                        "metric": "word_mae",
-                        "wilcoxon_w": round(w1.statistic, 2),
-                        "p_value": float(w1.p_value),
-                        "cliffs_delta": round(w1.cliffs_delta, 4),
-                        "effect_size": w1.effect_size,
-                        "significant_0_05": bool(w1.p_value < 0.05),
-                        "significant_0_001": bool(w1.p_value < 0.001),
-                    }
-                    print(
-                        f"[+] Proposed vs Whisper: W = {w1.statistic:.1f}, "
-                        f"p = {w1.p_value:.4e}, "
-                        f"Cliff's Delta = {w1.cliffs_delta:+.2f} ({w1.effect_size})"
-                    )
+        if "mode3_hybrid" in mode_utt_word_maes:
+            m3_errs = mode_utt_word_maes["mode3_hybrid"]
+            candidate_pairs: list[tuple[str, list[float], list[float]]] = []
+            if "mode1_whisper" in mode_utt_word_maes:
+                candidate_pairs.append(
+                    ("proposed_vs_whisper", mode_utt_word_maes["mode1_whisper"], m3_errs)
+                )
+            if "mode2_ctc" in mode_utt_word_maes:
+                candidate_pairs.append(
+                    ("proposed_vs_ctc", mode_utt_word_maes["mode2_ctc"], m3_errs)
+                )
 
-            if "mode2_ctc" in mode_word_errors_map:
-                m2_errs = mode_word_errors_map["mode2_ctc"]
-                if len(m2_errs) == len(m3_errs) and len(m3_errs) > 0:
-                    w2 = paired_wilcoxon_test(m2_errs, m3_errs)
-                    stat_significance["proposed_vs_ctc"] = {
+            executed_tests: list[tuple[str, Any]] = []
+            for pair_key, baseline_errs, proposed_errs in candidate_pairs:
+                if len(baseline_errs) == len(proposed_errs) and len(proposed_errs) > 0:
+                    w_res = paired_wilcoxon_test(baseline_errs, proposed_errs)
+                    executed_tests.append((pair_key, w_res))
+
+            if executed_tests:
+                raw_p_values = [res.p_value for _, res in executed_tests]
+                adj_p_values = bonferroni_holm_adjustment(raw_p_values)
+                n_spk = len(set(u.speaker_id for u in utterances))
+                for (pair_key, w_res), p_adj in zip(executed_tests, adj_p_values, strict=True):
+                    stat_significance[pair_key] = {
                         "metric": "word_mae",
-                        "wilcoxon_w": round(w2.statistic, 2),
-                        "p_value": float(w2.p_value),
-                        "cliffs_delta": round(w2.cliffs_delta, 4),
-                        "effect_size": w2.effect_size,
-                        "significant_0_05": bool(w2.p_value < 0.05),
-                        "significant_0_001": bool(w2.p_value < 0.001),
+                        "aggregation": "utterance_mean",
+                        "n_utterances": len(m3_errs),
+                        "n_speakers": n_spk,
+                        "wilcoxon_w": round(w_res.statistic, 2),
+                        "p_value_raw": float(w_res.p_value),
+                        "p_value_holm": float(p_adj),
+                        "p_value": float(p_adj),
+                        "cliffs_delta": round(w_res.cliffs_delta, 4),
+                        "effect_size": w_res.effect_size,
+                        "significant_0_05": bool(p_adj < 0.05),
+                        "significant_0_001": bool(p_adj < 0.001),
                     }
+                    disp_name = (
+                        "Proposed vs Whisper"
+                        if pair_key == "proposed_vs_whisper"
+                        else "Proposed vs CTC"
+                        if pair_key == "proposed_vs_ctc"
+                        else pair_key.replace("_vs_", " vs ").title()
+                    )
                     print(
-                        f"[+] Proposed vs CTC: W = {w2.statistic:.1f}, "
-                        f"p = {w2.p_value:.4e}, "
-                        f"Cliff's Delta = {w2.cliffs_delta:+.2f} ({w2.effect_size})"
+                        f"[+] {disp_name}: W = {w_res.statistic:.1f}, "
+                        f"p_raw = {w_res.p_value:.4e}, p_holm = {p_adj:.4e}, "
+                        f"Cliff's Delta = {w_res.cliffs_delta:+.2f} ({w_res.effect_size})"
                     )
 
         hardware_profile = get_hardware_info()
         now_utc = datetime.datetime.now(datetime.UTC).isoformat()
+        n_spk = len(set(u.speaker_id for u in utterances))
+        data_provenance = "SIMULATED_PREDICTIONS" if is_offline else "MODEL_EXECUTION"
+        warning = (
+            "Predictions are simulated; not model output; not citable." if is_offline else None
+        )
 
         benchmark_results = {
             "schema_version": 1,
             "timestamp": now_utc,
             "corpus": corpus,
+            "data_provenance": data_provenance,
+            "warning": warning,
             "offline_synthetic": is_offline,
             "seed": seed,
             "bootstrap_resamples": bootstrap_resamples,
             "utterance_count": len(utterances),
+            "n_utterances": len(utterances),
+            "n_speakers": n_spk,
             "total_audio_duration_seconds": total_audio_sec,
             "modes": modes_output,
             "statistical_significance": stat_significance,
@@ -886,8 +927,10 @@ def run_benchmark(
             "timestamp": now_utc,
             "inputs": {
                 "corpus": corpus,
+                "data_provenance": data_provenance,
                 "offline_synthetic": is_offline,
                 "utterance_count": len(utterances),
+                "n_speakers": n_spk,
                 "audio_files": input_hashes,
             },
             "outputs": {

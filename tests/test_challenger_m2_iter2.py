@@ -628,30 +628,38 @@ def test_real_production_execution_single_utterance_cluster_fallback(
 def test_real_production_execution_mismatched_mode_word_counts(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """When different modes produce different counts of words, Wilcoxon safely skipped."""
+    """When different modes produce different counts of utterances, Wilcoxon safely skipped."""
 
     class MockWhisper:
+        calls = 0
+
         def __init__(self, **kwargs: Any) -> None:
             pass
 
         def transcribe(self, audio_path: Path) -> list[ASRSegment]:
-            # Returns 1 word
+            MockWhisper.calls += 1
+            if MockWhisper.calls > 1:
+                return []
+            wrd_path = Path(audio_path).with_suffix(".wrd")
+            ref_words = parse_timit_wrd(wrd_path)
+            pred_words = [
+                WordToken(
+                    id=f"p_{w.id}",
+                    text=w.text,
+                    normalized=w.normalized,
+                    start=round(w.start + 0.05, 4),
+                    end=round(w.end + 0.05, 4),
+                    confidence=0.9,
+                )
+                for w in ref_words
+            ]
             return [
                 ASRSegment(
                     id="s0",
-                    start=0.1,
-                    end=0.5,
-                    text="she",
-                    words=[
-                        WordToken(
-                            id="w0",
-                            text="she",
-                            normalized="she",
-                            start=0.1,
-                            end=0.5,
-                            confidence=1.0,
-                        )
-                    ],
+                    start=pred_words[0].start,
+                    end=pred_words[-1].end,
+                    text=" ".join(w.text for w in pred_words),
+                    words=pred_words,
                 )
             ]
 
@@ -663,17 +671,18 @@ def test_real_production_execution_mismatched_mode_word_counts(
     def mock_speech_pipeline(audio_path, output_dir=None, engine="ctc", **kwargs):
         out = Path(output_dir)
         out.mkdir(parents=True, exist_ok=True)
-        # Returns 3 words
+        wrd_path = Path(audio_path).with_suffix(".wrd")
+        ref_words = parse_timit_wrd(wrd_path)
         words_data = [
             {
                 "id": f"p_{i}",
-                "text": t,
-                "normalized": t,
-                "start": 0.1 * (i + 1),
-                "end": 0.1 * (i + 2),
+                "text": w.text,
+                "normalized": w.normalized,
+                "start": round(w.start + 0.02, 4),
+                "end": round(w.end + 0.02, 4),
                 "phonemes": [],
             }
-            for i, t in enumerate(["she", "had", "dark"])
+            for i, w in enumerate(ref_words)
         ]
         (out / "alignment_raw.json").write_text(json.dumps({"words": words_data}), encoding="utf-8")
         return {"status": "ok"}
@@ -685,15 +694,15 @@ def test_real_production_execution_mismatched_mode_word_counts(
         corpus="synthetic",
         output_dir=out_dir,
         offline_synthetic=False,
-        max_utterances=1,
+        max_utterances=2,
         bootstrap_resamples=50,
         seed=42,
     )
 
-    # Mode 1 has 1 matched word error, Mode 3 has 3 matched word errors -> length mismatch
+    # Mode 1 has 1 evaluated utterance, Mode 3 has 2 evaluated utterances -> length mismatch
     # Invariant: Wilcoxon test between Mode 1 and Mode 3 is safely omitted
     assert "proposed_vs_whisper" not in res["statistical_significance"]
-    # But Mode 2 and Mode 3 have equal counts (both 3) -> Wilcoxon test between Mode 2 and 3 runs
+    # But Mode 2 and Mode 3 have equal counts (both 2) -> Wilcoxon test between Mode 2 and 3 runs
     assert "proposed_vs_ctc" in res["statistical_significance"]
 
 

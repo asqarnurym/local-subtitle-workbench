@@ -124,13 +124,41 @@ def _format_cliffs_delta(delta: float | None) -> str:
     return f"{delta:+.2f}"
 
 
+def _check_provenance_and_get_prefix(
+    data: dict[str, Any],
+    allow_simulated: bool = False,
+) -> str:
+    """Validate data provenance and return caption prefix if simulated data is allowed.
+
+    Refuses (raises ValueError) if data is simulated/offline and allow_simulated is False.
+    """
+    provenance = data.get("data_provenance")
+    is_offline = bool(
+        data.get("offline_synthetic", False) or (provenance == "SIMULATED_PREDICTIONS")
+    )
+
+    if provenance != "MODEL_EXECUTION" or is_offline:
+        if not allow_simulated:
+            raise ValueError(
+                f"Refusing to generate publication tables from unverified/simulated benchmark data "
+                f"(data_provenance={provenance!r}, offline_synthetic={is_offline}). "
+                f"Publication tables require real MODEL_EXECUTION data. "
+                f"Pass --allow-simulated to override for pipeline self-tests."
+            )
+        return "SIMULATED SELF-TEST -- NOT RESULTS: "
+    return ""
+
+
 def generate_alignment_accuracy_table(
     data: dict[str, Any],
     table_format: str = "booktabs",
+    allow_simulated: bool = False,
 ) -> str:
     """Generate Table 1: Alignment Accuracy Across Ablation Modes."""
     if table_format != "booktabs":
         raise ValueError(f"Unsupported table format: '{table_format}'. Must be 'booktabs'.")
+
+    prefix = _check_provenance_and_get_prefix(data, allow_simulated=allow_simulated)
 
     if "modes" not in data or not data["modes"]:
         raise ValueError("Benchmark results JSON missing 'modes' dictionary")
@@ -141,9 +169,17 @@ def generate_alignment_accuracy_table(
     remaining_keys = [k for k in modes_dict if k not in ordered_keys]
     all_keys = ordered_keys + remaining_keys
 
-    caption = "TIMIT Core Test Alignment Accuracy Across Ablation Modes"
-    if data.get("corpus") == "buckeye":
-        caption = "Buckeye Speech Corpus Alignment Accuracy Across Ablation Modes"
+    corpus = str(data.get("corpus", "synthetic")).lower()
+    if corpus == "timit":
+        base_caption = "TIMIT Core Test Alignment Accuracy Across Ablation Modes"
+    elif corpus == "buckeye":
+        base_caption = "Buckeye Speech Corpus Alignment Accuracy Across Ablation Modes"
+    elif corpus == "synthetic":
+        base_caption = "Synthetic Benchmark Alignment Accuracy Across Ablation Modes"
+    else:
+        base_caption = f"{corpus.capitalize()} Alignment Accuracy Across Ablation Modes"
+
+    caption = f"{prefix}{base_caption}"
 
     lines: list[str] = [
         r"\begin{table}[t]",
@@ -204,10 +240,13 @@ def generate_alignment_accuracy_table(
 def generate_computational_performance_table(
     data: dict[str, Any],
     table_format: str = "booktabs",
+    allow_simulated: bool = False,
 ) -> str:
     """Generate Table 2: Computational Efficiency Across Ablation Modes."""
     if table_format != "booktabs":
         raise ValueError(f"Unsupported table format: '{table_format}'. Must be 'booktabs'.")
+
+    prefix = _check_provenance_and_get_prefix(data, allow_simulated=allow_simulated)
 
     if "modes" not in data or not data["modes"]:
         raise ValueError("Benchmark results JSON missing 'modes' dictionary")
@@ -218,7 +257,7 @@ def generate_computational_performance_table(
     remaining_keys = [k for k in modes_dict if k not in ordered_keys]
     all_keys = ordered_keys + remaining_keys
 
-    caption = "Computational Efficiency Across Ablation Modes"
+    caption = f"{prefix}Computational Efficiency Across Ablation Modes"
 
     lines: list[str] = [
         r"\begin{table}[t]",
@@ -264,10 +303,13 @@ def generate_computational_performance_table(
 def generate_statistical_significance_table(
     data: dict[str, Any],
     table_format: str = "booktabs",
+    allow_simulated: bool = False,
 ) -> str:
     """Generate Table 3: Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size."""
     if table_format != "booktabs":
         raise ValueError(f"Unsupported table format: '{table_format}'. Must be 'booktabs'.")
+
+    prefix = _check_provenance_and_get_prefix(data, allow_simulated=allow_simulated)
 
     tests_dict = data.get("statistical_tests") or data.get("statistical_significance")
     if not tests_dict:
@@ -276,7 +318,7 @@ def generate_statistical_significance_table(
             "'statistical_significance' dictionary"
         )
 
-    caption = "Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size"
+    caption = f"{prefix}Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size"
 
     lines: list[str] = [
         r"\begin{table}[t]",
@@ -331,6 +373,7 @@ def generate_all_tables(
     input_path: Path | str,
     output_dir: Path | str,
     table_format: str = "booktabs",
+    allow_simulated: bool = False,
 ) -> dict[str, Path]:
     """Load benchmark JSON and generate all three LaTeX tables.
 
@@ -346,15 +389,21 @@ def generate_all_tables(
     out_dir = Path(output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    t1_content = generate_alignment_accuracy_table(data, table_format=table_format)
+    t1_content = generate_alignment_accuracy_table(
+        data, table_format=table_format, allow_simulated=allow_simulated
+    )
     t1_path = out_dir / "table_alignment_accuracy.tex"
     t1_path.write_text(t1_content, encoding="utf-8")
 
-    t2_content = generate_computational_performance_table(data, table_format=table_format)
+    t2_content = generate_computational_performance_table(
+        data, table_format=table_format, allow_simulated=allow_simulated
+    )
     t2_path = out_dir / "table_computational_performance.tex"
     t2_path.write_text(t2_content, encoding="utf-8")
 
-    t3_content = generate_statistical_significance_table(data, table_format=table_format)
+    t3_content = generate_statistical_significance_table(
+        data, table_format=table_format, allow_simulated=allow_simulated
+    )
     t3_path = out_dir / "table_statistical_significance.tex"
     t3_path.write_text(t3_content, encoding="utf-8")
 
@@ -391,6 +440,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         choices=["booktabs"],
         help="Table formatting style (default: booktabs)",
     )
+    parser.add_argument(
+        "--allow-simulated",
+        action="store_true",
+        default=False,
+        help="Allow generating tables from simulated self-test benchmark data with warning prefix in captions",
+    )
     return parser.parse_args(argv)
 
 
@@ -405,6 +460,7 @@ def main(argv: list[str] | None = None) -> int:
             input_path=args.input,
             output_dir=args.output_dir,
             table_format=args.format,
+            allow_simulated=args.allow_simulated,
         )
         for name, path in tables.items():
             print(f"[+] Generated {name} table: {path}")

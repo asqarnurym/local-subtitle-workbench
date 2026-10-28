@@ -26,7 +26,9 @@ from subtitle_workbench.ctc_aligner import (
     TorchAudioAligner,
     align_ctc_trellis,
     backtrack,
+    ctc_word_targets,
     get_trellis,
+    words_from_token_spans,
 )
 from subtitle_workbench.mfa_wrapper import (
     MFANotFoundError,
@@ -188,6 +190,30 @@ def test_torch_audio_aligner_unavailable_guard(monkeypatch: pytest.MonkeyPatch) 
     with pytest.raises(CTCAlignerUnavailableError) as exc_info:
         aligner._ensure_model()
     assert "required" in str(exc_info.value).lower() or "failed" in str(exc_info.value).lower()
+
+
+_MMS_LIKE_DICT = {"-": 0, **{c: i + 1 for i, c in enumerate("abcdefghijklmnopqrstuvwxyz'")}}
+
+
+def test_ctc_word_targets_has_no_separator_or_star_tokens() -> None:
+    """Word tokens are concatenated as-is; nothing is inserted between words."""
+    targets = ctc_word_targets("Don't  STOP 24 now.", _MMS_LIKE_DICT)
+    assert [t for t, _ in targets] == ["don't", "stop", "now"]
+    assert targets[1][1] == [_MMS_LIKE_DICT[c] for c in "stop"]
+    assert all(0 not in ids for _, ids in targets)
+    assert ctc_word_targets("42 !!", _MMS_LIKE_DICT) == []
+
+
+def test_words_from_token_spans_splits_by_token_count() -> None:
+    targets = ctc_word_targets("ab c", _MMS_LIKE_DICT)
+    # a: frames 2-4, b: 5-7, c: 10-12; frame = 20 ms
+    spans = [(2, 4, 0.9), (5, 7, 0.5), (10, 12, 1.0)]
+    words = words_from_token_spans(targets, spans, frame_duration=0.02, word_id_prefix="w")
+    assert [(w.text, w.start, w.end) for w in words] == [("ab", 0.04, 0.14), ("c", 0.2, 0.24)]
+    assert words[0].confidence == pytest.approx(0.7)
+    assert [w.id for w in words] == ["w_0000", "w_0001"]
+    with pytest.raises(ValueError, match="token spans"):
+        words_from_token_spans(targets, spans[:2], frame_duration=0.02)
 
 
 # ============================================================================

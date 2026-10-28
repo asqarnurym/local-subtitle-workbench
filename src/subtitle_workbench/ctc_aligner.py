@@ -3,7 +3,8 @@
 Implements:
 - Pure-NumPy forward Trellis matrix calculation and Viterbi backtracking
 - Character-to-word segment aggregation via boundary separator '|'
-- Lazy-loading TorchAudioAligner wrapper around torchaudio MMS_FA pipeline
+- Lazy-loading TorchAudioAligner wrapper around torchaudio MMS_FA pipeline (torchaudio
+  forced_align recipe: concatenated word tokens, no star token, words from token spans)
 - Hardware-aware device management (CPU/CUDA) with eager VRAM cleanup
 - Typed exceptions for graceful offline fallback
 """
@@ -332,6 +333,54 @@ def align_ctc_trellis(
     return words
 
 
+def ctc_word_targets(transcript: str, dictionary: dict[str, int]) -> list[tuple[str, list[int]]]:
+    """Map each whitespace-separated word to (in-vocabulary lowercase text, token IDs).
+
+    Characters outside the vocabulary are dropped. Words with no in-vocabulary
+    character are left out; they appear as unmatched reference words (coverage),
+    never as fabricated timings.
+    """
+    targets: list[tuple[str, list[int]]] = []
+    for word in transcript.split():
+        chars = [c for c in word.lower() if c in dictionary]
+        if chars:
+            targets.append(("".join(chars), [dictionary[c] for c in chars]))
+    return targets
+
+
+def words_from_token_spans(
+    targets: list[tuple[str, list[int]]],
+    spans: list[tuple[int, int, float]],
+    frame_duration: float,
+    word_id_prefix: str = "word",
+) -> list[WordToken]:
+    """Split merged token spans (start_frame, end_frame, score) back into words."""
+    expected = sum(len(ids) for _, ids in targets)
+    if len(spans) != expected:
+        raise ValueError(f"Expected {expected} token spans, got {len(spans)}")
+    words: list[WordToken] = []
+    i = 0
+    for w_idx, (text, ids) in enumerate(targets):
+        group = spans[i : i + len(ids)]
+        i += len(ids)
+        frames = sum(e - s for s, e, _ in group)
+        score = sum(sc * (e - s) for s, e, sc in group) / frames if frames else 0.0
+        start = round(group[0][0] * frame_duration, 4)
+        end = round(group[-1][1] * frame_duration, 4)
+        words.append(
+            WordToken(
+                id=f"{word_id_prefix}_{w_idx:04d}",
+                text=text,
+                normalized=text,
+                start=start,
+                end=max(end, round(start + frame_duration, 4)),
+                confidence=round(float(np.clip(score, 0.0, 1.0)), 4),
+                phonemes=[],
+            )
+        )
+    return words
+
+
 class TorchAudioAligner:
     """In-process CTC forced aligner wrapping torchaudio.pipelines.MMS_FA."""
 
@@ -363,8 +412,10 @@ class TorchAudioAligner:
             self._device = torch.device(target_device)
             bundle = torchaudio.pipelines.MMS_FA
             self._bundle = bundle
-            self._model = bundle.get_model().to(self._device)
-            self._dictionary = bundle.get_dict()
+            # No star token: it is a wildcard that absorbs arbitrary audio, not a word
+            # separator (MMS_FA has no separator; words come from token spans).
+            self._model = bundle.get_model(with_star=False).to(self._device)
+            self._dictionary = bundle.get_dict(star=None)
         except Exception as err:
             raise CTCAlignerUnavailableError(
                 f"Failed to initialize TorchAudio MMS_FA model: {err}"
@@ -377,35 +428,48 @@ class TorchAudioAligner:
         sample_rate: int = 16000,
         word_id_prefix: str = "word",
     ) -> list[WordToken]:
-        """Align raw audio waveform against transcript using MMS_FA acoustic emissions."""
+        """Align raw audio against a transcript with the torchaudio MMS_FA recipe.
+
+        Tokens of all words are concatenated without separators, aligned with
+        ``torchaudio.functional.forced_align``, merged into token spans and split back
+        into words by token count. Frame duration is samples / frames / sample rate.
+        Words without any character in the MMS_FA vocabulary are not aligned.
+        """
         self._ensure_model()
         import torch
+        import torchaudio
+
+        targets = ctc_word_targets(transcript, self._dictionary or {})
+        if not targets:
+            return []
+        token_ids = [t for _, ids in targets for t in ids]
 
         waveform = torch.from_numpy(np.ascontiguousarray(audio_samples)).float().to(self._device)
         if waveform.ndim == 1:
             waveform = waveform.unsqueeze(0)
-
-        emissions_np: np.ndarray | None = None
+        num_samples = int(waveform.size(1))
         try:
             with torch.inference_mode():
                 emissions, _ = self._model(waveform)
-                emissions_np = emissions[0].cpu().numpy()
+                emissions = torch.log_softmax(emissions, dim=-1)
+                if len(token_ids) > emissions.size(1):
+                    return []
+                ali, scores = torchaudio.functional.forced_align(
+                    emissions, torch.tensor([token_ids], device=emissions.device), blank=0
+                )
+                spans = torchaudio.functional.merge_tokens(ali[0].cpu(), scores[0].exp().cpu())
+                num_frames = int(emissions.size(1))
         finally:
             if "emissions" in locals():
                 del emissions
-            if "waveform" in locals():
-                del waveform
+            del waveform
             if self._device is not None and self._device.type == "cuda":
                 torch.cuda.empty_cache()
 
-        if emissions_np is None:
-            return []
-
-        separator = "*" if self._dictionary and "*" in self._dictionary else "|"
-        return align_ctc_trellis(
-            emissions=emissions_np,
-            tokens=transcript,
-            dictionary=self._dictionary,
-            separator=separator,
+        frame_duration = num_samples / num_frames / sample_rate
+        return words_from_token_spans(
+            targets,
+            [(s.start, s.end, float(s.score)) for s in spans],
+            frame_duration=frame_duration,
             word_id_prefix=word_id_prefix,
         )

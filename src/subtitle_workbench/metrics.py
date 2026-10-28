@@ -7,7 +7,9 @@ and paired non-parametric hypothesis testing (Wilcoxon signed-rank, Cliff's Delt
 
 from __future__ import annotations
 
+import functools
 import math
+import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from typing import Any
@@ -15,6 +17,7 @@ from typing import Any
 import numpy as np
 
 from .models import PhonemeCue, WordToken, finite_number
+from .text_norm import normalize_text_spans
 
 
 class BenchmarkError(Exception):
@@ -119,10 +122,31 @@ class AlignmentEvaluationResult:
         }
 
 
+_PLAIN_WORD = re.compile(r"[a-z]+")
+
+
+@functools.lru_cache(maxsize=65536)
+def _word_key(text: str) -> str:
+    """Canonical word form shared by predictions and references (e.g. "don't" -> "do not").
+
+    Corpus loaders store references through normalize_text_spans, while aligners
+    return their own surface forms; matching both through the same normalizer keeps
+    a correctly aligned word from counting as unmatched.
+    """
+    raw = text.strip().lower()
+    if _PLAIN_WORD.fullmatch(raw):
+        return raw
+    try:
+        spans = normalize_text_spans(raw)
+    except ValueError:
+        return raw
+    return " ".join(s.normalized for s in spans) or raw
+
+
 def _token_key(token: WordToken | PhonemeCue) -> str:
     """Extract normalized text or phoneme label for sequence matching."""
     if isinstance(token, WordToken):
-        return (token.normalized or token.text).strip().lower()
+        return _word_key(token.normalized or token.text)
     if isinstance(token, PhonemeCue):
         return token.phoneme.strip().lower()
     raise MetricComputationError(f"Unsupported token type: {type(token).__name__}")

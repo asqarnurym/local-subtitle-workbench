@@ -397,6 +397,23 @@ def test_boundary_evaluation_dp_sequence_matching() -> None:
     assert math.isclose(eval_res.mae, 10.0, abs_tol=1e-4)
 
 
+def test_boundary_evaluation_matches_contractions_across_normalizations() -> None:
+    """Reference loaders expand contractions; aligners keep surface forms. Both must match."""
+    ref = [
+        WordToken(id="r0", text="don't", normalized="do not", start=0.1, end=0.3, confidence=1.0),
+        WordToken(id="r1", text="ask", normalized="ask", start=0.3, end=0.6, confidence=1.0),
+        WordToken(id="r2", text="he'd", normalized="he would", start=0.7, end=0.9, confidence=1.0),
+    ]
+    pred = [
+        WordToken(id="p0", text="don't", normalized="don't", start=0.11, end=0.31, confidence=1.0),
+        WordToken(id="p1", text="Ask,", normalized="ask,", start=0.31, end=0.61, confidence=1.0),
+        WordToken(id="p2", text="he'd", normalized="he'd", start=0.71, end=0.91, confidence=1.0),
+    ]
+    res = evaluate_alignment_boundaries(pred, ref)
+    assert res.num_matched == 3 and res.num_unmatched == 0
+    assert math.isclose(res.mae, 10.0, abs_tol=1e-4)
+
+
 def test_boundary_evaluation_division_by_zero_protection() -> None:
     """Verify empty inputs or zero matches raise MetricComputationError."""
     valid_tokens = [

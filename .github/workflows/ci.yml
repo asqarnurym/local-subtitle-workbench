@@ -28,7 +28,7 @@ jobs:
           version: "0.12.24"
           enable-cache: true
       - name: Restore locked environment
-        run: uv sync --locked
+        run: uv sync --locked --extra api
       - name: Lint
         run: uv run --locked ruff check .
       - name: Formatting

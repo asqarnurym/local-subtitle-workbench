@@ -13,8 +13,8 @@ Scenario A - transcript known (the reference transcript of the corpus is given)
 Every mode runs the complete pipeline for its scenario (VAD and Whisper are never
 skipped; Whisper supplies anchors in scenario A). Execution is staged so that each
 model is loaded once: (1) one Whisper instance transcribes every utterance,
-(2) Whisper is unloaded, (3) all utterances are aligned by MFA in a single batch
-call and by one reused CTC model.
+(2) Whisper is unloaded, (3) all utterances are aligned by MFA in one call per
+speaker (one job each) and by one reused CTC model.
 
 Metrics (Individual Master's Plan): mean absolute boundary error (word and phone
 level, start and end boundaries) and the share of boundaries within 20 ms, with a

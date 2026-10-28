@@ -15,6 +15,7 @@ from __future__ import annotations
 import subprocess
 import wave
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -457,10 +458,11 @@ def _tg(words: list[tuple[float, float, str]], xmax: float) -> str:
     return "\n".join(lines) + "\n"
 
 
-def test_align_requests_single_mfa_call_for_many_recordings(
+def test_align_requests_one_mfa_call_per_speaker(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    """All chunks of all recordings go into one MFA corpus with per-speaker directories."""
+    """Chunks are grouped by speaker: one MFA corpus and call per speaker, sorted by name;
+    results come back in request order."""
     from subtitle_workbench.aligner import AlignmentFailure, AlignmentRequest
 
     monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/mfa")
@@ -474,17 +476,22 @@ def test_align_requests_single_mfa_call_for_many_recordings(
             id="c0", index=0, start=0.0, end=2.0, padded_start=0.0, padded_end=2.0, text=text
         )
 
-    seen: dict[str, object] = {}
+    seen: dict[str, Any] = {"speakers": []}
 
     def mock_run_fn(cmd: list[str], timeout: float | None = None) -> subprocess.CompletedProcess:
         corpus, out = Path(cmd[2]), Path(cmd[5])
-        seen["speakers"] = sorted(p.name for p in corpus.iterdir() if p.is_dir())
+        speakers = sorted(p.name for p in corpus.iterdir() if p.is_dir())
+        seen["speakers"].append(speakers)
         seen["cmd"] = list(cmd)
-        # Recording A aligned, recording B missing (simulated beam failure)
-        (out / "spk1").mkdir(parents=True, exist_ok=True)
-        (out / "spk1" / "chunk_0000.TextGrid").write_text(
-            _tg([(0.1, 0.5, "hello"), (0.6, 1.0, "world")], 2.0), encoding="utf-8"
-        )
+        # spk1 aligned (two chunks), spk2 missing (simulated beam failure)
+        if speakers == ["spk1"]:
+            (out / "spk1").mkdir(parents=True, exist_ok=True)
+            (out / "spk1" / "chunk_0000.TextGrid").write_text(
+                _tg([(0.1, 0.5, "hello"), (0.6, 1.0, "world")], 2.0), encoding="utf-8"
+            )
+            (out / "spk1" / "chunk_0001.TextGrid").write_text(
+                _tg([(0.2, 0.7, "again")], 2.0), encoding="utf-8"
+            )
         return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
 
     runner = MagicMock(spec=SubprocessRunner)
@@ -492,20 +499,44 @@ def test_align_requests_single_mfa_call_for_many_recordings(
     aligner = ForcedAligner(mfa_runner=runner)
     results = aligner.align_requests(
         [
-            AlignmentRequest(wav_a, [chunk("hello world")], speaker="spk1"),
             AlignmentRequest(wav_b, [chunk("good bye")], speaker="spk2"),
+            AlignmentRequest(wav_a, [chunk("hello world")], speaker="spk1"),
+            AlignmentRequest(wav_a, [chunk("again")], speaker="spk1"),
         ],
         engine="mfa",
     )
 
-    assert runner.run.call_count == 1
-    assert seen["speakers"] == ["spk1", "spk2"]
+    assert runner.run.call_count == 2
+    assert seen["speakers"] == [["spk1"], ["spk2"]]
     cmd = seen["cmd"]
     assert "--single_speaker" not in cmd
     assert "--fine_tune" in cmd
     assert cmd[cmd.index("--g2p_model_path") + 1] == "english_us_arpa"
-    assert [w.text for w in results[0]] == ["hello", "world"]
-    assert isinstance(results[1], AlignmentFailure)
+    assert isinstance(results[0], AlignmentFailure)
+    assert [w.text for w in results[1]] == ["hello", "world"]
+    assert [w.text for w in results[2]] == ["again"]
+    assert aligner.describe("mfa")["invocation"] == "per_speaker"
+
+
+def test_align_requests_single_batch_when_per_speaker_disabled(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from subtitle_workbench.aligner import AlignmentRequest
+
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/mfa")
+    wav = tmp_path / "a.wav"
+    create_dummy_wav(wav, duration_sec=2.0)
+    runner = MagicMock(spec=SubprocessRunner)
+    runner.run.return_value = subprocess.CompletedProcess(args=[], returncode=0, stdout="")
+    chunk = AudioChunk(
+        id="c0", index=0, start=0.0, end=2.0, padded_start=0.0, padded_end=2.0, text="hi"
+    )
+    aligner = ForcedAligner(mfa_runner=runner, mfa_per_speaker=False)
+    aligner.align_requests(
+        [AlignmentRequest(wav, [chunk], speaker=s) for s in ("spk1", "spk2")], engine="mfa"
+    )
+    assert runner.run.call_count == 1
+    assert aligner.describe("mfa")["invocation"] == "single_batch"
 
 
 def test_align_chunks_raises_when_mfa_skips_a_chunk(

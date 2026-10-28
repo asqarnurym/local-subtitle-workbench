@@ -3,7 +3,7 @@
 Provides:
 - AlignmentRequest: one recording's chunks to align (audio path, chunks, speaker label).
 - ForcedAligner: facade that slices chunk audio, runs exactly the requested engine
-  (no implicit fallback between engines), aligns many recordings in one MFA call,
+  (no implicit fallback between engines), aligns many recordings with one MFA call per speaker,
   and reconciles every recording into a globally monotonic word timeline.
 - align_chunks: module-level convenience entry point for a single recording.
 """
@@ -78,6 +78,7 @@ class ForcedAligner:
         g2p_model: str | None = "english_us_arpa",
         mfa_fine_tune: bool = True,
         mfa_num_jobs: int | None = None,
+        mfa_per_speaker: bool = True,
         ctc_device: str | None = None,
     ) -> None:
         self.mfa_runner = mfa_runner
@@ -87,6 +88,11 @@ class ForcedAligner:
         self.g2p_model = g2p_model
         self.mfa_fine_tune = mfa_fine_tune
         self.mfa_num_jobs = mfa_num_jobs
+        # MFA 3.4.3 --fine_tune requests alignments in kaldi_id ("<speaker>-<utt>") order
+        # from an archive that must be read in sorted utterance-id order; with several
+        # speakers in one call the orders diverge and Kaldi aborts ("100 < 9"). Within one
+        # speaker they agree, so MFA is called once per speaker (adaptation is per speaker).
+        self.mfa_per_speaker = mfa_per_speaker
         self.ctc_device = ctc_device
 
     # ------------------------------------------------------------------
@@ -105,6 +111,7 @@ class ForcedAligner:
                 "num_jobs": (
                     self.mfa_num_jobs if self.mfa_num_jobs is not None else default_num_jobs()
                 ),
+                "invocation": "per_speaker" if self.mfa_per_speaker else "single_batch",
             }
         return {"engine": "ctc", "model": "torchaudio.pipelines.MMS_FA"}
 
@@ -112,6 +119,30 @@ class ForcedAligner:
         if self.ctc_aligner is None:
             self.ctc_aligner = TorchAudioAligner(device=self.ctc_device)
         return self.ctc_aligner
+
+    def _run_mfa(self, items: list[MFAItem]) -> list[list[WordToken] | None]:
+        """Align items with MFA, one call per speaker (sorted) or one call for all."""
+        if self.mfa_per_speaker:
+            by_speaker: dict[str, list[int]] = {}
+            for i, item in enumerate(items):
+                by_speaker.setdefault(item.speaker, []).append(i)
+            batches = [by_speaker[s] for s in sorted(by_speaker)]
+        else:
+            batches = [list(range(len(items)))]
+        out: list[list[WordToken] | None] = [None] * len(items)
+        for idxs in batches:
+            res = run_mfa_corpus(
+                [items[i] for i in idxs],
+                dictionary=self.dictionary,
+                acoustic_model=self.acoustic_model,
+                g2p_model=self.g2p_model,
+                fine_tune=self.mfa_fine_tune,
+                num_jobs=self.mfa_num_jobs,
+                runner=self.mfa_runner,
+            )
+            for i, words in zip(idxs, res, strict=True):
+                out[i] = words
+        return out
 
     @staticmethod
     def _check_engine(engine: str) -> None:
@@ -128,7 +159,7 @@ class ForcedAligner:
         requests: list[AlignmentRequest],
         engine: Engine = "mfa",
     ) -> list[list[WordToken] | AlignmentFailure]:
-        """Align many recordings; MFA runs once for all chunks of all recordings.
+        """Align many recordings; MFA runs once per speaker for all of that speaker's chunks.
 
         Returns, per request, either the reconciled word list or an AlignmentFailure
         describing which chunks the engine could not align. Engine-level failures
@@ -160,14 +191,8 @@ class ForcedAligner:
             if not flat:
                 per_chunk = []
             elif engine == "mfa":
-                per_chunk = run_mfa_corpus(
-                    [MFAItem(wav, text, requests[r_idx].speaker) for r_idx, _, wav, text in flat],
-                    dictionary=self.dictionary,
-                    acoustic_model=self.acoustic_model,
-                    g2p_model=self.g2p_model,
-                    fine_tune=self.mfa_fine_tune,
-                    num_jobs=self.mfa_num_jobs,
-                    runner=self.mfa_runner,
+                per_chunk = self._run_mfa(
+                    [MFAItem(wav, text, requests[r_idx].speaker) for r_idx, _, wav, text in flat]
                 )
             else:
                 ctc = self._get_ctc()

@@ -120,7 +120,7 @@ sequenceDiagram
     DTW->>DTW: Partition chunks (L <= 30s) with 0.5s padding
     DTW->>Align: Pass acoustic chunks & corresponding text
     alt engine = mfa (proposed)
-        Align->>Align: Stage chunks into per-speaker corpus (.wav + .lab), one MFA call
+        Align->>Align: Stage chunks into one corpus per speaker (.wav + .lab), one MFA call per speaker
         Align->>Align: Parse output TextGrids to words and phonemes
     else engine = ctc (baseline, explicit only)
         Align->>Align: Run MMS_FA CTC Trellis dynamic programming

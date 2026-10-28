@@ -95,6 +95,11 @@ REFERENCE_TYPES: dict[str, str] = {
 
 MIN_SPEAKERS_FOR_SPEAKER_CLUSTERS = 10
 
+# MFA 3.4.3 on Windows can abort or hang in its threaded alignment collection
+# (several threads build the lexicon compiler concurrently). One job avoids it, and
+# the job split slightly changes boundaries, so the value is fixed for the benchmark.
+MFA_NUM_JOBS = 1
+
 
 @dataclass(frozen=True)
 class BenchmarkUtterance:
@@ -777,7 +782,7 @@ def run_benchmark(
             if aligner is None:
                 from subtitle_workbench.aligner import ForcedAligner
 
-                aligner = ForcedAligner()
+                aligner = ForcedAligner(mfa_num_jobs=MFA_NUM_JOBS)
             config["asr"] = {
                 "model": getattr(transcriber, "model_size_or_path", asr_model),
                 "device": getattr(transcriber, "device", device),

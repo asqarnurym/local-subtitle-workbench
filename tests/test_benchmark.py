@@ -937,6 +937,53 @@ def test_speech_benchmark_real_execution_stages_and_batching(tmp_path: Path) -> 
     assert res["config"]["asr"]["model"] == "fake"
 
 
+def test_speech_benchmark_pins_mfa_num_jobs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The default aligner runs MFA with one job, and the value is recorded in the config."""
+    import subtitle_workbench.aligner as aligner_mod
+    from scripts.speech_benchmark import MFA_NUM_JOBS, run_benchmark
+
+    real_cls = aligner_mod.ForcedAligner
+    created: list[dict[str, Any]] = []
+
+    class _RecordingAligner(_OracleAligner):
+        """Oracle alignments, but the real configuration record."""
+
+        def __init__(self, **kwargs: Any) -> None:
+            super().__init__()
+            created.append(kwargs)
+            self.real = real_cls(**kwargs)
+
+        def describe(self, engine: str) -> dict[str, Any]:
+            return self.real.describe(engine)
+
+    monkeypatch.setattr(aligner_mod, "ForcedAligner", _RecordingAligner)
+    res = run_benchmark(
+        corpus="synthetic",
+        data_dir=_staged_synthetic(tmp_path),
+        output_dir=tmp_path / "jobs",
+        offline_synthetic=False,
+        bootstrap_resamples=10,
+        transcriber=_OracleTranscriber(),
+        vad_backend=lambda *a, **k: [],
+    )
+    assert MFA_NUM_JOBS == 1
+    assert created == [{"mfa_num_jobs": 1}]
+    assert res["config"]["aligners"]["mfa"]["num_jobs"] == 1
+    manifest = json.loads((tmp_path / "jobs" / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["config"]["aligners"]["mfa"]["num_jobs"] == 1
+
+
+def test_forced_aligner_describe_records_resolved_num_jobs() -> None:
+    from subtitle_workbench.aligner import ForcedAligner
+    from subtitle_workbench.mfa_wrapper import default_num_jobs
+
+    assert ForcedAligner(mfa_num_jobs=1).describe("mfa")["num_jobs"] == 1
+    assert ForcedAligner().describe("mfa")["num_jobs"] == default_num_jobs()
+    assert "num_jobs" not in ForcedAligner().describe("ctc")
+
+
 def test_speech_benchmark_failures_are_recorded_and_pairs_stay_aligned(tmp_path: Path) -> None:
     """A failed utterance is reported (not dropped) and excluded from pairs by ID."""
     from scripts.speech_benchmark import run_benchmark

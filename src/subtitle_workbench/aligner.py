@@ -28,6 +28,7 @@ from .mfa_wrapper import (
     MFANotFoundError,
     SubprocessRunner,
     check_mfa_available,
+    default_num_jobs,
     run_mfa_corpus,
 )
 from .models import AudioChunk, WordToken
@@ -100,6 +101,10 @@ class ForcedAligner:
                 "g2p_model": self.g2p_model,
                 "fine_tune": self.mfa_fine_tune,
                 "speaker_adaptation": True,
+                # Affects boundaries slightly (job split), so it is part of the record
+                "num_jobs": (
+                    self.mfa_num_jobs if self.mfa_num_jobs is not None else default_num_jobs()
+                ),
             }
         return {"engine": "ctc", "model": "torchaudio.pipelines.MMS_FA"}
 

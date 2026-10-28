@@ -263,6 +263,87 @@ def load_buckeye_utterances(data_dir: Path) -> list[BenchmarkUtterance]:
 
 
 # ---------------------------------------------------------------------------
+# Fixed utterance samples (seeded, per speaker, saved as JSON)
+# ---------------------------------------------------------------------------
+
+SAMPLE_SCHEMA_VERSION = 1
+
+
+def draw_speaker_sample(
+    utterances: list[BenchmarkUtterance],
+    per_speaker: int,
+    seed: int,
+    n_speakers: int | None = None,
+) -> list[str]:
+    """Draw ``per_speaker`` utterance IDs per speaker, uniformly without replacement.
+
+    Speakers and their utterance IDs are sorted before drawing, so the result depends
+    only on the corpus content and the seed. With ``n_speakers`` a uniform subset of
+    speakers is drawn first. A speaker with too few utterances is an error.
+    """
+    if per_speaker < 1:
+        raise BenchmarkError(f"per_speaker must be >= 1, got {per_speaker}")
+    if seed < 0:
+        raise BenchmarkError(f"Random seed must be non-negative, got {seed}")
+    by_speaker: dict[str, list[str]] = {}
+    for u in utterances:
+        by_speaker.setdefault(u.speaker_id, []).append(u.id)
+    speakers = sorted(by_speaker)
+    if not speakers:
+        raise BenchmarkError("No utterances to sample from")
+    rng = np.random.default_rng(seed)
+    if n_speakers is not None:
+        if not 1 <= n_speakers <= len(speakers):
+            raise BenchmarkError(f"n_speakers must be in 1..{len(speakers)}, got {n_speakers}")
+        picked = rng.choice(len(speakers), size=n_speakers, replace=False)
+        speakers = [speakers[i] for i in sorted(picked)]
+    ids: list[str] = []
+    for spk in speakers:
+        pool = sorted(by_speaker[spk])
+        if len(pool) < per_speaker:
+            raise BenchmarkError(
+                f"Speaker {spk} has {len(pool)} utterances, fewer than {per_speaker}"
+            )
+        picked = rng.choice(len(pool), size=per_speaker, replace=False)
+        ids += [pool[i] for i in sorted(picked)]
+    return ids
+
+
+def load_utterance_sample(path: Path | str) -> dict[str, Any]:
+    """Read and validate a sample file written by ``scripts/make_benchmark_sample.py``."""
+    p = Path(path)
+    if not p.is_file():
+        raise BenchmarkError(f"Utterance list not found: {p}")
+    try:
+        sample = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as err:
+        raise BenchmarkError(f"Utterance list is not valid JSON: {p}: {err}") from err
+    if not isinstance(sample, dict) or sample.get("schema_version") != SAMPLE_SCHEMA_VERSION:
+        raise BenchmarkError(f"Unsupported utterance list schema in {p}")
+    ids = sample.get("utterance_ids")
+    if not isinstance(ids, list) or not ids or not all(isinstance(i, str) for i in ids):
+        raise BenchmarkError(f"utterance_ids in {p} must be a non-empty list of strings")
+    if len(ids) != len(set(ids)):
+        raise BenchmarkError(f"utterance_ids in {p} contain duplicates")
+    if not isinstance(sample.get("corpus"), str):
+        raise BenchmarkError(f"corpus in {p} must be a string")
+    return sample
+
+
+def select_utterances(
+    utterances: list[BenchmarkUtterance], ids: list[str]
+) -> list[BenchmarkUtterance]:
+    """Return the utterances with the given IDs, in list order; a missing ID is an error."""
+    by_id = {u.id: u for u in utterances}
+    missing = [i for i in ids if i not in by_id]
+    if missing:
+        raise BenchmarkError(
+            f"{len(missing)} listed utterance(s) not found in the corpus, e.g. {missing[:5]}"
+        )
+    return [by_id[i] for i in ids]
+
+
+# ---------------------------------------------------------------------------
 # Simulated self-test (pipeline plumbing only; never citable)
 # ---------------------------------------------------------------------------
 
@@ -618,6 +699,7 @@ def run_benchmark(
     bootstrap_resamples: int = 2000,
     device: str = "cuda",
     max_utterances: int | None = None,
+    utterance_list: Path | str | None = None,
     modes: list[str] | None = None,
     asr_model: str = "large-v3",
     transcriber: Any | None = None,
@@ -636,12 +718,21 @@ def run_benchmark(
     unknown = [m for m in selected if m not in MODES]
     if unknown:
         raise BenchmarkError(f"Unknown mode(s): {unknown}; choose from {list(MODES)}")
+    if utterance_list is not None and max_utterances is not None:
+        raise BenchmarkError("utterance_list and max_utterances are mutually exclusive")
+    sample = load_utterance_sample(utterance_list) if utterance_list is not None else None
 
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
     tmp: list[Any] = []
     try:
         utterances, corpus = _resolve_utterances(corpus, data_dir, offline_synthetic, tmp)
+        if sample is not None:
+            if sample["corpus"] != corpus:
+                raise BenchmarkError(
+                    f"Utterance list is for corpus '{sample['corpus']}', not '{corpus}'"
+                )
+            utterances = select_utterances(utterances, sample["utterance_ids"])
         if max_utterances is not None and max_utterances > 0:
             utterances = utterances[:max_utterances]
         if not utterances:
@@ -659,6 +750,14 @@ def run_benchmark(
         print(f"[*] Corpus {corpus}: {len(utterances)} utterances, {n_spk} speakers")
 
         config: dict[str, Any] = {"modes": selected, "ci_unit": ci_unit}
+        if sample is not None:
+            config["sample"] = {
+                "path": Path(utterance_list).as_posix(),  # type: ignore[arg-type]
+                "sha256": sha256(utterance_list),  # type: ignore[arg-type]
+                "seed": sample.get("seed"),
+                "per_speaker": sample.get("per_speaker"),
+                "n_utterances": len(sample["utterance_ids"]),
+            }
         if offline_synthetic:
             rng = np.random.default_rng(seed)
             predictions = {
@@ -806,6 +905,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--asr-model", type=str, default="large-v3")
     parser.add_argument("--max-utterances", type=int, default=None)
     parser.add_argument(
+        "--utterance-list",
+        type=Path,
+        default=None,
+        help="JSON sample from scripts/make_benchmark_sample.py; runs exactly these IDs",
+    )
+    parser.add_argument(
         "--modes",
         type=str,
         default=None,
@@ -827,6 +932,7 @@ def main(argv: list[str] | None = None) -> int:
             bootstrap_resamples=args.bootstrap_resamples,
             device=args.device,
             max_utterances=args.max_utterances,
+            utterance_list=args.utterance_list,
             modes=modes_list,
             asr_model=args.asr_model,
         )

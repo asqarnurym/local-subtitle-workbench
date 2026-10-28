@@ -14,4 +14,7 @@ test-results.xml
 .env
 .env.*
 data/
-reports/
+reports/*
+# Frozen benchmark samples are versioned (docs/RUNBOOK.md section 3a)
+!reports/*_sample_*.json
+!reports/timit_pilot_*.json

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "corpus": "timit",
+  "data_dir": "data/corpora/timit",
+  "seed": 20260401,
+  "per_speaker": 1,
+  "n_speakers_requested": 10,
+  "method": "speakers and IDs sorted; numpy default_rng(seed); optional uniform speaker subset, then per_speaker IDs per speaker uniformly without replacement",
+  "source_n_utterances": 160,
+  "source_n_speakers": 16,
+  "n_speakers": 10,
+  "n_utterances": 10,
+  "created_utc": "2026-10-28T18:43:20.174165+00:00",
+  "utterance_ids": [
+    "dr1-fvmh0_sx296",
+    "dr2-marc0_sa2",
+    "dr3-falk0_si1086",
+    "dr4-falr0_sx65",
+    "dr4-maeb0_sa1",
+    "dr5-ftlg0_sx213",
+    "dr5-mbgt0_sx171",
+    "dr7-fblv0_si2318",
+    "dr8-fbcg1_sx82",
+    "dr8-mbcg0_si2217"
+  ]
+}

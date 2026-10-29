@@ -66,6 +66,8 @@ class ModeSpec:
     scenario: str  # "A" or "B"
     engine: str | None  # None -> Whisper timestamps only
     has_phones: bool
+    base: str | None = None  # refined modes reuse this mode's alignments (no extra MFA)
+    refiner: str | None = None  # "const" or "brqe"
 
 
 MODES: dict[str, ModeSpec] = {
@@ -74,14 +76,28 @@ MODES: dict[str, ModeSpec] = {
     "B2_proposed": ModeSpec("Proposed: Whisper + anchoring + MFA", "B", "mfa", True),
     "A1_ctc": ModeSpec("Known text + CTC (MMS_FA)", "A", "ctc", False),
     "A2_proposed": ModeSpec("Proposed: known text + anchoring + MFA", "A", "mfa", True),
+    "B2_const": ModeSpec(
+        "B2 + constant offset (BRQE rival)", "B", "mfa", True, "B2_proposed", "const"
+    ),
+    "B2_brqe": ModeSpec("B2 + BRQE refinement", "B", "mfa", True, "B2_proposed", "brqe"),
+    "A2_const": ModeSpec(
+        "A2 + constant offset (BRQE rival)", "A", "mfa", True, "A2_proposed", "const"
+    ),
+    "A2_brqe": ModeSpec("A2 + BRQE refinement", "A", "mfa", True, "A2_proposed", "brqe"),
 }
-DEFAULT_MODES = list(MODES)
+REFINED_MODES = [m for m, spec in MODES.items() if spec.refiner]
+DEFAULT_MODES = [m for m in MODES if m not in REFINED_MODES]
 
 # Primary hypotheses: proposed vs. each baseline within the same scenario
 COMPARISONS: list[tuple[str, str, str]] = [
     ("B2_vs_B0", "B0_whisper", "B2_proposed"),
     ("B2_vs_B1", "B1_whisper_ctc", "B2_proposed"),
     ("A2_vs_A1", "A1_ctc", "A2_proposed"),
+    # BRQE ablation (present only when refined modes run); Holm covers all tests
+    ("B2brqe_vs_B2", "B2_proposed", "B2_brqe"),
+    ("B2brqe_vs_B2const", "B2_const", "B2_brqe"),
+    ("A2brqe_vs_A2", "A2_proposed", "A2_brqe"),
+    ("A2brqe_vs_A2const", "A2_const", "A2_brqe"),
 ]
 
 REFERENCE_TYPES: dict[str, str] = {
@@ -435,6 +451,7 @@ def execute_modes(
     vad_backend: Any | None = None,
     log: Callable[[str], None] = print,
     timings: dict[str, float] | None = None,
+    refiners: dict[str, Any] | None = None,
 ) -> dict[str, dict[str, tuple[list[WordToken], list[PhonemeCue] | None] | str]]:
     """Run all requested modes; returns mode -> utterance id -> prediction or error text.
 
@@ -483,7 +500,7 @@ def execute_modes(
     log("[*] Stage 2/2: forced alignment")
     for mode in modes:
         spec = MODES[mode]
-        if spec.engine is None:
+        if spec.engine is None or spec.base is not None:
             continue
         ready = [
             (utt, jobs[spec.scenario][utt.id])
@@ -510,6 +527,29 @@ def execute_modes(
             else:
                 phones = [p for w in out for p in w.phonemes] if spec.has_phones else None
                 results[mode][utt.id] = (out, phones)
+
+    # Stage 3: refiners on the base modes' alignments (BRQE and its constant rival)
+    refined = [m for m in modes if MODES[m].base is not None]
+    if refined:
+        from subtitle_workbench.refiner import MelExtractor, read_wav_mono, refine_prediction
+
+        t0 = time.perf_counter()
+        extractor = MelExtractor()
+        mels = {u.id: extractor(read_wav_mono(u.wav_path)) for u in utterances}
+        timings["mel_features"] = round(time.perf_counter() - t0, 3)
+        for mode in refined:
+            spec = MODES[mode]
+            log(f"[*]   {mode}: {spec.refiner} on {spec.base}")
+            t0 = time.perf_counter()
+            for utt in utterances:
+                base = results[spec.base].get(utt.id)
+                if base is None or isinstance(base, str):
+                    results[mode][utt.id] = base or "base mode not executed"
+                    continue
+                results[mode][utt.id] = refine_prediction(
+                    refiners[spec.refiner], utt.id, spec.scenario, base[0], base[1], mels
+                )
+            timings[f"refine_{mode}"] = round(time.perf_counter() - t0, 3)
     return results
 
 
@@ -677,6 +717,70 @@ def compare_modes(rows: list[dict[str, Any]], modes: list[str], n_speakers: int)
     return out
 
 
+def load_refiners(refiner_dir: Path | str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Load BRQE weights and constant offsets; returns refiners and their config record."""
+    from subtitle_workbench.refiner import BRQERefiner, ConstantRefiner
+
+    d = Path(refiner_dir)
+    const_file, brqe_file = d / "const_offsets.json", d / "brqe.pt"
+    for f in (const_file, brqe_file, brqe_file.with_suffix(".json")):
+        if not f.is_file():
+            raise BenchmarkError(f"Refiner file not found: {f}")
+    const = ConstantRefiner(json.loads(const_file.read_text(encoding="utf-8"))["offsets"])
+    brqe = BRQERefiner.load(brqe_file)
+    meta = json.loads(brqe_file.with_suffix(".json").read_text(encoding="utf-8"))
+    record = {
+        "dir": d.as_posix(),
+        "brqe_weights_sha256": meta["weights_sha256"],
+        "brqe_config": meta["config"],
+        "const_offsets_sha256": sha256(const_file),
+        "trained_on": meta.get("trained_on"),
+    }
+    return {"const": const, "brqe": brqe}, record
+
+
+def quality_estimation(
+    utterances: list[BenchmarkUtterance], base: dict[str, Any], refined: dict[str, Any]
+) -> dict[str, Any] | None:
+    """Reliability head: P(word boundary of the MFA alignment is > 20 ms off).
+
+    Label per matched word: max(|start error|, |end error|) of the base (MFA) word > 20 ms.
+    Score: 1 - confidence of the same word in the BRQE output (same order as the base).
+    Retention: word MAE of the BRQE output after rejecting the least reliable words.
+    """
+    from subtitle_workbench.metrics import _align_token_sequences
+    from subtitle_workbench.refiner import pr_auc, roc_auc
+
+    labels, scores, kept_err = [], [], []
+    for utt in utterances:
+        b, r = base.get(utt.id), refined.get(utt.id)
+        if b is None or r is None or isinstance(b, str) or isinstance(r, str):
+            continue
+        index = {id(w): i for i, w in enumerate(b[0])}
+        for bw, rw in _align_token_sequences(b[0], utt.ref_words)[0]:
+            i = index[id(bw)]
+            labels.append(max(abs(bw.start - rw.start), abs(bw.end - rw.end)) > 0.02)
+            scores.append(1.0 - r[0][i].confidence)
+            new = r[0][i]
+            kept_err.append(0.5 * (abs(new.start - rw.start) + abs(new.end - rw.end)) * 1000)
+    if not labels:
+        return None
+    y, sc, err = np.array(labels), np.array(scores), np.array(kept_err)
+    order = np.argsort(sc, kind="mergesort")  # most reliable first
+    retention = {}
+    for reject in (0.0, 0.1, 0.2, 0.3, 0.5):
+        keep = order[: max(1, int(round(len(order) * (1 - reject))))]
+        retention[f"reject_{int(reject * 100)}pct"] = round(float(err[keep].mean()), 2)
+    return {
+        "label": "base MFA word boundary error > 20 ms",
+        "n_words": int(len(y)),
+        "positive_rate": round(float(y.mean()), 4),
+        "roc_auc": roc_auc(y, sc),
+        "pr_auc": pr_auc(y, sc),
+        "word_mae_after_rejection_ms": retention,
+    }
+
+
 def serialize_predictions(predictions: dict[str, Any], modes: list[str]) -> dict[str, Any]:
     """Predicted word and phone boundaries per mode and utterance (or the error text).
 
@@ -693,7 +797,7 @@ def serialize_predictions(predictions: dict[str, Any], modes: list[str]) -> dict
             words, phones = pred
             per_utt[utt_id] = {
                 "status": "ok",
-                "words": [[w.text, w.normalized, w.start, w.end] for w in words],
+                "words": [[w.text, w.normalized, w.start, w.end, w.confidence] for w in words],
                 "phones": (
                     [[p.phoneme, p.start, p.end] for p in phones] if phones is not None else None
                 ),
@@ -701,7 +805,10 @@ def serialize_predictions(predictions: dict[str, Any], modes: list[str]) -> dict
         out[m] = per_utt
     return {
         "schema_version": 1,
-        "fields": {"word": "text,normalized,start,end", "phone": "phoneme,start,end"},
+        "fields": {
+            "word": "text,normalized,start,end,confidence",
+            "phone": "phoneme,start,end",
+        },
         "modes": out,
     }
 
@@ -768,6 +875,7 @@ def run_benchmark(
     transcriber: Any | None = None,
     aligner: Any | None = None,
     vad_backend: Any | None = None,
+    refiner_dir: Path | str | None = None,
 ) -> dict[str, Any]:
     """Execute the benchmark and write benchmark_results.json, benchmark_utterances.json,
     and manifest.json into ``output_dir``."""
@@ -775,7 +883,10 @@ def run_benchmark(
         raise BenchmarkError(f"Random seed must be non-negative, got {seed}")
     if bootstrap_resamples < 1:
         raise BenchmarkError(f"bootstrap_resamples must be >= 1, got {bootstrap_resamples}")
-    selected = list(modes) if modes is not None else list(DEFAULT_MODES)
+    if modes is not None:
+        selected = list(modes)
+    else:
+        selected = list(DEFAULT_MODES) + (list(REFINED_MODES) if refiner_dir else [])
     if not selected:
         raise BenchmarkError("At least one mode must be selected")
     unknown = [m for m in selected if m not in MODES]
@@ -783,6 +894,15 @@ def run_benchmark(
         raise BenchmarkError(f"Unknown mode(s): {unknown}; choose from {list(MODES)}")
     if utterance_list is not None and max_utterances is not None:
         raise BenchmarkError("utterance_list and max_utterances are mutually exclusive")
+    refined = [m for m in selected if MODES[m].base is not None]
+    missing_base = [m for m in refined if MODES[m].base not in selected]
+    if missing_base:
+        raise BenchmarkError(f"Refined mode(s) {missing_base} need their base mode selected")
+    if refined and offline_synthetic:
+        raise BenchmarkError("Refined modes cannot run on simulated predictions")
+    if refined and refiner_dir is None:
+        raise BenchmarkError(f"Refined mode(s) {refined} need refiner_dir (BRQE weights)")
+    refiners, refiner_config = load_refiners(refiner_dir) if refined else ({}, None)
     sample = load_utterance_sample(utterance_list) if utterance_list is not None else None
 
     out_path = Path(output_dir)
@@ -858,7 +978,10 @@ def run_benchmark(
                 aligner,
                 vad_backend=vad_backend,
                 timings=stage_seconds,
+                refiners=refiners,
             )
+            if refiner_config is not None:
+                config["refiners"] = refiner_config
 
         modes_output: dict[str, Any] = {}
         all_rows: list[dict[str, Any]] = []
@@ -866,6 +989,10 @@ def run_benchmark(
             summary, rows = evaluate_mode(
                 m, utterances, predictions[m], ci_unit, bootstrap_resamples, seed
             )
+            if MODES[m].refiner == "brqe":
+                summary["quality_estimation"] = quality_estimation(
+                    utterances, predictions[MODES[m].base], predictions[m]
+                )
             modes_output[m] = summary
             all_rows += rows
             wm = summary["word_metrics"]
@@ -990,6 +1117,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="JSON sample from scripts/make_benchmark_sample.py; runs exactly these IDs",
     )
     parser.add_argument(
+        "--refiner-dir",
+        type=Path,
+        default=None,
+        help="BRQE weights + constant offsets (adds the A2/B2 +const and +brqe modes)",
+    )
+    parser.add_argument(
         "--modes",
         type=str,
         default=None,
@@ -1012,6 +1145,7 @@ def main(argv: list[str] | None = None) -> int:
             device=args.device,
             max_utterances=args.max_utterances,
             utterance_list=args.utterance_list,
+            refiner_dir=args.refiner_dir,
             modes=modes_list,
             asr_model=args.asr_model,
         )

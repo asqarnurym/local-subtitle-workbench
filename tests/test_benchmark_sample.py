@@ -308,7 +308,7 @@ def test_run_benchmark_writes_predictions_and_runtime(tmp_path: Path) -> None:
     b2 = preds["modes"]["B2_proposed"]
     assert len(b2) == 10
     first = next(iter(b2.values()))
-    assert first["status"] == "ok" and len(first["words"][0]) == 4 and first["phones"]
+    assert first["status"] == "ok" and len(first["words"][0]) == 5 and first["phones"]
     assert preds["modes"]["B0_whisper"][next(iter(b2))]["phones"] is None
     manifest = json.loads((tmp_path / "out" / "manifest.json").read_text())
     assert manifest["outputs"]["benchmark_predictions.json"]["sha256"] == sha256(

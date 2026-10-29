@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-10-29T03:13:58.443208+00:00",
+  "code": {
+    "source_sha256": "09605a45f3222dfb475b2691ace6e9e5ca0afc6f34c9588df1777bddfc689c03",
+    "git_revision": "9dc8018de6d9debef7d6765b40630903eaf2cbdd",
+    "git_worktree_dirty": true
+  },
+  "input": {
+    "run": "reports/brqe_train_run",
+    "sample": {
+      "path": "reports/buckeye_train_sample_20260401.json",
+      "sha256": "c27f6de24c06eb92cf3a3352a95abe24c729ac07cee609d03c8582e88b06b876",
+      "seed": 20260401,
+      "per_speaker": 150,
+      "n_utterances": 3000
+    },
+    "split": {
+      "path": "reports/buckeye_split_20260401.json",
+      "sha256": "49bcad6e6f686ad3ab26d1f9800e2c4dee519a1dbd4b441471e9b2ba5a0af2f7"
+    },
+    "run_code": {
+      "source_sha256": "09605a45f3222dfb475b2691ace6e9e5ca0afc6f34c9588df1777bddfc689c03",
+      "git_revision": "9dc8018de6d9debef7d6765b40630903eaf2cbdd",
+      "git_worktree_dirty": false
+    },
+    "n_utterances": 3000,
+    "n_speakers": 20
+  },
+  "config": {
+    "epochs": 12,
+    "batch_size": 512,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "cls_weight": 0.5,
+    "seed": 20260401,
+    "hidden": 128,
+    "dropout": 0.2
+  },
+  "n_boundaries": 461850,
+  "n_matched": 382270,
+  "weights_sha256": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+  "const_offsets": {
+    "phone_end|A": 0.00019999999999997797,
+    "phone_end|B": 0.00019999999999997797,
+    "phone_start|A": -0.00010000000000021103,
+    "phone_start|B": -0.00019999999999997797,
+    "word_end|A": -0.0006500000000000394,
+    "word_end|B": -0.0009999999999998899,
+    "word_start|A": -0.0013000000000000789,
+    "word_start|B": -0.0014000000000000679
+  },
+  "seconds": 714.2
+}

@@ -365,6 +365,24 @@ def select_utterances(
     return [by_id[i] for i in ids]
 
 
+def corpus_defect(utt: BenchmarkUtterance) -> str | None:
+    """Reason the staged clip is unusable as gold, or None.
+
+    Only empty audio is checked: reference word times are already validated by WordToken.
+    """
+    if utt.duration <= 0:
+        return "empty audio"
+    return None
+
+
+def exclude_corpus_defects(
+    utterances: list[BenchmarkUtterance],
+) -> tuple[list[BenchmarkUtterance], dict[str, str]]:
+    """Split off defective clips; returns (usable utterances, {id: reason})."""
+    excluded = {u.id: r for u in utterances if (r := corpus_defect(u)) is not None}
+    return [u for u in utterances if u.id not in excluded], excluded
+
+
 # ---------------------------------------------------------------------------
 # Simulated self-test (pipeline plumbing only; never citable)
 # ---------------------------------------------------------------------------
@@ -535,7 +553,14 @@ def execute_modes(
 
         t0 = time.perf_counter()
         extractor = MelExtractor()
-        mels = {u.id: extractor(read_wav_mono(u.wav_path)) for u in utterances}
+        mels: dict[str, Any] = {}
+        mel_errors: dict[str, str] = {}
+        for u in utterances:
+            # One bad clip fails only itself, as in Stages 1-2
+            try:
+                mels[u.id] = extractor(read_wav_mono(u.wav_path))
+            except Exception as err:
+                mel_errors[u.id] = f"mel features failed: {type(err).__name__}: {err}"
         timings["mel_features"] = round(time.perf_counter() - t0, 3)
         for mode in refined:
             spec = MODES[mode]
@@ -546,9 +571,15 @@ def execute_modes(
                 if base is None or isinstance(base, str):
                     results[mode][utt.id] = base or "base mode not executed"
                     continue
-                results[mode][utt.id] = refine_prediction(
-                    refiners[spec.refiner], utt.id, spec.scenario, base[0], base[1], mels
-                )
+                if utt.id in mel_errors:
+                    results[mode][utt.id] = mel_errors[utt.id]
+                    continue
+                try:
+                    results[mode][utt.id] = refine_prediction(
+                        refiners[spec.refiner], utt.id, spec.scenario, base[0], base[1], mels
+                    )
+                except Exception as err:
+                    results[mode][utt.id] = f"refinement failed: {type(err).__name__}: {err}"
             timings[f"refine_{mode}"] = round(time.perf_counter() - t0, 3)
     return results
 
@@ -916,6 +947,7 @@ def run_benchmark(
                     f"Utterance list is for corpus '{sample['corpus']}', not '{corpus}'"
                 )
             utterances = select_utterances(utterances, sample["utterance_ids"])
+        utterances, excluded_defects = exclude_corpus_defects(utterances)
         if max_utterances is not None and max_utterances > 0:
             utterances = utterances[:max_utterances]
         if not utterances:
@@ -933,6 +965,9 @@ def run_benchmark(
         print(f"[*] Corpus {corpus}: {len(utterances)} utterances, {n_spk} speakers")
 
         config: dict[str, Any] = {"modes": selected, "ci_unit": ci_unit}
+        config["excluded_corpus_defects"] = excluded_defects
+        if excluded_defects:
+            print(f"[!] Excluded {len(excluded_defects)} defective clip(s): {excluded_defects}")
         if sample is not None:
             config["sample"] = {
                 "path": Path(utterance_list).as_posix(),  # type: ignore[arg-type]

@@ -95,9 +95,11 @@ uv run --locked --all-extras python scripts/speech_benchmark.py --corpus buckeye
 Full runs:
 
 ```powershell
-uv run --locked --all-extras python scripts/speech_benchmark.py --corpus timit   --data-dir data/corpora/timit   --output-dir reports/timit
-uv run --locked --all-extras python scripts/speech_benchmark.py --corpus buckeye --data-dir data/corpora/buckeye --output-dir reports/buckeye
+uv run --locked --all-extras python scripts/speech_benchmark.py --corpus timit   --data-dir data/corpora/timit   --refiner-dir models/brqe --output-dir reports/timit
+uv run --locked --all-extras python scripts/speech_benchmark.py --corpus buckeye --data-dir data/corpora/buckeye --utterance-list reports/buckeye_test_sample_20260401.json --refiner-dir models/brqe --output-dir reports/buckeye
 ```
+
+Clips with empty audio are corpus defects, not alignment failures: they are excluded before any stage and listed with the reason in `config.excluded_corpus_defects`. In the staged Buckeye these are `s1901b_0111`–`s1901b_0121` (header-only WAV files); one of them (`s1901b_0119`) is in the test sample, so the Buckeye full run has 999 clips.
 
 Each run writes `benchmark_results.json` (per-mode summary and paired tests), `benchmark_utterances.json` (one row per utterance and mode, including failures and their error text), `benchmark_predictions.json` (predicted word and phone boundaries per mode and utterance, reused by later analyses) and `manifest.json` (code hash, input audio and output hashes, configuration, hardware). `benchmark_results.json` also has a `runtime` section (wall-clock seconds and real-time factor per stage); it is recorded for transparency only and is not an evaluation target.
 

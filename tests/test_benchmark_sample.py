@@ -20,7 +20,9 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.speech_benchmark import (  # noqa: E402
     SAMPLE_SCHEMA_VERSION,
+    corpus_defect,
     draw_speaker_sample,
+    exclude_corpus_defects,
     load_synthetic_utterances,
     load_utterance_sample,
     run_benchmark,
@@ -57,6 +59,16 @@ def _timit_like(root: Path, speakers: int, per_speaker: int) -> Path:
             (d / f"sx{u}.wrd").write_text("1600 8000 she\n", encoding="utf-8")
             (d / f"sx{u}.phn").write_text("1600 4000 sh\n4000 8000 iy\n", encoding="utf-8")
     return root
+
+
+def test_exclude_corpus_defects_drops_empty_audio(tmp_path: Path) -> None:
+    import dataclasses
+
+    utts = _synthetic(tmp_path)
+    kept, excluded = exclude_corpus_defects([dataclasses.replace(utts[0], duration=0.0)] + utts[1:])
+    assert excluded == {utts[0].id: "empty audio"}
+    assert [u.id for u in kept] == [u.id for u in utts[1:]]
+    assert corpus_defect(utts[1]) is None
 
 
 def test_draw_speaker_sample_is_deterministic_and_balanced(tmp_path: Path) -> None:

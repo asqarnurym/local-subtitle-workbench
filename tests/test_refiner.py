@@ -186,3 +186,49 @@ def test_benchmark_refined_modes_reuse_base_alignments(tmp_path: Path) -> None:
         run_benchmark(
             corpus="synthetic", output_dir=tmp_path / "o3", modes=["A2_proposed", "A2_brqe"]
         )
+
+
+def test_benchmark_excludes_empty_clip_and_isolates_refiner_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import wave
+
+    import subtitle_workbench.refiner as refiner_mod
+    from scripts.speech_benchmark import run_benchmark
+    from subtitle_workbench.corpora import stage_synthetic_benchmark
+    from tests.test_benchmark import _OracleAligner, _OracleTranscriber
+
+    _write_refiners(tmp_path / "ref")
+    data = stage_synthetic_benchmark(tmp_path / "synth")
+    wavs = sorted(data.glob("**/*.wav"))
+    with wave.open(str(wavs[0]), "wb") as w:  # header only: a corpus defect
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(16000)
+    real = refiner_mod.refine_prediction
+    victim: list[str] = []
+
+    def flaky(refiner, utt, *args):
+        if not victim:
+            victim.append(utt)
+        if utt == victim[0]:
+            raise RuntimeError("boom")
+        return real(refiner, utt, *args)
+
+    monkeypatch.setattr(refiner_mod, "refine_prediction", flaky)
+    res = run_benchmark(
+        corpus="synthetic",
+        data_dir=data,
+        output_dir=tmp_path / "out",
+        bootstrap_resamples=20,
+        transcriber=_OracleTranscriber(),
+        aligner=_OracleAligner(),
+        vad_backend=lambda *a, **k: [],
+        refiner_dir=tmp_path / "ref",
+    )
+    excluded = res["config"]["excluded_corpus_defects"]
+    assert list(excluded.values()) == ["empty audio"] and res["n_utterances"] == 9
+    rows = json.loads((tmp_path / "out" / "benchmark_utterances.json").read_text("utf-8"))
+    failed = [r for r in rows if r["mode"] == "A2_brqe" and r["status"] != "ok"]
+    assert [r["utterance"] for r in failed] == victim
+    assert "refinement failed: RuntimeError: boom" in failed[0]["error"]

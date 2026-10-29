@@ -24,6 +24,7 @@ from .audio import slice_wav
 from .chunker import reconcile_chunk_alignments
 from .ctc_aligner import TorchAudioAligner
 from .mfa_wrapper import (
+    MFAExecutionError,
     MFAItem,
     MFANotFoundError,
     SubprocessRunner,
@@ -80,6 +81,7 @@ class ForcedAligner:
         mfa_num_jobs: int | None = None,
         mfa_per_speaker: bool = True,
         ctc_device: str | None = None,
+        mfa_max_attempts: int = 3,
     ) -> None:
         self.mfa_runner = mfa_runner
         self.ctc_aligner = ctc_aligner
@@ -94,6 +96,11 @@ class ForcedAligner:
         # speaker they agree, so MFA is called once per speaker (adaptation is per speaker).
         self.mfa_per_speaker = mfa_per_speaker
         self.ctc_device = ctc_device
+        # MFA 3.4.3 on Windows occasionally crashes natively (e.g. exit 0xC0000409) while
+        # collecting alignments; the same call then succeeds. A failed call is retried and
+        # every retry is recorded here so that it is visible in the benchmark results.
+        self.mfa_max_attempts = mfa_max_attempts
+        self.mfa_retries: list[dict[str, object]] = []
 
     # ------------------------------------------------------------------
     # Configuration record (written to manifests)
@@ -131,15 +138,37 @@ class ForcedAligner:
             batches = [list(range(len(items)))]
         out: list[list[WordToken] | None] = [None] * len(items)
         for idxs in batches:
-            res = run_mfa_corpus(
-                [items[i] for i in idxs],
-                dictionary=self.dictionary,
-                acoustic_model=self.acoustic_model,
-                g2p_model=self.g2p_model,
-                fine_tune=self.mfa_fine_tune,
-                num_jobs=self.mfa_num_jobs,
-                runner=self.mfa_runner,
-            )
+            batch = [items[i] for i in idxs]
+            for attempt in range(1, self.mfa_max_attempts + 1):
+                try:
+                    res = run_mfa_corpus(
+                        batch,
+                        dictionary=self.dictionary,
+                        acoustic_model=self.acoustic_model,
+                        g2p_model=self.g2p_model,
+                        fine_tune=self.mfa_fine_tune,
+                        num_jobs=self.mfa_num_jobs,
+                        runner=self.mfa_runner,
+                    )
+                    break
+                except MFAExecutionError as err:
+                    self.mfa_retries.append(
+                        {
+                            "speaker": batch[0].speaker,
+                            "n_items": len(batch),
+                            "attempt": attempt,
+                            "error": str(err).splitlines()[0][:200],
+                        }
+                    )
+                    if attempt == self.mfa_max_attempts:
+                        raise
+                    logger.warning(
+                        "MFA failed for speaker %s (attempt %d/%d), retrying: %s",
+                        batch[0].speaker,
+                        attempt,
+                        self.mfa_max_attempts,
+                        str(err).splitlines()[0][:200],
+                    )
             for i, words in zip(idxs, res, strict=True):
                 out[i] = words
         return out

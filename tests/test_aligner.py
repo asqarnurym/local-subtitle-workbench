@@ -518,6 +518,49 @@ def test_align_requests_one_mfa_call_per_speaker(
     assert aligner.describe("mfa")["invocation"] == "per_speaker"
 
 
+def test_mfa_crash_is_retried_and_recorded(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from subtitle_workbench.aligner import AlignmentRequest
+    from subtitle_workbench.mfa_wrapper import MFAExecutionError
+
+    monkeypatch.setattr("shutil.which", lambda _: "/usr/local/bin/mfa")
+    wav = tmp_path / "a.wav"
+    create_dummy_wav(wav, duration_sec=2.0)
+    chunk = AudioChunk(
+        id="c0", index=0, start=0.0, end=2.0, padded_start=0.0, padded_end=2.0, text="again"
+    )
+    crash = subprocess.CalledProcessError(3221226505, ["mfa"], stderr="native crash")
+
+    def flaky(cmd: list[str], timeout: float | None = None) -> subprocess.CompletedProcess:
+        if runner.run.call_count == 1:
+            raise crash
+        out = Path(cmd[5]) / "spk1"
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "chunk_0000.TextGrid").write_text(_tg([(0.2, 0.7, "again")], 2.0), "utf-8")
+        return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
+
+    runner = MagicMock(spec=SubprocessRunner)
+    runner.run.side_effect = flaky
+    aligner = ForcedAligner(mfa_runner=runner)
+    res = aligner.align_requests([AlignmentRequest(wav, [chunk], speaker="spk1")], engine="mfa")
+    assert [w.text for w in res[0]] == ["again"] and runner.run.call_count == 2
+    assert aligner.mfa_retries == [
+        {
+            "speaker": "spk1",
+            "n_items": 1,
+            "attempt": 1,
+            "error": "MFA execution failed with exit code 3221226505: native crash",
+        }
+    ]
+
+    # A call that keeps failing still stops the run after the last attempt
+    runner = MagicMock(spec=SubprocessRunner)
+    runner.run.side_effect = crash
+    aligner = ForcedAligner(mfa_runner=runner, mfa_max_attempts=2)
+    with pytest.raises(MFAExecutionError):
+        aligner.align_requests([AlignmentRequest(wav, [chunk], speaker="spk1")], engine="mfa")
+    assert runner.run.call_count == 2 and len(aligner.mfa_retries) == 2
+
+
 def test_align_requests_single_batch_when_per_speaker_disabled(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

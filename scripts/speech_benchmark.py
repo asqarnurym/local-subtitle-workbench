@@ -1017,6 +1017,8 @@ def run_benchmark(
             )
             if refiner_config is not None:
                 config["refiners"] = refiner_config
+            if hasattr(aligner, "mfa_retries"):
+                config["mfa_retries"] = list(aligner.mfa_retries)
 
         modes_output: dict[str, Any] = {}
         all_rows: list[dict[str, Any]] = []

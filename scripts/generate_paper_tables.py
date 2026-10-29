@@ -291,6 +291,60 @@ def generate_statistical_significance_table(
     return "\n".join(lines) + "\n"
 
 
+QE_REJECTION_LEVELS = (0, 10, 20, 30, 50)
+
+
+def generate_quality_estimation_table(
+    data: dict[str, Any],
+    table_format: str = "booktabs",
+    allow_simulated: bool = False,
+) -> str | None:
+    """Generate the BRQE reliability-head table; None when no mode has quality_estimation."""
+    if table_format != "booktabs":
+        raise ValueError(f"Unsupported table format: '{table_format}'. Must be 'booktabs'.")
+
+    prefix = _check_provenance_and_get_prefix(data, allow_simulated=allow_simulated)
+    rows = [
+        (key, m["quality_estimation"])
+        for key, m in data.get("modes", {}).items()
+        if m.get("quality_estimation")
+    ]
+    if not rows:
+        return None
+
+    level_cols = " & ".join(f"{lv}\\%" for lv in QE_REJECTION_LEVELS)
+    lines: list[str] = [
+        r"\begin{table}[t]",
+        r"\centering",
+        f"\\caption{{{prefix}BRQE Reliability Head: Detection of Word Boundary Errors "
+        r"above 20 ms and Word MAE (ms) after Rejecting the Least Reliable Words}",
+        r"\label{tab:quality_estimation}",
+        f"\\begin{{tabular}}{{lccc{'c' * len(QE_REJECTION_LEVELS)}}}",
+        r"\toprule",
+        f"Method & \\(n\\) words & ROC-AUC & PR-AUC (base rate) & {level_cols} \\\\",
+        r"\midrule",
+    ]
+
+    def _auc(val: float | None) -> str:
+        return f"{float(val):.3f}" if val is not None else "--"
+
+    for key, qe in rows:
+        rejection = qe.get("word_mae_after_rejection_ms") or {}
+        maes = " & ".join(
+            f"{float(v):.1f}" if (v := rejection.get(f"reject_{lv}pct")) is not None else "--"
+            for lv in QE_REJECTION_LEVELS
+        )
+        rate = qe.get("positive_rate")
+        pr = _auc(qe.get("pr_auc")) + (f" ({float(rate):.2f})" if rate is not None else "")
+        lines.append(
+            f"{_format_method_name(key, data['modes'][key])} & {qe.get('n_words', '--')} & "
+            f"{_auc(qe.get('roc_auc'))} & {pr} & {maes} \\\\"
+        )
+
+    lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
+    return "\n".join(lines) + "\n"
+
+
 def generate_all_tables(
     input_path: Path | str,
     output_dir: Path | str,
@@ -323,10 +377,17 @@ def generate_all_tables(
     t3_path = out_dir / "table_statistical_significance.tex"
     t3_path.write_text(t3_content, encoding="utf-8")
 
-    return {
+    paths = {
         "alignment_accuracy": t1_path,
         "statistical_significance": t3_path,
     }
+    qe_content = generate_quality_estimation_table(
+        data, table_format=table_format, allow_simulated=allow_simulated
+    )
+    if qe_content is not None:
+        paths["quality_estimation"] = out_dir / "table_quality_estimation.tex"
+        paths["quality_estimation"].write_text(qe_content, encoding="utf-8")
+    return paths
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

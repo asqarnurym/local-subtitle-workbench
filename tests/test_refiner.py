@@ -170,6 +170,11 @@ def test_benchmark_refined_modes_reuse_base_alignments(tmp_path: Path) -> None:
     assert "A2brqe_vs_A2const" in res["statistical_significance"]
     assert res["config"]["refiners"]["brqe_weights_sha256"]
     assert "refine_A2_brqe" in res["runtime"]["stages"]
+    from scripts.generate_paper_tables import generate_quality_estimation_table
+
+    table = generate_quality_estimation_table(res, allow_simulated=True)
+    assert table is not None and r"\label{tab:quality_estimation}" in table
+    assert "(A2) + BRQE" in table and "(A2) + constant" not in table
     with pytest.raises(BenchmarkError, match="base mode"):
         run_benchmark(
             corpus="synthetic",

@@ -31,6 +31,7 @@ import json
 import platform
 import sys
 import tempfile
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -433,8 +434,14 @@ def execute_modes(
     aligner: Any,
     vad_backend: Any | None = None,
     log: Callable[[str], None] = print,
+    timings: dict[str, float] | None = None,
 ) -> dict[str, dict[str, tuple[list[WordToken], list[PhonemeCue] | None] | str]]:
-    """Run all requested modes; returns mode -> utterance id -> prediction or error text."""
+    """Run all requested modes; returns mode -> utterance id -> prediction or error text.
+
+    Wall-clock seconds per stage are written into ``timings`` when given (transparency
+    only; not an evaluation target).
+    """
+    timings = timings if timings is not None else {}
     from subtitle_workbench.aligner import AlignmentFailure, AlignmentRequest
     from subtitle_workbench.pipeline import prepare_alignment_job
 
@@ -444,6 +451,7 @@ def execute_modes(
 
     # Stage 1: VAD + Whisper (+ anchoring + chunking), one loaded ASR model
     log(f"[*] Stage 1/2: ASR and chunking for {len(utterances)} utterances")
+    t0 = time.perf_counter()
     try:
         for utt in utterances:
             for scenario in sorted(scenarios):
@@ -459,6 +467,7 @@ def execute_modes(
                     jobs[scenario][utt.id] = _error_text(err)
     finally:
         cached.unload()
+    timings["asr_and_chunking"] = round(time.perf_counter() - t0, 3)
 
     results: dict[str, dict[str, Any]] = {m: {} for m in modes}
 
@@ -492,7 +501,9 @@ def execute_modes(
             for _, job in ready
         ]
         log(f"[*]   {mode}: {len(requests)} utterances via {spec.engine}")
+        t0 = time.perf_counter()
         aligned = aligner.align_requests(requests, engine=spec.engine)
+        timings[f"align_{mode}"] = round(time.perf_counter() - t0, 3)
         for (utt, _), out in zip(ready, aligned, strict=True):
             if isinstance(out, AlignmentFailure):
                 results[mode][utt.id] = _error_text(out)
@@ -666,6 +677,53 @@ def compare_modes(rows: list[dict[str, Any]], modes: list[str], n_speakers: int)
     return out
 
 
+def serialize_predictions(predictions: dict[str, Any], modes: list[str]) -> dict[str, Any]:
+    """Predicted word and phone boundaries per mode and utterance (or the error text).
+
+    Saved with every run so that later analyses (BRQE, error analysis) reuse the frozen
+    predictions instead of re-running the models.
+    """
+    out: dict[str, Any] = {}
+    for m in modes:
+        per_utt: dict[str, Any] = {}
+        for utt_id, pred in predictions[m].items():
+            if isinstance(pred, str):
+                per_utt[utt_id] = {"status": "failed", "error": pred}
+                continue
+            words, phones = pred
+            per_utt[utt_id] = {
+                "status": "ok",
+                "words": [[w.text, w.normalized, w.start, w.end] for w in words],
+                "phones": (
+                    [[p.phoneme, p.start, p.end] for p in phones] if phones is not None else None
+                ),
+            }
+        out[m] = per_utt
+    return {
+        "schema_version": 1,
+        "fields": {"word": "text,normalized,start,end", "phone": "phoneme,start,end"},
+        "modes": out,
+    }
+
+
+def runtime_summary(
+    stage_seconds: dict[str, float], total_seconds: float, audio_seconds: float, n_utts: int
+) -> dict[str, Any]:
+    """Wall-clock time per stage and real-time factors. Transparency only: not a target."""
+
+    def rtf(seconds: float) -> float | None:
+        return round(seconds / audio_seconds, 4) if audio_seconds > 0 else None
+
+    return {
+        "note": "transparency only; not an evaluation target",
+        "total_seconds": round(total_seconds, 3),
+        "audio_seconds": round(audio_seconds, 3),
+        "n_utterances": n_utts,
+        "rtf_total": rtf(total_seconds),
+        "stages": {k: {"seconds": v, "rtf": rtf(v)} for k, v in stage_seconds.items()},
+    }
+
+
 # ---------------------------------------------------------------------------
 # Orchestration
 # ---------------------------------------------------------------------------
@@ -763,6 +821,8 @@ def run_benchmark(
                 "per_speaker": sample.get("per_speaker"),
                 "n_utterances": len(sample["utterance_ids"]),
             }
+        stage_seconds: dict[str, float] = {}
+        t_run = time.perf_counter()
         if offline_synthetic:
             rng = np.random.default_rng(seed)
             predictions = {
@@ -792,7 +852,12 @@ def run_benchmark(
             if callable(describe):
                 config["aligners"] = {e: describe(e) for e in ("mfa", "ctc")}
             predictions = execute_modes(
-                utterances, selected, transcriber, aligner, vad_backend=vad_backend
+                utterances,
+                selected,
+                transcriber,
+                aligner,
+                vad_backend=vad_backend,
+                timings=stage_seconds,
             )
 
         modes_output: dict[str, Any] = {}
@@ -836,12 +901,20 @@ def run_benchmark(
             "config": config,
             "modes": modes_output,
             "statistical_significance": stats,
+            "runtime": runtime_summary(
+                stage_seconds, time.perf_counter() - t_run, total_audio, len(utterances)
+            ),
             "hardware": hardware,
         }
         results_file = out_path / "benchmark_results.json"
         results_file.write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
         utt_file = out_path / "benchmark_utterances.json"
         utt_file.write_text(json.dumps(all_rows, indent=2) + "\n", encoding="utf-8")
+        pred_file = out_path / "benchmark_predictions.json"
+        pred_file.write_text(
+            json.dumps(serialize_predictions(predictions, selected), indent=1) + "\n",
+            encoding="utf-8",
+        )
 
         manifest = {
             "schema_version": 2,
@@ -861,6 +934,7 @@ def run_benchmark(
             "outputs": {
                 results_file.name: {"sha256": sha256(results_file)},
                 utt_file.name: {"sha256": sha256(utt_file)},
+                pred_file.name: {"sha256": sha256(pred_file)},
             },
             "runtime": {
                 "python": platform.python_version(),

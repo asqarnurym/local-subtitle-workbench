@@ -75,6 +75,16 @@ uv run --locked --all-extras python scripts/make_benchmark_sample.py --corpus bu
 
 Created 2026-10-28: TIMIT pilot 10 utterances from 10 speakers (sha256 `da928910…843e`); Buckeye 400 clips, 10 from each of 40 speakers (sha256 `9719b13d…20fb`). Do not use `--max-utterances` for the pilot: it takes the first N IDs, which all belong to one speaker.
 
+Speaker split and full-run samples (decisions D6, D7 in `docs/IMPROVEMENT_PLAN.md`). Buckeye speakers are split once into 20 test and 20 train speakers; reported numbers come only from the test group, and the train group is used only for BRQE:
+
+```powershell
+uv run --locked --all-extras python scripts/make_speaker_split.py --corpus buckeye --n-test 20 --seed 20260401 --output reports/buckeye_split_20260401.json
+uv run --locked --all-extras python scripts/make_benchmark_sample.py --corpus buckeye --per-speaker 50  --seed 20260401 --split reports/buckeye_split_20260401.json --group test  --output reports/buckeye_test_sample_20260401.json
+uv run --locked --all-extras python scripts/make_benchmark_sample.py --corpus buckeye --per-speaker 150 --seed 20260401 --split reports/buckeye_split_20260401.json --group train --output reports/buckeye_train_sample_20260401.json
+```
+
+Created 2026-10-29 (random, not stratified: no speaker metadata is staged locally): split sha256 `49bcad6e…f2f7`, test speakers s02 s03 s07 s09 s11 s12 s15 s17 s18 s19 s20 s22 s27 s31 s33 s34 s35 s36 s37 s38; test sample 1000 clips (sha256 `0986421d…4d08`); train sample 3000 clips (sha256 `c27f6de2…b876`).
+
 Pilots (`--utterance-list` runs exactly the listed IDs and records the file path, sha256 and seed in `config.sample` of the results and the manifest; it cannot be combined with `--max-utterances`):
 
 ```powershell
@@ -89,7 +99,7 @@ uv run --locked --all-extras python scripts/speech_benchmark.py --corpus timit  
 uv run --locked --all-extras python scripts/speech_benchmark.py --corpus buckeye --data-dir data/corpora/buckeye --output-dir reports/buckeye
 ```
 
-Each run writes `benchmark_results.json` (per-mode summary and paired tests), `benchmark_utterances.json` (one row per utterance and mode, including failures and their error text) and `manifest.json` (code hash, input audio hashes, configuration, hardware).
+Each run writes `benchmark_results.json` (per-mode summary and paired tests), `benchmark_utterances.json` (one row per utterance and mode, including failures and their error text), `benchmark_predictions.json` (predicted word and phone boundaries per mode and utterance, reused by later analyses) and `manifest.json` (code hash, input audio and output hashes, configuration, hardware). `benchmark_results.json` also has a `runtime` section (wall-clock seconds and real-time factor per stage); it is recorded for transparency only and is not an evaluation target.
 
 ## 3a. Validation protocol
 

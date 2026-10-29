@@ -197,3 +197,120 @@ def test_make_benchmark_sample_cli(tmp_path: Path) -> None:
     assert again.returncode == 1
     assert "refusing to overwrite" in again.stderr
     assert out.read_bytes() == before
+
+
+def _textgrid_corpus(root: Path, speakers: list[str], per_speaker: int) -> Path:
+    """Minimal Buckeye-style clips: <spk>01a_<nnnn>.wav + .TextGrid."""
+    root.mkdir(parents=True)
+    tg = (
+        'File type = "ooTextFile"\nObject class = "TextGrid"\n\nxmin = 0\nxmax = 1\n'
+        "tiers? <exists>\nsize = 2\nitem []:\n"
+        '    item [1]:\n        class = "IntervalTier"\n        name = "words"\n'
+        "        xmin = 0\n        xmax = 1\n        intervals: size = 1\n"
+        "        intervals [1]:\n            xmin = 0.1\n            xmax = 0.6\n"
+        '            text = "yes"\n'
+        '    item [2]:\n        class = "IntervalTier"\n        name = "phones"\n'
+        "        xmin = 0\n        xmax = 1\n        intervals: size = 2\n"
+        "        intervals [1]:\n            xmin = 0.1\n            xmax = 0.3\n"
+        '            text = "y"\n'
+        "        intervals [2]:\n            xmin = 0.3\n            xmax = 0.6\n"
+        '            text = "eh"\n'
+    )
+    for spk in speakers:
+        for i in range(per_speaker):
+            stem = root / f"{spk}01a_{i:04d}"
+            with wave.open(str(stem.with_suffix(".wav")), "wb") as w:
+                w.setnchannels(1)
+                w.setsampwidth(2)
+                w.setframerate(16000)
+                w.writeframes(b"\x00\x01" * 16000)
+            stem.with_suffix(".TextGrid").write_text(tg, encoding="utf-8")
+    return root
+
+
+def test_split_speakers_is_deterministic_and_disjoint() -> None:
+    from scripts.make_speaker_split import split_speakers
+
+    spk = [f"s{i:02d}" for i in range(1, 41)]
+    test, train = split_speakers(list(reversed(spk)), n_test=20, seed=20260401)
+    assert (test, train) == split_speakers(spk, n_test=20, seed=20260401)
+    assert len(test) == len(train) == 20
+    assert not set(test) & set(train) and set(test) | set(train) == set(spk)
+    assert test == sorted(test) and train == sorted(train)
+    with pytest.raises(BenchmarkError, match="n_test"):
+        split_speakers(spk, n_test=40, seed=1)
+
+
+def test_split_and_group_sample_cli(tmp_path: Path) -> None:
+    data = _textgrid_corpus(tmp_path / "bk", ["s01", "s02", "s03", "s04"], per_speaker=3)
+    split_path = tmp_path / "reports" / "split.json"
+    split_cmd = [
+        sys.executable,
+        "scripts/make_speaker_split.py",
+        "--corpus",
+        "buckeye",
+        "--data-dir",
+        str(data),
+        "--n-test",
+        "2",
+        "--seed",
+        "7",
+        "--output",
+        str(split_path),
+    ]
+    proc = subprocess.run(split_cmd, capture_output=True, text=True, cwd=PROJECT_ROOT)
+    assert proc.returncode == 0, proc.stderr
+    split = json.loads(split_path.read_text(encoding="utf-8"))
+    assert len(split["test_speakers"]) == 2 and len(split["train_speakers"]) == 2
+    again = subprocess.run(split_cmd, capture_output=True, text=True, cwd=PROJECT_ROOT)
+    assert again.returncode == 1 and "refusing to overwrite" in again.stderr
+
+    out = tmp_path / "reports" / "test_sample.json"
+    cmd = [
+        sys.executable,
+        "scripts/make_benchmark_sample.py",
+        "--corpus",
+        "buckeye",
+        "--data-dir",
+        str(data),
+        "--per-speaker",
+        "2",
+        "--seed",
+        "7",
+        "--split",
+        str(split_path),
+        "--group",
+        "test",
+        "--output",
+        str(out),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=PROJECT_ROOT)
+    assert proc.returncode == 0, proc.stderr
+    sample = json.loads(out.read_text(encoding="utf-8"))
+    assert {i[:3] for i in sample["utterance_ids"]} == set(split["test_speakers"])
+    assert sample["n_utterances"] == 4
+    assert sample["split"]["group"] == "test"
+    assert sample["split"]["sha256"] == sha256(split_path)
+
+
+def test_run_benchmark_writes_predictions_and_runtime(tmp_path: Path) -> None:
+    res = run_benchmark(
+        corpus="synthetic",
+        output_dir=tmp_path / "out",
+        offline_synthetic=True,
+        bootstrap_resamples=20,
+    )
+    rt = res["runtime"]
+    assert rt["note"].startswith("transparency only")
+    assert rt["audio_seconds"] > 0 and rt["rtf_total"] >= 0
+    preds = json.loads((tmp_path / "out" / "benchmark_predictions.json").read_text())
+    assert set(preds["modes"]) == set(res["modes"])
+    b2 = preds["modes"]["B2_proposed"]
+    assert len(b2) == 10
+    first = next(iter(b2.values()))
+    assert first["status"] == "ok" and len(first["words"][0]) == 4 and first["phones"]
+    assert preds["modes"]["B0_whisper"][next(iter(b2))]["phones"] is None
+    manifest = json.loads((tmp_path / "out" / "manifest.json").read_text())
+    assert manifest["outputs"]["benchmark_predictions.json"]["sha256"] == sha256(
+        tmp_path / "out" / "benchmark_predictions.json"
+    )

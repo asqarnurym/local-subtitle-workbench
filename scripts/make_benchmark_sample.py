@@ -32,6 +32,7 @@ from scripts.speech_benchmark import (  # noqa: E402
     load_textgrid_utterances,
     load_timit_utterances,
 )
+from subtitle_workbench.provenance import sha256  # noqa: E402
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -46,6 +47,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--split", type=Path, default=None, help="Speaker split from make_speaker_split.py"
+    )
+    parser.add_argument(
+        "--group", choices=["test", "train"], default=None, help="Split group to sample from"
+    )
     return parser.parse_args(argv)
 
 
@@ -57,10 +64,22 @@ def main(argv: list[str] | None = None) -> int:
             raise BenchmarkError(f"Output exists, refusing to overwrite: {args.output}")
         if not data_dir.is_dir():
             raise BenchmarkError(f"Corpus directory not found: {data_dir}")
+        if (args.split is None) != (args.group is None):
+            raise BenchmarkError("--split and --group must be given together")
+        group = None
+        if args.split is not None:
+            split = json.loads(args.split.read_text(encoding="utf-8"))
+            if split.get("corpus") != args.corpus:
+                raise BenchmarkError(f"Split is for corpus '{split.get('corpus')}'")
+            group = set(split[f"{args.group}_speakers"])
         if args.corpus == "timit":
             utterances = load_timit_utterances(data_dir)
         else:
             utterances = load_textgrid_utterances(data_dir, args.corpus)
+        if group is not None:
+            utterances = [u for u in utterances if u.speaker_id in group]
+            if {u.speaker_id for u in utterances} != group:
+                raise BenchmarkError("Some split speakers have no utterances in the corpus")
         ids = draw_speaker_sample(utterances, args.per_speaker, args.seed, args.speakers)
     except BenchmarkError as err:
         sys.stderr.write(f"[-] Sample Error: {err}\n")
@@ -78,6 +97,11 @@ def main(argv: list[str] | None = None) -> int:
         "method": (
             "speakers and IDs sorted; numpy default_rng(seed); optional uniform speaker "
             "subset, then per_speaker IDs per speaker uniformly without replacement"
+        ),
+        "split": (
+            {"path": args.split.as_posix(), "sha256": sha256(args.split), "group": args.group}
+            if args.split is not None
+            else None
         ),
         "source_n_utterances": len(utterances),
         "source_n_speakers": len({u.speaker_id for u in utterances}),

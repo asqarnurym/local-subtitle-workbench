@@ -24,6 +24,10 @@ METHOD_DISPLAY_NAMES: dict[str, str] = {
     "B2_proposed": "(B2) Proposed: Whisper + MFA",
     "A1_ctc": "(A1) Known text + CTC",
     "A2_proposed": "(A2) Proposed: known text + MFA",
+    "B2_const": "(B2) + constant offset",
+    "B2_brqe": "(B2) + BRQE",
+    "A2_const": "(A2) + constant offset",
+    "A2_brqe": "(A2) + BRQE",
 }
 
 # Standard comparison pair display names
@@ -31,6 +35,10 @@ COMPARISON_DISPLAY_NAMES: dict[str, str] = {
     "B2_vs_B0": "B2 Proposed vs. B0 Whisper",
     "B2_vs_B1": "B2 Proposed vs. B1 Whisper + CTC",
     "A2_vs_A1": "A2 Proposed vs. A1 CTC",
+    "B2brqe_vs_B2": "B2 + BRQE vs. B2",
+    "B2brqe_vs_B2const": "B2 + BRQE vs. B2 + constant offset",
+    "A2brqe_vs_A2": "A2 + BRQE vs. A2",
+    "A2brqe_vs_A2const": "A2 + BRQE vs. A2 + constant offset",
 }
 
 PREFERRED_MODE_ORDER: list[str] = list(METHOD_DISPLAY_NAMES)

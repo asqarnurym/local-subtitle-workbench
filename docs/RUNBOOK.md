@@ -101,6 +101,21 @@ uv run --locked --all-extras python scripts/speech_benchmark.py --corpus buckeye
 
 Each run writes `benchmark_results.json` (per-mode summary and paired tests), `benchmark_utterances.json` (one row per utterance and mode, including failures and their error text), `benchmark_predictions.json` (predicted word and phone boundaries per mode and utterance, reused by later analyses) and `manifest.json` (code hash, input audio and output hashes, configuration, hardware). `benchmark_results.json` also has a `runtime` section (wall-clock seconds and real-time factor per stage); it is recorded for transparency only and is not an evaluation target.
 
+## 3b. BRQE (train speakers only)
+
+BRQE refines MFA boundaries and estimates their reliability (`docs/IMPROVEMENT_PLAN.md` §6). It is trained only on the 20 train speakers; `train_brqe.py` refuses a run that contains a test speaker.
+
+```powershell
+# 1. MFA alignments (A2, B2) on the train sample; numbers of this run are never reported
+uv run --locked --all-extras python scripts/speech_benchmark.py --corpus buckeye --data-dir data/corpora/buckeye --utterance-list reports/buckeye_train_sample_20260401.json --modes A2_proposed,B2_proposed --output-dir reports/brqe_train_run
+# 2. Speaker-grouped 5-fold CV inside the train speakers + pre-registered decision (§6.5)
+uv run --locked --all-extras python scripts/train_brqe.py --run reports/brqe_train_run --split reports/buckeye_split_20260401.json --cv 5 --report reports/brqe_cv_20260401.json
+# 3. Final training on all train speakers -> models/brqe (brqe.pt, brqe.json, const_offsets.json)
+uv run --locked --all-extras python scripts/train_brqe.py --run reports/brqe_train_run --split reports/buckeye_split_20260401.json --final models/brqe --report reports/brqe_final_20260401.json
+```
+
+With `--refiner-dir models/brqe`, `speech_benchmark.py` adds the modes `A2_const`, `A2_brqe`, `B2_const`, `B2_brqe`. They reuse the A2/B2 MFA alignments (no extra MFA calls); the BRQE weights' sha256 is recorded in `config.refiners`, and the reliability head's ROC-AUC, PR-AUC and word MAE after rejection are in `modes.*_brqe.quality_estimation`.
+
 ## 3a. Validation protocol
 
 Steps 1-6 must be completed in order. A failed step stops the protocol.

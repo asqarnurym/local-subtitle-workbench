@@ -19,3 +19,4 @@ reports/*
 !reports/*_sample_*.json
 !reports/timit_pilot_*.json
 !reports/*_split_*.json
+!reports/brqe_*.json

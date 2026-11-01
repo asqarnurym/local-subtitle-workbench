@@ -155,6 +155,18 @@ reference hashes and the dirty-worktree flag in the final BRQE training report.
 The versioned audit inventory is `reports/frozen_evidence_audit_20261101.json`.
 `.gitattributes` preserves byte-level hashes across Git checkouts.
 
+R1 additionally reproduced all saved metric summaries, per-clip rows and original
+statistical comparisons for both corpora from saved predictions (no model runs).
+Its report is `reports/r1_metric_replay_20261101.json`. For a fresh replay on a
+clean worktree, choose a new ignored directory:
+
+```powershell
+uv run --locked --all-extras python scripts/replay_frozen_metrics.py --output-dir reports/r1_replay_recheck
+```
+
+This command preserves original runs, uses their recorded bootstrap parameters,
+and stops on discrepancies. It does not add speaker-level significance tests.
+
 ## 5. Tables
 
 ```powershell

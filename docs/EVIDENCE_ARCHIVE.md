@@ -114,3 +114,39 @@ conversion, paths escaping the repository, accidental output overwrite, and a
 changed annotation being rejected without overwriting the baseline. Independent
 read-only review found a missing reference-snapshot comparison; it was fixed,
 tested and reviewed again before committing.
+
+## R1: replay of the saved metrics (2026-11-01)
+
+The [R1 report](../reports/r1_metric_replay_20261101.json) records a completed replay
+of TIMIT and Buckeye from their saved predictions and current reference annotations,
+after the integrity preflight. **All saved fields matched exactly**, with their
+original rounding, seed 42 and 2,000 bootstrap resamples:
+
+| Corpus | Modes | Per-clip metric rows | Clip-level statistical comparisons | Differences |
+| --- | --- | --- | --- | --- |
+| TIMIT | 9 | 1,440 | 7 | 0 |
+| Buckeye | 9 | 8,991 | 7 | 0 |
+
+This includes word/phone MAE, Acc@20ms, MAE confidence intervals, matched counts,
+coverage, failures, reliability-head metrics and rejection curves, and the original
+Wilcoxon/Holm comparison outputs. It adds no new statistical hypotheses and does
+not independently validate the scoring implementation. Historical reference
+hashes are still unavailable, but the saved results agree with today's references.
+
+The replay ran from clean revision `e77772f9b9e68a679c9be480aa76e9de4b18bedf`;
+the Git revision and clean status were identical at the end. It took 75.948 seconds
+including preflight; none of the 4,374 protected artifact, annotation, code and
+dependency files changed. No speech model was run. Before execution, ruff and
+all 757 non-model tests passed. The training-state provenance question remains for
+R2 (a separate control training run).
+
+The replay report is versioned; recomputed rows, full summaries, differences and
+preflight details remain local under `reports/r1_replay_20261101/`, with their
+hashes in the report. To repeat the check, choose a fresh ignored directory:
+
+```powershell
+uv run --locked --all-extras python scripts/replay_frozen_metrics.py --output-dir reports/r1_replay_recheck
+```
+
+The command requires a clean worktree. It refuses an existing output directory
+and checks the original artifact and annotation hashes before replaying metrics.

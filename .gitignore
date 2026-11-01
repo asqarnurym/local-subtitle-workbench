@@ -43,3 +43,15 @@ reports/buckeye/tables/*
 !reports/r1_metric_replay_20261101.json
 !reports/r2_brqe_reproduction_20261101.json
 !reports/r2_brqe_independent_20261101.json
+!reports/e1_analysis_20261102/
+reports/e1_analysis_20261102/*
+!reports/e1_analysis_20261102/analysis.json
+!reports/e1_analysis_20261102/independent_check.json
+!reports/e1_analysis_20261102/figure_manifest.json
+!reports/e1_analysis_20261102/figures/
+reports/e1_analysis_20261102/figures/*
+!reports/e1_analysis_20261102/figures/*.png
+!reports/e1_analysis_20261102/figures/*.pdf
+!reports/e1_analysis_20261102/tables/
+reports/e1_analysis_20261102/tables/*
+!reports/e1_analysis_20261102/tables/*.tex

@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "status": "VERIFIED",
+  "scope": "Final figure/table integrity and resolution; prior complete numerical verification reused only after its SHA-256, analysis, ledgers and protected inputs were checked unchanged.",
+  "numerical_verification_sha256": "6bade7f40ed1309a75d924fadbbc297095a17f8b10de33cba0c2be381be27406",
+  "analysis_sha256": "ba6190c47ac7e87e11251f7384b9962dd79e7cd9ca444b4d07763cdb9f40686a",
+  "figure_manifest_sha256": "72747e8ab7b9cc0a720f940f5b96e931cca655ff579348307c0eaa87df1e98ef",
+  "checker_sha256": "838017222b60962ed24e7248fd61f02b3a3ab3106089ba4348d86b07bb7a9390",
+  "python": "3.11.17",
+  "pillow": "13.0.0",
+  "figure_files_verified": 24,
+  "table_files_verified": 2,
+  "png_checks": {
+    "reports/e1_analysis_work_20261102/figures_final/word_error_ecdf_en.png": {
+      "pixels": [
+        2220,
+        1740
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/speaker_brqe_gain_en.png": {
+      "pixels": [
+        2220,
+        2520
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/word_start_end_en.png": {
+      "pixels": [
+        2220,
+        1230
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/reliability_retention_en.png": {
+      "pixels": [
+        2220,
+        1230
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/phone_group_mae_en.png": {
+      "pixels": [
+        2220,
+        1980
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/word_duration_mae_en.png": {
+      "pixels": [
+        2220,
+        1980
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/word_error_ecdf_ru.png": {
+      "pixels": [
+        2220,
+        1740
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/speaker_brqe_gain_ru.png": {
+      "pixels": [
+        2220,
+        2520
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/word_start_end_ru.png": {
+      "pixels": [
+        2220,
+        1230
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/reliability_retention_ru.png": {
+      "pixels": [
+        2220,
+        1230
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/phone_group_mae_ru.png": {
+      "pixels": [
+        2220,
+        1980
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "reports/e1_analysis_work_20261102/figures_final/word_duration_mae_ru.png": {
+      "pixels": [
+        2220,
+        1980
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    }
+  },
+  "code_start": {
+    "source_sha256": "b872cc9c1be520ed31bce67c228b3ded5c3b85ce2bbf17854d128133c9212c4c",
+    "git_revision": "22bd62240c2b6dfd74b10193f51d5d83fd52eb22",
+    "git_worktree_dirty": false
+  },
+  "code_end": {
+    "source_sha256": "b872cc9c1be520ed31bce67c228b3ded5c3b85ce2bbf17854d128133c9212c4c",
+    "git_revision": "22bd62240c2b6dfd74b10193f51d5d83fd52eb22",
+    "git_worktree_dirty": false
+  }
+}

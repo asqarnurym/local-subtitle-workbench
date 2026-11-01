@@ -185,6 +185,38 @@ This performs one final training run, followed by a separate checker process.
 Original weights and benchmark results are read-only. It does not rerun CV, ASR
 or forced alignment, and it does not select a new model from test-set performance.
 
+### 4.2 E1: speaker statistics, error analysis and figures (2026-11-02)
+
+E1 is complete. See [E1_ANALYSIS_RESULTS.md](E1_ANALYSIS_RESULTS.md) for findings,
+denominators, limitations and all six bilingual figures. The versioned archive is
+`reports/e1_analysis_20261102`; large boundary ledgers and initial visual-QA
+exports remain under the local ignored `reports/e1_analysis_work_20261102`.
+No models were executed and no frozen output or approved claim was replaced.
+
+To reproduce the analysis, first commit changes and use a **fresh ignored** output
+directory. Run the standard lint/tests from section 1. Then:
+
+```powershell
+uv run --locked --all-extras python scripts/analyze_speaker_errors.py --output-dir reports/e1_recheck
+uv run --no-project --with numpy==2.4.6 --with scipy==1.17.1 --with matplotlib==3.11.2 --with pillow==13.0.0 python scripts/render_error_analysis.py --analysis-dir reports/e1_recheck
+uv run --no-project --with numpy==2.4.6 --with scipy==1.17.1 --with matplotlib==3.11.2 --with pillow==13.0.0 python scripts/check_speaker_analysis.py --analysis-dir reports/e1_recheck
+```
+
+The last command independently checks all boundary rows, bootstrap intervals and
+exact speaker tests, then verifies the figure/table files. It can take substantially
+longer than the primary analysis because it exhaustively enumerates sign
+permutations. All three commands require unchanged protected inputs; the analysis
+and checker require a clean worktree. Existing verdicts are not overwritten.
+The extra packages live in an isolated uv environment; `uv.lock` is unchanged.
+
+For the completed run, the full checker verified the initial figure layout.
+After layout-only fixes, `check_analysis_figures.py` checked the final 24 exports
+and two tables, anchored to the unchanged full numerical verdict SHA-256
+`6bade7f40ed1309a75d924fadbbc297095a17f8b10de33cba0c2be381be27406`.
+Both initial and final figure manifests are archived. `archive_index.json` maps
+their execution paths to byte-identical archived copies; it does not rewrite
+paths inside the generated evidence. The initial figures themselves remain local.
+
 ## 5. Tables
 
 ```powershell

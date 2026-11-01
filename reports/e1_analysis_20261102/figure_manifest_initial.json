@@ -1,0 +1,139 @@
+{
+  "analysis_sha256": "ba6190c47ac7e87e11251f7384b9962dd79e7cd9ca444b4d07763cdb9f40686a",
+  "renderer_sha256": "959d02b8a9e8fca6cd741ce9b7db28ed116ad6f0be71ab3adb308659dc63919e",
+  "code": {
+    "source_sha256": "b872cc9c1be520ed31bce67c228b3ded5c3b85ce2bbf17854d128133c9212c4c",
+    "git_revision": "65a1fe1131d12b560f759705d46573c870c40876",
+    "git_worktree_dirty": false
+  },
+  "numpy": "2.4.6",
+  "matplotlib": "3.11.2",
+  "png_dpi": 300,
+  "font": "DejaVu Serif, 9 pt",
+  "files": {
+    "reports/e1_analysis_work_20261102/figures/word_error_ecdf_en.png": {
+      "sha256": "431b96987aad32e77ea25b21a3b046c9e6c031209b17bb30571a13a40d08d095",
+      "language": "en",
+      "figure": "word_error_ecdf"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_error_ecdf_en.pdf": {
+      "sha256": "a4ec1694ae920fb260568af23ed55e219e33a94a87f3df61d2e741dd07c7257c",
+      "language": "en",
+      "figure": "word_error_ecdf"
+    },
+    "reports/e1_analysis_work_20261102/figures/speaker_brqe_gain_en.png": {
+      "sha256": "a3d7d4df61a63127a6ca209723a3dccf581823cb58a35a8f0565bde149cfd6f9",
+      "language": "en",
+      "figure": "speaker_brqe_gain"
+    },
+    "reports/e1_analysis_work_20261102/figures/speaker_brqe_gain_en.pdf": {
+      "sha256": "f44493923fb1ba19af96c3cd07dc463a148a02525797cbecb132ddf251d7950e",
+      "language": "en",
+      "figure": "speaker_brqe_gain"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_start_end_en.png": {
+      "sha256": "100b7db3be821c4b14a3b1b3ca5417351301113920b3024b2ce1de81034aa6f0",
+      "language": "en",
+      "figure": "word_start_end"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_start_end_en.pdf": {
+      "sha256": "c18c8a1146f4af2b04c7a343066f654bf9343890e071cf86d0fe549d26476655",
+      "language": "en",
+      "figure": "word_start_end"
+    },
+    "reports/e1_analysis_work_20261102/figures/reliability_retention_en.png": {
+      "sha256": "a675368ab7cd849fd1bf318663971959b4c57bb7056f8799580ae37c2093f8d1",
+      "language": "en",
+      "figure": "reliability_retention"
+    },
+    "reports/e1_analysis_work_20261102/figures/reliability_retention_en.pdf": {
+      "sha256": "709842b8ec9970f60ec62cd8d56b1e8c834e02757ec67af0dd4a62a92fa5a322",
+      "language": "en",
+      "figure": "reliability_retention"
+    },
+    "reports/e1_analysis_work_20261102/figures/phone_group_mae_en.png": {
+      "sha256": "71f9882865516737f98e4010d0f33522da5c7e9923f69290cc5c0d1c85996b83",
+      "language": "en",
+      "figure": "phone_group_mae"
+    },
+    "reports/e1_analysis_work_20261102/figures/phone_group_mae_en.pdf": {
+      "sha256": "99dea530533b1284bf1837faaf46ec92725a1b81d7ee1624104c3d6f588917f1",
+      "language": "en",
+      "figure": "phone_group_mae"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_duration_mae_en.png": {
+      "sha256": "5cdfe33c289aeacda2772daa3e2ab0c9797b95b2a5081d843826fad431557631",
+      "language": "en",
+      "figure": "word_duration_mae"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_duration_mae_en.pdf": {
+      "sha256": "f89a414d3ae1334073bdce9c07b5308fc41a4696fcb27df0ee97f12b2851156a",
+      "language": "en",
+      "figure": "word_duration_mae"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_error_ecdf_ru.png": {
+      "sha256": "c124a4eeb63ee7bd3aa6ae75eba169b9e76e74fcb77d934ab421074440919728",
+      "language": "ru",
+      "figure": "word_error_ecdf"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_error_ecdf_ru.pdf": {
+      "sha256": "a7026d60e1dd060fc12f7b8b14d054ca1636e8393e8179749926377bc3e62da6",
+      "language": "ru",
+      "figure": "word_error_ecdf"
+    },
+    "reports/e1_analysis_work_20261102/figures/speaker_brqe_gain_ru.png": {
+      "sha256": "e65ce9de3f2ba14d88d68e22481653e6da6debef252fec1cc3f8fdf266ef82dd",
+      "language": "ru",
+      "figure": "speaker_brqe_gain"
+    },
+    "reports/e1_analysis_work_20261102/figures/speaker_brqe_gain_ru.pdf": {
+      "sha256": "b60b1b7e92cada0af086b976a17611878ad1abb00d064f4ca8299419ffd88f60",
+      "language": "ru",
+      "figure": "speaker_brqe_gain"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_start_end_ru.png": {
+      "sha256": "28af77f266a903667fe6ff90b1e96b7d88e27d00ecfcb21edcee300c79c414dc",
+      "language": "ru",
+      "figure": "word_start_end"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_start_end_ru.pdf": {
+      "sha256": "f79dbd7f8c9e6df8b1bc51168f586a2ff9085ebc3cd6a469925b25720b7c57ea",
+      "language": "ru",
+      "figure": "word_start_end"
+    },
+    "reports/e1_analysis_work_20261102/figures/reliability_retention_ru.png": {
+      "sha256": "418048ade1286903ea06d9d1557bfb4490f2e08e855a1770e16276cf16cac01d",
+      "language": "ru",
+      "figure": "reliability_retention"
+    },
+    "reports/e1_analysis_work_20261102/figures/reliability_retention_ru.pdf": {
+      "sha256": "398260641531b8640e4e33db4a31da0f971d5102c97ec78042e709c5df6aa8d1",
+      "language": "ru",
+      "figure": "reliability_retention"
+    },
+    "reports/e1_analysis_work_20261102/figures/phone_group_mae_ru.png": {
+      "sha256": "4e96cce0d35d40ca8ecaf11564d6fad3314e4689ae19340009742bc960a5031b",
+      "language": "ru",
+      "figure": "phone_group_mae"
+    },
+    "reports/e1_analysis_work_20261102/figures/phone_group_mae_ru.pdf": {
+      "sha256": "9cf4984a1ea8f48ea66ca8b5110b726a29b87390b26378a7d0d37def6f849c7f",
+      "language": "ru",
+      "figure": "phone_group_mae"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_duration_mae_ru.png": {
+      "sha256": "5cd79ceb587f66b5670c36f76eeacc966da8a7ea8ba6b61847e319f0870c3673",
+      "language": "ru",
+      "figure": "word_duration_mae"
+    },
+    "reports/e1_analysis_work_20261102/figures/word_duration_mae_ru.pdf": {
+      "sha256": "ef2024bb3d6902fc43b7c494abe0a15dd250f2105cbb6c80bef1fbd42c765d73",
+      "language": "ru",
+      "figure": "word_duration_mae"
+    }
+  },
+  "tables": {
+    "reports/e1_analysis_work_20261102/tables/speaker_tests_buckeye.tex": "e13fa5c3e3ae9951900ac42faeef66105c5980ea68282cfb882fafe4496ea9f1",
+    "reports/e1_analysis_work_20261102/tables/speaker_tests_timit.tex": "9446b3ccacc0b9dea36da4ee42217fe52298012c5852b4fc3b8685fbba53f582"
+  }
+}

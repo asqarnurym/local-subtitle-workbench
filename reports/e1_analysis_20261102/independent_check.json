@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "VERIFIED",
+  "analysis_sha256": "ba6190c47ac7e87e11251f7384b9962dd79e7cd9ca444b4d07763cdb9f40686a",
+  "code": {
+    "source_sha256": "b872cc9c1be520ed31bce67c228b3ded5c3b85ce2bbf17854d128133c9212c4c",
+    "git_revision": "65a1fe1131d12b560f759705d46573c870c40876",
+    "git_worktree_dirty": false
+  },
+  "checker_sha256": "424fd5bb0e79fce3df098477f94b0826c7506f5747f44e772f6990a3d9b5bdc0",
+  "numpy": "2.4.6",
+  "scipy": "1.17.1",
+  "corpora": {
+    "timit": {
+      "boundary_records_verified": 78314,
+      "tier_cis_verified": 30,
+      "speaker_tests_verified": 7,
+      "scipy_exact_p_values": {
+        "B2_vs_B0": 3.0517578125e-05,
+        "B2_vs_B1": 6.103515625e-05,
+        "A2_vs_A1": 6.103515625e-05,
+        "B2brqe_vs_B2": 0.252227783203125,
+        "B2brqe_vs_B2const": 0.116668701171875,
+        "A2brqe_vs_A2": 0.17535400390625,
+        "A2brqe_vs_A2const": 0.129730224609375
+      }
+    },
+    "buckeye": {
+      "boundary_records_verified": 425584,
+      "tier_cis_verified": 30,
+      "speaker_tests_verified": 7,
+      "scipy_exact_p_values": {
+        "B2_vs_B0": 1.9073486328125e-06,
+        "B2_vs_B1": 1.33514404296875e-05,
+        "A2_vs_A1": 1.9073486328125e-06,
+        "B2brqe_vs_B2": 1.9073486328125e-06,
+        "B2brqe_vs_B2const": 1.9073486328125e-06,
+        "A2brqe_vs_A2": 1.9073486328125e-06,
+        "A2brqe_vs_A2const": 1.9073486328125e-06
+      }
+    }
+  },
+  "figure_files_verified": 24,
+  "table_files_verified": 2,
+  "figure_manifest_sha256": "c9a3161968236ae7377b8ae23cdca5ec74a6c061c94bc18286f35744a81aca5c",
+  "code_end": {
+    "source_sha256": "b872cc9c1be520ed31bce67c228b3ded5c3b85ce2bbf17854d128133c9212c4c",
+    "git_revision": "65a1fe1131d12b560f759705d46573c870c40876",
+    "git_worktree_dirty": false
+  },
+  "scope": "Separate timestamp/denominator checks, direct speaker bootstrap and exhaustive SciPy sign permutations; frozen token matching/folding reused. No new model execution or human annotation audit."
+}

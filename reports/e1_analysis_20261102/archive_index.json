@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "scope": "Byte-identical curated copies; generated reports retain original execution paths. Raw ledgers and initial figures stay local.",
+  "copies": [
+    {
+      "source": "reports/e1_analysis_work_20261102/analysis.json",
+      "archived": "reports/e1_analysis_20261102/analysis.json",
+      "sha256": "ba6190c47ac7e87e11251f7384b9962dd79e7cd9ca444b4d07763cdb9f40686a"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/independent_check.json",
+      "archived": "reports/e1_analysis_20261102/independent_check.json",
+      "sha256": "6bade7f40ed1309a75d924fadbbc297095a17f8b10de33cba0c2be381be27406"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figure_manifest_initial.json",
+      "archived": "reports/e1_analysis_20261102/figure_manifest_initial.json",
+      "sha256": "c9a3161968236ae7377b8ae23cdca5ec74a6c061c94bc18286f35744a81aca5c"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figure_manifest.json",
+      "archived": "reports/e1_analysis_20261102/figure_manifest.json",
+      "sha256": "72747e8ab7b9cc0a720f940f5b96e931cca655ff579348307c0eaa87df1e98ef"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figure_check.json",
+      "archived": "reports/e1_analysis_20261102/figure_check.json",
+      "sha256": "97373cb2d37170b518a1f899b8fffa104c77cb0a8186c2e2e29293bce6cd1bc7"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/gold_extent_check.json",
+      "archived": "reports/e1_analysis_20261102/gold_extent_check.json",
+      "sha256": "2ea794eada1c0a886649af2113347aa77e96c1076cb79a096bccc08fe48d155a"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_error_ecdf_en.png",
+      "archived": "reports/e1_analysis_20261102/figures/word_error_ecdf_en.png",
+      "sha256": "4f741fc1e136f551840d521c2c5635356a4cb1a3c2d5de3bcdcc9861e8ea2396"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_error_ecdf_en.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/word_error_ecdf_en.pdf",
+      "sha256": "cf9d22913c1b9f27611838a2132920438f7de0ff86f832c7350aaaa9f86cdae6"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/speaker_brqe_gain_en.png",
+      "archived": "reports/e1_analysis_20261102/figures/speaker_brqe_gain_en.png",
+      "sha256": "bc8dd5f6a97521f2d7eae165d9a810dd97a68fdddfef89c32c8bdff5c5fd50c9"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/speaker_brqe_gain_en.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/speaker_brqe_gain_en.pdf",
+      "sha256": "ada774ddb9cd69b697538677f0229af82622c0047ae63658d289949a54cde8ae"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_start_end_en.png",
+      "archived": "reports/e1_analysis_20261102/figures/word_start_end_en.png",
+      "sha256": "124dec4abff07ad7d751dfe0405e0a93eb78b561cf07bff420b46c900f67e53c"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_start_end_en.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/word_start_end_en.pdf",
+      "sha256": "062e6b223ed02cdf381d214808eaf703759b8850cd8fe2732906bb8d7752cb7e"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/reliability_retention_en.png",
+      "archived": "reports/e1_analysis_20261102/figures/reliability_retention_en.png",
+      "sha256": "a675368ab7cd849fd1bf318663971959b4c57bb7056f8799580ae37c2093f8d1"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/reliability_retention_en.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/reliability_retention_en.pdf",
+      "sha256": "709842b8ec9970f60ec62cd8d56b1e8c834e02757ec67af0dd4a62a92fa5a322"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/phone_group_mae_en.png",
+      "archived": "reports/e1_analysis_20261102/figures/phone_group_mae_en.png",
+      "sha256": "c810071b1463e8f1f1cbcc5f802f12e4f942b95d5a38e76dff0a1833e7a81c28"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/phone_group_mae_en.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/phone_group_mae_en.pdf",
+      "sha256": "c78aa47d18a97da7f001a4243b2046f22f7ae541cbbd15f2d7d2c46bf7c9ec15"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_duration_mae_en.png",
+      "archived": "reports/e1_analysis_20261102/figures/word_duration_mae_en.png",
+      "sha256": "e2d6739075082399303455c1467a5f267d84e513dc289d12eda0577a6f5f1d2f"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_duration_mae_en.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/word_duration_mae_en.pdf",
+      "sha256": "4b468ddf26c0a56483c24f40139616ecab0f8429d0ed08c2ecfcfddc84733ed5"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_error_ecdf_ru.png",
+      "archived": "reports/e1_analysis_20261102/figures/word_error_ecdf_ru.png",
+      "sha256": "b53f4fbe035130885068daa96242275493b565db1a791f67058d1c843966676d"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_error_ecdf_ru.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/word_error_ecdf_ru.pdf",
+      "sha256": "334f89df3f2586f3efaf1916621f93879bb693b46ee9ba727b4abd7141cafd94"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/speaker_brqe_gain_ru.png",
+      "archived": "reports/e1_analysis_20261102/figures/speaker_brqe_gain_ru.png",
+      "sha256": "396bea6f31dcaf01812085c19e2089097198aa58b381e356539d74d38ec42b6a"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/speaker_brqe_gain_ru.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/speaker_brqe_gain_ru.pdf",
+      "sha256": "8ddd907471a1f0f03cd3fc96d61e741f853de72d2bf6dec4c73e140db8eb44fc"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_start_end_ru.png",
+      "archived": "reports/e1_analysis_20261102/figures/word_start_end_ru.png",
+      "sha256": "1986472f9ec2e8fa3dea07d7f10300c0b334a640a74378901497dc81a294ebc9"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_start_end_ru.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/word_start_end_ru.pdf",
+      "sha256": "b3edf54ef29d20cfbe9cc556f5808c9302570c9613d200a2d5ae66a2c1aa9a29"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/reliability_retention_ru.png",
+      "archived": "reports/e1_analysis_20261102/figures/reliability_retention_ru.png",
+      "sha256": "418048ade1286903ea06d9d1557bfb4490f2e08e855a1770e16276cf16cac01d"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/reliability_retention_ru.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/reliability_retention_ru.pdf",
+      "sha256": "398260641531b8640e4e33db4a31da0f971d5102c97ec78042e709c5df6aa8d1"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/phone_group_mae_ru.png",
+      "archived": "reports/e1_analysis_20261102/figures/phone_group_mae_ru.png",
+      "sha256": "5ff25af4aab44372af325c521ce93f4e917894f6486ae92b24cb17989356ddd7"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/phone_group_mae_ru.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/phone_group_mae_ru.pdf",
+      "sha256": "0530ed2fb00e17d0ed2aafc2485d7b1b1c86b2d803a0e4cefd7d8b0fe86e2537"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_duration_mae_ru.png",
+      "archived": "reports/e1_analysis_20261102/figures/word_duration_mae_ru.png",
+      "sha256": "1f27463d2a4ec9910e67110283d09e21169346b8abf2c4b15f084d88e149ba63"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/figures_final/word_duration_mae_ru.pdf",
+      "archived": "reports/e1_analysis_20261102/figures/word_duration_mae_ru.pdf",
+      "sha256": "7929dbd2106777b718e0477a1da425682261bb8aa76f1e82202b0d8323acbaf8"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/tables/speaker_tests_buckeye.tex",
+      "archived": "reports/e1_analysis_20261102/tables/speaker_tests_buckeye.tex",
+      "sha256": "e13fa5c3e3ae9951900ac42faeef66105c5980ea68282cfb882fafe4496ea9f1"
+    },
+    {
+      "source": "reports/e1_analysis_work_20261102/tables/speaker_tests_timit.tex",
+      "archived": "reports/e1_analysis_20261102/tables/speaker_tests_timit.tex",
+      "sha256": "9446b3ccacc0b9dea36da4ee42217fe52298012c5852b4fc3b8685fbba53f582"
+    }
+  ]
+}

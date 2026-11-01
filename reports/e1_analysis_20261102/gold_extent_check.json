@@ -1,0 +1,13 @@
+{
+  "scope": "Descriptive gold timing extent check; 1 ms allowance; no exclusion or metric changes",
+  "corpora": {
+    "timit": {
+      "n_utterances": 160,
+      "reference_extends_beyond_audio": []
+    },
+    "buckeye": {
+      "n_utterances": 999,
+      "reference_extends_beyond_audio": []
+    }
+  }
+}

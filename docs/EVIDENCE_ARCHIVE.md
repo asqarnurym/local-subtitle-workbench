@@ -212,3 +212,60 @@ using a fresh report path and a clean worktree:
 ```powershell
 uv run --locked --all-extras python -X faulthandler -u scripts/check_brqe_reproduction.py --control-dir reports/r2_brqe_control_20261101/model --output reports/r2_brqe_control_20261101/independent_recheck.json
 ```
+
+## E1: speaker-level inference and descriptive errors (2026-11-02)
+
+The [E1 results report](E1_ANALYSIS_RESULTS.md) completes E1a/b and links all
+bilingual figures, tables and machine-readable evidence. All 160 TIMIT and
+999 valid Buckeye test clips were analyzed from saved predictions, without
+executing models. The protocol was fixed before this supplementary computation,
+after the original clip-level experiment was already known. No model selection,
+outlier exclusion or replacement of frozen results was performed.
+
+On Buckeye the word-MAE benefit of BRQE over both unrefined MFA and the constant
+offset remains significant in both scenarios when the experimental unit is the
+speaker: all 20 speakers improve, exact two-sided Wilcoxon p = 1.335144e-5 after
+Holm adjustment over the original seven comparisons. On TIMIT the four BRQE
+comparisons are not significant (adjusted p = 0.466675). The original clip tests
+remain separately labelled and unchanged. New accuracy CIs, attempted-reference
+coverage and descriptive error breakdowns do not silently replace old fields.
+
+The main calculation ran from clean `65a1fe1` in 95.184 seconds. All 4,378
+protected files were unchanged. A separate process verified **503,898 boundary
+records, 60 CIs and 14 speaker tests** against timestamps, direct cluster
+bootstrap and exhaustive SciPy sign permutations. Frozen token matching/folding
+are reused; this is independent numerical checking, not a second human reviewer
+or independent annotation audit. Its verdict is
+[`independent_check.json`](../reports/e1_analysis_20261102/independent_check.json).
+
+The numerical checker also checked the initial 24 figure files and two tables.
+After layout-only corrections, the final graphics were checked from clean
+`22bd622`, using the pinned numerical-verdict SHA-256
+`6bade7f40ed1309a75d924fadbbc297095a17f8b10de33cba0c2be381be27406`.
+The final checker revalidated the unchanged analysis, local ledgers and protected
+inputs, then checked all 24 final exports, PNG resolution, PDF headers and table
+values. A wrong numerical-verdict hash was rejected in a negative control.
+Both language sets were visually reviewed for clipping and overlap.
+
+The archive `reports/e1_analysis_20261102` includes byte-identical copies of the
+analysis, numerical verdict, initial/final figure manifests, final graphics
+verdict, reference-extent check, 24 final figures and two tables.
+[`archive_index.json`](../reports/e1_analysis_20261102/archive_index.json) maps
+the recorded working paths to the public copies with matching SHA-256 hashes.
+The original JSON bytes and execution paths are retained. Boundary ledgers,
+clip aggregates, initial figures and QA contact sheets stay local under
+`reports/e1_analysis_work_20261102`; the analysis records ledger hashes.
+
+The two figure manifests are intentionally different: the old full verdict
+references `figure_manifest_initial.json`, while `figure_check.json` anchors
+the final `figure_manifest.json` to the same verified numerical analysis.
+The full numerical tests were not repeated or tuned after layout changes.
+
+Tools are pinned in an isolated environment (NumPy 2.4.6, SciPy 1.17.1,
+Matplotlib 3.11.2, Pillow 13.0.0); the project lockfile is unchanged. Ruff and all
+767 non-model tests passed after the code changes. The reference-extent check
+found no references beyond valid audio duration with a 1 ms allowance; this
+does not establish annotation accuracy. Earlier missing historical annotation
+hashes and the original training `dirty=true` remain documented limitations.
+See [RUNBOOK section 4.2](RUNBOOK.md#42-e1-speaker-statistics-error-analysis-and-figures-2026-11-02)
+for a complete repeat in a fresh directory.

@@ -41,3 +41,5 @@ reports/buckeye/tables/*
 !reports/buckeye/tables/table_quality_estimation.tex
 !reports/frozen_evidence_audit_20261101.json
 !reports/r1_metric_replay_20261101.json
+!reports/r2_brqe_reproduction_20261101.json
+!reports/r2_brqe_independent_20261101.json

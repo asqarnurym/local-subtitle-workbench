@@ -12,3 +12,4 @@ reports/buckeye/benchmark_results.json -text whitespace=cr-at-eol
 reports/buckeye/manifest.json -text whitespace=cr-at-eol
 reports/buckeye/tables/*.tex -text whitespace=cr-at-eol
 reports/frozen_evidence_audit_20261101.json -text whitespace=cr-at-eol
+reports/r1_metric_replay_20261101.json -text whitespace=cr-at-eol

@@ -75,7 +75,8 @@ reproducibility or a new scientific result.
    preserved. Its source fingerprint agrees with the training/CV revision, and the
    saved model hash matches both evaluation manifests, but the report cannot
    identify all historical uncommitted changes. This audit does not retroactively
-   certify a clean final training execution.
+   certify a clean original final training execution. A subsequent clean control
+   run exactly reproduced the saved model (R2 below).
 4. The BRQE training-data run recorded its Git revision at completion; the earlier
    start revision and this limitation are already described in plan §6.5.
 5. Statistical tests currently use clip-level pairs, whereas confidence intervals
@@ -137,8 +138,8 @@ The replay ran from clean revision `e77772f9b9e68a679c9be480aa76e9de4b18bedf`;
 the Git revision and clean status were identical at the end. It took 75.948 seconds
 including preflight; none of the 4,374 protected artifact, annotation, code and
 dependency files changed. No speech model was run. Before execution, ruff and
-all 757 non-model tests passed. The training-state provenance question remains for
-R2 (a separate control training run).
+all 757 non-model tests passed. The separate R2 control training run below adds
+evidence for the saved model's reproducibility.
 
 The replay report is versioned; recomputed rows, full summaries, differences and
 preflight details remain local under `reports/r1_replay_20261101/`, with their
@@ -150,3 +151,64 @@ uv run --locked --all-extras python scripts/replay_frozen_metrics.py --output-di
 
 The command requires a clean worktree. It refuses an existing output directory
 and checks the original artifact and annotation hashes before replaying metrics.
+
+## R2–R3: clean BRQE reproduction and independent checking (2026-11-01)
+
+One control training run from clean revision
+`d59d77a5623a8cab7b5a1ac235197591b13d24a9` reproduced the original model with
+**EXACT_MATCH**. See the [complete reproduction report](../reports/r2_brqe_reproduction_20261101.json)
+and [separate saved-model check](../reports/r2_brqe_independent_20261101.json).
+
+The wrapper verified 15 file/declaration comparisons against the original
+training revision, kept all frozen hyperparameters and seed, and used only the
+same 3,000 clips from 20 training speakers. It reused saved MFA alignments;
+Whisper and MFA were not rerun. Training had 382,270 matched boundaries out of
+461,850. The new training report records a clean worktree; the wrapper recorded
+the same clean revision at both start and end. All 7,389 protected original
+artifact, annotation, training-audio, script and dependency files were unchanged.
+Before this model run, ruff and all 760 non-model tests passed.
+
+| Check | Result |
+| --- | --- |
+| Learned parameters and non-learned buffers | All 22 tensors equal; shape, dtype and finite values checked |
+| Constant-offset rival | Equal |
+| Boundary-shift head | 461,850 outputs compared; 0 differences |
+| Reliability head | 461,850 outputs compared; 0 differences |
+| Maximum absolute difference, either head | 0, with no numerical tolerance |
+| Checkpoint file SHA-256 | Equal: `93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19` |
+
+Independence here means a **separate verification process and comparison path**,
+not a separately developed implementation of the neural architecture. The checker
+revalidates the archive, reloads both saved checkpoints, rebuilds the train-only
+features, and directly calls the frozen networks. It performs no fitting and does
+not call `BRQERefiner.predict` or reuse inference outputs from the training process.
+It compares both heads over all training boundaries, including unmatched ones.
+The dataset loader and architecture remain the frozen implementations. Final
+validation in another process also reread the model tensors and artifact hashes.
+
+Training took 465.0 seconds; the independent check took 76.284 seconds; total
+control time including integrity checks was 567.382 seconds. The recorded
+environment is Python 3.11.17, NumPy 2.4.6, torch 2.14.1, torchaudio 2.11.0,
+CPU training with eight torch threads. Timings are transparency records only.
+
+The control weights and detailed logs remain local under
+`reports/r2_brqe_control_20261101/`; their hashes are in the versioned report.
+The two archived reports are exact byte copies of the generated reports. The
+original weights, benchmark outputs, tags and approved claims were not replaced.
+The old `dirty=true` is retained: the new clean run demonstrates reproducibility
+of the exact saved model, rather than certifying the old worktree retrospectively.
+The missing historical annotation hashes remain a documented limitation.
+
+To repeat the control, first run the documented lint/tests and commit any changes,
+then choose a fresh ignored directory:
+
+```powershell
+uv run --locked --all-extras python -X faulthandler -u scripts/reproduce_brqe.py --output-dir reports/r2_brqe_recheck
+```
+
+The independent checker can also be invoked separately on saved control weights,
+using a fresh report path and a clean worktree:
+
+```powershell
+uv run --locked --all-extras python -X faulthandler -u scripts/check_brqe_reproduction.py --control-dir reports/r2_brqe_control_20261101/model --output reports/r2_brqe_control_20261101/independent_recheck.json
+```

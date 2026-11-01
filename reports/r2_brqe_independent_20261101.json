@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "check": "R2_INDEPENDENT_SAVED_MODEL_CHECK",
+  "status": "EXACT_MATCH",
+  "checked_at_utc": "2026-11-01T13:04:59.741772+00:00",
+  "code": {
+    "source_sha256": "b872cc9c1be520ed31bce67c228b3ded5c3b85ce2bbf17854d128133c9212c4c",
+    "git_revision": "d59d77a5623a8cab7b5a1ac235197591b13d24a9",
+    "git_worktree_dirty": false
+  },
+  "integrity_preflight_status": "PASS_WITH_LIMITATIONS",
+  "baseline_sha256": "7c18bb978d8c05097b2dcc5b1b62e1025f62e1a342ca41f6a9e75b2f01e23c3e",
+  "metadata_equal": {
+    "config": true,
+    "features": true,
+    "trained_on": true
+  },
+  "state_comparison": {
+    "keys_equal": true,
+    "tensors": {
+      "cls.bias": {
+        "shape": [
+          1
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "cls.weight": {
+        "shape": [
+          1,
+          128
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.0.bias": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.0.weight": {
+        "shape": [
+          96,
+          64,
+          5
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.1.bias": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.1.num_batches_tracked": {
+        "shape": [],
+        "dtype": "torch.int64",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.1.running_mean": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.1.running_var": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.1.weight": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.3.bias": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.3.weight": {
+        "shape": [
+          96,
+          96,
+          5
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.4.bias": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.4.num_batches_tracked": {
+        "shape": [],
+        "dtype": "torch.int64",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.4.running_mean": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.4.running_var": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.4.weight": {
+        "shape": [
+          96
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.6.bias": {
+        "shape": [
+          32
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "conv.6.weight": {
+        "shape": [
+          32,
+          96,
+          3
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "mlp.0.bias": {
+        "shape": [
+          128
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "mlp.0.weight": {
+        "shape": [
+          128,
+          1318
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "reg.bias": {
+        "shape": [
+          1
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      },
+      "reg.weight": {
+        "shape": [
+          1,
+          128
+        ],
+        "dtype": "torch.float32",
+        "same_shape_and_dtype": true,
+        "finite": true,
+        "equal": true,
+        "max_absolute_difference": 0.0
+      }
+    },
+    "equal": true
+  },
+  "constant_refiner_equal": true,
+  "forward_comparison": {
+    "equal": true,
+    "batch_size": 1024,
+    "heads": {
+      "shift_seconds": {
+        "n_values": 461850,
+        "n_different": 0,
+        "max_absolute_difference": 0.0
+      },
+      "error_probability": {
+        "n_values": 461850,
+        "n_different": 0,
+        "max_absolute_difference": 0.0
+      }
+    },
+    "prediction_sha256": {
+      "original": "f07c256391862daaa7c28aded502308d2d61f4ebc6410899bb2a25e1405d8d43",
+      "control": "f07c256391862daaa7c28aded502308d2d61f4ebc6410899bb2a25e1405d8d43"
+    },
+    "hash_encoding": "Per batch: head name, NUL, float32 little-endian output bytes; shift then probability."
+  },
+  "n_boundaries": 461850,
+  "n_matched": 382270,
+  "n_utterances": 3000,
+  "n_speakers": 20,
+  "checkpoint_sha256": {
+    "original": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+    "control": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19"
+  },
+  "seconds": 76.284,
+  "scope": "Independent process; freshly loaded checkpoints and train-only features; exact tensor/buffer equality and direct forward calls. No fitting, parameter search, or test-speaker data."
+}

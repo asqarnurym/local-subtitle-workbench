@@ -167,6 +167,24 @@ uv run --locked --all-extras python scripts/replay_frozen_metrics.py --output-di
 This command preserves original runs, uses their recorded bootstrap parameters,
 and stops on discrepancies. It does not add speaker-level significance tests.
 
+R2 then reproduced the final BRQE model from a clean worktree, with an independent
+saved-model and direct-forward check. Reports are
+`reports/r2_brqe_reproduction_20261101.json` and
+`reports/r2_brqe_independent_20261101.json`: all 22 state tensors and both heads'
+outputs matched exactly. The original final-training `dirty=true` flag is retained.
+
+For a repeat, first complete the lint/test protocol in section 1 and commit all
+changes. Then choose a fresh ignored directory (about 10 minutes in the recorded
+control; runtime is machine-dependent):
+
+```powershell
+uv run --locked --all-extras python -X faulthandler -u scripts/reproduce_brqe.py --output-dir reports/r2_brqe_recheck
+```
+
+This performs one final training run, followed by a separate checker process.
+Original weights and benchmark results are read-only. It does not rerun CV, ASR
+or forced alignment, and it does not select a new model from test-set performance.
+
 ## 5. Tables
 
 ```powershell

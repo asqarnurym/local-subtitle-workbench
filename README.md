@@ -47,9 +47,10 @@ The reference pipeline is: Silero-VAD → Faster-Whisper ASR → coarse word-lev
 
 ## Evaluation status
 
-- **No citable results exist yet.** Earlier pilot runs were discarded: their references were MFA alignments and the proposed mode received the reference transcript while the baseline did not. See `docs/IMPROVEMENT_PLAN.md`.
+- **Frozen gold-reference runs are complete:** [TIMIT](reports/timit/benchmark_results.json) (160 utterances, 16 speakers; `bench-frozen-20261029`) and [Buckeye](reports/buckeye/benchmark_results.json) (999 clips, 20 held-out speakers; `bench-frozen-20261029c`). Summaries, original manifests and tables are versioned. See the [evidence archive and its limitations](docs/EVIDENCE_ARCHIVE.md); approved claim wording is in [CLAIM_LEDGER](docs/CLAIM_LEDGER.csv).
 - **Metrics (Individual Master's Plan):** mean absolute boundary error (word and phone level, start and end boundaries) with cluster bootstrap 95% CI, and the share of boundaries within 20 ms. Coverage (matched reference words) is reported next to every mode.
 - **Benchmark modes:** scenario B (no transcript): `B0_whisper`, `B1_whisper_ctc`, `B2_proposed`; scenario A (transcript known): `A1_ctc`, `A2_proposed`. Proposed vs. baseline comparisons are paired by utterance ID.
+- **BRQE ablation:** `A2_const`, `A2_brqe`, `B2_const`, `B2_brqe` reuse the MFA predictions. BRQE is trained on the 20 disjoint Buckeye training speakers. Word coverage in the Buckeye no-transcript scenario is 89.0%; report it alongside accuracy. Statistical tests currently pair clips; speaker-level tests are the next analysis step.
 - **Reference corpora:** gold = TIMIT (free NLTK sample, or full LDC93S1) and Buckeye (free, registration); silver = LibriSpeech test-clean and L2-ARCTIC (their boundaries come from forced alignment and are reported as agreement, not accuracy).
 - **Synthetic self-test:** `--offline-synthetic` simulates predictions to test metric and table code. It never runs models and is never citable.
 

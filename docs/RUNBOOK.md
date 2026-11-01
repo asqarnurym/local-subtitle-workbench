@@ -123,7 +123,7 @@ With `--refiner-dir models/brqe`, `speech_benchmark.py` adds the modes `A2_const
 Steps 1-6 must be completed in order. A failed step stops the protocol.
 
 1. **Clean tree and tests.** `git status` is empty. `ruff check .` and `pytest -m "not model"` pass (see section 1).
-2. **Buckeye sample.** Use 10 clips per speaker across all 40 speakers (about 400 clips), drawn with `seed = 20260401` from the staged clips in `data/corpora/buckeye`. Save the selected clip IDs and the seed to `reports/buckeye_sample_20260401.json` (section 3, `make_benchmark_sample.py`). The TIMIT pilot uses `reports/timit_pilot_20260401.json` (1 utterance from each of 10 speakers, same seed). The sample files are versioned: `.gitignore` ignores `reports/*` except `reports/*_sample_*.json` and `reports/timit_pilot_*.json`, so they are part of the freeze tag; run outputs in `reports/` stay ignored. Their sha256 is also recorded in every run's `config.sample`.
+2. **Buckeye sample.** Use 10 clips per speaker across all 40 speakers (about 400 clips), drawn with `seed = 20260401` from the staged clips in `data/corpora/buckeye`. Save the selected clip IDs and the seed to `reports/buckeye_sample_20260401.json` (section 3, `make_benchmark_sample.py`). The TIMIT pilot uses `reports/timit_pilot_20260401.json` (1 utterance from each of 10 speakers, same seed). Fixed sample and split files are versioned and part of the freeze tags; their sha256 is also recorded in each sampled run's `config.sample`. The completed full-run summaries, manifests and selected tables were subsequently archived in Git (section 4.1); large per-clip outputs and pilot outputs stay ignored.
 3. **Pilot criteria.** On the 10-utterance TIMIT pilot and then on the Buckeye sample: share of failed utterances below 5%, and `word_metrics.coverage` at least 90%. If either fails, do not start the full run; investigate `benchmark_utterances.json` first.
 4. **Freeze.** After a passing pilot, tag the commit (`bench-frozen-<date>`). Code, sample and configuration do not change after the tag; any change means a new tag and a new pilot.
 5. **Full run and tables.** Sections 3 and 5, run from the frozen tag only.
@@ -136,6 +136,24 @@ Steps 1-6 must be completed in order. A failed step stops the protocol.
 3. `code.git_worktree_dirty` in the manifest is `false` (commit before the run).
 4. For every mode: `n_utterances_failed` and `word_metrics.coverage` are reported; investigate failures in `benchmark_utterances.json`.
 5. `ci_unit` is `speaker` when at least 10 speakers are present, otherwise `utterance`.
+
+### 4.1 Archived frozen evidence (2026-11-01)
+
+The original summaries, manifests and three tables for each completed full run
+are versioned under `reports/timit` and `reports/buckeye`. They refer to different
+execution tags: `bench-frozen-20261029` (TIMIT) and `bench-frozen-20261029c`
+(Buckeye). The approved claims and original run bytes are preserved.
+
+```powershell
+uv run --locked --all-extras python scripts/verify_frozen_evidence.py --output reports/evidence_recheck.json
+```
+
+This integrity check needs local audio and per-clip outputs, runs no models, and
+fails on missing or changed files. See [EVIDENCE_ARCHIVE.md](EVIDENCE_ARCHIVE.md)
+for the exact scope and provenance limitations, especially missing historical
+reference hashes and the dirty-worktree flag in the final BRQE training report.
+The versioned audit inventory is `reports/frozen_evidence_audit_20261101.json`.
+`.gitattributes` preserves byte-level hashes across Git checkouts.
 
 ## 5. Tables
 

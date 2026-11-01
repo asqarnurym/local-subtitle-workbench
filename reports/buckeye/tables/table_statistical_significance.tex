@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{Paired Wilcoxon Signed-Rank Test and Cliff's Delta Effect Size}
+\label{tab:statistical_significance}
+\begin{tabular}{lccccc}
+\toprule
+Comparison Pair & \(n\) & Wilcoxon \(W\) & \(p_{Holm}\) & Cliff's \(\delta\) & Effect \\
+\midrule
+B2 Proposed vs. B0 Whisper & 997 & 7583.5 & $< 0.001$ & +0.93 & Large \\
+B2 Proposed vs. B1 Whisper + CTC & 997 & 59002.5 & $< 0.001$ & +0.68 & Large \\
+A2 Proposed vs. A1 CTC & 997 & 16639.5 & $< 0.001$ & +0.86 & Large \\
+B2 + BRQE vs. B2 & 997 & 90640.0 & $< 0.001$ & +0.17 & Small \\
+B2 + BRQE vs. B2 + constant offset & 997 & 89704.0 & $< 0.001$ & +0.17 & Small \\
+A2 + BRQE vs. A2 & 997 & 75033.5 & $< 0.001$ & +0.23 & Small \\
+A2 + BRQE vs. A2 + constant offset & 997 & 74979.5 & $< 0.001$ & +0.23 & Small \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,14 @@
+# Evidence hashes describe exact bytes, including the original Windows newlines.
+# Do not apply core.autocrlf or text normalization to the frozen evidence.
+reports/*_sample_*.json -text whitespace=cr-at-eol
+reports/timit_pilot_*.json -text whitespace=cr-at-eol
+reports/*_split_*.json -text whitespace=cr-at-eol
+reports/brqe_*.json -text whitespace=cr-at-eol
+models/brqe/*.json -text whitespace=cr-at-eol
+reports/timit/benchmark_results.json -text whitespace=cr-at-eol
+reports/timit/manifest.json -text whitespace=cr-at-eol
+reports/timit/tables/*.tex -text whitespace=cr-at-eol
+reports/buckeye/benchmark_results.json -text whitespace=cr-at-eol
+reports/buckeye/manifest.json -text whitespace=cr-at-eol
+reports/buckeye/tables/*.tex -text whitespace=cr-at-eol
+reports/frozen_evidence_audit_20261101.json -text whitespace=cr-at-eol

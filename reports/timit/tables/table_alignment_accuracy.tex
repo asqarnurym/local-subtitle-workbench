@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Boundary Error on TIMIT (read speech, manual boundaries) (160 utterances, 16 speakers)}
+\label{tab:alignment_accuracy}
+\begin{tabular}{lcccc}
+\toprule
+Method & Word MAE [95\% CI] (ms) & Word Acc@20ms (\%) & Phone MAE (ms) & Phone Acc@20ms (\%) \\
+\midrule
+(B0) Whisper timestamps & 153.0 [146.0, 160.7] & 2.1\% & -- & -- \\
+(B1) Whisper + CTC & 36.9 [34.9, 39.2] & 34.4\% & -- & -- \\
+(B2) Proposed: Whisper + MFA & 20.5 [17.3, 25.5] & 67.8\% & 15.0 & 81.8\% \\
+(A1) Known text + CTC & 36.9 [34.9, 39.2] & 34.4\% & -- & -- \\
+(A2) Proposed: known text + MFA & 20.3 [17.3, 25.1] & 68.4\% & 14.8 & 82.0\% \\
+(B2) + constant offset & 20.5 [17.4, 25.6] & 67.1\% & 15.0 & 81.8\% \\
+(B2) + BRQE & 20.1 [17.0, 25.0] & 69.7\% & 14.0 & 83.2\% \\
+(A2) + constant offset & 20.3 [17.4, 25.1] & 67.6\% & 14.8 & 81.9\% \\
+(A2) + BRQE & 19.9 [17.0, 24.6] & 69.9\% & 13.8 & 83.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}

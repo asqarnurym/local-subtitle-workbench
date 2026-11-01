@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Boundary Error on Buckeye (spontaneous speech, manual boundaries) (999 utterances, 20 speakers)}
+\label{tab:alignment_accuracy}
+\begin{tabular}{lcccc}
+\toprule
+Method & Word MAE [95\% CI] (ms) & Word Acc@20ms (\%) & Phone MAE (ms) & Phone Acc@20ms (\%) \\
+\midrule
+(B0) Whisper timestamps & 126.5 [120.1, 133.1] & 6.9\% & -- & -- \\
+(B1) Whisper + CTC & 41.3 [39.1, 43.8] & 34.3\% & -- & -- \\
+(B2) Proposed: Whisper + MFA & 30.1 [25.9, 34.5] & 69.0\% & 26.0 & 78.0\% \\
+(A1) Known text + CTC & 40.5 [38.3, 42.8] & 34.0\% & -- & -- \\
+(A2) Proposed: known text + MFA & 19.6 [17.8, 21.6] & 71.1\% & 15.9 & 79.8\% \\
+(B2) + constant offset & 30.1 [25.9, 34.4] & 68.7\% & 26.0 & 78.0\% \\
+(B2) + BRQE & 27.7 [23.6, 32.0] & 74.9\% & 24.3 & 80.6\% \\
+(A2) + constant offset & 19.5 [17.7, 21.5] & 70.9\% & 15.9 & 79.8\% \\
+(A2) + BRQE & 17.0 [15.2, 18.9] & 76.8\% & 14.3 & 82.4\% \\
+\bottomrule
+\end{tabular}
+\end{table}

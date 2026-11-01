@@ -1,0 +1,13 @@
+\begin{table}[t]
+\centering
+\caption{BRQE Reliability Head: Detection of Word Boundary Errors above 20 ms and Word MAE (ms) after Rejecting the Least Reliable Words}
+\label{tab:quality_estimation}
+\begin{tabular}{lcccccccc}
+\toprule
+Method & \(n\) words & ROC-AUC & PR-AUC (base rate) & 0\% & 10\% & 20\% & 30\% & 50\% \\
+\midrule
+(B2) + BRQE & 8165 & 0.749 & 0.752 (0.52) & 27.7 & 27.0 & 26.1 & 25.1 & 23.1 \\
+(A2) + BRQE & 9153 & 0.756 & 0.747 (0.50) & 17.0 & 16.3 & 15.6 & 14.7 & 12.5 \\
+\bottomrule
+\end{tabular}
+\end{table}

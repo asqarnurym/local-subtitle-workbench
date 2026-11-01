@@ -20,3 +20,23 @@ reports/*
 !reports/timit_pilot_*.json
 !reports/*_split_*.json
 !reports/brqe_*.json
+# Curated evidence from completed frozen runs; large per-clip data stays local.
+!reports/timit/
+!reports/buckeye/
+reports/timit/*
+reports/buckeye/*
+!reports/timit/benchmark_results.json
+!reports/timit/manifest.json
+!reports/buckeye/benchmark_results.json
+!reports/buckeye/manifest.json
+!reports/timit/tables/
+!reports/buckeye/tables/
+reports/timit/tables/*
+reports/buckeye/tables/*
+!reports/timit/tables/table_alignment_accuracy.tex
+!reports/timit/tables/table_statistical_significance.tex
+!reports/timit/tables/table_quality_estimation.tex
+!reports/buckeye/tables/table_alignment_accuracy.tex
+!reports/buckeye/tables/table_statistical_significance.tex
+!reports/buckeye/tables/table_quality_estimation.tex
+!reports/frozen_evidence_audit_20261101.json

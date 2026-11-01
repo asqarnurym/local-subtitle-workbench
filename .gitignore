@@ -48,6 +48,8 @@ reports/e1_analysis_20261102/*
 !reports/e1_analysis_20261102/analysis.json
 !reports/e1_analysis_20261102/independent_check.json
 !reports/e1_analysis_20261102/figure_manifest.json
+!reports/e1_analysis_20261102/figure_check.json
+!reports/e1_analysis_20261102/gold_extent_check.json
 !reports/e1_analysis_20261102/figures/
 reports/e1_analysis_20261102/figures/*
 !reports/e1_analysis_20261102/figures/*.png

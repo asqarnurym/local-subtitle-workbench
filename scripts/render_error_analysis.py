@@ -44,7 +44,7 @@ TEXT = {
         "cdf": "Cumulative fraction",
         "known": "A: known transcript",
         "asr": "B: ASR transcript",
-        "gain": "MAE reduction vs constant offset (ms)",
+        "gain": "MAE reduction (ms)\nrelative to constant offset",
         "speaker": "Speaker",
         "mae": "MAE (ms)",
         "reject": "Rejected words (%)",
@@ -64,7 +64,7 @@ TEXT = {
         "cdf": "Накопленная доля",
         "known": "A: известный текст",
         "asr": "B: текст ASR",
-        "gain": "Снижение MAE относительно константы, мс",
+        "gain": "Снижение MAE, мс\nотносительно константной поправки",
         "speaker": "Диктор",
         "mae": "MAE, мс",
         "reject": "Отбраковано слов, %",
@@ -95,11 +95,13 @@ def panels(corpora, text, height=5.8):
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--analysis-dir", required=True)
+    parser.add_argument("--figure-dir", default="figures", help="Subdirectory for figure exports")
     args = parser.parse_args()
     work = local_path(args.analysis_dir)
     analysis = read_json((work / "analysis.json").relative_to(ROOT).as_posix())
     require(analysis["status"] == "COMPLETE", "Analysis is incomplete")
-    figdir, tables = work / "figures", work / "tables"
+    figdir, tables = (work / args.figure_dir).resolve(), work / "tables"
+    require(figdir.parent == work, "Figure directory must be directly under the analysis directory")
     figdir.mkdir(exist_ok=True)
     tables.mkdir(exist_ok=True)
     plt.rcParams.update(
@@ -112,6 +114,7 @@ def main() -> None:
             "ytick.labelsize": 9,
             "legend.fontsize": 9,
             "pdf.fonttype": 42,
+            "mathtext.fontset": "dejavuserif",
         }
     )
     errors = {}
@@ -168,10 +171,17 @@ def main() -> None:
                 ax.set_xlabel(text["error"])
                 ax.set_ylabel(text["cdf"])
                 ax.set_ylim(0, 1.02)
-                ax.legend(loc="lower right", frameon=False)
+        handles, _ = axes[0, 1].get_legend_handles_labels()
+        fig.legend(
+            handles,
+            ["Whisper", "CTC", "MFA", "MFA + BRQE"],
+            loc="outside upper center",
+            ncol=4,
+            frameon=False,
+        )
         save(fig, "word_error_ecdf", lang)
 
-        fig, axes = panels(analysis["corpora"], text, height=7.6)
+        fig, axes = panels(analysis["corpora"], text, height=8.4)
         for row, (_corpus, data) in enumerate(analysis["corpora"].items()):
             for col, key in enumerate(("A2brqe_vs_A2const", "B2brqe_vs_B2const")):
                 ax, comparison = axes[row, col], data["speaker_comparisons"][key]
@@ -187,15 +197,7 @@ def main() -> None:
                 ax.axvline(0, color="black", linewidth=0.8)
                 ax.set_xlabel(text["gain"])
                 ax.set_ylabel(text["speaker"])
-                ax.text(
-                    0.98,
-                    0.02,
-                    f"Holm p = {comparison['p_value_holm']:.3g}",
-                    ha="right",
-                    va="bottom",
-                    transform=ax.transAxes,
-                    bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.85},
-                )
+                ax.set_title(ax.get_title() + f"\nHolm p = {comparison['p_value_holm']:.3g}")
         save(fig, "speaker_brqe_gain", lang)
 
         fig, axes = plt.subplots(1, 2, figsize=(7.4, 4.1), layout="constrained")
@@ -210,8 +212,9 @@ def main() -> None:
             ax.set_xticks(x, ["A2", "A2+BRQE", "B2", "B2+BRQE"], rotation=25, ha="right")
             ax.set_ylabel(text["mae"])
             ax.set_title(corpus.upper() if corpus == "timit" else "Buckeye")
-            ax.legend(frameon=False)
             ax.grid(axis="y", alpha=0.2)
+        handles, labels = axes[-1].get_legend_handles_labels()
+        fig.legend(handles, labels, loc="outside upper center", ncol=2, frameon=False)
         save(fig, "word_start_end", lang)
 
         fig, axes = plt.subplots(1, 2, figsize=(7.4, 4.1), layout="constrained")
@@ -284,7 +287,10 @@ def main() -> None:
                     ax.set_ylim(bottom=0)
                     if figure == "word_duration_mae":
                         ax.set_xlabel(text["duration"])
-                    ax.legend(frameon=False)
+            handles, _ = axes[-1, -1].get_legend_handles_labels()
+            fig.legend(
+                handles, ["MFA", "MFA + BRQE"], loc="outside upper center", ncol=2, frameon=False
+            )
             save(fig, figure, lang)
 
     for corpus, data in analysis["corpora"].items():

@@ -227,7 +227,18 @@ def build_speaker(
         parsed = parse_buckeye_textgrid(tg_path)
         require(same_references(parsed, words, phones), f"{stem}: reference round trip differs")
         for shorter_seconds, n, shorter_words in n_words_by_length:
-            require(parsed[:n] == shorter_words, f"{stem}: not a prefix of {shorter_seconds} s")
+            require(
+                same_references(
+                    parsed[:n],
+                    [Interval(w.start, w.end, w.text) for w in shorter_words],
+                    [
+                        Interval(c.start, c.end, c.phoneme)
+                        for w in shorter_words
+                        for c in w.phonemes
+                    ],
+                ),
+                f"{stem}: not a prefix of {shorter_seconds} s",
+            )
         n_words_by_length.append((seconds, len(parsed), parsed))
         out["recordings"][name] = {
             "utterance": stem,

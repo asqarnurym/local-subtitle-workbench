@@ -135,3 +135,30 @@ def test_max_deviation_rejects_label_changes_and_measures_time() -> None:
     assert max_deviation([word], [Interval(1.0, 1.5001, "a")], []) == pytest.approx(1e-4)
     assert max_deviation([word], [Interval(1.0, 1.5, "b")], []) == float("inf")
     assert max_deviation([word], [], []) == float("inf")
+
+
+def test_isolating_aligner_records_chunking_errors_per_recording() -> None:
+    from types import SimpleNamespace
+
+    from scripts.s1_long_recordings import IsolatingAligner
+    from subtitle_workbench.aligner import AlignmentFailure
+    from subtitle_workbench.chunker import MonotonicityError
+
+    class Inner:
+        mfa_retries = ["kept"]
+
+        def align_requests(self, requests, engine):
+            if requests[0].audio_path == "bad.wav":
+                raise MonotonicityError("Chronology corruption")
+            if requests[0].audio_path == "crash.wav":
+                raise RuntimeError("engine crash")
+            return [["ok"]]
+
+    aligner = IsolatingAligner(Inner())
+    reqs = [SimpleNamespace(audio_path=p) for p in ("a.wav", "bad.wav", "b.wav")]
+    out = aligner.align_requests(reqs, engine="ctc")
+    assert out[0] == ["ok"] and out[2] == ["ok"] and isinstance(out[1], AlignmentFailure)
+    assert aligner.isolated_failures[0]["audio"] == "bad.wav"
+    assert aligner.mfa_retries == ["kept"]
+    with pytest.raises(RuntimeError, match="engine crash"):
+        aligner.align_requests([SimpleNamespace(audio_path="crash.wav")], engine="mfa")

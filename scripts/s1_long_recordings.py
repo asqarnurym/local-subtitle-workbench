@@ -139,6 +139,41 @@ class NullTranscriber:
         return []
 
 
+class IsolatingAligner:
+    """Aligns each recording in its own call to the frozen aligner.
+
+    The frozen ``align_requests`` raises when chunk reconciliation of one recording
+    fails (``ChunkingError``, e.g. overlapping chunk outputs), which aborts the whole
+    batch. Here that error becomes the failure of that recording only. Any other error
+    (e.g. an MFA crash after its retries) still stops the run. Every run has one
+    recording per speaker, and MFA runs once per speaker in both cases, so the
+    computation per recording is unchanged.
+    """
+
+    def __init__(self, inner: Any) -> None:
+        self.inner = inner
+        self.isolated_failures: list[dict[str, str]] = []
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.inner, name)
+
+    def align_requests(self, requests: list, engine: str) -> list:
+        from subtitle_workbench.aligner import AlignmentFailure
+        from subtitle_workbench.chunker import ChunkingError
+
+        out: list = []
+        for req in requests:
+            try:
+                out += self.inner.align_requests([req], engine=engine)
+            except ChunkingError as err:
+                text = f"{type(err).__name__}: {err}"
+                self.isolated_failures.append(
+                    {"engine": engine, "audio": Path(req.audio_path).name, "error": text}
+                )
+                out.append(AlignmentFailure(text))
+        return out
+
+
 def read_pcm(path: Path) -> tuple[int, bytes]:
     with wave.open(str(path), "rb") as src:
         require(src.getnchannels() == 1 and src.getsampwidth() == 2, f"{path}: expected mono PCM16")
@@ -333,6 +368,9 @@ def run(out: Path) -> int:
             require(not before["dirty"], "Worktree is dirty; commit before running")
             print(f"[*] {run_dir.name}: start {time.strftime('%H:%M:%S')}", flush=True)
             t0 = time.perf_counter()
+            from subtitle_workbench.aligner import ForcedAligner
+
+            aligner = IsolatingAligner(ForcedAligner(mfa_num_jobs=benchmark.MFA_NUM_JOBS))
             benchmark.run_benchmark(
                 corpus="buckeye",
                 data_dir=dest / length,
@@ -340,6 +378,7 @@ def run(out: Path) -> int:
                 modes=modes,
                 refiner_dir=PROJECT_ROOT / REFINER_DIR,
                 transcriber=NullTranscriber() if variant == "noanchor" else None,
+                aligner=aligner,
             )
             write_json(
                 run_dir / "run_record.json",
@@ -351,6 +390,7 @@ def run(out: Path) -> int:
                     "git_after": git_state(),
                     "code": code_hashes(),
                     "build_sha256": sha_file(out / "build.json"),
+                    "isolated_chunking_failures": aligner.isolated_failures,
                     "refiner_files": {
                         f.name: sha_file(f) for f in sorted((PROJECT_ROOT / REFINER_DIR).glob("*"))
                     },

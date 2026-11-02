@@ -72,9 +72,9 @@ CODE_FILES = (
     "uv.lock",
     "pyproject.toml",
 )
-# The frozen TextGrid parser rounds times to 0.1 ms; clip and long-recording references
-# are each rounded once, so they may differ by up to two half-steps.
-TIME_TOLERANCE_S = 1e-4 + 1e-6
+# The frozen TextGrid parser rounds times to 0.1 ms (two half-steps between clip and
+# long-recording references) and trims a 0.1 ms overlap with the next word to its start.
+TIME_TOLERANCE_S = 2e-4 + 1e-6
 MAE_TOLERANCE_MS = 5e-4 + 1e-9  # benchmark rows are rounded to 0.001 ms
 MIN_PAIRS = 6
 
@@ -151,25 +151,18 @@ def shifted(words: list, offset: float) -> tuple[list[Interval], list[Interval]]
     return w, p
 
 
-def same_references(parsed: list, expected: list[Interval], phones: list[Interval]) -> bool:
-    """Parsed long-recording references equal the shifted clip references (1 us)."""
+def max_deviation(parsed: list, expected: list[Interval], phones: list[Interval]) -> float:
+    """Largest time difference (s) between parsed references and the shifted clip
+    references; infinite when any word or phone label or count differs."""
     got_phones = [c for w in parsed for c in w.phonemes]
-    return (
-        len(parsed) == len(expected)
-        and len(got_phones) == len(phones)
-        and all(
-            a.text == b.label
-            and abs(a.start - b.start) <= TIME_TOLERANCE_S
-            and abs(a.end - b.end) <= TIME_TOLERANCE_S
-            for a, b in zip(parsed, expected, strict=True)
-        )
-        and all(
-            a.phoneme == b.label
-            and abs(a.start - b.start) <= TIME_TOLERANCE_S
-            and abs(a.end - b.end) <= TIME_TOLERANCE_S
-            for a, b in zip(got_phones, phones, strict=True)
-        )
-    )
+    if len(parsed) != len(expected) or len(got_phones) != len(phones):
+        return float("inf")
+    if any(a.text != b.label for a, b in zip(parsed, expected, strict=True)) or any(
+        a.phoneme != b.label for a, b in zip(got_phones, phones, strict=True)
+    ):
+        return float("inf")
+    pairs = [*zip(parsed, expected, strict=True), *zip(got_phones, phones, strict=True)]
+    return max((max(abs(a.start - b.start), abs(a.end - b.end)) for a, b in pairs), default=0.0)
 
 
 def build_speaker(
@@ -225,10 +218,11 @@ def build_speaker(
         # Validation 1: audio bytes and references survive the round trip
         require(read_pcm(wav_path)[1] == bytes(audio), f"{stem}: audio round trip differs")
         parsed = parse_buckeye_textgrid(tg_path)
-        require(same_references(parsed, words, phones), f"{stem}: reference round trip differs")
+        deviation = max_deviation(parsed, words, phones)
+        require(deviation <= TIME_TOLERANCE_S, f"{stem}: reference round trip differs")
         for shorter_seconds, n, shorter_words in n_words_by_length:
             require(
-                same_references(
+                max_deviation(
                     parsed[:n],
                     [Interval(w.start, w.end, w.text) for w in shorter_words],
                     [
@@ -236,7 +230,8 @@ def build_speaker(
                         for w in shorter_words
                         for c in w.phonemes
                     ],
-                ),
+                )
+                <= TIME_TOLERANCE_S,
                 f"{stem}: not a prefix of {shorter_seconds} s",
             )
         n_words_by_length.append((seconds, len(parsed), parsed))
@@ -248,6 +243,7 @@ def build_speaker(
             "last_clip": ids[-1],
             "clip_ids": ids,
             "n_words": len(parsed),
+            "max_reference_deviation_ms": round(deviation * 1000, 4),
             "wav_sha256": sha_file(wav_path),
             "textgrid_sha256": sha_file(tg_path),
         }

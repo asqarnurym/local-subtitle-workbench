@@ -126,3 +126,12 @@ def test_paired_test_excludes_missing_speakers_and_small_samples() -> None:
     cond["s00"] = None
     small = paired_test(base, cond)
     assert not small["testable"] and small["excluded_speakers"] == ["s00"]
+
+
+def test_max_deviation_rejects_label_changes_and_measures_time() -> None:
+    from scripts.s1_long_recordings import max_deviation
+
+    word = WordToken("w0", "a", "a", 1.0, 1.5, 1.0)
+    assert max_deviation([word], [Interval(1.0, 1.5001, "a")], []) == pytest.approx(1e-4)
+    assert max_deviation([word], [Interval(1.0, 1.5, "b")], []) == float("inf")
+    assert max_deviation([word], [], []) == float("inf")

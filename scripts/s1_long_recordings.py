@@ -72,7 +72,9 @@ CODE_FILES = (
     "uv.lock",
     "pyproject.toml",
 )
-TIME_TOLERANCE_S = 1e-6
+# The frozen TextGrid parser rounds times to 0.1 ms; clip and long-recording references
+# are each rounded once, so they may differ by up to two half-steps.
+TIME_TOLERANCE_S = 1e-4 + 1e-6
 MAE_TOLERANCE_MS = 5e-4 + 1e-9  # benchmark rows are rounded to 0.001 ms
 MIN_PAIRS = 6
 

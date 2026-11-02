@@ -59,3 +59,4 @@ reports/e1_analysis_20261102/figures/*
 !reports/e1_analysis_20261102/tables/
 reports/e1_analysis_20261102/tables/*
 !reports/e1_analysis_20261102/tables/*.tex
+!reports/brqe_sensitivity_20261102/

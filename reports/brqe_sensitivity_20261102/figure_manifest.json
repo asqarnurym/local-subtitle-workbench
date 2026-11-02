@@ -1,0 +1,15 @@
+{
+  "source": {
+    "reports/brqe_sensitivity_20261102/summary.json": "e5960f531a3e496c0665bdd2cd4877eec0532f9db8fcb2cfe5f658be9c663966"
+  },
+  "script": {
+    "scripts/render_brqe_sensitivity.py": "f33aceb95fea6f93c56fac190f8f7880820b67a1be2945b1fd6d6eab654963b9"
+  },
+  "matplotlib": "3.11.2",
+  "files": {
+    "reports/brqe_sensitivity_20261102/figures/brqe_sensitivity_en.png": "5acee1ecb37b424cf0c5b468dc73f5df459b6575470dd334f36d402399e19f37",
+    "reports/brqe_sensitivity_20261102/figures/brqe_sensitivity_en.pdf": "86d39cf4773147d755e2f0ef0ad9de8d77ea97afa90a2f6a7d56d153838767e4",
+    "reports/brqe_sensitivity_20261102/figures/brqe_sensitivity_ru.png": "ed9876ee13b4566d037b1189978ce2838301ec91616f3acb39109cc9b7b05675",
+    "reports/brqe_sensitivity_20261102/figures/brqe_sensitivity_ru.pdf": "568b8b4dafde1b91803ca6e2b19890d29adce0c2969e3998a5483fdd12d9f345"
+  }
+}

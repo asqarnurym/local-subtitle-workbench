@@ -217,6 +217,20 @@ Both initial and final figure manifests are archived. `archive_index.json` maps
 their execution paths to byte-identical archived copies; it does not rewrite
 paths inside the generated evidence. The initial figures themselves remain local.
 
+### 4.3 BRQE hyperparameter sensitivity (2026-11-03)
+
+Train-speaker CV only; no test speakers, no Whisper/MFA, frozen weights untouched.
+Results and limitations: [BRQE_SENSITIVITY_RESULTS.md](BRQE_SENSITIVITY_RESULTS.md);
+archive `reports/brqe_sensitivity_20261102`. The run refuses a dirty worktree, aborts
+unless `baseline` reproduces `reports/brqe_cv_20260401.json`, and resumes finished
+configurations. Use a fresh ignored output directory (about 5 h on the author's laptop GPU):
+
+```powershell
+uv run --locked --all-extras python scripts/brqe_sensitivity.py --output-dir reports/brqe_sensitivity_recheck
+uv run --locked --all-extras python scripts/brqe_sensitivity.py --output-dir reports/brqe_sensitivity_recheck --verify
+uv run --no-project --with matplotlib==3.11.2 python scripts/render_brqe_sensitivity.py --analysis-dir reports/brqe_sensitivity_recheck
+```
+
 ## 5. Tables
 
 ```powershell

@@ -1,0 +1,217 @@
+{
+  "name": "window_150ms",
+  "config": {
+    "epochs": 12,
+    "batch_size": 512,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "cls_weight": 0.5,
+    "seed": 20260401,
+    "hidden": 128,
+    "dropout": 0.2
+  },
+  "half_window_frames": 30,
+  "window_ms": 150,
+  "seconds": 3552.9,
+  "folds": [
+    {
+      "fold": 0,
+      "held_out": [
+        "s01",
+        "s10",
+        "s23",
+        "s29"
+      ],
+      "n_train": 304006,
+      "seconds": 718.1
+    },
+    {
+      "fold": 1,
+      "held_out": [
+        "s04",
+        "s13",
+        "s24",
+        "s30"
+      ],
+      "n_train": 313198,
+      "seconds": 797.8
+    },
+    {
+      "fold": 2,
+      "held_out": [
+        "s05",
+        "s14",
+        "s25",
+        "s32"
+      ],
+      "n_train": 298126,
+      "seconds": 677.4
+    },
+    {
+      "fold": 3,
+      "held_out": [
+        "s06",
+        "s16",
+        "s26",
+        "s39"
+      ],
+      "n_train": 304850,
+      "seconds": 670.1
+    },
+    {
+      "fold": 4,
+      "held_out": [
+        "s08",
+        "s21",
+        "s28",
+        "s40"
+      ],
+      "n_train": 308900,
+      "seconds": 686.4
+    }
+  ],
+  "scores": {
+    "none": {
+      "word_A": {
+        "mae_ms": 18.71,
+        "acc_20ms": 70.58,
+        "n_boundaries": 55310
+      },
+      "word_B": {
+        "mae_ms": 24.459,
+        "acc_20ms": 69.52,
+        "n_boundaries": 50362
+      },
+      "phone_A": {
+        "mae_ms": 14.954,
+        "acc_20ms": 80.22,
+        "n_boundaries": 140556
+      },
+      "phone_B": {
+        "mae_ms": 20.156,
+        "acc_20ms": 79.25,
+        "n_boundaries": 136042
+      }
+    },
+    "const": {
+      "word_A": {
+        "mae_ms": 18.679,
+        "acc_20ms": 71.03,
+        "n_boundaries": 55310
+      },
+      "word_B": {
+        "mae_ms": 24.431,
+        "acc_20ms": 70.03,
+        "n_boundaries": 50362
+      },
+      "phone_A": {
+        "mae_ms": 14.955,
+        "acc_20ms": 80.45,
+        "n_boundaries": 140556
+      },
+      "phone_B": {
+        "mae_ms": 20.156,
+        "acc_20ms": 79.47,
+        "n_boundaries": 136042
+      }
+    },
+    "brqe": {
+      "word_A": {
+        "mae_ms": 16.66,
+        "acc_20ms": 75.95,
+        "n_boundaries": 55310
+      },
+      "word_B": {
+        "mae_ms": 22.466,
+        "acc_20ms": 74.84,
+        "n_boundaries": 50362
+      },
+      "phone_A": {
+        "mae_ms": 13.914,
+        "acc_20ms": 82.0,
+        "n_boundaries": 140556
+      },
+      "phone_B": {
+        "mae_ms": 19.139,
+        "acc_20ms": 80.99,
+        "n_boundaries": 136042
+      }
+    }
+  },
+  "tests": {
+    "word_A": {
+      "n_speakers": 20,
+      "brqe_vs_const": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.45999999999999996,
+        "speakers_improved": 20
+      },
+      "brqe_vs_none": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.4650000000000001,
+        "speakers_improved": 20
+      }
+    },
+    "word_B": {
+      "n_speakers": 20,
+      "brqe_vs_const": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.2350000000000001,
+        "speakers_improved": 20
+      },
+      "brqe_vs_none": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.25,
+        "speakers_improved": 20
+      }
+    },
+    "phone_A": {
+      "n_speakers": 20,
+      "brqe_vs_const": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.32000000000000006,
+        "speakers_improved": 20
+      },
+      "brqe_vs_none": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.32499999999999996,
+        "speakers_improved": 20
+      }
+    },
+    "phone_B": {
+      "n_speakers": 20,
+      "brqe_vs_const": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.18999999999999995,
+        "speakers_improved": 20
+      },
+      "brqe_vs_none": {
+        "p_value": 9.569173157064625e-05,
+        "cliffs_delta": 0.18999999999999995,
+        "speakers_improved": 20
+      }
+    }
+  },
+  "quality_estimation": {
+    "word": {
+      "roc_auc": 0.7714267780078085,
+      "pr_auc": 0.6070848712612937,
+      "positive_rate": 0.2992372624725566
+    },
+    "phone": {
+      "roc_auc": 0.7560327907250147,
+      "pr_auc": 0.4740344610133593,
+      "positive_rate": 0.2025466561580344
+    }
+  },
+  "decision": {
+    "refinement_enters_proposed": true,
+    "per_scenario": {
+      "A": true,
+      "B": true
+    }
+  },
+  "protocol_sha256": "f79567d9fe932f7e7346c86044692549eb2cedadc235e2eef57de846136929f2",
+  "git_revision": "a14e996837183dda9ebae6214e32f332689d0d7f",
+  "schema_version": 1
+}

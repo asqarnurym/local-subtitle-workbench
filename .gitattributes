@@ -16,3 +16,4 @@ reports/r1_metric_replay_20261101.json -text whitespace=cr-at-eol
 reports/r2_brqe_reproduction_20261101.json -text whitespace=cr-at-eol
 reports/r2_brqe_independent_20261101.json -text whitespace=cr-at-eol
 reports/e1_analysis_20261102/** -text whitespace=cr-at-eol
+reports/brqe_sensitivity_20261102/** -text whitespace=cr-at-eol

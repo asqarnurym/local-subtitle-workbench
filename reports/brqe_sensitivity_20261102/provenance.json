@@ -1,0 +1,53 @@
+{
+  "protocol": "docs/BRQE_SENSITIVITY_PROTOCOL.md",
+  "protocol_sha256": "f79567d9fe932f7e7346c86044692549eb2cedadc235e2eef57de846136929f2",
+  "git_before": {
+    "revision": "a14e996837183dda9ebae6214e32f332689d0d7f",
+    "dirty": false
+  },
+  "code": {
+    "scripts/brqe_sensitivity.py": "5215ca5890d8e3405ac1c8b5915864d9fbf84730c1f761ba56e7377110aede82",
+    "scripts/train_brqe.py": "e96d1d5b63bcf2b9779b9114bd2dfbfbc56d3f9504d7ab25711e68037774cf77",
+    "scripts/speech_benchmark.py": "1ad4aa8da1fef2d4df949d601ebdb624c38ef7c2e241e1339a52744e7b43b0e0",
+    "src/subtitle_workbench/refiner.py": "4aa56abe1f0a66d84cdf347e6916bc147b93df0d591c9ccb1d2e155dfd79d0da",
+    "src/subtitle_workbench/metrics.py": "ab2daad6af8c0767eeb4940b0ca01af46760d4a952bcf6f4c3897acd8a9e9414",
+    "uv.lock": "36986a9a23459f21ca87b61b9fd7f13e05ad9694fbdd00c5c1f1c89d5f5c30a7",
+    "pyproject.toml": "6e555d3226f1a8315ec339d20b35edfcb8d23472cb31d27308836986c1bd3184"
+  },
+  "inputs": {
+    "files": {
+      "reports/brqe_train_run/benchmark_predictions.json": "cec3e2436b38dc9a1afd1d246a9950efd7e2923cd444020789d98adbce775a2e",
+      "reports/brqe_train_run/benchmark_results.json": "79cc2b560a2824a10bcc2f8453704c09146e83fc239356c085cc077da4e07b96",
+      "reports/brqe_train_run/manifest.json": "6072074d630584f390c3c72c2db195dfafb12bd0ae410546e7dc96fed18502d9",
+      "reports/buckeye_train_sample_20260401.json": "c27f6de24c06eb92cf3a3352a95abe24c729ac07cee609d03c8582e88b06b876",
+      "reports/buckeye_split_20260401.json": "49bcad6e6f686ad3ab26d1f9800e2c4dee519a1dbd4b441471e9b2ba5a0af2f7"
+    },
+    "train_audio_and_references": {
+      "n_files": 6000,
+      "sha256_of_sorted_file_hashes": "18515dae68f3149b021f2d41e4737bebf20035cd42dc9241204b1adcf5de273b"
+    }
+  },
+  "training_input": {
+    "run": "reports/brqe_train_run",
+    "sample": {
+      "path": "reports/buckeye_train_sample_20260401.json",
+      "sha256": "c27f6de24c06eb92cf3a3352a95abe24c729ac07cee609d03c8582e88b06b876",
+      "seed": 20260401,
+      "per_speaker": 150,
+      "n_utterances": 3000
+    },
+    "split": {
+      "path": "reports/buckeye_split_20260401.json",
+      "sha256": "49bcad6e6f686ad3ab26d1f9800e2c4dee519a1dbd4b441471e9b2ba5a0af2f7"
+    },
+    "run_code": {
+      "source_sha256": "09605a45f3222dfb475b2691ace6e9e5ca0afc6f34c9588df1777bddfc689c03",
+      "git_revision": "9dc8018de6d9debef7d6765b40630903eaf2cbdd",
+      "git_worktree_dirty": false
+    },
+    "n_utterances": 3000,
+    "n_speakers": 20
+  },
+  "n_boundaries": 461850,
+  "n_matched": 382270
+}

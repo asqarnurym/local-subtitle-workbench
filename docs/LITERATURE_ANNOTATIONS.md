@@ -25,6 +25,8 @@ NIST, ITU, EBU, сайты авторов и лабораторий). Они л�
 | Garofolo1993 | Garofolo, Lamel, Fisher, Fiscus, Pallett, Dahlgren. *DARPA TIMIT Acoustic-Phonetic Continuous Speech Corpus CD-ROM*. NISTIR 4930 (1993) | Обязательная ссылка на корпус (скан, текст не извлекается) | https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir4930.pdf | ab6ee9f8f8aaa55f |
 | ITU1998 | Recommendation ITU-R BT.1359-1 (11/1998). *Relative timing of sound and vision for broadcasting* | Пороги заметности и приемлемости рассинхрона | https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.1359-1-199811-I!!PDF-E.pdf | 1e6f61373b6900d7 |
 | EBU2007 | EBU Recommendation R37-2007. *The relative timing of the sound and vision components of a television signal* | Допуски синхронизации в вещании | https://tech.ebu.ch/files/live/sites/tech/files/shared/r/r037.pdf | 045d5619b9c14d91 |
+| McAuliffe2026 | McAuliffe, Gunter, Wagner, Sonderegger. *Montreal Forced Aligner and the state of speech-to-text alignment in 2026*. arXiv 2606.18466v1 (2026), препринт | Актуальный ориентир точности MFA на TIMIT и Buckeye; как готовят данные для бенчмарка | https://arxiv.org/pdf/2606.18466 | e31c4c160333dc7f |
+| Mu2026 | Mu, Shi, Wang, Liu, Xu, Xie. *LLM-ForcedAligner: A Non-Autoregressive and Accurate LLM-Based Forced Aligner for Multilingual and Long-Form Speech*. arXiv 2601.18220v2 (2026), препринт | Сдвиг выравнивателей на склеенной длинной речи (RQ3); современный нейросетевой подход | https://arxiv.org/pdf/2601.18220 | e61855af290e61d6 |
 
 Полные SHA-256 (имя файла → хэш):
 
@@ -33,7 +35,9 @@ EBU2007_R37.pdf                                  045d5619b9c14d9139ec7c9434c271c
 Garofolo1993_TIMIT_NISTIR4930.pdf                ab6ee9f8f8aaa55f3c395a3efcb916e915c35fc48b4ff22c1ea6264034c8e1da
 ITU1998_BT1359-1.pdf                             1e6f61373b6900d76dcc0be13af8d86055794876e325ff7bc630f44a0d775acc
 Kurzinger2020_CTCSegmentation.pdf                3c71864510debae281c8f439ad384edbd78c13aa2f41bc9ad0e3969a215507f3
+McAuliffe2026_MFA2026.pdf                        e31c4c160333dc7f812183ef9d1e2c2300326fe2221753ef4bc7a40bc8344cc0
 Moreno1998_RecursiveLongAlignment.pdf            bb66daa071911ecec15318f13c483ff05dcb224ef8a9c579a082ea5e53c22139
+Mu2026_LLMForcedAligner.pdf                      e61855af290e61d6434845b54854e3bd33fe4c03ad5f50a354393e1332aebdc4
 Pitt2005_BuckeyeCorpus.pdf                       bd02eed3f265d4b36831a3c9e3d9d88bac1322830792c3e010fd7b4f61aff272
 Rastorgueva2023_NeMoForcedAligner.pdf            7cd1795bd2feb844f156021045384037c810d48fbf3a0db9f51870b06ece4067
 Raymond2002_BuckeyeTranscriptionConsistency.pdf  421f8b95603800e3abb2fc3e399626ce99fc9e6611a06ff08225f66e24755286
@@ -134,6 +138,41 @@ Neuropsychologia, DOI 10.1016/j.neuropsychologia.2006.01.001. Это платн�
 **EBU2007 (R37).**
 - Сквозные пределы: звук раньше изображения ≤ 40 мс, позже ≤ 60 мс.
 - Точность на каждом этапе: от 5 мс раньше до 15 мс позже.
+
+**McAuliffe2026 (добавлено 04.11.2026).** Препринт авторов MFA, рецензирование не
+подтверждено.
+- Табл. 4, слова, среднее в мс и доля границ при t ≤ 10 / 25 / 50 / 100 мс:
+  - MFA ARPA 3.0, TIMIT — 19,93; 44,99 / 66,50 / 91,61 / 98,38 %;
+  - MFA ARPA 3.0, Buckeye — 21,75; 48,76 / 70,16 / 91,35 / 97,29 %.
+- Средняя ошибка на тех же корпусах: WhisperX — 110,04 и 110,90 мс, NeMo — 78,24 и
+  88,62 мс (TIMIT и Buckeye).
+- Фонемы, MFA ARPA 3.0: 12,11 мс на TIMIT и 13,87 мс на Buckeye. MFA 1.0: 16,4 и 17,6 мс.
+- Подготовка данных: спонтанная речь нарезана на фразы, разделённые паузой 300 мс, с запасом
+  тишины 200 мс; фразы до трёх слов и фразы с неизвестными, оборванными и вырезанными словами
+  отброшены.
+- В извлечённом тексте нет числа невыровненных фраз (поиск по «failed», «failure», «could
+  not», «unable to», «not aligned»). Режим длинных записей не оценивался.
+- Адаптация модели к корпусу внутри того же языка почти ничего не меняет. Это адаптация
+  модели, а не адаптация к диктору, которая есть у нас.
+- MFA 3.0 умеет сегментировать длинные файлы, в том числе итеративно по тексту.
+- **Значение для нас:** независимое подтверждение порядка величин (наши A2: 20,3 мс TIMIT,
+  19,6 мс Buckeye) и превосходства MFA над WhisperX и NeMo. Сравнение только качественное:
+  другие выборки, другая подготовка Buckeye, версия модели не обязательно та же. Такая
+  подготовка не входит в режим, где у нас появляются провалы, поэтому о них статья данных не
+  даёт.
+
+**Mu2026 (добавлено 04.11.2026).** Препринт.
+- Предлагает нейросетевой выравниватель на речевой LLM. Метрика — накопленный средний сдвиг
+  (AAS), а не MAE границ.
+- Английский, AAS в мс, обычная речь: NFA — 107,5, WhisperX — 92,1, LLM-ForcedAligner — 37,5.
+  Склейки до 300 с: 226,7 / 227,2 / 58,6.
+- **Главная оговорка:** эталон этих таблиц — псевдометки MFA. Ручная разметка есть только
+  для внутреннего китайского набора (ограничение названо самими авторами). Поэтому статья
+  не оценивает точность MFA и не сообщает о его провалах.
+- Авторы называют MFA самым точным из существующих методов и потому берут его как учителя.
+- **Значение для нас:** склейка коротких записей в длинные — принятый приём (как наш S1).
+  Нейросетевые выравниватели страдают на длинной речи иначе: дают результат, но со сдвигом.
+  Числа с нашими несопоставимы (метрика, язык, эталон).
 
 ## Как использовать в статье
 

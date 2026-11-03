@@ -122,6 +122,22 @@ Node 6: Serialization  [Custom HalfUp]◄──vs──►  [WebVTT-py / PySRT /
 
 ---
 
+## 3a. MFA failure recovery (added 2026-11-04)
+
+Candidates for Node 5, checked by theory and stored S1b results only; nothing was run.
+Evidence, verdicts and rejected options: `docs/MFA_FAILURE_BACKLOG.md`.
+
+| ID | Candidate | Verdict |
+|---|---|---|
+| MF-1 | Keep MFA diagnostics and the list of failed chunks | Justified, prerequisite |
+| MF-2 | Count failures per chunk, report both accounting rules | Strongest case |
+| MF-3 | Retry failed chunks only with `--beam 100 --retry_beam 400` | Plausible, main candidate |
+| MF-4 | Split a failed chunk and realign the parts | Plausible, second step |
+| MF-5 | Use CTC for failed chunks | Conflicts with the no-fallback rule; author decision |
+| MF-6 | MFA built-in segmentation instead of our chunker | Low priority |
+
+---
+
 ## 4. Backlog Execution & Promotion Policy
 
 1. **Isolation Guarantee:** Analog implementations must be located exclusively in `src/subtitle_workbench/experimental/` or `tests/analogs/`. They must not alter the default behavior of the core CLI tool `subtitle-workbench`.

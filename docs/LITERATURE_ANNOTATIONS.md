@@ -25,8 +25,8 @@ NIST, ITU, EBU, сайты авторов и лабораторий). Они л�
 | Garofolo1993 | Garofolo, Lamel, Fisher, Fiscus, Pallett, Dahlgren. *DARPA TIMIT Acoustic-Phonetic Continuous Speech Corpus CD-ROM*. NISTIR 4930 (1993) | Обязательная ссылка на корпус (скан, текст не извлекается) | https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir4930.pdf | ab6ee9f8f8aaa55f |
 | ITU1998 | Recommendation ITU-R BT.1359-1 (11/1998). *Relative timing of sound and vision for broadcasting* | Пороги заметности и приемлемости рассинхрона | https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.1359-1-199811-I!!PDF-E.pdf | 1e6f61373b6900d7 |
 | EBU2007 | EBU Recommendation R37-2007. *The relative timing of the sound and vision components of a television signal* | Допуски синхронизации в вещании | https://tech.ebu.ch/files/live/sites/tech/files/shared/r/r037.pdf | 045d5619b9c14d91 |
-| McAuliffe2026 | McAuliffe, Gunter, Wagner, Sonderegger. *Montreal Forced Aligner and the state of speech-to-text alignment in 2026*. arXiv 2606.18466v1 (2026), препринт | Актуальный ориентир точности MFA на TIMIT и Buckeye; как готовят данные для бенчмарка | https://arxiv.org/pdf/2606.18466 | e31c4c160333dc7f |
-| Mu2026 | Mu, Shi, Wang, Liu, Xu, Xie. *LLM-ForcedAligner: A Non-Autoregressive and Accurate LLM-Based Forced Aligner for Multilingual and Long-Form Speech*. arXiv 2601.18220v2 (2026), препринт | Сдвиг выравнивателей на склеенной длинной речи (RQ3); современный нейросетевой подход | https://arxiv.org/pdf/2601.18220 | e61855af290e61d6 |
+| McAuliffe2026 | McAuliffe, Gunter, Wagner, Sonderegger. *Montreal Forced Aligner and the state of speech-to-text alignment in 2026*. Interspeech 2026, 347–356 | Актуальный ориентир точности MFA на TIMIT и Buckeye; как готовят данные для бенчмарка | https://www.isca-archive.org/interspeech_2026/mcauliffe26_interspeech.pdf | 3994e24c486449d9 |
+| Mu2026 | Mu, Shi, Wang, Liu, Xu, Xie. *LLM-ForcedAligner: A Non-Autoregressive and Accurate LLM-Based Forced Aligner for Multilingual and Long-Form Speech*. ACL 2026, Long Papers, 25627–25638 | Сдвиг выравнивателей на склеенной длинной речи (RQ3); современный нейросетевой подход | https://aclanthology.org/2026.acl-long.1174.pdf | b18aa8d9b30bff96 |
 
 Полные SHA-256 (имя файла → хэш):
 
@@ -35,9 +35,9 @@ EBU2007_R37.pdf                                  045d5619b9c14d9139ec7c9434c271c
 Garofolo1993_TIMIT_NISTIR4930.pdf                ab6ee9f8f8aaa55f3c395a3efcb916e915c35fc48b4ff22c1ea6264034c8e1da
 ITU1998_BT1359-1.pdf                             1e6f61373b6900d76dcc0be13af8d86055794876e325ff7bc630f44a0d775acc
 Kurzinger2020_CTCSegmentation.pdf                3c71864510debae281c8f439ad384edbd78c13aa2f41bc9ad0e3969a215507f3
-McAuliffe2026_MFA2026.pdf                        e31c4c160333dc7f812183ef9d1e2c2300326fe2221753ef4bc7a40bc8344cc0
+McAuliffe2026_Interspeech.pdf                    3994e24c486449d984bc36b8d37f35c46e9d1290923934840e747c13f6b06d33
 Moreno1998_RecursiveLongAlignment.pdf            bb66daa071911ecec15318f13c483ff05dcb224ef8a9c579a082ea5e53c22139
-Mu2026_LLMForcedAligner.pdf                      e61855af290e61d6434845b54854e3bd33fe4c03ad5f50a354393e1332aebdc4
+Mu2026_ACL.pdf                                   b18aa8d9b30bff962f2c794de9eb20a4117ba23b1293529d798367fb73c83c9e
 Pitt2005_BuckeyeCorpus.pdf                       bd02eed3f265d4b36831a3c9e3d9d88bac1322830792c3e010fd7b4f61aff272
 Rastorgueva2023_NeMoForcedAligner.pdf            7cd1795bd2feb844f156021045384037c810d48fbf3a0db9f51870b06ece4067
 Raymond2002_BuckeyeTranscriptionConsistency.pdf  421f8b95603800e3abb2fc3e399626ce99fc9e6611a06ff08225f66e24755286
@@ -139,8 +139,8 @@ Neuropsychologia, DOI 10.1016/j.neuropsychologia.2006.01.001. Это платн�
 - Сквозные пределы: звук раньше изображения ≤ 40 мс, позже ≤ 60 мс.
 - Точность на каждом этапе: от 5 мс раньше до 15 мс позже.
 
-**McAuliffe2026 (добавлено 04.11.2026).** Препринт авторов MFA, рецензирование не
-подтверждено.
+**McAuliffe2026 (добавлено 04.11.2026).** Опубликовано в Interspeech 2026. Числа ниже сверены
+с PDF из ISCA Archive и совпали с препринтом.
 - Табл. 4, слова, среднее в мс и доля границ при t ≤ 10 / 25 / 50 / 100 мс:
   - MFA ARPA 3.0, TIMIT — 19,93; 44,99 / 66,50 / 91,61 / 98,38 %;
   - MFA ARPA 3.0, Buckeye — 21,75; 48,76 / 70,16 / 91,35 / 97,29 %.
@@ -161,7 +161,8 @@ Neuropsychologia, DOI 10.1016/j.neuropsychologia.2006.01.001. Это платн�
   подготовка не входит в режим, где у нас появляются провалы, поэтому о них статья данных не
   даёт.
 
-**Mu2026 (добавлено 04.11.2026).** Препринт.
+**Mu2026 (добавлено 04.11.2026).** Опубликовано в ACL 2026. Числа ниже сверены с PDF из ACL
+Anthology и совпали с препринтом.
 - Предлагает нейросетевой выравниватель на речевой LLM. Метрика — накопленный средний сдвиг
   (AAS), а не MAE границ.
 - Английский, AAS в мс, обычная речь: NFA — 107,5, WhisperX — 92,1, LLM-ForcedAligner — 37,5.

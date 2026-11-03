@@ -19,3 +19,4 @@ reports/e1_analysis_20261102/** -text whitespace=cr-at-eol
 reports/brqe_sensitivity_20261102/** -text whitespace=cr-at-eol
 reports/s1b_seam_check_20261103/** -text whitespace=cr-at-eol
 reports/s1b_seam_check_stitch_20261103/** -text whitespace=cr-at-eol
+reports/s1b_long_20261103/** -text whitespace=cr-at-eol

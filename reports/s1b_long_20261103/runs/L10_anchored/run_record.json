@@ -1,0 +1,8280 @@
+{
+  "length": "L10",
+  "variant": "anchored",
+  "reconciler": "stitch",
+  "mfa_workers": 4,
+  "mfa_retries": [],
+  "seconds": 12420.7,
+  "git_before": {
+    "revision": "41ec4ccdf8f23cf92e4aa7f94d2638c45ebe8cdc",
+    "dirty": false
+  },
+  "git_after": {
+    "revision": "41ec4ccdf8f23cf92e4aa7f94d2638c45ebe8cdc",
+    "dirty": false
+  },
+  "code": {
+    "scripts/s1_long_recordings.py": "b7efd5862242951a62e1d91d06ffd1b712db369ab72bd2cfb2e7fa16744d070f",
+    "scripts/seam_safe.py": "6b1d273c598875b57a6667709648a033d44d08d42addcd8feae643dfe6dea34c",
+    "scripts/seam_stitch.py": "82f839b9f2517fc238a5586e9ee1f60bcef54e39c251a0e79743ff02ae4a07ca",
+    "docs/S1B_SEAM_SAFE_PROTOCOL.md": "6ce95af20f62127528952cf33626583fc754c311e948300411b137fdd2e631b8",
+    "scripts/speech_benchmark.py": "1ad4aa8da1fef2d4df949d601ebdb624c38ef7c2e241e1339a52744e7b43b0e0",
+    "scripts/analyze_speaker_errors.py": "ce74accc93aab7d47b01314d37f37f2020d80a1857edb3a12ed65dcace95a28d",
+    "src/subtitle_workbench/pipeline.py": "eb92cb04f294d26373bb4e1c84f513564d55c5730aa6bc0e669f51965e7d0f87",
+    "src/subtitle_workbench/anchoring.py": "fec7b6293a40e9d3adedac977ea572a469924b6bf9e537e68393555f69558ba3",
+    "src/subtitle_workbench/chunker.py": "ab6cf80d8d83198c365fa35c90b295b2b2240b4f2663426c26530da84bdd2a2c",
+    "src/subtitle_workbench/aligner.py": "b74add0e6756fb91cce8df937a5462d1bf93759d976f345c03ba11e0dc448e80",
+    "src/subtitle_workbench/metrics.py": "ab2daad6af8c0767eeb4940b0ca01af46760d4a952bcf6f4c3897acd8a9e9414",
+    "src/subtitle_workbench/refiner.py": "4aa56abe1f0a66d84cdf347e6916bc147b93df0d591c9ccb1d2e155dfd79d0da",
+    "uv.lock": "36986a9a23459f21ca87b61b9fd7f13e05ad9694fbdd00c5c1f1c89d5f5c30a7",
+    "pyproject.toml": "6e555d3226f1a8315ec339d20b35edfcb8d23472cb31d27308836986c1bd3184"
+  },
+  "build_sha256": "a08c48865147ad95315f5561425688ae135777a01c0071a0a5ed5d590dbcd57a",
+  "isolated_chunking_failures": [],
+  "seam_reconciliation_log": [
+    {
+      "n_chunks": 23,
+      "method": "stitch",
+      "n_words": 2723,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.44,
+          "anchor": "with",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 49.712,
+          "anchor": "all",
+          "anchor_to_seam_s": 0.346
+        },
+        {
+          "seam_s": 72.48,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.368
+        },
+        {
+          "seam_s": 89.264,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.397
+        },
+        {
+          "seam_s": 116.76,
+          "anchor": "years",
+          "anchor_to_seam_s": 0.482
+        },
+        {
+          "seam_s": 144.12,
+          "anchor": "from",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 172.96,
+          "anchor": "you're",
+          "anchor_to_seam_s": 0.388
+        },
+        {
+          "seam_s": 202.94,
+          "anchor": "better",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 232.06,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 262.04,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.138
+        },
+        {
+          "seam_s": 291.96,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 318.4,
+          "anchor": "they're",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 345.44,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 373.56,
+          "anchor": "is",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 399.904,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.284
+        },
+        {
+          "seam_s": 427.9,
+          "anchor": "having",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 440.768,
+          "anchor": "get",
+          "anchor_to_seam_s": 0.349
+        },
+        {
+          "seam_s": 464.352,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.376
+        },
+        {
+          "seam_s": 492.18,
+          "anchor": "don't",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 520.14,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.088
+        },
+        {
+          "seam_s": 548.832,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.316
+        },
+        {
+          "seam_s": 572.656,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.262
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 1751,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 28.04,
+          "anchor": "zero",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 58.03,
+          "anchor": "financial",
+          "anchor_to_seam_s": 0.572
+        },
+        {
+          "seam_s": 87.9,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 111.21,
+          "anchor": "start",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 119.44,
+          "anchor": "overwhelmed",
+          "anchor_to_seam_s": 0.585
+        },
+        {
+          "seam_s": 147.98,
+          "anchor": "life",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 155.856,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.31
+        },
+        {
+          "seam_s": 184.25,
+          "anchor": "push",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 195.12,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.257
+        },
+        {
+          "seam_s": 222.04,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.502
+        },
+        {
+          "seam_s": 247.7,
+          "anchor": "developed",
+          "anchor_to_seam_s": 0.202
+        },
+        {
+          "seam_s": 275.216,
+          "anchor": "years",
+          "anchor_to_seam_s": 0.868
+        },
+        {
+          "seam_s": 299.328,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.481
+        },
+        {
+          "seam_s": 319.936,
+          "anchor": "or",
+          "anchor_to_seam_s": 0.373
+        },
+        {
+          "seam_s": 347.6,
+          "anchor": "here",
+          "anchor_to_seam_s": 0.021
+        },
+        {
+          "seam_s": 353.232,
+          "anchor": "john",
+          "anchor_to_seam_s": 0.434
+        },
+        {
+          "seam_s": 374.99,
+          "anchor": "today",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 387.568,
+          "anchor": "or",
+          "anchor_to_seam_s": 1.661
+        },
+        {
+          "seam_s": 411.68,
+          "anchor": "drifting",
+          "anchor_to_seam_s": 0.091
+        },
+        {
+          "seam_s": 437.84,
+          "anchor": "upon",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 454.88,
+          "anchor": "beautiful",
+          "anchor_to_seam_s": 0.497
+        },
+        {
+          "seam_s": 484.39,
+          "anchor": "family",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 508.74,
+          "anchor": "maybe",
+          "anchor_to_seam_s": 0.202
+        },
+        {
+          "seam_s": 534.6,
+          "anchor": "happen",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 560.75,
+          "anchor": "want",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 589.88,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.022
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 2408,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 11.344,
+          "anchor": "out",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 41.34,
+          "anchor": "years",
+          "anchor_to_seam_s": 0.291
+        },
+        {
+          "seam_s": 66.0,
+          "anchor": "being",
+          "anchor_to_seam_s": 0.308
+        },
+        {
+          "seam_s": 76.48,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.387
+        },
+        {
+          "seam_s": 105.08,
+          "anchor": "relationship",
+          "anchor_to_seam_s": 0.182
+        },
+        {
+          "seam_s": 131.2,
+          "anchor": "lucky",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 158.1,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.161
+        },
+        {
+          "seam_s": 186.59,
+          "anchor": "point",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 215.81,
+          "anchor": "goofy",
+          "anchor_to_seam_s": 0.072
+        },
+        {
+          "seam_s": 219.776,
+          "anchor": "they're",
+          "anchor_to_seam_s": 0.162
+        },
+        {
+          "seam_s": 247.22,
+          "anchor": "abused",
+          "anchor_to_seam_s": 0.036
+        },
+        {
+          "seam_s": 250.816,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.268
+        },
+        {
+          "seam_s": 278.78,
+          "anchor": "can't",
+          "anchor_to_seam_s": 0.172
+        },
+        {
+          "seam_s": 308.78,
+          "anchor": "in",
+          "anchor_to_seam_s": 0.059
+        },
+        {
+          "seam_s": 310.992,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.351
+        },
+        {
+          "seam_s": 338.896,
+          "anchor": "wants",
+          "anchor_to_seam_s": 0.373
+        },
+        {
+          "seam_s": 368.44,
+          "anchor": "family",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 397.12,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.132
+        },
+        {
+          "seam_s": 426.25,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 448.384,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.036
+        },
+        {
+          "seam_s": 466.24,
+          "anchor": "fabulous",
+          "anchor_to_seam_s": 0.418
+        },
+        {
+          "seam_s": 495.48,
+          "anchor": "compromise",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 524.59,
+          "anchor": "come",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 532.08,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.288
+        },
+        {
+          "seam_s": 561.17,
+          "anchor": "baseball",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 590.864,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.304
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 2375,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 25.056,
+          "anchor": "travel",
+          "anchor_to_seam_s": 0.423
+        },
+        {
+          "seam_s": 49.936,
+          "anchor": "actually",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 77.22,
+          "anchor": "europe",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 103.936,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.352
+        },
+        {
+          "seam_s": 131.95,
+          "anchor": "building",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 159.824,
+          "anchor": "before",
+          "anchor_to_seam_s": 0.334
+        },
+        {
+          "seam_s": 183.504,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.677
+        },
+        {
+          "seam_s": 194.288,
+          "anchor": "terrible",
+          "anchor_to_seam_s": 0.409
+        },
+        {
+          "seam_s": 222.64,
+          "anchor": "although",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 250.448,
+          "anchor": "be",
+          "anchor_to_seam_s": 0.49
+        },
+        {
+          "seam_s": 260.512,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.094
+        },
+        {
+          "seam_s": 289.7,
+          "anchor": "another",
+          "anchor_to_seam_s": 0.072
+        },
+        {
+          "seam_s": 300.592,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.295
+        },
+        {
+          "seam_s": 327.36,
+          "anchor": "needs",
+          "anchor_to_seam_s": 0.398
+        },
+        {
+          "seam_s": 346.144,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.345
+        },
+        {
+          "seam_s": 376.13,
+          "anchor": "true",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 381.696,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.49
+        },
+        {
+          "seam_s": 408.8,
+          "anchor": "careful",
+          "anchor_to_seam_s": 0.418
+        },
+        {
+          "seam_s": 437.37,
+          "anchor": "fairly",
+          "anchor_to_seam_s": 0.081
+        },
+        {
+          "seam_s": 463.456,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.282
+        },
+        {
+          "seam_s": 491.472,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.246
+        },
+        {
+          "seam_s": 516.8,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 538.736,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.292
+        },
+        {
+          "seam_s": 549.072,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.355
+        },
+        {
+          "seam_s": 572.624,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.304
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2008,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.52,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.259
+        },
+        {
+          "seam_s": 54.032,
+          "anchor": "ranting",
+          "anchor_to_seam_s": 0.416
+        },
+        {
+          "seam_s": 69.136,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.299
+        },
+        {
+          "seam_s": 99.024,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.304
+        },
+        {
+          "seam_s": 128.368,
+          "anchor": "fire",
+          "anchor_to_seam_s": 0.38
+        },
+        {
+          "seam_s": 157.376,
+          "anchor": "heck",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 185.2,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.328
+        },
+        {
+          "seam_s": 214.704,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.205
+        },
+        {
+          "seam_s": 229.776,
+          "anchor": "fifty",
+          "anchor_to_seam_s": 0.331
+        },
+        {
+          "seam_s": 247.744,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.244
+        },
+        {
+          "seam_s": 277.536,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 295.152,
+          "anchor": "two",
+          "anchor_to_seam_s": 0.367
+        },
+        {
+          "seam_s": 322.8,
+          "anchor": "different",
+          "anchor_to_seam_s": 0.408
+        },
+        {
+          "seam_s": 349.664,
+          "anchor": "part",
+          "anchor_to_seam_s": 0.294
+        },
+        {
+          "seam_s": 375.408,
+          "anchor": "pool",
+          "anchor_to_seam_s": 0.49
+        },
+        {
+          "seam_s": 390.832,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.295
+        },
+        {
+          "seam_s": 420.15,
+          "anchor": "win",
+          "anchor_to_seam_s": 0.092
+        },
+        {
+          "seam_s": 444.192,
+          "anchor": "number",
+          "anchor_to_seam_s": 0.327
+        },
+        {
+          "seam_s": 469.936,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 494.576,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.462
+        },
+        {
+          "seam_s": 523.056,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.293
+        },
+        {
+          "seam_s": 550.816,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.353
+        },
+        {
+          "seam_s": 564.944,
+          "anchor": "probably",
+          "anchor_to_seam_s": 0.305
+        },
+        {
+          "seam_s": 591.376,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.142
+        }
+      ]
+    },
+    {
+      "n_chunks": 21,
+      "method": "stitch",
+      "n_words": 2734,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 28.34,
+          "anchor": "deal",
+          "anchor_to_seam_s": 0.019
+        },
+        {
+          "seam_s": 58.12,
+          "anchor": "bikes",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 87.83,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 116.81,
+          "anchor": "miserable",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 145.43,
+          "anchor": "ultrasounds",
+          "anchor_to_seam_s": 0.152
+        },
+        {
+          "seam_s": 171.92,
+          "anchor": "though",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 200.49,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 230.26,
+          "anchor": "dublin",
+          "anchor_to_seam_s": 0.072
+        },
+        {
+          "seam_s": 259.56,
+          "anchor": "everything",
+          "anchor_to_seam_s": 0.001
+        },
+        {
+          "seam_s": 288.19,
+          "anchor": "twelve",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 316.85,
+          "anchor": "stuff",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 346.82,
+          "anchor": "work",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 375.87,
+          "anchor": "week",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 405.79,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 434.62,
+          "anchor": "stuff",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 463.23,
+          "anchor": "nice",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 492.7,
+          "anchor": "feel",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 520.92,
+          "anchor": "classes",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 550.62,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.061
+        },
+        {
+          "seam_s": 579.31,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.218
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 2146,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 1.856,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.323
+        },
+        {
+          "seam_s": 28.92,
+          "anchor": "industrialized",
+          "anchor_to_seam_s": 0.242
+        },
+        {
+          "seam_s": 56.05,
+          "anchor": "bit",
+          "anchor_to_seam_s": 0.352
+        },
+        {
+          "seam_s": 78.08,
+          "anchor": "growing",
+          "anchor_to_seam_s": 0.438
+        },
+        {
+          "seam_s": 103.264,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.344
+        },
+        {
+          "seam_s": 119.68,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 138.0,
+          "anchor": "got",
+          "anchor_to_seam_s": 0.289
+        },
+        {
+          "seam_s": 150.336,
+          "anchor": "actually",
+          "anchor_to_seam_s": 0.483
+        },
+        {
+          "seam_s": 178.848,
+          "anchor": "his",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 206.94,
+          "anchor": "year",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 215.568,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 239.152,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.496
+        },
+        {
+          "seam_s": 264.11,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 294.09,
+          "anchor": "driving",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 321.8,
+          "anchor": "conservative",
+          "anchor_to_seam_s": 0.098
+        },
+        {
+          "seam_s": 350.76,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.378
+        },
+        {
+          "seam_s": 357.296,
+          "anchor": "which",
+          "anchor_to_seam_s": 2.434
+        },
+        {
+          "seam_s": 385.55,
+          "anchor": "dude",
+          "anchor_to_seam_s": 0.252
+        },
+        {
+          "seam_s": 412.304,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.304
+        },
+        {
+          "seam_s": 441.32,
+          "anchor": "is",
+          "anchor_to_seam_s": 0.041
+        },
+        {
+          "seam_s": 460.96,
+          "anchor": "towards",
+          "anchor_to_seam_s": 0.683
+        },
+        {
+          "seam_s": 489.92,
+          "anchor": "unifying",
+          "anchor_to_seam_s": 0.522
+        },
+        {
+          "seam_s": 515.504,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.346
+        },
+        {
+          "seam_s": 523.408,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.308
+        },
+        {
+          "seam_s": 549.96,
+          "anchor": "scared",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 579.52,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.209
+        }
+      ]
+    },
+    {
+      "n_chunks": 23,
+      "method": "stitch",
+      "n_words": 1929,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.49,
+          "anchor": "coming",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 59.35,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.288
+        },
+        {
+          "seam_s": 87.25,
+          "anchor": "families",
+          "anchor_to_seam_s": 0.159
+        },
+        {
+          "seam_s": 117.25,
+          "anchor": "happening",
+          "anchor_to_seam_s": 0.512
+        },
+        {
+          "seam_s": 127.824,
+          "anchor": "how",
+          "anchor_to_seam_s": 0.293
+        },
+        {
+          "seam_s": 155.83,
+          "anchor": "is",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 179.904,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.494
+        },
+        {
+          "seam_s": 208.66,
+          "anchor": "community",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 237.97,
+          "anchor": "twins",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 266.69,
+          "anchor": "happen",
+          "anchor_to_seam_s": 0.192
+        },
+        {
+          "seam_s": 286.112,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 314.41,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 336.032,
+          "anchor": "very",
+          "anchor_to_seam_s": 0.387
+        },
+        {
+          "seam_s": 364.53,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.031
+        },
+        {
+          "seam_s": 394.23,
+          "anchor": "thing",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 422.92,
+          "anchor": "major",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 452.69,
+          "anchor": "meetings",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 482.43,
+          "anchor": "elected",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 502.24,
+          "anchor": "human",
+          "anchor_to_seam_s": 0.358
+        },
+        {
+          "seam_s": 531.4,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 561.34,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.358
+        },
+        {
+          "seam_s": 582.16,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.318
+        }
+      ]
+    },
+    {
+      "n_chunks": 24,
+      "method": "stitch",
+      "n_words": 2493,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 20.64,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.318
+        },
+        {
+          "seam_s": 50.58,
+          "anchor": "shop",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 78.15,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.318
+        },
+        {
+          "seam_s": 104.528,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.3
+        },
+        {
+          "seam_s": 132.89,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 153.472,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.346
+        },
+        {
+          "seam_s": 182.128,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.26
+        },
+        {
+          "seam_s": 204.855,
+          "anchor": "relationship",
+          "anchor_to_seam_s": 0.117
+        },
+        {
+          "seam_s": 229.664,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.404
+        },
+        {
+          "seam_s": 256.04,
+          "anchor": "children",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 282.22,
+          "anchor": "don't",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 287.84,
+          "anchor": "is",
+          "anchor_to_seam_s": 0.606
+        },
+        {
+          "seam_s": 316.52,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 340.832,
+          "anchor": "i",
+          "anchor_to_seam_s": 1.137
+        },
+        {
+          "seam_s": 367.73,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.031
+        },
+        {
+          "seam_s": 396.9,
+          "anchor": "either",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 426.864,
+          "anchor": "makes",
+          "anchor_to_seam_s": 0.344
+        },
+        {
+          "seam_s": 455.81,
+          "anchor": "them",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 483.16,
+          "anchor": "butter",
+          "anchor_to_seam_s": 0.071
+        },
+        {
+          "seam_s": 496.32,
+          "anchor": "up",
+          "anchor_to_seam_s": 0.364
+        },
+        {
+          "seam_s": 523.968,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.32
+        },
+        {
+          "seam_s": 545.904,
+          "anchor": "neck",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 573.98,
+          "anchor": "sure",
+          "anchor_to_seam_s": 0.362
+        }
+      ]
+    },
+    {
+      "n_chunks": 23,
+      "method": "stitch",
+      "n_words": 2408,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 26.57,
+          "anchor": "odot",
+          "anchor_to_seam_s": 0.286
+        },
+        {
+          "seam_s": 30.256,
+          "anchor": "accredited",
+          "anchor_to_seam_s": 0.529
+        },
+        {
+          "seam_s": 59.95,
+          "anchor": "twenty",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 89.81,
+          "anchor": "our",
+          "anchor_to_seam_s": 1.179
+        },
+        {
+          "seam_s": 114.624,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.335
+        },
+        {
+          "seam_s": 144.496,
+          "anchor": "become",
+          "anchor_to_seam_s": 0.402
+        },
+        {
+          "seam_s": 173.91,
+          "anchor": "traffic",
+          "anchor_to_seam_s": 0.132
+        },
+        {
+          "seam_s": 198.48,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.258
+        },
+        {
+          "seam_s": 210.416,
+          "anchor": "months",
+          "anchor_to_seam_s": 0.523
+        },
+        {
+          "seam_s": 237.904,
+          "anchor": "streamlining",
+          "anchor_to_seam_s": 0.694
+        },
+        {
+          "seam_s": 267.78,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 297.74,
+          "anchor": "promote",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 326.16,
+          "anchor": "in",
+          "anchor_to_seam_s": 0.191
+        },
+        {
+          "seam_s": 354.99,
+          "anchor": "level",
+          "anchor_to_seam_s": 0.021
+        },
+        {
+          "seam_s": 384.61,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.609
+        },
+        {
+          "seam_s": 413.06,
+          "anchor": "house",
+          "anchor_to_seam_s": 0.009
+        },
+        {
+          "seam_s": 442.6,
+          "anchor": "refrigerator",
+          "anchor_to_seam_s": 0.092
+        },
+        {
+          "seam_s": 470.63,
+          "anchor": "forth",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 497.83,
+          "anchor": "notes",
+          "anchor_to_seam_s": 0.172
+        },
+        {
+          "seam_s": 527.24,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.232
+        },
+        {
+          "seam_s": 557.11,
+          "anchor": "ratings",
+          "anchor_to_seam_s": 0.091
+        },
+        {
+          "seam_s": 585.63,
+          "anchor": "lifetime",
+          "anchor_to_seam_s": 0.082
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 1726,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.12,
+          "anchor": "european",
+          "anchor_to_seam_s": 0.668
+        },
+        {
+          "seam_s": 41.92,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.327
+        },
+        {
+          "seam_s": 64.592,
+          "anchor": "truly",
+          "anchor_to_seam_s": 0.386
+        },
+        {
+          "seam_s": 93.62,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 102.288,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.378
+        },
+        {
+          "seam_s": 130.26,
+          "anchor": "attractive",
+          "anchor_to_seam_s": 0.181
+        },
+        {
+          "seam_s": 159.18,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.298
+        },
+        {
+          "seam_s": 186.96,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 213.424,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.394
+        },
+        {
+          "seam_s": 237.616,
+          "anchor": "yes",
+          "anchor_to_seam_s": 0.562
+        },
+        {
+          "seam_s": 266.34,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.308
+        },
+        {
+          "seam_s": 283.648,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.361
+        },
+        {
+          "seam_s": 310.08,
+          "anchor": "work",
+          "anchor_to_seam_s": 0.019
+        },
+        {
+          "seam_s": 318.048,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.438
+        },
+        {
+          "seam_s": 344.912,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.366
+        },
+        {
+          "seam_s": 374.02,
+          "anchor": "grandchildren",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 401.44,
+          "anchor": "thing",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 426.48,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.328
+        },
+        {
+          "seam_s": 454.688,
+          "anchor": "getting",
+          "anchor_to_seam_s": 0.401
+        },
+        {
+          "seam_s": 483.632,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 503.552,
+          "anchor": "from",
+          "anchor_to_seam_s": 0.524
+        },
+        {
+          "seam_s": 513.984,
+          "anchor": "belong",
+          "anchor_to_seam_s": 0.423
+        },
+        {
+          "seam_s": 543.16,
+          "anchor": "church",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 571.04,
+          "anchor": "preschool",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 599.44,
+          "anchor": "women",
+          "anchor_to_seam_s": 0.018
+        }
+      ]
+    },
+    {
+      "n_chunks": 22,
+      "method": "stitch",
+      "n_words": 2244,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 28.58,
+          "anchor": "in",
+          "anchor_to_seam_s": 0.321
+        },
+        {
+          "seam_s": 58.48,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.098
+        },
+        {
+          "seam_s": 88.36,
+          "anchor": "they're",
+          "anchor_to_seam_s": 0.212
+        },
+        {
+          "seam_s": 118.22,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 144.43,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.178
+        },
+        {
+          "seam_s": 168.96,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.368
+        },
+        {
+          "seam_s": 197.28,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 219.85,
+          "anchor": "battery",
+          "anchor_to_seam_s": 1.243
+        },
+        {
+          "seam_s": 249.17,
+          "anchor": "yards",
+          "anchor_to_seam_s": 0.041
+        },
+        {
+          "seam_s": 276.464,
+          "anchor": "set",
+          "anchor_to_seam_s": 0.396
+        },
+        {
+          "seam_s": 303.35,
+          "anchor": "us",
+          "anchor_to_seam_s": 0.021
+        },
+        {
+          "seam_s": 328.26,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.059
+        },
+        {
+          "seam_s": 357.5,
+          "anchor": "guns",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 387.33,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.619
+        },
+        {
+          "seam_s": 414.82,
+          "anchor": "all",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 439.63,
+          "anchor": "jeep",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 467.68,
+          "anchor": "him",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 497.67,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.278
+        },
+        {
+          "seam_s": 526.03,
+          "anchor": "enough",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 554.28,
+          "anchor": "getting",
+          "anchor_to_seam_s": 0.929
+        },
+        {
+          "seam_s": 580.27,
+          "anchor": "right",
+          "anchor_to_seam_s": 0.081
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2035,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.472,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.336
+        },
+        {
+          "seam_s": 43.264,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.313
+        },
+        {
+          "seam_s": 72.048,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.549
+        },
+        {
+          "seam_s": 93.536,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.363
+        },
+        {
+          "seam_s": 119.376,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.302
+        },
+        {
+          "seam_s": 148.304,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.415
+        },
+        {
+          "seam_s": 175.12,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.278
+        },
+        {
+          "seam_s": 198.464,
+          "anchor": "doing",
+          "anchor_to_seam_s": 0.344
+        },
+        {
+          "seam_s": 222.32,
+          "anchor": "might",
+          "anchor_to_seam_s": 0.358
+        },
+        {
+          "seam_s": 233.2,
+          "anchor": "which",
+          "anchor_to_seam_s": 0.286
+        },
+        {
+          "seam_s": 258.24,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.358
+        },
+        {
+          "seam_s": 285.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.324
+        },
+        {
+          "seam_s": 308.944,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.524
+        },
+        {
+          "seam_s": 335.408,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.47
+        },
+        {
+          "seam_s": 365.248,
+          "anchor": "homes",
+          "anchor_to_seam_s": 0.35
+        },
+        {
+          "seam_s": 391.344,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.384
+        },
+        {
+          "seam_s": 413.104,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.354
+        },
+        {
+          "seam_s": 439.408,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.3
+        },
+        {
+          "seam_s": 467.91,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 492.688,
+          "anchor": "did",
+          "anchor_to_seam_s": 0.56
+        },
+        {
+          "seam_s": 517.568,
+          "anchor": "desk",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 542.11,
+          "anchor": "do",
+          "anchor_to_seam_s": 0.342
+        },
+        {
+          "seam_s": 556.592,
+          "anchor": "type",
+          "anchor_to_seam_s": 1.536
+        },
+        {
+          "seam_s": 580.528,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.331
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2308,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 16.368,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.33
+        },
+        {
+          "seam_s": 44.52,
+          "anchor": "moscow",
+          "anchor_to_seam_s": 0.152
+        },
+        {
+          "seam_s": 73.408,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.28
+        },
+        {
+          "seam_s": 101.66,
+          "anchor": "again",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 104.0,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.313
+        },
+        {
+          "seam_s": 129.59,
+          "anchor": "week",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 159.17,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.678
+        },
+        {
+          "seam_s": 162.56,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.367
+        },
+        {
+          "seam_s": 187.04,
+          "anchor": "code",
+          "anchor_to_seam_s": 0.191
+        },
+        {
+          "seam_s": 212.832,
+          "anchor": "orthodox",
+          "anchor_to_seam_s": 0.833
+        },
+        {
+          "seam_s": 222.064,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 247.56,
+          "anchor": "smith",
+          "anchor_to_seam_s": 0.071
+        },
+        {
+          "seam_s": 276.8,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.178
+        },
+        {
+          "seam_s": 278.688,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.188
+        },
+        {
+          "seam_s": 308.4,
+          "anchor": "times",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 337.68,
+          "anchor": "anything",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 356.08,
+          "anchor": "you're",
+          "anchor_to_seam_s": 0.103
+        },
+        {
+          "seam_s": 382.07,
+          "anchor": "anybody",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 411.02,
+          "anchor": "drink",
+          "anchor_to_seam_s": 0.069
+        },
+        {
+          "seam_s": 412.992,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.375
+        },
+        {
+          "seam_s": 442.38,
+          "anchor": "inspired",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 469.68,
+          "anchor": "married",
+          "anchor_to_seam_s": 0.418
+        },
+        {
+          "seam_s": 492.432,
+          "anchor": "people",
+          "anchor_to_seam_s": 1.357
+        },
+        {
+          "seam_s": 508.112,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.287
+        },
+        {
+          "seam_s": 522.896,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.321
+        },
+        {
+          "seam_s": 546.352,
+          "anchor": "exciting",
+          "anchor_to_seam_s": 1.197
+        },
+        {
+          "seam_s": 576.32,
+          "anchor": "before",
+          "anchor_to_seam_s": 0.111
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 2123,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 24.688,
+          "anchor": "been",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 50.256,
+          "anchor": "i've",
+          "anchor_to_seam_s": 0.313
+        },
+        {
+          "seam_s": 63.296,
+          "anchor": "pursue",
+          "anchor_to_seam_s": 0.471
+        },
+        {
+          "seam_s": 92.48,
+          "anchor": "research",
+          "anchor_to_seam_s": 0.091
+        },
+        {
+          "seam_s": 120.16,
+          "anchor": "program",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 149.824,
+          "anchor": "career",
+          "anchor_to_seam_s": 0.394
+        },
+        {
+          "seam_s": 179.38,
+          "anchor": "out",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 208.272,
+          "anchor": "point",
+          "anchor_to_seam_s": 0.336
+        },
+        {
+          "seam_s": 231.728,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.311
+        },
+        {
+          "seam_s": 241.952,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.396
+        },
+        {
+          "seam_s": 270.26,
+          "anchor": "paintings",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 296.24,
+          "anchor": "happens",
+          "anchor_to_seam_s": 0.072
+        },
+        {
+          "seam_s": 314.48,
+          "anchor": "darth",
+          "anchor_to_seam_s": 0.588
+        },
+        {
+          "seam_s": 343.75,
+          "anchor": "trek",
+          "anchor_to_seam_s": 0.242
+        },
+        {
+          "seam_s": 369.968,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.32
+        },
+        {
+          "seam_s": 382.256,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.411
+        },
+        {
+          "seam_s": 407.616,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.272
+        },
+        {
+          "seam_s": 418.976,
+          "anchor": "completely",
+          "anchor_to_seam_s": 0.411
+        },
+        {
+          "seam_s": 439.408,
+          "anchor": "come",
+          "anchor_to_seam_s": 0.37
+        },
+        {
+          "seam_s": 465.89,
+          "anchor": "too",
+          "anchor_to_seam_s": 0.092
+        },
+        {
+          "seam_s": 491.78,
+          "anchor": "matter",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 519.632,
+          "anchor": "period",
+          "anchor_to_seam_s": 0.416
+        },
+        {
+          "seam_s": 547.92,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 563.584,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.397
+        },
+        {
+          "seam_s": 578.064,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.343
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2614,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.7,
+          "anchor": "build",
+          "anchor_to_seam_s": 0.692
+        },
+        {
+          "seam_s": 49.712,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.004
+        },
+        {
+          "seam_s": 59.712,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.275
+        },
+        {
+          "seam_s": 88.56,
+          "anchor": "no",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 100.416,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.301
+        },
+        {
+          "seam_s": 129.89,
+          "anchor": "room",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 156.32,
+          "anchor": "hour",
+          "anchor_to_seam_s": 0.121
+        },
+        {
+          "seam_s": 179.28,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.009
+        },
+        {
+          "seam_s": 208.225,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.043
+        },
+        {
+          "seam_s": 232.384,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.444
+        },
+        {
+          "seam_s": 243.728,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.512
+        },
+        {
+          "seam_s": 270.87,
+          "anchor": "things",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 280.608,
+          "anchor": "oh",
+          "anchor_to_seam_s": 0.328
+        },
+        {
+          "seam_s": 310.47,
+          "anchor": "hayes",
+          "anchor_to_seam_s": 0.142
+        },
+        {
+          "seam_s": 324.48,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.327
+        },
+        {
+          "seam_s": 344.368,
+          "anchor": "focused",
+          "anchor_to_seam_s": 0.571
+        },
+        {
+          "seam_s": 357.84,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.397
+        },
+        {
+          "seam_s": 384.54,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 403.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.294
+        },
+        {
+          "seam_s": 424.128,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 453.472,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.316
+        },
+        {
+          "seam_s": 480.16,
+          "anchor": "there's",
+          "anchor_to_seam_s": 0.458
+        },
+        {
+          "seam_s": 492.8,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.347
+        },
+        {
+          "seam_s": 513.312,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.366
+        },
+        {
+          "seam_s": 530.272,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 558.608,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 584.096,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.312
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 2428,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.79,
+          "anchor": "years",
+          "anchor_to_seam_s": 0.172
+        },
+        {
+          "seam_s": 56.688,
+          "anchor": "gene",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 86.68,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 110.832,
+          "anchor": "because",
+          "anchor_to_seam_s": 0.456
+        },
+        {
+          "seam_s": 139.93,
+          "anchor": "oriented",
+          "anchor_to_seam_s": 0.073
+        },
+        {
+          "seam_s": 141.888,
+          "anchor": "get",
+          "anchor_to_seam_s": 0.279
+        },
+        {
+          "seam_s": 169.7,
+          "anchor": "recently",
+          "anchor_to_seam_s": 0.061
+        },
+        {
+          "seam_s": 175.568,
+          "anchor": "tried",
+          "anchor_to_seam_s": 0.36
+        },
+        {
+          "seam_s": 204.77,
+          "anchor": "alcoholic",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 234.464,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.436
+        },
+        {
+          "seam_s": 263.84,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 283.6,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 299.6,
+          "anchor": "counseling",
+          "anchor_to_seam_s": 0.558
+        },
+        {
+          "seam_s": 328.83,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.178
+        },
+        {
+          "seam_s": 357.61,
+          "anchor": "work",
+          "anchor_to_seam_s": 0.182
+        },
+        {
+          "seam_s": 379.92,
+          "anchor": "taught",
+          "anchor_to_seam_s": 0.319
+        },
+        {
+          "seam_s": 405.936,
+          "anchor": "now",
+          "anchor_to_seam_s": 0.779
+        },
+        {
+          "seam_s": 431.04,
+          "anchor": "in",
+          "anchor_to_seam_s": 1.409
+        },
+        {
+          "seam_s": 455.296,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 484.06,
+          "anchor": "here",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 512.98,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 531.28,
+          "anchor": "training",
+          "anchor_to_seam_s": 0.493
+        },
+        {
+          "seam_s": 560.8,
+          "anchor": "took",
+          "anchor_to_seam_s": 0.318
+        },
+        {
+          "seam_s": 566.064,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.05
+        },
+        {
+          "seam_s": 595.77,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.018
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2388,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 26.72,
+          "anchor": "school",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 52.288,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.391
+        },
+        {
+          "seam_s": 80.16,
+          "anchor": "war",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 106.256,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 135.568,
+          "anchor": "good",
+          "anchor_to_seam_s": 0.32
+        },
+        {
+          "seam_s": 164.928,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.421
+        },
+        {
+          "seam_s": 194.61,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.168
+        },
+        {
+          "seam_s": 198.8,
+          "anchor": "hours",
+          "anchor_to_seam_s": 0.477
+        },
+        {
+          "seam_s": 226.7,
+          "anchor": "originally",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 256.61,
+          "anchor": "obviously",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 278.928,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.32
+        },
+        {
+          "seam_s": 307.6,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 336.656,
+          "anchor": "were",
+          "anchor_to_seam_s": 0.323
+        },
+        {
+          "seam_s": 351.2,
+          "anchor": "nowadays",
+          "anchor_to_seam_s": 0.567
+        },
+        {
+          "seam_s": 374.992,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.427
+        },
+        {
+          "seam_s": 395.584,
+          "anchor": "generally",
+          "anchor_to_seam_s": 0.445
+        },
+        {
+          "seam_s": 424.5,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.191
+        },
+        {
+          "seam_s": 453.712,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.316
+        },
+        {
+          "seam_s": 467.12,
+          "anchor": "hung",
+          "anchor_to_seam_s": 0.399
+        },
+        {
+          "seam_s": 495.11,
+          "anchor": "the",
+          "anchor_to_seam_s": 2.34
+        },
+        {
+          "seam_s": 515.264,
+          "anchor": "are",
+          "anchor_to_seam_s": 0.334
+        },
+        {
+          "seam_s": 537.344,
+          "anchor": "kid",
+          "anchor_to_seam_s": 0.507
+        },
+        {
+          "seam_s": 559.344,
+          "anchor": "guns",
+          "anchor_to_seam_s": 0.424
+        },
+        {
+          "seam_s": 588.912,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.316
+        }
+      ]
+    },
+    {
+      "n_chunks": 24,
+      "method": "stitch",
+      "n_words": 2634,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.14,
+          "anchor": "gosh",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 59.072,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.316
+        },
+        {
+          "seam_s": 87.19,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 117.19,
+          "anchor": "knew",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 147.19,
+          "anchor": "brother",
+          "anchor_to_seam_s": 0.152
+        },
+        {
+          "seam_s": 153.792,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.414
+        },
+        {
+          "seam_s": 177.19,
+          "anchor": "zoo",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 207.17,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 237.08,
+          "anchor": "they'll",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 266.93,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 284.208,
+          "anchor": "there's",
+          "anchor_to_seam_s": 1.28
+        },
+        {
+          "seam_s": 301.008,
+          "anchor": "world",
+          "anchor_to_seam_s": 0.66
+        },
+        {
+          "seam_s": 326.685,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.017
+        },
+        {
+          "seam_s": 343.056,
+          "anchor": "like",
+          "anchor_to_seam_s": 1.05
+        },
+        {
+          "seam_s": 357.515,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.192
+        },
+        {
+          "seam_s": 387.38,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.288
+        },
+        {
+          "seam_s": 416.92,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 446.82,
+          "anchor": "than",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 476.81,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.449
+        },
+        {
+          "seam_s": 505.104,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.464
+        },
+        {
+          "seam_s": 529.056,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.383
+        },
+        {
+          "seam_s": 548.24,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.443
+        },
+        {
+          "seam_s": 572.46,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.612
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2225,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.38,
+          "anchor": "work",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 57.15,
+          "anchor": "the",
+          "anchor_to_seam_s": 1.169
+        },
+        {
+          "seam_s": 84.53,
+          "anchor": "maybe",
+          "anchor_to_seam_s": 0.401
+        },
+        {
+          "seam_s": 103.664,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.026
+        },
+        {
+          "seam_s": 133.36,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.382
+        },
+        {
+          "seam_s": 161.67,
+          "anchor": "out",
+          "anchor_to_seam_s": 0.899
+        },
+        {
+          "seam_s": 183.9,
+          "anchor": "union",
+          "anchor_to_seam_s": 0.051
+        },
+        {
+          "seam_s": 205.96,
+          "anchor": "what",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 234.72,
+          "anchor": "no",
+          "anchor_to_seam_s": 0.482
+        },
+        {
+          "seam_s": 264.2,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 294.19,
+          "anchor": "far",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 324.08,
+          "anchor": "separate",
+          "anchor_to_seam_s": 0.049
+        },
+        {
+          "seam_s": 350.55,
+          "anchor": "jobs",
+          "anchor_to_seam_s": 0.132
+        },
+        {
+          "seam_s": 378.07,
+          "anchor": "here",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 405.73,
+          "anchor": "title",
+          "anchor_to_seam_s": 0.092
+        },
+        {
+          "seam_s": 417.968,
+          "anchor": "at",
+          "anchor_to_seam_s": 0.309
+        },
+        {
+          "seam_s": 446.85,
+          "anchor": "same",
+          "anchor_to_seam_s": 0.077
+        },
+        {
+          "seam_s": 448.304,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 477.49,
+          "anchor": "classes",
+          "anchor_to_seam_s": 0.141
+        },
+        {
+          "seam_s": 500.88,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 526.448,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.4
+        },
+        {
+          "seam_s": 555.15,
+          "anchor": "started",
+          "anchor_to_seam_s": 0.121
+        },
+        {
+          "seam_s": 570.16,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.277
+        },
+        {
+          "seam_s": 598.95,
+          "anchor": "system",
+          "anchor_to_seam_s": 0.087
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 1749,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 28.04,
+          "anchor": "zero",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 58.03,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.325
+        },
+        {
+          "seam_s": 87.9,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.0
+        },
+        {
+          "seam_s": 111.21,
+          "anchor": "start",
+          "anchor_to_seam_s": 0.085
+        },
+        {
+          "seam_s": 119.44,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.485
+        },
+        {
+          "seam_s": 147.98,
+          "anchor": "life",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 155.856,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.284
+        },
+        {
+          "seam_s": 184.25,
+          "anchor": "push",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 195.12,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.255
+        },
+        {
+          "seam_s": 222.04,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.56
+        },
+        {
+          "seam_s": 247.7,
+          "anchor": "developed",
+          "anchor_to_seam_s": 0.205
+        },
+        {
+          "seam_s": 275.216,
+          "anchor": "finances",
+          "anchor_to_seam_s": 0.469
+        },
+        {
+          "seam_s": 299.328,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.452
+        },
+        {
+          "seam_s": 319.936,
+          "anchor": "or",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 347.6,
+          "anchor": "here",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 353.232,
+          "anchor": "john",
+          "anchor_to_seam_s": 0.398
+        },
+        {
+          "seam_s": 374.99,
+          "anchor": "today",
+          "anchor_to_seam_s": 0.075
+        },
+        {
+          "seam_s": 387.568,
+          "anchor": "or",
+          "anchor_to_seam_s": 1.652
+        },
+        {
+          "seam_s": 411.68,
+          "anchor": "drifting",
+          "anchor_to_seam_s": 0.09
+        },
+        {
+          "seam_s": 437.84,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.095
+        },
+        {
+          "seam_s": 454.88,
+          "anchor": "beautiful",
+          "anchor_to_seam_s": 0.52
+        },
+        {
+          "seam_s": 484.39,
+          "anchor": "family",
+          "anchor_to_seam_s": 0.13
+        },
+        {
+          "seam_s": 508.74,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.265
+        },
+        {
+          "seam_s": 534.6,
+          "anchor": "happen",
+          "anchor_to_seam_s": 0.095
+        },
+        {
+          "seam_s": 560.75,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.79
+        },
+        {
+          "seam_s": 589.88,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.045
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2008,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.52,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.24
+        },
+        {
+          "seam_s": 54.032,
+          "anchor": "ranting",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 69.136,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.296
+        },
+        {
+          "seam_s": 99.024,
+          "anchor": "my",
+          "anchor_to_seam_s": 2.146
+        },
+        {
+          "seam_s": 128.368,
+          "anchor": "fire",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 157.376,
+          "anchor": "heck",
+          "anchor_to_seam_s": 0.349
+        },
+        {
+          "seam_s": 185.2,
+          "anchor": "don't",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 214.704,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.176
+        },
+        {
+          "seam_s": 229.776,
+          "anchor": "fifty",
+          "anchor_to_seam_s": 0.279
+        },
+        {
+          "seam_s": 247.744,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.251
+        },
+        {
+          "seam_s": 277.536,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.384
+        },
+        {
+          "seam_s": 295.152,
+          "anchor": "two",
+          "anchor_to_seam_s": 0.333
+        },
+        {
+          "seam_s": 322.8,
+          "anchor": "different",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 349.664,
+          "anchor": "part",
+          "anchor_to_seam_s": 0.266
+        },
+        {
+          "seam_s": 375.408,
+          "anchor": "pretty",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 390.832,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.303
+        },
+        {
+          "seam_s": 420.15,
+          "anchor": "will",
+          "anchor_to_seam_s": 0.31
+        },
+        {
+          "seam_s": 444.192,
+          "anchor": "number",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 469.936,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.361
+        },
+        {
+          "seam_s": 494.576,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.349
+        },
+        {
+          "seam_s": 523.056,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.274
+        },
+        {
+          "seam_s": 550.816,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.339
+        },
+        {
+          "seam_s": 564.944,
+          "anchor": "on",
+          "anchor_to_seam_s": 0.591
+        },
+        {
+          "seam_s": 591.376,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.104
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 2146,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 1.856,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 28.92,
+          "anchor": "there's",
+          "anchor_to_seam_s": 0.21
+        },
+        {
+          "seam_s": 56.05,
+          "anchor": "more",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 78.08,
+          "anchor": "growing",
+          "anchor_to_seam_s": 0.42
+        },
+        {
+          "seam_s": 103.264,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 119.68,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.325
+        },
+        {
+          "seam_s": 138.0,
+          "anchor": "got",
+          "anchor_to_seam_s": 0.285
+        },
+        {
+          "seam_s": 150.336,
+          "anchor": "actually",
+          "anchor_to_seam_s": 0.444
+        },
+        {
+          "seam_s": 178.848,
+          "anchor": "his",
+          "anchor_to_seam_s": 0.302
+        },
+        {
+          "seam_s": 206.94,
+          "anchor": "year",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 215.568,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.277
+        },
+        {
+          "seam_s": 239.152,
+          "anchor": "because",
+          "anchor_to_seam_s": 0.288
+        },
+        {
+          "seam_s": 264.11,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.0
+        },
+        {
+          "seam_s": 294.09,
+          "anchor": "driving",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 321.8,
+          "anchor": "conservative",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 350.76,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.145
+        },
+        {
+          "seam_s": 357.296,
+          "anchor": "clubs",
+          "anchor_to_seam_s": 0.309
+        },
+        {
+          "seam_s": 385.55,
+          "anchor": "dude",
+          "anchor_to_seam_s": 0.4
+        },
+        {
+          "seam_s": 412.304,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.241
+        },
+        {
+          "seam_s": 441.32,
+          "anchor": "is",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 460.96,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.385
+        },
+        {
+          "seam_s": 489.92,
+          "anchor": "unifying",
+          "anchor_to_seam_s": 0.51
+        },
+        {
+          "seam_s": 515.504,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.316
+        },
+        {
+          "seam_s": 523.408,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.272
+        },
+        {
+          "seam_s": 549.96,
+          "anchor": "scared",
+          "anchor_to_seam_s": 0.13
+        },
+        {
+          "seam_s": 579.52,
+          "anchor": "stuff",
+          "anchor_to_seam_s": 0.03
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 1734,
+      "n_no_anchor": 1,
+      "seams": [
+        {
+          "seam_s": 27.12,
+          "anchor": "real",
+          "anchor_to_seam_s": 0.545
+        },
+        {
+          "seam_s": 41.92,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.79
+        },
+        {
+          "seam_s": 64.592,
+          "anchor": "truly",
+          "anchor_to_seam_s": 0.398
+        },
+        {
+          "seam_s": 93.62,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.07
+        },
+        {
+          "seam_s": 102.288,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 130.26,
+          "anchor": "attractive",
+          "anchor_to_seam_s": 0.19
+        },
+        {
+          "seam_s": 159.18,
+          "anchor": "reselling",
+          "anchor_to_seam_s": 0.22
+        },
+        {
+          "seam_s": 186.96,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 213.424,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.406
+        },
+        {
+          "seam_s": 237.616,
+          "anchor": "yes",
+          "anchor_to_seam_s": 0.584
+        },
+        {
+          "seam_s": 266.34,
+          "anchor": "sons",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 283.648,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.407
+        },
+        {
+          "seam_s": 310.08,
+          "anchor": "work",
+          "anchor_to_seam_s": 1.14
+        },
+        {
+          "seam_s": 318.048,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.372
+        },
+        {
+          "seam_s": 344.912,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.333
+        },
+        {
+          "seam_s": 374.02,
+          "anchor": null
+        },
+        {
+          "seam_s": 401.44,
+          "anchor": "benefit",
+          "anchor_to_seam_s": 1.92
+        },
+        {
+          "seam_s": 426.48,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.275
+        },
+        {
+          "seam_s": 454.688,
+          "anchor": "getting",
+          "anchor_to_seam_s": 0.397
+        },
+        {
+          "seam_s": 483.632,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.308
+        },
+        {
+          "seam_s": 503.552,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 513.984,
+          "anchor": "belong",
+          "anchor_to_seam_s": 0.421
+        },
+        {
+          "seam_s": 543.16,
+          "anchor": "church",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 571.04,
+          "anchor": "preschool",
+          "anchor_to_seam_s": 0.115
+        },
+        {
+          "seam_s": 599.44,
+          "anchor": "women",
+          "anchor_to_seam_s": 0.025
+        }
+      ]
+    },
+    {
+      "n_chunks": 22,
+      "method": "stitch",
+      "n_words": 2244,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 28.58,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.06
+        },
+        {
+          "seam_s": 58.48,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.075
+        },
+        {
+          "seam_s": 88.36,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 118.22,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 144.43,
+          "anchor": "rifle",
+          "anchor_to_seam_s": 0.14
+        },
+        {
+          "seam_s": 168.96,
+          "anchor": "map",
+          "anchor_to_seam_s": 0.12
+        },
+        {
+          "seam_s": 197.28,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 219.85,
+          "anchor": "when",
+          "anchor_to_seam_s": 0.135
+        },
+        {
+          "seam_s": 249.17,
+          "anchor": "yards",
+          "anchor_to_seam_s": 0.12
+        },
+        {
+          "seam_s": 276.464,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.371
+        },
+        {
+          "seam_s": 303.35,
+          "anchor": "us",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 328.26,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.07
+        },
+        {
+          "seam_s": 357.5,
+          "anchor": "guns",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 387.33,
+          "anchor": "around",
+          "anchor_to_seam_s": 0.47
+        },
+        {
+          "seam_s": 414.82,
+          "anchor": "all",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 439.63,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.205
+        },
+        {
+          "seam_s": 467.68,
+          "anchor": "him",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 497.67,
+          "anchor": "suppose",
+          "anchor_to_seam_s": 0.105
+        },
+        {
+          "seam_s": 526.03,
+          "anchor": "enough",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 554.28,
+          "anchor": "you're",
+          "anchor_to_seam_s": 0.675
+        },
+        {
+          "seam_s": 580.27,
+          "anchor": "right",
+          "anchor_to_seam_s": 0.055
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2041,
+      "n_no_anchor": 1,
+      "seams": [
+        {
+          "seam_s": 27.472,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.298
+        },
+        {
+          "seam_s": 43.264,
+          "anchor": null
+        },
+        {
+          "seam_s": 72.048,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.518
+        },
+        {
+          "seam_s": 93.536,
+          "anchor": "a",
+          "anchor_to_seam_s": 1.079
+        },
+        {
+          "seam_s": 119.376,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.279
+        },
+        {
+          "seam_s": 148.304,
+          "anchor": "support",
+          "anchor_to_seam_s": 0.906
+        },
+        {
+          "seam_s": 175.12,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.25
+        },
+        {
+          "seam_s": 198.464,
+          "anchor": "doing",
+          "anchor_to_seam_s": 0.306
+        },
+        {
+          "seam_s": 222.32,
+          "anchor": "might",
+          "anchor_to_seam_s": 0.325
+        },
+        {
+          "seam_s": 233.2,
+          "anchor": "which",
+          "anchor_to_seam_s": 0.28
+        },
+        {
+          "seam_s": 258.24,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.335
+        },
+        {
+          "seam_s": 285.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.311
+        },
+        {
+          "seam_s": 308.944,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.271
+        },
+        {
+          "seam_s": 335.408,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.282
+        },
+        {
+          "seam_s": 365.248,
+          "anchor": "homes",
+          "anchor_to_seam_s": 0.343
+        },
+        {
+          "seam_s": 391.344,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.331
+        },
+        {
+          "seam_s": 413.104,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.346
+        },
+        {
+          "seam_s": 439.408,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.272
+        },
+        {
+          "seam_s": 467.91,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 492.688,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.322
+        },
+        {
+          "seam_s": 517.568,
+          "anchor": "desk",
+          "anchor_to_seam_s": 0.382
+        },
+        {
+          "seam_s": 542.11,
+          "anchor": "do",
+          "anchor_to_seam_s": 0.265
+        },
+        {
+          "seam_s": 556.592,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.283
+        },
+        {
+          "seam_s": 580.528,
+          "anchor": "for",
+          "anchor_to_seam_s": 1.173
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2614,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.7,
+          "anchor": "databases",
+          "anchor_to_seam_s": 0.15
+        },
+        {
+          "seam_s": 49.712,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.168
+        },
+        {
+          "seam_s": 59.712,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.238
+        },
+        {
+          "seam_s": 88.56,
+          "anchor": "no",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 100.416,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.374
+        },
+        {
+          "seam_s": 129.89,
+          "anchor": "room",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 156.32,
+          "anchor": "hour",
+          "anchor_to_seam_s": 0.08
+        },
+        {
+          "seam_s": 179.28,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 208.225,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.515
+        },
+        {
+          "seam_s": 232.384,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.301
+        },
+        {
+          "seam_s": 243.728,
+          "anchor": "taking",
+          "anchor_to_seam_s": 0.327
+        },
+        {
+          "seam_s": 270.87,
+          "anchor": "things",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 280.608,
+          "anchor": "oh",
+          "anchor_to_seam_s": 0.287
+        },
+        {
+          "seam_s": 310.47,
+          "anchor": "hayes",
+          "anchor_to_seam_s": 0.13
+        },
+        {
+          "seam_s": 324.48,
+          "anchor": "there",
+          "anchor_to_seam_s": 0.44
+        },
+        {
+          "seam_s": 344.368,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.322
+        },
+        {
+          "seam_s": 357.84,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.37
+        },
+        {
+          "seam_s": 384.54,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 403.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.251
+        },
+        {
+          "seam_s": 424.128,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 453.472,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.298
+        },
+        {
+          "seam_s": 480.16,
+          "anchor": "because",
+          "anchor_to_seam_s": 0.28
+        },
+        {
+          "seam_s": 492.8,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.33
+        },
+        {
+          "seam_s": 513.312,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 530.272,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.323
+        },
+        {
+          "seam_s": 558.608,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 584.096,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.289
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2388,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 26.72,
+          "anchor": "school",
+          "anchor_to_seam_s": 0.105
+        },
+        {
+          "seam_s": 52.288,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 80.16,
+          "anchor": "war",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 106.256,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.269
+        },
+        {
+          "seam_s": 135.568,
+          "anchor": "good",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 164.928,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.402
+        },
+        {
+          "seam_s": 194.61,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 198.8,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.3
+        },
+        {
+          "seam_s": 226.7,
+          "anchor": "originally",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 256.61,
+          "anchor": "obviously",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 278.928,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.297
+        },
+        {
+          "seam_s": 307.6,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 336.656,
+          "anchor": "were",
+          "anchor_to_seam_s": 0.289
+        },
+        {
+          "seam_s": 351.2,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.46
+        },
+        {
+          "seam_s": 374.992,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.443
+        },
+        {
+          "seam_s": 395.584,
+          "anchor": "generally",
+          "anchor_to_seam_s": 0.416
+        },
+        {
+          "seam_s": 424.5,
+          "anchor": "everything",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 453.712,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.283
+        },
+        {
+          "seam_s": 467.12,
+          "anchor": "hung",
+          "anchor_to_seam_s": 0.375
+        },
+        {
+          "seam_s": 495.11,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.05
+        },
+        {
+          "seam_s": 515.264,
+          "anchor": "are",
+          "anchor_to_seam_s": 0.311
+        },
+        {
+          "seam_s": 537.344,
+          "anchor": "kid",
+          "anchor_to_seam_s": 0.519
+        },
+        {
+          "seam_s": 559.344,
+          "anchor": "guns",
+          "anchor_to_seam_s": 0.401
+        },
+        {
+          "seam_s": 588.912,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.308
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 2721,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 26.61,
+          "anchor": "things",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 49.712,
+          "anchor": "all",
+          "anchor_to_seam_s": 0.346
+        },
+        {
+          "seam_s": 72.48,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.368
+        },
+        {
+          "seam_s": 89.264,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.463
+        },
+        {
+          "seam_s": 117.24,
+          "anchor": "on",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 145.8,
+          "anchor": "they've",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 169.96,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 198.28,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 224.76,
+          "anchor": "want",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 251.38,
+          "anchor": "now",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 275.6,
+          "anchor": "in",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 301.58,
+          "anchor": "babysitter",
+          "anchor_to_seam_s": 0.332
+        },
+        {
+          "seam_s": 326.85,
+          "anchor": "influences",
+          "anchor_to_seam_s": 0.132
+        },
+        {
+          "seam_s": 350.22,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 369.72,
+          "anchor": "earth",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 391.4,
+          "anchor": "or",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 399.904,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.282
+        },
+        {
+          "seam_s": 427.9,
+          "anchor": "having",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 440.768,
+          "anchor": "get",
+          "anchor_to_seam_s": 0.349
+        },
+        {
+          "seam_s": 464.352,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.376
+        },
+        {
+          "seam_s": 487.84,
+          "anchor": "together",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 516.62,
+          "anchor": "right",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 530.544,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.884
+        },
+        {
+          "seam_s": 548.832,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.317
+        },
+        {
+          "seam_s": 572.656,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.262
+        }
+      ]
+    },
+    {
+      "n_chunks": 29,
+      "method": "stitch",
+      "n_words": 1846,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 23.98,
+          "anchor": "maybe",
+          "anchor_to_seam_s": 0.213
+        },
+        {
+          "seam_s": 49.46,
+          "anchor": "can",
+          "anchor_to_seam_s": 0.049
+        },
+        {
+          "seam_s": 73.1,
+          "anchor": "influence",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 95.96,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 119.44,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.398
+        },
+        {
+          "seam_s": 147.98,
+          "anchor": "life",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 155.856,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.31
+        },
+        {
+          "seam_s": 184.48,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 195.12,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.248
+        },
+        {
+          "seam_s": 217.26,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 241.12,
+          "anchor": "word",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 268.14,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.102
+        },
+        {
+          "seam_s": 275.216,
+          "anchor": "were",
+          "anchor_to_seam_s": 0.87
+        },
+        {
+          "seam_s": 299.328,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.379
+        },
+        {
+          "seam_s": 319.936,
+          "anchor": "where",
+          "anchor_to_seam_s": 0.363
+        },
+        {
+          "seam_s": 347.6,
+          "anchor": "here",
+          "anchor_to_seam_s": 0.021
+        },
+        {
+          "seam_s": 353.232,
+          "anchor": "john",
+          "anchor_to_seam_s": 0.434
+        },
+        {
+          "seam_s": 371.28,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 387.568,
+          "anchor": "or",
+          "anchor_to_seam_s": 1.661
+        },
+        {
+          "seam_s": 417.13,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.039
+        },
+        {
+          "seam_s": 445.35,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.049
+        },
+        {
+          "seam_s": 454.88,
+          "anchor": "beautiful",
+          "anchor_to_seam_s": 0.486
+        },
+        {
+          "seam_s": 473.51,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.037
+        },
+        {
+          "seam_s": 487.21,
+          "anchor": "would",
+          "anchor_to_seam_s": 0.007
+        },
+        {
+          "seam_s": 506.45,
+          "anchor": "often",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 533.05,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 560.27,
+          "anchor": "want",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 588.73,
+          "anchor": "or",
+          "anchor_to_seam_s": 0.218
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2441,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 11.344,
+          "anchor": "out",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 35.74,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 60.976,
+          "anchor": "with",
+          "anchor_to_seam_s": 0.332
+        },
+        {
+          "seam_s": 76.48,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.388
+        },
+        {
+          "seam_s": 103.04,
+          "anchor": "into",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 121.9,
+          "anchor": "switched",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 146.44,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 175.82,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 196.52,
+          "anchor": "on",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 219.776,
+          "anchor": "they're",
+          "anchor_to_seam_s": 0.158
+        },
+        {
+          "seam_s": 248.3,
+          "anchor": "abused",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 250.816,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.267
+        },
+        {
+          "seam_s": 280.22,
+          "anchor": "grade",
+          "anchor_to_seam_s": 0.072
+        },
+        {
+          "seam_s": 308.52,
+          "anchor": "in",
+          "anchor_to_seam_s": 0.201
+        },
+        {
+          "seam_s": 310.992,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 338.896,
+          "anchor": "wants",
+          "anchor_to_seam_s": 0.373
+        },
+        {
+          "seam_s": 364.7,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 386.0,
+          "anchor": "they're",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 404.88,
+          "anchor": "will",
+          "anchor_to_seam_s": 0.253
+        },
+        {
+          "seam_s": 433.14,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 448.384,
+          "anchor": "don't",
+          "anchor_to_seam_s": 0.043
+        },
+        {
+          "seam_s": 466.24,
+          "anchor": "is",
+          "anchor_to_seam_s": 0.434
+        },
+        {
+          "seam_s": 489.98,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 514.22,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 532.08,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.308
+        },
+        {
+          "seam_s": 558.82,
+          "anchor": "part",
+          "anchor_to_seam_s": 0.091
+        },
+        {
+          "seam_s": 580.48,
+          "anchor": "be",
+          "anchor_to_seam_s": 0.028
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2327,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 25.056,
+          "anchor": "travel",
+          "anchor_to_seam_s": 0.423
+        },
+        {
+          "seam_s": 49.936,
+          "anchor": "actually",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 71.0,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 97.32,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 103.936,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.339
+        },
+        {
+          "seam_s": 123.92,
+          "anchor": "then",
+          "anchor_to_seam_s": 0.009
+        },
+        {
+          "seam_s": 152.16,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.142
+        },
+        {
+          "seam_s": 159.824,
+          "anchor": "before",
+          "anchor_to_seam_s": 0.332
+        },
+        {
+          "seam_s": 183.504,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.677
+        },
+        {
+          "seam_s": 194.288,
+          "anchor": "terrible",
+          "anchor_to_seam_s": 0.409
+        },
+        {
+          "seam_s": 222.64,
+          "anchor": "although",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 250.448,
+          "anchor": "be",
+          "anchor_to_seam_s": 0.49
+        },
+        {
+          "seam_s": 260.512,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.094
+        },
+        {
+          "seam_s": 283.56,
+          "anchor": "holding",
+          "anchor_to_seam_s": 0.138
+        },
+        {
+          "seam_s": 300.592,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.296
+        },
+        {
+          "seam_s": 327.36,
+          "anchor": "needs",
+          "anchor_to_seam_s": 0.398
+        },
+        {
+          "seam_s": 346.144,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.345
+        },
+        {
+          "seam_s": 370.0,
+          "anchor": "much",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 381.696,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.331
+        },
+        {
+          "seam_s": 408.8,
+          "anchor": "careful",
+          "anchor_to_seam_s": 0.418
+        },
+        {
+          "seam_s": 433.8,
+          "anchor": "seems",
+          "anchor_to_seam_s": 0.001
+        },
+        {
+          "seam_s": 463.456,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.342
+        },
+        {
+          "seam_s": 491.472,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.326
+        },
+        {
+          "seam_s": 516.8,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 538.736,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.292
+        },
+        {
+          "seam_s": 549.072,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.355
+        },
+        {
+          "seam_s": 572.624,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.304
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2006,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.52,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.259
+        },
+        {
+          "seam_s": 54.032,
+          "anchor": "raving",
+          "anchor_to_seam_s": 0.926
+        },
+        {
+          "seam_s": 69.136,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.298
+        },
+        {
+          "seam_s": 99.024,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.304
+        },
+        {
+          "seam_s": 128.368,
+          "anchor": "fire",
+          "anchor_to_seam_s": 0.38
+        },
+        {
+          "seam_s": 157.376,
+          "anchor": "heck",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 185.2,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.328
+        },
+        {
+          "seam_s": 214.704,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.275
+        },
+        {
+          "seam_s": 229.776,
+          "anchor": "fifty",
+          "anchor_to_seam_s": 0.331
+        },
+        {
+          "seam_s": 247.744,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.314
+        },
+        {
+          "seam_s": 277.536,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 295.152,
+          "anchor": "two",
+          "anchor_to_seam_s": 0.376
+        },
+        {
+          "seam_s": 322.8,
+          "anchor": "different",
+          "anchor_to_seam_s": 0.408
+        },
+        {
+          "seam_s": 349.664,
+          "anchor": "part",
+          "anchor_to_seam_s": 0.294
+        },
+        {
+          "seam_s": 375.408,
+          "anchor": "pool",
+          "anchor_to_seam_s": 0.49
+        },
+        {
+          "seam_s": 390.832,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.295
+        },
+        {
+          "seam_s": 420.66,
+          "anchor": "exchange",
+          "anchor_to_seam_s": 0.079
+        },
+        {
+          "seam_s": 444.192,
+          "anchor": "number",
+          "anchor_to_seam_s": 0.336
+        },
+        {
+          "seam_s": 469.936,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 494.576,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.462
+        },
+        {
+          "seam_s": 523.056,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.293
+        },
+        {
+          "seam_s": 550.816,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.353
+        },
+        {
+          "seam_s": 564.944,
+          "anchor": "probably",
+          "anchor_to_seam_s": 0.305
+        },
+        {
+          "seam_s": 591.376,
+          "anchor": "first",
+          "anchor_to_seam_s": 0.382
+        }
+      ]
+    },
+    {
+      "n_chunks": 23,
+      "method": "stitch",
+      "n_words": 2753,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.22,
+          "anchor": "from",
+          "anchor_to_seam_s": 1.609
+        },
+        {
+          "seam_s": 57.44,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 84.88,
+          "anchor": "stuff",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 110.84,
+          "anchor": "me",
+          "anchor_to_seam_s": 0.061
+        },
+        {
+          "seam_s": 137.98,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 162.05,
+          "anchor": "anything",
+          "anchor_to_seam_s": 0.051
+        },
+        {
+          "seam_s": 188.7,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.009
+        },
+        {
+          "seam_s": 218.04,
+          "anchor": "probably",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 243.02,
+          "anchor": "fifth",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 266.68,
+          "anchor": "at",
+          "anchor_to_seam_s": 0.049
+        },
+        {
+          "seam_s": 293.74,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 318.7,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.192
+        },
+        {
+          "seam_s": 345.1,
+          "anchor": "can",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 370.71,
+          "anchor": "her",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 395.8,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 420.66,
+          "anchor": "all",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 448.29,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.141
+        },
+        {
+          "seam_s": 472.7806,
+          "anchor": "comfortable",
+          "anchor_to_seam_s": 0.087
+        },
+        {
+          "seam_s": 497.94,
+          "anchor": "are",
+          "anchor_to_seam_s": 0.129
+        },
+        {
+          "seam_s": 524.73,
+          "anchor": "minutes",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 550.88,
+          "anchor": "see",
+          "anchor_to_seam_s": 0.019
+        },
+        {
+          "seam_s": 576.44,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.258
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2173,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 1.856,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.323
+        },
+        {
+          "seam_s": 25.4,
+          "anchor": "higher",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 50.54,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.088
+        },
+        {
+          "seam_s": 78.08,
+          "anchor": "growing",
+          "anchor_to_seam_s": 0.438
+        },
+        {
+          "seam_s": 103.264,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.344
+        },
+        {
+          "seam_s": 119.68,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 138.0,
+          "anchor": "farm",
+          "anchor_to_seam_s": 0.532
+        },
+        {
+          "seam_s": 150.336,
+          "anchor": "actually",
+          "anchor_to_seam_s": 0.483
+        },
+        {
+          "seam_s": 178.848,
+          "anchor": "his",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 203.87,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 215.568,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.349
+        },
+        {
+          "seam_s": 239.152,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.496
+        },
+        {
+          "seam_s": 262.0,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 284.26,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.282
+        },
+        {
+          "seam_s": 312.5,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.152
+        },
+        {
+          "seam_s": 338.14,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 357.296,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 381.56,
+          "anchor": "moving",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 404.74,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.001
+        },
+        {
+          "seam_s": 412.304,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.302
+        },
+        {
+          "seam_s": 435.36,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.328
+        },
+        {
+          "seam_s": 460.96,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.468
+        },
+        {
+          "seam_s": 477.6,
+          "anchor": "non",
+          "anchor_to_seam_s": 0.003
+        },
+        {
+          "seam_s": 503.72,
+          "anchor": "church",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 523.408,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.32
+        },
+        {
+          "seam_s": 548.68,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.448
+        },
+        {
+          "seam_s": 572.46,
+          "anchor": "little",
+          "anchor_to_seam_s": 0.089
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 2042,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 23.84,
+          "anchor": "appreciated",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 45.62,
+          "anchor": "want",
+          "anchor_to_seam_s": 0.228
+        },
+        {
+          "seam_s": 68.56,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 93.16,
+          "anchor": "big",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 116.42,
+          "anchor": "what's",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 127.824,
+          "anchor": "how",
+          "anchor_to_seam_s": 0.293
+        },
+        {
+          "seam_s": 153.54,
+          "anchor": "in",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 179.904,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.494
+        },
+        {
+          "seam_s": 196.52,
+          "anchor": "some",
+          "anchor_to_seam_s": 0.039
+        },
+        {
+          "seam_s": 223.44,
+          "anchor": "i",
+          "anchor_to_seam_s": 3.03
+        },
+        {
+          "seam_s": 244.44,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.059
+        },
+        {
+          "seam_s": 265.76,
+          "anchor": "what",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 286.112,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 309.66,
+          "anchor": "i'm",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 336.032,
+          "anchor": "very",
+          "anchor_to_seam_s": 0.387
+        },
+        {
+          "seam_s": 356.24,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.089
+        },
+        {
+          "seam_s": 377.96,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 400.58,
+          "anchor": "jubilee",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 422.06,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.059
+        },
+        {
+          "seam_s": 445.5,
+          "anchor": "met",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 468.33,
+          "anchor": "information",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 494.44,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 502.24,
+          "anchor": "human",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 525.3,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 550.4,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.019
+        },
+        {
+          "seam_s": 576.13,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.303
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 2497,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 20.64,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.318
+        },
+        {
+          "seam_s": 50.04,
+          "anchor": "far",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 69.88,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 83.184,
+          "anchor": "um",
+          "anchor_to_seam_s": 0.393
+        },
+        {
+          "seam_s": 104.528,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.3
+        },
+        {
+          "seam_s": 132.92,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 153.472,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.346
+        },
+        {
+          "seam_s": 182.128,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.26
+        },
+        {
+          "seam_s": 205.38,
+          "anchor": "florida",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 229.664,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.374
+        },
+        {
+          "seam_s": 254.12,
+          "anchor": "love",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 281.5,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.242
+        },
+        {
+          "seam_s": 287.84,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 317.38,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.232
+        },
+        {
+          "seam_s": 340.832,
+          "anchor": "i",
+          "anchor_to_seam_s": 1.137
+        },
+        {
+          "seam_s": 363.84,
+          "anchor": "what",
+          "anchor_to_seam_s": 0.061
+        },
+        {
+          "seam_s": 389.54,
+          "anchor": "nothing",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 415.48,
+          "anchor": "harder",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 426.864,
+          "anchor": "makes",
+          "anchor_to_seam_s": 0.343
+        },
+        {
+          "seam_s": 455.0,
+          "anchor": "what's",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 477.04,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 496.32,
+          "anchor": "up",
+          "anchor_to_seam_s": 0.363
+        },
+        {
+          "seam_s": 523.968,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.32
+        },
+        {
+          "seam_s": 545.904,
+          "anchor": "neck",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 567.87,
+          "anchor": "kinda",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 592.016,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.408
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 2519,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.89,
+          "anchor": "addition",
+          "anchor_to_seam_s": 0.096
+        },
+        {
+          "seam_s": 30.256,
+          "anchor": "accredited",
+          "anchor_to_seam_s": 0.528
+        },
+        {
+          "seam_s": 50.82,
+          "anchor": "dekalb",
+          "anchor_to_seam_s": 0.121
+        },
+        {
+          "seam_s": 78.26,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 100.98,
+          "anchor": "strength",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 124.576,
+          "anchor": "provide",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 144.496,
+          "anchor": "become",
+          "anchor_to_seam_s": 0.402
+        },
+        {
+          "seam_s": 165.64,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 176.784,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.293
+        },
+        {
+          "seam_s": 198.48,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.258
+        },
+        {
+          "seam_s": 210.416,
+          "anchor": "months",
+          "anchor_to_seam_s": 0.523
+        },
+        {
+          "seam_s": 237.904,
+          "anchor": "streamlining",
+          "anchor_to_seam_s": 0.694
+        },
+        {
+          "seam_s": 262.7,
+          "anchor": "lot",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 292.2,
+          "anchor": "trying",
+          "anchor_to_seam_s": 0.132
+        },
+        {
+          "seam_s": 319.32,
+          "anchor": "guards",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 347.6,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 375.68,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.132
+        },
+        {
+          "seam_s": 405.06,
+          "anchor": "success",
+          "anchor_to_seam_s": 0.112
+        },
+        {
+          "seam_s": 427.6,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.029
+        },
+        {
+          "seam_s": 453.7,
+          "anchor": "neighbor",
+          "anchor_to_seam_s": 0.021
+        },
+        {
+          "seam_s": 479.88,
+          "anchor": "found",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 502.91,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 527.24,
+          "anchor": "companies",
+          "anchor_to_seam_s": 1.263
+        },
+        {
+          "seam_s": 550.44,
+          "anchor": "then",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 572.78,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.002
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 1770,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.12,
+          "anchor": "european",
+          "anchor_to_seam_s": 0.668
+        },
+        {
+          "seam_s": 41.92,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.327
+        },
+        {
+          "seam_s": 64.592,
+          "anchor": "truly",
+          "anchor_to_seam_s": 0.386
+        },
+        {
+          "seam_s": 82.93,
+          "anchor": "some",
+          "anchor_to_seam_s": 0.823
+        },
+        {
+          "seam_s": 102.288,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.4
+        },
+        {
+          "seam_s": 127.12,
+          "anchor": "way",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 155.86,
+          "anchor": "salvation",
+          "anchor_to_seam_s": 0.041
+        },
+        {
+          "seam_s": 184.5,
+          "anchor": "conservatory",
+          "anchor_to_seam_s": 0.101
+        },
+        {
+          "seam_s": 213.424,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.664
+        },
+        {
+          "seam_s": 237.616,
+          "anchor": "yes",
+          "anchor_to_seam_s": 0.562
+        },
+        {
+          "seam_s": 266.94,
+          "anchor": "heard",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 283.648,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.36
+        },
+        {
+          "seam_s": 301.64,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.007
+        },
+        {
+          "seam_s": 318.048,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.44
+        },
+        {
+          "seam_s": 344.912,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.366
+        },
+        {
+          "seam_s": 368.48,
+          "anchor": "far",
+          "anchor_to_seam_s": 0.563
+        },
+        {
+          "seam_s": 395.58,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.009
+        },
+        {
+          "seam_s": 424.992,
+          "anchor": "learn",
+          "anchor_to_seam_s": 0.386
+        },
+        {
+          "seam_s": 454.688,
+          "anchor": "getting",
+          "anchor_to_seam_s": 0.411
+        },
+        {
+          "seam_s": 483.632,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 503.552,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.366
+        },
+        {
+          "seam_s": 513.984,
+          "anchor": "belong",
+          "anchor_to_seam_s": 0.423
+        },
+        {
+          "seam_s": 538.36,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 563.32,
+          "anchor": "tulsan",
+          "anchor_to_seam_s": 0.122
+        },
+        {
+          "seam_s": 589.25,
+          "anchor": "ago",
+          "anchor_to_seam_s": 0.132
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2298,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 23.28,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 47.34,
+          "anchor": "twenty",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 69.15,
+          "anchor": "area",
+          "anchor_to_seam_s": 0.082
+        },
+        {
+          "seam_s": 91.02,
+          "anchor": "since",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 117.02,
+          "anchor": "african",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 139.16,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.049
+        },
+        {
+          "seam_s": 161.42,
+          "anchor": "when",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 183.52,
+          "anchor": "on",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 203.44,
+          "anchor": "within",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 224.74,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 252.4,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 276.464,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.205
+        },
+        {
+          "seam_s": 302.76,
+          "anchor": "up",
+          "anchor_to_seam_s": 0.019
+        },
+        {
+          "seam_s": 330.62,
+          "anchor": "below",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 359.736,
+          "anchor": "could",
+          "anchor_to_seam_s": 0.158
+        },
+        {
+          "seam_s": 380.72,
+          "anchor": "little",
+          "anchor_to_seam_s": 0.088
+        },
+        {
+          "seam_s": 404.18,
+          "anchor": "whether",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 432.92,
+          "anchor": "his",
+          "anchor_to_seam_s": 0.052
+        },
+        {
+          "seam_s": 457.64,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 486.52,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.228
+        },
+        {
+          "seam_s": 509.16,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 530.78,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 551.36,
+          "anchor": "too",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 572.28,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.162
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2029,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.472,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.336
+        },
+        {
+          "seam_s": 43.264,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.374
+        },
+        {
+          "seam_s": 72.048,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.549
+        },
+        {
+          "seam_s": 93.536,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.323
+        },
+        {
+          "seam_s": 119.376,
+          "anchor": "found",
+          "anchor_to_seam_s": 0.522
+        },
+        {
+          "seam_s": 148.304,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.405
+        },
+        {
+          "seam_s": 175.12,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.368
+        },
+        {
+          "seam_s": 198.464,
+          "anchor": "doing",
+          "anchor_to_seam_s": 0.344
+        },
+        {
+          "seam_s": 222.32,
+          "anchor": "might",
+          "anchor_to_seam_s": 0.358
+        },
+        {
+          "seam_s": 233.2,
+          "anchor": "which",
+          "anchor_to_seam_s": 0.286
+        },
+        {
+          "seam_s": 258.24,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.358
+        },
+        {
+          "seam_s": 285.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.324
+        },
+        {
+          "seam_s": 308.944,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.294
+        },
+        {
+          "seam_s": 335.408,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.47
+        },
+        {
+          "seam_s": 365.248,
+          "anchor": "homes",
+          "anchor_to_seam_s": 0.35
+        },
+        {
+          "seam_s": 391.344,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.384
+        },
+        {
+          "seam_s": 413.104,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.354
+        },
+        {
+          "seam_s": 439.408,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.56
+        },
+        {
+          "seam_s": 466.54,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.401
+        },
+        {
+          "seam_s": 492.688,
+          "anchor": "did",
+          "anchor_to_seam_s": 0.56
+        },
+        {
+          "seam_s": 517.568,
+          "anchor": "desk",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 543.04,
+          "anchor": "go",
+          "anchor_to_seam_s": 0.128
+        },
+        {
+          "seam_s": 572.112,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.694
+        },
+        {
+          "seam_s": 580.528,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.338
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2258,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 16.368,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.339
+        },
+        {
+          "seam_s": 43.84,
+          "anchor": "close",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 73.408,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.28
+        },
+        {
+          "seam_s": 100.46,
+          "anchor": "easy",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 104.0,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.314
+        },
+        {
+          "seam_s": 130.1,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 153.42,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 162.56,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.346
+        },
+        {
+          "seam_s": 184.78,
+          "anchor": "them",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 212.832,
+          "anchor": "basically",
+          "anchor_to_seam_s": 0.487
+        },
+        {
+          "seam_s": 222.064,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 243.84,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 273.48,
+          "anchor": "through",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 278.688,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.19
+        },
+        {
+          "seam_s": 307.86,
+          "anchor": "funny",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 327.5,
+          "anchor": "our",
+          "anchor_to_seam_s": 0.059
+        },
+        {
+          "seam_s": 356.08,
+          "anchor": "when",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 382.07,
+          "anchor": "anybody",
+          "anchor_to_seam_s": 0.061
+        },
+        {
+          "seam_s": 402.57,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 412.992,
+          "anchor": "kinda",
+          "anchor_to_seam_s": 0.386
+        },
+        {
+          "seam_s": 433.9,
+          "anchor": "wife",
+          "anchor_to_seam_s": 0.212
+        },
+        {
+          "seam_s": 462.62,
+          "anchor": "can't",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 492.432,
+          "anchor": "people",
+          "anchor_to_seam_s": 1.357
+        },
+        {
+          "seam_s": 508.112,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.287
+        },
+        {
+          "seam_s": 522.896,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.321
+        },
+        {
+          "seam_s": 546.352,
+          "anchor": "exciting",
+          "anchor_to_seam_s": 1.197
+        },
+        {
+          "seam_s": 572.12,
+          "anchor": "no",
+          "anchor_to_seam_s": 0.009
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2176,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 24.688,
+          "anchor": "been",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 50.256,
+          "anchor": "i've",
+          "anchor_to_seam_s": 0.322
+        },
+        {
+          "seam_s": 63.296,
+          "anchor": "pursue",
+          "anchor_to_seam_s": 0.461
+        },
+        {
+          "seam_s": 89.66,
+          "anchor": "number",
+          "anchor_to_seam_s": 0.009
+        },
+        {
+          "seam_s": 110.54,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 130.08,
+          "anchor": "particularly",
+          "anchor_to_seam_s": 0.488
+        },
+        {
+          "seam_s": 149.824,
+          "anchor": "career",
+          "anchor_to_seam_s": 0.394
+        },
+        {
+          "seam_s": 178.8,
+          "anchor": "came",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 208.272,
+          "anchor": "point",
+          "anchor_to_seam_s": 0.337
+        },
+        {
+          "seam_s": 231.728,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.311
+        },
+        {
+          "seam_s": 241.952,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.234
+        },
+        {
+          "seam_s": 268.88,
+          "anchor": "done",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 289.8867,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 314.48,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.268
+        },
+        {
+          "seam_s": 336.3,
+          "anchor": "school",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 352.576,
+          "anchor": "darker",
+          "anchor_to_seam_s": 0.402
+        },
+        {
+          "seam_s": 382.256,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.412
+        },
+        {
+          "seam_s": 407.616,
+          "anchor": "big",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 418.976,
+          "anchor": "completely",
+          "anchor_to_seam_s": 0.411
+        },
+        {
+          "seam_s": 439.408,
+          "anchor": "come",
+          "anchor_to_seam_s": 0.37
+        },
+        {
+          "seam_s": 462.74,
+          "anchor": "high",
+          "anchor_to_seam_s": 0.079
+        },
+        {
+          "seam_s": 488.48,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 516.304,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.297
+        },
+        {
+          "seam_s": 519.632,
+          "anchor": "while",
+          "anchor_to_seam_s": 0.53
+        },
+        {
+          "seam_s": 545.0,
+          "anchor": "hook",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 563.584,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.397
+        },
+        {
+          "seam_s": 578.064,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.343
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2684,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 25.14,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 49.712,
+          "anchor": "what",
+          "anchor_to_seam_s": 0.276
+        },
+        {
+          "seam_s": 59.712,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.275
+        },
+        {
+          "seam_s": 88.56,
+          "anchor": "no",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 100.416,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.301
+        },
+        {
+          "seam_s": 125.24,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.002
+        },
+        {
+          "seam_s": 149.74,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 176.42,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 200.96,
+          "anchor": "heard",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 225.744,
+          "anchor": "five",
+          "anchor_to_seam_s": 0.416
+        },
+        {
+          "seam_s": 243.728,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.511
+        },
+        {
+          "seam_s": 267.39,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 280.608,
+          "anchor": "oh",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 302.66,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 324.48,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.328
+        },
+        {
+          "seam_s": 344.368,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.4
+        },
+        {
+          "seam_s": 357.84,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.397
+        },
+        {
+          "seam_s": 385.84,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 403.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.294
+        },
+        {
+          "seam_s": 424.128,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 453.472,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.286
+        },
+        {
+          "seam_s": 480.16,
+          "anchor": "cause",
+          "anchor_to_seam_s": 0.308
+        },
+        {
+          "seam_s": 492.8,
+          "anchor": "done",
+          "anchor_to_seam_s": 0.504
+        },
+        {
+          "seam_s": 513.312,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.366
+        },
+        {
+          "seam_s": 530.272,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 558.608,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 584.096,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.312
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 2519,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 28.04,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.108
+        },
+        {
+          "seam_s": 56.688,
+          "anchor": "gene",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 80.39,
+          "anchor": "while",
+          "anchor_to_seam_s": 0.092
+        },
+        {
+          "seam_s": 110.3,
+          "anchor": "um",
+          "anchor_to_seam_s": 0.192
+        },
+        {
+          "seam_s": 132.09,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.558
+        },
+        {
+          "seam_s": 141.888,
+          "anchor": "get",
+          "anchor_to_seam_s": 0.28
+        },
+        {
+          "seam_s": 169.12,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 175.568,
+          "anchor": "tried",
+          "anchor_to_seam_s": 0.36
+        },
+        {
+          "seam_s": 200.3,
+          "anchor": "terrible",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 230.27,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 234.464,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.441
+        },
+        {
+          "seam_s": 255.46,
+          "anchor": "he's",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 283.6,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 299.6,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.277
+        },
+        {
+          "seam_s": 324.52,
+          "anchor": "answer",
+          "anchor_to_seam_s": 0.092
+        },
+        {
+          "seam_s": 351.2941,
+          "anchor": "what",
+          "anchor_to_seam_s": 0.046
+        },
+        {
+          "seam_s": 379.92,
+          "anchor": "taught",
+          "anchor_to_seam_s": 0.319
+        },
+        {
+          "seam_s": 405.936,
+          "anchor": "because",
+          "anchor_to_seam_s": 0.493
+        },
+        {
+          "seam_s": 431.04,
+          "anchor": "should",
+          "anchor_to_seam_s": 0.401
+        },
+        {
+          "seam_s": 455.296,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 485.15,
+          "anchor": "counted",
+          "anchor_to_seam_s": 0.078
+        },
+        {
+          "seam_s": 505.25,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 531.28,
+          "anchor": "training",
+          "anchor_to_seam_s": 0.492
+        },
+        {
+          "seam_s": 560.8,
+          "anchor": "took",
+          "anchor_to_seam_s": 0.318
+        },
+        {
+          "seam_s": 566.064,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.05
+        },
+        {
+          "seam_s": 589.0167,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.059
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2395,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 30.0,
+          "anchor": "help",
+          "anchor_to_seam_s": 0.171
+        },
+        {
+          "seam_s": 52.288,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.391
+        },
+        {
+          "seam_s": 76.78,
+          "anchor": "enlist",
+          "anchor_to_seam_s": 0.032
+        },
+        {
+          "seam_s": 106.256,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.252
+        },
+        {
+          "seam_s": 135.568,
+          "anchor": "good",
+          "anchor_to_seam_s": 0.32
+        },
+        {
+          "seam_s": 164.928,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.421
+        },
+        {
+          "seam_s": 187.26,
+          "anchor": "or",
+          "anchor_to_seam_s": 0.062
+        },
+        {
+          "seam_s": 198.8,
+          "anchor": "hours",
+          "anchor_to_seam_s": 0.474
+        },
+        {
+          "seam_s": 225.68,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 253.4,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.239
+        },
+        {
+          "seam_s": 278.928,
+          "anchor": "she'd",
+          "anchor_to_seam_s": 0.44
+        },
+        {
+          "seam_s": 299.92,
+          "anchor": "her",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 325.264,
+          "anchor": "as",
+          "anchor_to_seam_s": 0.304
+        },
+        {
+          "seam_s": 351.2,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.332
+        },
+        {
+          "seam_s": 374.992,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.427
+        },
+        {
+          "seam_s": 395.584,
+          "anchor": "generally",
+          "anchor_to_seam_s": 0.445
+        },
+        {
+          "seam_s": 424.28,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.029
+        },
+        {
+          "seam_s": 453.712,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.316
+        },
+        {
+          "seam_s": 467.12,
+          "anchor": "hung",
+          "anchor_to_seam_s": 0.399
+        },
+        {
+          "seam_s": 487.92,
+          "anchor": "got",
+          "anchor_to_seam_s": 0.039
+        },
+        {
+          "seam_s": 515.264,
+          "anchor": "are",
+          "anchor_to_seam_s": 0.334
+        },
+        {
+          "seam_s": 537.344,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.644
+        },
+        {
+          "seam_s": 559.344,
+          "anchor": "guns",
+          "anchor_to_seam_s": 0.424
+        },
+        {
+          "seam_s": 588.912,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.316
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2728,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.98,
+          "anchor": "awesome",
+          "anchor_to_seam_s": 0.042
+        },
+        {
+          "seam_s": 59.072,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.535
+        },
+        {
+          "seam_s": 86.42,
+          "anchor": "hear",
+          "anchor_to_seam_s": 0.009
+        },
+        {
+          "seam_s": 113.12,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.468
+        },
+        {
+          "seam_s": 140.08,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.238
+        },
+        {
+          "seam_s": 153.792,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.255
+        },
+        {
+          "seam_s": 183.78,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 208.62,
+          "anchor": "could",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 233.22,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.929
+        },
+        {
+          "seam_s": 259.07,
+          "anchor": "job",
+          "anchor_to_seam_s": 0.081
+        },
+        {
+          "seam_s": 284.208,
+          "anchor": "or",
+          "anchor_to_seam_s": 0.791
+        },
+        {
+          "seam_s": 301.008,
+          "anchor": "world",
+          "anchor_to_seam_s": 0.66
+        },
+        {
+          "seam_s": 330.31,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.038
+        },
+        {
+          "seam_s": 343.056,
+          "anchor": "they",
+          "anchor_to_seam_s": 1.258
+        },
+        {
+          "seam_s": 368.46,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.011
+        },
+        {
+          "seam_s": 393.56,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.208
+        },
+        {
+          "seam_s": 416.92,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.069
+        },
+        {
+          "seam_s": 439.94,
+          "anchor": "beach",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 465.94,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.092
+        },
+        {
+          "seam_s": 492.59,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 505.104,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.463
+        },
+        {
+          "seam_s": 529.056,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 548.24,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.658
+        },
+        {
+          "seam_s": 573.66,
+          "anchor": "towers",
+          "anchor_to_seam_s": 0.072
+        }
+      ]
+    },
+    {
+      "n_chunks": 29,
+      "method": "stitch",
+      "n_words": 2248,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 25.2,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 47.88,
+          "anchor": "seven",
+          "anchor_to_seam_s": 0.013
+        },
+        {
+          "seam_s": 70.26,
+          "anchor": "met",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 91.14,
+          "anchor": "now",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 103.664,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.318
+        },
+        {
+          "seam_s": 133.22,
+          "anchor": "ventilation",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 155.9,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 175.7,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.033
+        },
+        {
+          "seam_s": 198.88,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 221.78,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.048
+        },
+        {
+          "seam_s": 250.8,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.039
+        },
+        {
+          "seam_s": 270.6,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.019
+        },
+        {
+          "seam_s": 291.9,
+          "anchor": "deal",
+          "anchor_to_seam_s": 0.012
+        },
+        {
+          "seam_s": 313.9,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.058
+        },
+        {
+          "seam_s": 335.98,
+          "anchor": "s",
+          "anchor_to_seam_s": 0.108
+        },
+        {
+          "seam_s": 356.6,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.008
+        },
+        {
+          "seam_s": 376.82,
+          "anchor": "they're",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 398.2,
+          "anchor": "me",
+          "anchor_to_seam_s": 0.028
+        },
+        {
+          "seam_s": 417.968,
+          "anchor": "at",
+          "anchor_to_seam_s": 0.31
+        },
+        {
+          "seam_s": 439.85,
+          "anchor": "dollars",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 448.304,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.452
+        },
+        {
+          "seam_s": 473.42,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.148
+        },
+        {
+          "seam_s": 494.44,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.068
+        },
+        {
+          "seam_s": 523.66,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.007
+        },
+        {
+          "seam_s": 526.448,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.396
+        },
+        {
+          "seam_s": 545.84,
+          "anchor": "helps",
+          "anchor_to_seam_s": 0.018
+        },
+        {
+          "seam_s": 570.16,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.278
+        },
+        {
+          "seam_s": 599.38,
+          "anchor": "theirs",
+          "anchor_to_seam_s": 0.017
+        }
+      ]
+    },
+    {
+      "n_chunks": 29,
+      "method": "stitch",
+      "n_words": 1846,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 23.98,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 49.46,
+          "anchor": "can",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 73.1,
+          "anchor": "influence",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 95.96,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 119.44,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 147.98,
+          "anchor": "life",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 155.856,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.284
+        },
+        {
+          "seam_s": 184.48,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 195.12,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.255
+        },
+        {
+          "seam_s": 217.26,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 241.12,
+          "anchor": "word",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 268.14,
+          "anchor": "i'll",
+          "anchor_to_seam_s": 0.0
+        },
+        {
+          "seam_s": 275.216,
+          "anchor": "finances",
+          "anchor_to_seam_s": 0.469
+        },
+        {
+          "seam_s": 299.328,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.317
+        },
+        {
+          "seam_s": 319.936,
+          "anchor": "where",
+          "anchor_to_seam_s": 0.334
+        },
+        {
+          "seam_s": 347.6,
+          "anchor": "here",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 353.232,
+          "anchor": "john",
+          "anchor_to_seam_s": 0.398
+        },
+        {
+          "seam_s": 371.28,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 387.568,
+          "anchor": "or",
+          "anchor_to_seam_s": 1.652
+        },
+        {
+          "seam_s": 417.13,
+          "anchor": "about",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 445.35,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 454.88,
+          "anchor": "beautiful",
+          "anchor_to_seam_s": 0.52
+        },
+        {
+          "seam_s": 473.51,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.145
+        },
+        {
+          "seam_s": 487.21,
+          "anchor": "would",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 506.45,
+          "anchor": "often",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 533.05,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 560.27,
+          "anchor": "want",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 588.73,
+          "anchor": "nickel",
+          "anchor_to_seam_s": 0.06
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2327,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 25.056,
+          "anchor": "travel",
+          "anchor_to_seam_s": 0.424
+        },
+        {
+          "seam_s": 49.936,
+          "anchor": "actually",
+          "anchor_to_seam_s": 0.374
+        },
+        {
+          "seam_s": 71.0,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 97.32,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 103.936,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.334
+        },
+        {
+          "seam_s": 123.92,
+          "anchor": "then",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 152.16,
+          "anchor": "off",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 159.824,
+          "anchor": "before",
+          "anchor_to_seam_s": 0.306
+        },
+        {
+          "seam_s": 183.504,
+          "anchor": "oh",
+          "anchor_to_seam_s": 0.439
+        },
+        {
+          "seam_s": 194.288,
+          "anchor": "terrible",
+          "anchor_to_seam_s": 0.372
+        },
+        {
+          "seam_s": 222.64,
+          "anchor": "although",
+          "anchor_to_seam_s": 0.335
+        },
+        {
+          "seam_s": 250.448,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.297
+        },
+        {
+          "seam_s": 260.512,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.123
+        },
+        {
+          "seam_s": 283.56,
+          "anchor": "holding",
+          "anchor_to_seam_s": 0.125
+        },
+        {
+          "seam_s": 300.592,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.278
+        },
+        {
+          "seam_s": 327.36,
+          "anchor": "needs",
+          "anchor_to_seam_s": 0.37
+        },
+        {
+          "seam_s": 346.144,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 370.0,
+          "anchor": "much",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 381.696,
+          "anchor": "just",
+          "anchor_to_seam_s": 0.334
+        },
+        {
+          "seam_s": 408.8,
+          "anchor": "careful",
+          "anchor_to_seam_s": 0.38
+        },
+        {
+          "seam_s": 433.8,
+          "anchor": "seems",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 463.456,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.284
+        },
+        {
+          "seam_s": 491.472,
+          "anchor": "are",
+          "anchor_to_seam_s": 0.477
+        },
+        {
+          "seam_s": 516.8,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.315
+        },
+        {
+          "seam_s": 538.736,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.289
+        },
+        {
+          "seam_s": 549.072,
+          "anchor": "this",
+          "anchor_to_seam_s": 0.358
+        },
+        {
+          "seam_s": 572.624,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.261
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2006,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.52,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.24
+        },
+        {
+          "seam_s": 54.032,
+          "anchor": "ranting",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 69.136,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.296
+        },
+        {
+          "seam_s": 99.024,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.266
+        },
+        {
+          "seam_s": 128.368,
+          "anchor": "fire",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 157.376,
+          "anchor": "heck",
+          "anchor_to_seam_s": 0.349
+        },
+        {
+          "seam_s": 185.2,
+          "anchor": "don't",
+          "anchor_to_seam_s": 0.34
+        },
+        {
+          "seam_s": 214.704,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.261
+        },
+        {
+          "seam_s": 229.776,
+          "anchor": "fifty",
+          "anchor_to_seam_s": 0.279
+        },
+        {
+          "seam_s": 247.744,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.296
+        },
+        {
+          "seam_s": 277.536,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.384
+        },
+        {
+          "seam_s": 295.152,
+          "anchor": "two",
+          "anchor_to_seam_s": 0.333
+        },
+        {
+          "seam_s": 322.8,
+          "anchor": "different",
+          "anchor_to_seam_s": 0.39
+        },
+        {
+          "seam_s": 349.664,
+          "anchor": "part",
+          "anchor_to_seam_s": 0.266
+        },
+        {
+          "seam_s": 375.408,
+          "anchor": "pretty",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 390.832,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.303
+        },
+        {
+          "seam_s": 420.66,
+          "anchor": "exchange",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 444.192,
+          "anchor": "number",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 469.936,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.361
+        },
+        {
+          "seam_s": 494.576,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.349
+        },
+        {
+          "seam_s": 523.056,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.274
+        },
+        {
+          "seam_s": 550.816,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.339
+        },
+        {
+          "seam_s": 564.944,
+          "anchor": "on",
+          "anchor_to_seam_s": 0.591
+        },
+        {
+          "seam_s": 591.376,
+          "anchor": "first",
+          "anchor_to_seam_s": 0.329
+        }
+      ]
+    },
+    {
+      "n_chunks": 27,
+      "method": "stitch",
+      "n_words": 2042,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 23.84,
+          "anchor": "appreciated",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 45.62,
+          "anchor": "didn't",
+          "anchor_to_seam_s": 0.05
+        },
+        {
+          "seam_s": 68.56,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 93.16,
+          "anchor": "big",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 116.42,
+          "anchor": "what's",
+          "anchor_to_seam_s": 0.09
+        },
+        {
+          "seam_s": 127.824,
+          "anchor": "how",
+          "anchor_to_seam_s": 0.236
+        },
+        {
+          "seam_s": 153.54,
+          "anchor": "in",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 179.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 196.52,
+          "anchor": "some",
+          "anchor_to_seam_s": 0.003
+        },
+        {
+          "seam_s": 223.44,
+          "anchor": "wild",
+          "anchor_to_seam_s": 0.075
+        },
+        {
+          "seam_s": 244.44,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.034
+        },
+        {
+          "seam_s": 265.76,
+          "anchor": "what",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 286.112,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.278
+        },
+        {
+          "seam_s": 309.66,
+          "anchor": "i'm",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 336.032,
+          "anchor": "very",
+          "anchor_to_seam_s": 0.383
+        },
+        {
+          "seam_s": 356.24,
+          "anchor": "it",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 377.96,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 400.58,
+          "anchor": "jubilee",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 422.06,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.085
+        },
+        {
+          "seam_s": 445.5,
+          "anchor": "met",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 468.33,
+          "anchor": "information",
+          "anchor_to_seam_s": 0.085
+        },
+        {
+          "seam_s": 494.44,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 502.24,
+          "anchor": "human",
+          "anchor_to_seam_s": 0.325
+        },
+        {
+          "seam_s": 525.3,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 550.4,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 576.13,
+          "anchor": "money",
+          "anchor_to_seam_s": 0.08
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2173,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 1.856,
+          "anchor": "ten",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 25.4,
+          "anchor": "higher",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 50.54,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 78.08,
+          "anchor": "growing",
+          "anchor_to_seam_s": 0.42
+        },
+        {
+          "seam_s": 103.264,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.356
+        },
+        {
+          "seam_s": 119.68,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.325
+        },
+        {
+          "seam_s": 138.0,
+          "anchor": "we've",
+          "anchor_to_seam_s": 0.275
+        },
+        {
+          "seam_s": 150.336,
+          "anchor": "actually",
+          "anchor_to_seam_s": 0.444
+        },
+        {
+          "seam_s": 178.848,
+          "anchor": "with",
+          "anchor_to_seam_s": 0.553
+        },
+        {
+          "seam_s": 203.87,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 215.568,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.277
+        },
+        {
+          "seam_s": 239.152,
+          "anchor": "because",
+          "anchor_to_seam_s": 0.288
+        },
+        {
+          "seam_s": 262.0,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 284.26,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.085
+        },
+        {
+          "seam_s": 312.5,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.18
+        },
+        {
+          "seam_s": 338.14,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 357.296,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.254
+        },
+        {
+          "seam_s": 381.56,
+          "anchor": "moving",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 404.74,
+          "anchor": "but",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 412.304,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.241
+        },
+        {
+          "seam_s": 435.36,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.235
+        },
+        {
+          "seam_s": 460.96,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.385
+        },
+        {
+          "seam_s": 477.6,
+          "anchor": "non",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 503.72,
+          "anchor": "church",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 523.408,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.272
+        },
+        {
+          "seam_s": 548.68,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.225
+        },
+        {
+          "seam_s": 572.46,
+          "anchor": "little",
+          "anchor_to_seam_s": 0.05
+        }
+      ]
+    },
+    {
+      "n_chunks": 23,
+      "method": "stitch",
+      "n_words": 2753,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 29.22,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 57.44,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 84.88,
+          "anchor": "stuff",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 110.84,
+          "anchor": "me",
+          "anchor_to_seam_s": 0.09
+        },
+        {
+          "seam_s": 137.98,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 162.05,
+          "anchor": "anything",
+          "anchor_to_seam_s": 0.07
+        },
+        {
+          "seam_s": 188.7,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 218.04,
+          "anchor": "probably",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 243.02,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 266.68,
+          "anchor": "at",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 293.74,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 318.7,
+          "anchor": "have",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 345.1,
+          "anchor": "can",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 370.71,
+          "anchor": "her",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 395.8,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 420.66,
+          "anchor": "all",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 448.29,
+          "anchor": "oh",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 472.7806,
+          "anchor": "comfortable",
+          "anchor_to_seam_s": 0.054
+        },
+        {
+          "seam_s": 497.94,
+          "anchor": "are",
+          "anchor_to_seam_s": 0.079
+        },
+        {
+          "seam_s": 524.73,
+          "anchor": "minutes",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 550.88,
+          "anchor": "see",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 576.44,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.035
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 1770,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.12,
+          "anchor": "real",
+          "anchor_to_seam_s": 0.545
+        },
+        {
+          "seam_s": 41.92,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.275
+        },
+        {
+          "seam_s": 64.592,
+          "anchor": "truly",
+          "anchor_to_seam_s": 0.398
+        },
+        {
+          "seam_s": 82.93,
+          "anchor": "know",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 102.288,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 127.12,
+          "anchor": "way",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 155.86,
+          "anchor": "salvation",
+          "anchor_to_seam_s": 0.08
+        },
+        {
+          "seam_s": 184.5,
+          "anchor": "conservatory",
+          "anchor_to_seam_s": 0.095
+        },
+        {
+          "seam_s": 213.424,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.406
+        },
+        {
+          "seam_s": 237.616,
+          "anchor": "yes",
+          "anchor_to_seam_s": 0.594
+        },
+        {
+          "seam_s": 266.94,
+          "anchor": "heard",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 283.648,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.407
+        },
+        {
+          "seam_s": 301.64,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 318.048,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.372
+        },
+        {
+          "seam_s": 344.912,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.333
+        },
+        {
+          "seam_s": 368.48,
+          "anchor": "siblings",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 395.58,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 424.992,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.322
+        },
+        {
+          "seam_s": 454.688,
+          "anchor": "getting",
+          "anchor_to_seam_s": 0.397
+        },
+        {
+          "seam_s": 483.632,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.308
+        },
+        {
+          "seam_s": 503.552,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 513.984,
+          "anchor": "belong",
+          "anchor_to_seam_s": 0.421
+        },
+        {
+          "seam_s": 538.36,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 563.32,
+          "anchor": "tulsan",
+          "anchor_to_seam_s": 0.12
+        },
+        {
+          "seam_s": 589.25,
+          "anchor": "ago",
+          "anchor_to_seam_s": 0.07
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2298,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 23.28,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 47.34,
+          "anchor": "twenty",
+          "anchor_to_seam_s": 0.115
+        },
+        {
+          "seam_s": 69.15,
+          "anchor": "area",
+          "anchor_to_seam_s": 0.125
+        },
+        {
+          "seam_s": 91.02,
+          "anchor": "since",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 117.02,
+          "anchor": "african",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 139.16,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.065
+        },
+        {
+          "seam_s": 161.42,
+          "anchor": "when",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 183.52,
+          "anchor": "on",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 203.44,
+          "anchor": "within",
+          "anchor_to_seam_s": 0.125
+        },
+        {
+          "seam_s": 224.74,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 252.4,
+          "anchor": "was",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 276.464,
+          "anchor": "think",
+          "anchor_to_seam_s": 0.371
+        },
+        {
+          "seam_s": 302.76,
+          "anchor": "up",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 330.62,
+          "anchor": "below",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 359.736,
+          "anchor": "could",
+          "anchor_to_seam_s": 0.156
+        },
+        {
+          "seam_s": 380.72,
+          "anchor": "little",
+          "anchor_to_seam_s": 0.12
+        },
+        {
+          "seam_s": 404.18,
+          "anchor": "whether",
+          "anchor_to_seam_s": 0.0
+        },
+        {
+          "seam_s": 432.92,
+          "anchor": "his",
+          "anchor_to_seam_s": 0.05
+        },
+        {
+          "seam_s": 457.64,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 486.52,
+          "anchor": "else",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 509.16,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.0
+        },
+        {
+          "seam_s": 530.78,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 551.36,
+          "anchor": "too",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 572.28,
+          "anchor": "book",
+          "anchor_to_seam_s": 0.005
+        }
+      ]
+    },
+    {
+      "n_chunks": 26,
+      "method": "stitch",
+      "n_words": 2519,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.89,
+          "anchor": "addition",
+          "anchor_to_seam_s": 0.09
+        },
+        {
+          "seam_s": 30.256,
+          "anchor": "accredited",
+          "anchor_to_seam_s": 0.509
+        },
+        {
+          "seam_s": 50.82,
+          "anchor": "dekalb",
+          "anchor_to_seam_s": 0.19
+        },
+        {
+          "seam_s": 78.26,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 100.98,
+          "anchor": "strength",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 124.576,
+          "anchor": "provide",
+          "anchor_to_seam_s": 0.384
+        },
+        {
+          "seam_s": 144.496,
+          "anchor": "become",
+          "anchor_to_seam_s": 0.384
+        },
+        {
+          "seam_s": 165.64,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 176.784,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.261
+        },
+        {
+          "seam_s": 198.48,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.275
+        },
+        {
+          "seam_s": 210.416,
+          "anchor": "months",
+          "anchor_to_seam_s": 0.484
+        },
+        {
+          "seam_s": 237.904,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.291
+        },
+        {
+          "seam_s": 262.7,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 292.2,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 319.32,
+          "anchor": "guards",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 347.6,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 375.68,
+          "anchor": "can",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 405.06,
+          "anchor": "success",
+          "anchor_to_seam_s": 0.035
+        },
+        {
+          "seam_s": 427.6,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.0
+        },
+        {
+          "seam_s": 453.7,
+          "anchor": "neighbor",
+          "anchor_to_seam_s": 0.06
+        },
+        {
+          "seam_s": 479.88,
+          "anchor": "found",
+          "anchor_to_seam_s": 0.06
+        },
+        {
+          "seam_s": 502.91,
+          "anchor": "you",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 527.24,
+          "anchor": "land",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 550.44,
+          "anchor": "then",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 572.78,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.025
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2029,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 27.472,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.298
+        },
+        {
+          "seam_s": 43.264,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.351
+        },
+        {
+          "seam_s": 72.048,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.518
+        },
+        {
+          "seam_s": 93.536,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.394
+        },
+        {
+          "seam_s": 119.376,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.279
+        },
+        {
+          "seam_s": 148.304,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.361
+        },
+        {
+          "seam_s": 175.12,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.37
+        },
+        {
+          "seam_s": 198.464,
+          "anchor": "doing",
+          "anchor_to_seam_s": 0.306
+        },
+        {
+          "seam_s": 222.32,
+          "anchor": "might",
+          "anchor_to_seam_s": 0.325
+        },
+        {
+          "seam_s": 233.2,
+          "anchor": "which",
+          "anchor_to_seam_s": 0.28
+        },
+        {
+          "seam_s": 258.24,
+          "anchor": "people",
+          "anchor_to_seam_s": 0.335
+        },
+        {
+          "seam_s": 285.904,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.311
+        },
+        {
+          "seam_s": 308.944,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.271
+        },
+        {
+          "seam_s": 335.408,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.282
+        },
+        {
+          "seam_s": 365.248,
+          "anchor": "homes",
+          "anchor_to_seam_s": 0.343
+        },
+        {
+          "seam_s": 391.344,
+          "anchor": "she",
+          "anchor_to_seam_s": 0.326
+        },
+        {
+          "seam_s": 413.104,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.341
+        },
+        {
+          "seam_s": 439.408,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.272
+        },
+        {
+          "seam_s": 466.54,
+          "anchor": "um",
+          "anchor_to_seam_s": 0.108
+        },
+        {
+          "seam_s": 492.688,
+          "anchor": "they",
+          "anchor_to_seam_s": 0.322
+        },
+        {
+          "seam_s": 517.568,
+          "anchor": "desk",
+          "anchor_to_seam_s": 0.382
+        },
+        {
+          "seam_s": 543.04,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 572.112,
+          "anchor": "trying",
+          "anchor_to_seam_s": 0.378
+        },
+        {
+          "seam_s": 580.528,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.287
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2176,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 24.688,
+          "anchor": "been",
+          "anchor_to_seam_s": 0.337
+        },
+        {
+          "seam_s": 50.256,
+          "anchor": "i've",
+          "anchor_to_seam_s": 0.274
+        },
+        {
+          "seam_s": 63.296,
+          "anchor": "pursue",
+          "anchor_to_seam_s": 0.439
+        },
+        {
+          "seam_s": 89.66,
+          "anchor": "number",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 110.54,
+          "anchor": "like",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 130.08,
+          "anchor": "particularly",
+          "anchor_to_seam_s": 0.48
+        },
+        {
+          "seam_s": 149.824,
+          "anchor": "career",
+          "anchor_to_seam_s": 0.376
+        },
+        {
+          "seam_s": 178.8,
+          "anchor": "came",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 208.272,
+          "anchor": "point",
+          "anchor_to_seam_s": 0.338
+        },
+        {
+          "seam_s": 231.728,
+          "anchor": "back",
+          "anchor_to_seam_s": 0.322
+        },
+        {
+          "seam_s": 241.952,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.258
+        },
+        {
+          "seam_s": 268.88,
+          "anchor": "done",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 289.8867,
+          "anchor": "one",
+          "anchor_to_seam_s": 0.022
+        },
+        {
+          "seam_s": 314.48,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.235
+        },
+        {
+          "seam_s": 336.3,
+          "anchor": "school",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 352.576,
+          "anchor": "darker",
+          "anchor_to_seam_s": 0.409
+        },
+        {
+          "seam_s": 382.256,
+          "anchor": "really",
+          "anchor_to_seam_s": 0.359
+        },
+        {
+          "seam_s": 407.616,
+          "anchor": "big",
+          "anchor_to_seam_s": 0.379
+        },
+        {
+          "seam_s": 418.976,
+          "anchor": "completely",
+          "anchor_to_seam_s": 0.389
+        },
+        {
+          "seam_s": 439.408,
+          "anchor": "come",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 462.74,
+          "anchor": "high",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 488.48,
+          "anchor": "he",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 516.304,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.269
+        },
+        {
+          "seam_s": 519.632,
+          "anchor": "period",
+          "anchor_to_seam_s": 0.393
+        },
+        {
+          "seam_s": 545.0,
+          "anchor": "hook",
+          "anchor_to_seam_s": 0.004
+        },
+        {
+          "seam_s": 563.584,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.369
+        },
+        {
+          "seam_s": 578.064,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.276
+        }
+      ]
+    },
+    {
+      "n_chunks": 28,
+      "method": "stitch",
+      "n_words": 2684,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 25.14,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 49.712,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.168
+        },
+        {
+          "seam_s": 59.712,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.238
+        },
+        {
+          "seam_s": 88.56,
+          "anchor": "no",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 100.416,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.329
+        },
+        {
+          "seam_s": 125.24,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 149.74,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 176.42,
+          "anchor": "still",
+          "anchor_to_seam_s": 0.135
+        },
+        {
+          "seam_s": 200.96,
+          "anchor": "heard",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 225.744,
+          "anchor": "yeah",
+          "anchor_to_seam_s": 0.326
+        },
+        {
+          "seam_s": 243.728,
+          "anchor": "taking",
+          "anchor_to_seam_s": 0.327
+        },
+        {
+          "seam_s": 267.39,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 280.608,
+          "anchor": "oh",
+          "anchor_to_seam_s": 0.287
+        },
+        {
+          "seam_s": 302.66,
+          "anchor": "of",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 324.48,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.325
+        },
+        {
+          "seam_s": 344.368,
+          "anchor": "ya",
+          "anchor_to_seam_s": 0.342
+        },
+        {
+          "seam_s": 357.84,
+          "anchor": "columbus",
+          "anchor_to_seam_s": 0.37
+        },
+        {
+          "seam_s": 385.84,
+          "anchor": "to",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 403.904,
+          "anchor": "em",
+          "anchor_to_seam_s": 0.339
+        },
+        {
+          "seam_s": 424.128,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.367
+        },
+        {
+          "seam_s": 453.472,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.288
+        },
+        {
+          "seam_s": 480.16,
+          "anchor": "cause",
+          "anchor_to_seam_s": 0.28
+        },
+        {
+          "seam_s": 492.8,
+          "anchor": "done",
+          "anchor_to_seam_s": 0.515
+        },
+        {
+          "seam_s": 513.312,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.348
+        },
+        {
+          "seam_s": 530.272,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.323
+        },
+        {
+          "seam_s": 558.608,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 584.096,
+          "anchor": "went",
+          "anchor_to_seam_s": 0.289
+        }
+      ]
+    },
+    {
+      "n_chunks": 25,
+      "method": "stitch",
+      "n_words": 2395,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 30.0,
+          "anchor": "out",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 52.288,
+          "anchor": "i",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 76.78,
+          "anchor": "enlist",
+          "anchor_to_seam_s": 0.05
+        },
+        {
+          "seam_s": 106.256,
+          "anchor": "so",
+          "anchor_to_seam_s": 0.244
+        },
+        {
+          "seam_s": 135.568,
+          "anchor": "good",
+          "anchor_to_seam_s": 0.312
+        },
+        {
+          "seam_s": 164.928,
+          "anchor": "time",
+          "anchor_to_seam_s": 0.402
+        },
+        {
+          "seam_s": 187.26,
+          "anchor": "or",
+          "anchor_to_seam_s": 0.075
+        },
+        {
+          "seam_s": 198.8,
+          "anchor": "well",
+          "anchor_to_seam_s": 0.3
+        },
+        {
+          "seam_s": 225.68,
+          "anchor": "the",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 253.4,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.075
+        },
+        {
+          "seam_s": 278.928,
+          "anchor": "she'd",
+          "anchor_to_seam_s": 0.392
+        },
+        {
+          "seam_s": 299.92,
+          "anchor": "her",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 325.264,
+          "anchor": "as",
+          "anchor_to_seam_s": 0.281
+        },
+        {
+          "seam_s": 351.2,
+          "anchor": "uh",
+          "anchor_to_seam_s": 0.46
+        },
+        {
+          "seam_s": 374.992,
+          "anchor": "had",
+          "anchor_to_seam_s": 0.413
+        },
+        {
+          "seam_s": 395.584,
+          "anchor": "generally",
+          "anchor_to_seam_s": 0.421
+        },
+        {
+          "seam_s": 424.28,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 453.712,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.283
+        },
+        {
+          "seam_s": 467.12,
+          "anchor": "hung",
+          "anchor_to_seam_s": 0.37
+        },
+        {
+          "seam_s": 487.92,
+          "anchor": "got",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 515.264,
+          "anchor": "are",
+          "anchor_to_seam_s": 0.311
+        },
+        {
+          "seam_s": 537.344,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.381
+        },
+        {
+          "seam_s": 559.344,
+          "anchor": "guns",
+          "anchor_to_seam_s": 0.401
+        },
+        {
+          "seam_s": 588.912,
+          "anchor": "that",
+          "anchor_to_seam_s": 0.308
+        }
+      ]
+    },
+    {
+      "n_chunks": 29,
+      "method": "stitch",
+      "n_words": 2248,
+      "n_no_anchor": 0,
+      "seams": [
+        {
+          "seam_s": 25.2,
+          "anchor": "my",
+          "anchor_to_seam_s": 0.025
+        },
+        {
+          "seam_s": 47.88,
+          "anchor": "seven",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 70.26,
+          "anchor": "met",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 91.14,
+          "anchor": "now",
+          "anchor_to_seam_s": 0.045
+        },
+        {
+          "seam_s": 103.664,
+          "anchor": "for",
+          "anchor_to_seam_s": 0.301
+        },
+        {
+          "seam_s": 133.22,
+          "anchor": "ventilation",
+          "anchor_to_seam_s": 0.06
+        },
+        {
+          "seam_s": 155.9,
+          "anchor": "that's",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 175.7,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.05
+        },
+        {
+          "seam_s": 198.88,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 221.78,
+          "anchor": "we",
+          "anchor_to_seam_s": 0.06
+        },
+        {
+          "seam_s": 250.8,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 270.6,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.015
+        },
+        {
+          "seam_s": 291.9,
+          "anchor": "deal",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 313.9,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 335.98,
+          "anchor": "s",
+          "anchor_to_seam_s": 0.04
+        },
+        {
+          "seam_s": 356.6,
+          "anchor": "a",
+          "anchor_to_seam_s": 0.02
+        },
+        {
+          "seam_s": 376.82,
+          "anchor": "they're",
+          "anchor_to_seam_s": 0.0
+        },
+        {
+          "seam_s": 398.2,
+          "anchor": "me",
+          "anchor_to_seam_s": 0.03
+        },
+        {
+          "seam_s": 417.968,
+          "anchor": "at",
+          "anchor_to_seam_s": 0.297
+        },
+        {
+          "seam_s": 439.85,
+          "anchor": "dollars",
+          "anchor_to_seam_s": 0.005
+        },
+        {
+          "seam_s": 448.304,
+          "anchor": "yknow",
+          "anchor_to_seam_s": 0.381
+        },
+        {
+          "seam_s": 473.42,
+          "anchor": "and",
+          "anchor_to_seam_s": 0.115
+        },
+        {
+          "seam_s": 494.44,
+          "anchor": "not",
+          "anchor_to_seam_s": 0.055
+        },
+        {
+          "seam_s": 523.66,
+          "anchor": "if",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 526.448,
+          "anchor": "it's",
+          "anchor_to_seam_s": 0.362
+        },
+        {
+          "seam_s": 545.84,
+          "anchor": "helps",
+          "anchor_to_seam_s": 0.01
+        },
+        {
+          "seam_s": 570.16,
+          "anchor": "can",
+          "anchor_to_seam_s": 0.765
+        },
+        {
+          "seam_s": 599.38,
+          "anchor": "theirs",
+          "anchor_to_seam_s": 0.01
+        }
+      ]
+    }
+  ],
+  "refiner_files": {
+    "brqe.json": "bd518226b33507d853b7592a5c8cfd6c564a38824eb546e62b8893f4bae011ba",
+    "brqe.pt": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+    "const_offsets.json": "ca2e1a8f00d52e784cb98e3974aca10f7aad6da619799d966644eab455efa936"
+  }
+}

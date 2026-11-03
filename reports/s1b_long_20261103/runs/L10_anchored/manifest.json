@@ -1,0 +1,141 @@
+{
+  "schema_version": 2,
+  "tool": {
+    "name": "local-subtitle-workbench",
+    "version": "0.1.0"
+  },
+  "code": {
+    "source_sha256": "b872cc9c1be520ed31bce67c228b3ded5c3b85ce2bbf17854d128133c9212c4c",
+    "git_revision": "41ec4ccdf8f23cf92e4aa7f94d2638c45ebe8cdc",
+    "git_worktree_dirty": false
+  },
+  "timestamp": "2026-11-03T20:29:33.740860+00:00",
+  "inputs": {
+    "corpus": "buckeye",
+    "reference_type": "gold",
+    "data_provenance": "MODEL_EXECUTION",
+    "offline_synthetic": false,
+    "n_utterances": 20,
+    "n_speakers": 20,
+    "audio_files": {
+      "s02_L10": "cf149fc8e7b4c6249c45dfca348266f30db1aab6d110f3c1801932e3dffd2595",
+      "s03_L10": "8246c4a5d121873d8d64a910c319e39b3ec37648bd44dc9388b8fa2c17fd08a7",
+      "s07_L10": "ec1eb249a89c646a7af25cef263946b01e8edbf3687ecdcc1d512c7254baca3c",
+      "s09_L10": "e9c4cebfd8edfab92da38463bc65f95de0f46a36b4d17f47b4942aedce5fa978",
+      "s11_L10": "0861870cecd78359f0a01e4ad04182842804fd33829f8fe35ff501920f25053a",
+      "s12_L10": "fc2818f252e7ce4176f528f016a84c791b7eac1ef191e77d144751b0e1d82243",
+      "s15_L10": "07501731614e90a5c7913387ac32defad01c3d1c36c1c6fa2cd21ae1d506d2b1",
+      "s17_L10": "5d39b118e8032d166c0f8d7f189fd1647b88584b282ae8da4c75ff189d69c722",
+      "s18_L10": "3514a95b6a5d2b77ef885acf444ac2d69fa5728c3aeb87bcef3613623d8ae429",
+      "s19_L10": "503004890015b33926b9031485e8bbc754093a25800443c54e8a77d4adbaf2d7",
+      "s20_L10": "ba668d804a03420c7a2b2b4056398a792660b8f0ec9a60f67ce3421832182358",
+      "s22_L10": "59c92a2accc110ecd128bacc6afe6622f3a058e281b60b11ffd7fae3c1a91a35",
+      "s27_L10": "7b6fd7a54f29aab8fcfa74a859b75e36e724ff6d4aa1c818c6639b50f1903375",
+      "s31_L10": "f6ed783fec40ed40df6c53d3329fe58ad0dec23cc9b314b4c2e27d3be1de0436",
+      "s33_L10": "91e2e05838cb28e8916bfddff0599ae32c7d09964a67887bdf594e73727e254a",
+      "s34_L10": "135c47e437c122a2e950615e607545fc1c63e5e5791e6cd3bd9b46f2685e564d",
+      "s35_L10": "8d38c84c572526556de90e61f4183c92e1692cd9fe6803d2c849a770f8e625d8",
+      "s36_L10": "434edd6af890e363b451ca28c472fdc4f7368c160b3e346c7dc9becb1aaac1ae",
+      "s37_L10": "b0ef9add950508d06dbd5900676cacb843a425278c4a8730b4facfe0db50677d",
+      "s38_L10": "6136acb0ad890b9d68cb21b3502b315f5e19e6e926af844b4fada516c2806f63"
+    }
+  },
+  "config": {
+    "modes": [
+      "B0_whisper",
+      "B1_whisper_ctc",
+      "B2_proposed",
+      "A1_ctc",
+      "A2_proposed",
+      "B2_const",
+      "B2_brqe",
+      "A2_const",
+      "A2_brqe"
+    ],
+    "ci_unit": "speaker",
+    "excluded_corpus_defects": {},
+    "asr": {
+      "model": "large-v3",
+      "device": "cuda",
+      "compute_type": "int8_float16"
+    },
+    "aligners": {
+      "mfa": {
+        "engine": "mfa",
+        "dictionary": "english_us_arpa",
+        "acoustic_model": "english_us_arpa",
+        "g2p_model": "english_us_arpa",
+        "fine_tune": true,
+        "speaker_adaptation": true,
+        "num_jobs": 1,
+        "invocation": "per_speaker"
+      },
+      "ctc": {
+        "engine": "ctc",
+        "model": "torchaudio.pipelines.MMS_FA"
+      }
+    },
+    "refiners": {
+      "dir": "C:/Users/nurym/Desktop/local-subtitle-workbench/models/brqe",
+      "brqe_weights_sha256": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+      "brqe_config": {
+        "epochs": 12,
+        "batch_size": 512,
+        "lr": 0.001,
+        "weight_decay": 0.0001,
+        "cls_weight": 0.5,
+        "seed": 20260401,
+        "hidden": 128,
+        "dropout": 0.2
+      },
+      "const_offsets_sha256": "ca2e1a8f00d52e784cb98e3974aca10f7aad6da619799d966644eab455efa936",
+      "trained_on": {
+        "run": "reports/brqe_train_run",
+        "sample": {
+          "path": "reports/buckeye_train_sample_20260401.json",
+          "sha256": "c27f6de24c06eb92cf3a3352a95abe24c729ac07cee609d03c8582e88b06b876",
+          "seed": 20260401,
+          "per_speaker": 150,
+          "n_utterances": 3000
+        },
+        "split": {
+          "path": "reports/buckeye_split_20260401.json",
+          "sha256": "49bcad6e6f686ad3ab26d1f9800e2c4dee519a1dbd4b441471e9b2ba5a0af2f7"
+        },
+        "run_code": {
+          "source_sha256": "09605a45f3222dfb475b2691ace6e9e5ca0afc6f34c9588df1777bddfc689c03",
+          "git_revision": "9dc8018de6d9debef7d6765b40630903eaf2cbdd",
+          "git_worktree_dirty": false
+        },
+        "n_utterances": 3000,
+        "n_speakers": 20
+      }
+    },
+    "mfa_retries": []
+  },
+  "outputs": {
+    "benchmark_results.json": {
+      "sha256": "ab270a550139a67aba1e9ca696cb3b83f9f2c2b2484d7a3c2b9a5bd1726d6546"
+    },
+    "benchmark_utterances.json": {
+      "sha256": "2f0d3b180e9fe3abc156566e5ca7a99c89a5334adacf552bc7432c57a330c36c"
+    },
+    "benchmark_predictions.json": {
+      "sha256": "7c1cc8d8e03adecfcbf4d1526eeaf2eec5ca1b8625a1f708d96d8890f1c73dad"
+    }
+  },
+  "runtime": {
+    "python": "3.11.17",
+    "numpy": "2.4.6",
+    "platform": "Windows-10-10.0.26340-SP0"
+  },
+  "hardware": {
+    "platform": "Windows-10-10.0.26340-SP0",
+    "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+    "python_version": "3.11.17",
+    "cuda_available": true,
+    "whisper_cuda_available": true,
+    "torch_cuda_available": false,
+    "cuda_device_name": null
+  }
+}

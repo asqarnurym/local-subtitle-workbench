@@ -65,3 +65,13 @@ reports/e1_analysis_20261102/tables/*
 literature/
 !reports/s1b_seam_check_20261103/
 !reports/s1b_seam_check_stitch_20261103/
+# S1b evidence; large prediction files stay local.
+!reports/s1b_long_20261103/
+reports/s1b_long_20261103/*
+!reports/s1b_long_20261103/analysis.json
+!reports/s1b_long_20261103/verify.json
+!reports/s1b_long_20261103/build.json
+!reports/s1b_long_20261103/position_detail.json
+!reports/s1b_long_20261103/figures/
+!reports/s1b_long_20261103/runs/
+reports/s1b_long_20261103/runs/*/benchmark_predictions.json

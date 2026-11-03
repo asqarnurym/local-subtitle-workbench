@@ -1,0 +1,482 @@
+[
+  {
+    "mode": "A2_proposed",
+    "utterance": "s02_L01",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s02_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s03_L01",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 15.287,
+    "word_acc_20ms": 76.98,
+    "word_matched": 202,
+    "word_reference": 202,
+    "phone_mae_ms": 13.154
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s07_L01",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2] of s07_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s09_L01",
+    "speaker": "s09",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s09_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s11_L01",
+    "speaker": "s11",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s11_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s12_L01",
+    "speaker": "s12",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s12_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s15_L01",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s15_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s17_L01",
+    "speaker": "s17",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s17_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s18_L01",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s18_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s19_L01",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s19_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s20_L01",
+    "speaker": "s20",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s20_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s22_L01",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 27.544,
+    "word_acc_20ms": 57.89,
+    "word_matched": 209,
+    "word_reference": 209,
+    "phone_mae_ms": 21.972
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s27_L01",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s27_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s31_L01",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s31_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s33_L01",
+    "speaker": "s33",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s33_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s34_L01",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 19.372,
+    "word_acc_20ms": 66.97,
+    "word_matched": 271,
+    "word_reference": 271,
+    "phone_mae_ms": 24.085
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s35_L01",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 16.876,
+    "word_acc_20ms": 77.22,
+    "word_matched": 248,
+    "word_reference": 248,
+    "phone_mae_ms": 14.339
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s36_L01",
+    "speaker": "s36",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s36_L01.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s37_L01",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 35.637,
+    "word_acc_20ms": 56.69,
+    "word_matched": 239,
+    "word_reference": 239,
+    "phone_mae_ms": 24.508
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s38_L01",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s38_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s02_L01",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s02_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s03_L01",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 15.286,
+    "word_acc_20ms": 77.97,
+    "word_matched": 202,
+    "word_reference": 202,
+    "phone_mae_ms": 13.152
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s07_L01",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2] of s07_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s09_L01",
+    "speaker": "s09",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s09_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s11_L01",
+    "speaker": "s11",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s11_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s12_L01",
+    "speaker": "s12",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s12_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s15_L01",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s15_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s17_L01",
+    "speaker": "s17",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s17_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s18_L01",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s18_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s19_L01",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s19_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s20_L01",
+    "speaker": "s20",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s20_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s22_L01",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 27.385,
+    "word_acc_20ms": 59.09,
+    "word_matched": 209,
+    "word_reference": 209,
+    "phone_mae_ms": 21.968
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s27_L01",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s27_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s31_L01",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s31_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s33_L01",
+    "speaker": "s33",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s33_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s34_L01",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 19.436,
+    "word_acc_20ms": 66.97,
+    "word_matched": 271,
+    "word_reference": 271,
+    "phone_mae_ms": 24.079
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s35_L01",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 16.869,
+    "word_acc_20ms": 77.82,
+    "word_matched": 248,
+    "word_reference": 248,
+    "phone_mae_ms": 14.338
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s36_L01",
+    "speaker": "s36",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s36_L01.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s37_L01",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 35.599,
+    "word_acc_20ms": 57.74,
+    "word_matched": 239,
+    "word_reference": 239,
+    "phone_mae_ms": 24.501
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s38_L01",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s38_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s02_L01",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s02_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s03_L01",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 13.827,
+    "word_acc_20ms": 80.2,
+    "word_matched": 202,
+    "word_reference": 202,
+    "phone_mae_ms": 10.98
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s07_L01",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2] of s07_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s09_L01",
+    "speaker": "s09",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s09_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s11_L01",
+    "speaker": "s11",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s11_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s12_L01",
+    "speaker": "s12",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s12_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s15_L01",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s15_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s17_L01",
+    "speaker": "s17",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s17_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s18_L01",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s18_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s19_L01",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s19_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s20_L01",
+    "speaker": "s20",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s20_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s22_L01",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 25.413,
+    "word_acc_20ms": 65.79,
+    "word_matched": 209,
+    "word_reference": 209,
+    "phone_mae_ms": 20.459
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s27_L01",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s27_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s31_L01",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s31_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s33_L01",
+    "speaker": "s33",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1] of s33_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s34_L01",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 16.478,
+    "word_acc_20ms": 74.72,
+    "word_matched": 271,
+    "word_reference": 271,
+    "phone_mae_ms": 22.238
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s35_L01",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 15.695,
+    "word_acc_20ms": 80.65,
+    "word_matched": 248,
+    "word_reference": 248,
+    "phone_mae_ms": 13.487
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s36_L01",
+    "speaker": "s36",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1] of s36_L01.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s37_L01",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 33.512,
+    "word_acc_20ms": 61.09,
+    "word_matched": 239,
+    "word_reference": 239,
+    "phone_mae_ms": 23.742
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s38_L01",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s38_L01.wav"
+  }
+]

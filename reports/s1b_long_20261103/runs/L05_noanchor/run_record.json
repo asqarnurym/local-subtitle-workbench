@@ -1,0 +1,40 @@
+{
+  "length": "L05",
+  "variant": "noanchor",
+  "reconciler": "stitch",
+  "mfa_workers": 4,
+  "mfa_retries": [],
+  "seconds": 526.6,
+  "git_before": {
+    "revision": "41ec4ccdf8f23cf92e4aa7f94d2638c45ebe8cdc",
+    "dirty": false
+  },
+  "git_after": {
+    "revision": "41ec4ccdf8f23cf92e4aa7f94d2638c45ebe8cdc",
+    "dirty": false
+  },
+  "code": {
+    "scripts/s1_long_recordings.py": "b7efd5862242951a62e1d91d06ffd1b712db369ab72bd2cfb2e7fa16744d070f",
+    "scripts/seam_safe.py": "6b1d273c598875b57a6667709648a033d44d08d42addcd8feae643dfe6dea34c",
+    "scripts/seam_stitch.py": "82f839b9f2517fc238a5586e9ee1f60bcef54e39c251a0e79743ff02ae4a07ca",
+    "docs/S1B_SEAM_SAFE_PROTOCOL.md": "6ce95af20f62127528952cf33626583fc754c311e948300411b137fdd2e631b8",
+    "scripts/speech_benchmark.py": "1ad4aa8da1fef2d4df949d601ebdb624c38ef7c2e241e1339a52744e7b43b0e0",
+    "scripts/analyze_speaker_errors.py": "ce74accc93aab7d47b01314d37f37f2020d80a1857edb3a12ed65dcace95a28d",
+    "src/subtitle_workbench/pipeline.py": "eb92cb04f294d26373bb4e1c84f513564d55c5730aa6bc0e669f51965e7d0f87",
+    "src/subtitle_workbench/anchoring.py": "fec7b6293a40e9d3adedac977ea572a469924b6bf9e537e68393555f69558ba3",
+    "src/subtitle_workbench/chunker.py": "ab6cf80d8d83198c365fa35c90b295b2b2240b4f2663426c26530da84bdd2a2c",
+    "src/subtitle_workbench/aligner.py": "b74add0e6756fb91cce8df937a5462d1bf93759d976f345c03ba11e0dc448e80",
+    "src/subtitle_workbench/metrics.py": "ab2daad6af8c0767eeb4940b0ca01af46760d4a952bcf6f4c3897acd8a9e9414",
+    "src/subtitle_workbench/refiner.py": "4aa56abe1f0a66d84cdf347e6916bc147b93df0d591c9ccb1d2e155dfd79d0da",
+    "uv.lock": "36986a9a23459f21ca87b61b9fd7f13e05ad9694fbdd00c5c1f1c89d5f5c30a7",
+    "pyproject.toml": "6e555d3226f1a8315ec339d20b35edfcb8d23472cb31d27308836986c1bd3184"
+  },
+  "build_sha256": "a08c48865147ad95315f5561425688ae135777a01c0071a0a5ed5d590dbcd57a",
+  "isolated_chunking_failures": [],
+  "seam_reconciliation_log": [],
+  "refiner_files": {
+    "brqe.json": "bd518226b33507d853b7592a5c8cfd6c564a38824eb546e62b8893f4bae011ba",
+    "brqe.pt": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+    "const_offsets.json": "ca2e1a8f00d52e784cb98e3974aca10f7aad6da619799d966644eab455efa936"
+  }
+}

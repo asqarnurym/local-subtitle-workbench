@@ -1,0 +1,1802 @@
+[
+  {
+    "mode": "B0_whisper",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "ok",
+    "word_mae_ms": 116.243,
+    "word_acc_20ms": 5.62,
+    "word_matched": 1272,
+    "word_reference": 1364
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 169.972,
+    "word_acc_20ms": 1.79,
+    "word_matched": 893,
+    "word_reference": 990
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "ok",
+    "word_mae_ms": 129.359,
+    "word_acc_20ms": 3.62,
+    "word_matched": 1104,
+    "word_reference": 1180
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 126.003,
+    "word_acc_20ms": 4.62,
+    "word_matched": 1125,
+    "word_reference": 1218
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 145.402,
+    "word_acc_20ms": 3.83,
+    "word_matched": 939,
+    "word_reference": 1020
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 113.067,
+    "word_acc_20ms": 3.16,
+    "word_matched": 1266,
+    "word_reference": 1362
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "ok",
+    "word_mae_ms": 187.794,
+    "word_acc_20ms": 3.89,
+    "word_matched": 925,
+    "word_reference": 1062
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 151.428,
+    "word_acc_20ms": 1.68,
+    "word_matched": 985,
+    "word_reference": 1065
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "ok",
+    "word_mae_ms": 133.065,
+    "word_acc_20ms": 3.29,
+    "word_matched": 1109,
+    "word_reference": 1201
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "ok",
+    "word_mae_ms": 141.724,
+    "word_acc_20ms": 4.78,
+    "word_matched": 1005,
+    "word_reference": 1146
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 182.006,
+    "word_acc_20ms": 2.01,
+    "word_matched": 822,
+    "word_reference": 874
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 146.299,
+    "word_acc_20ms": 2.07,
+    "word_matched": 989,
+    "word_reference": 1112
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "ok",
+    "word_mae_ms": 170.134,
+    "word_acc_20ms": 2.51,
+    "word_matched": 898,
+    "word_reference": 1001
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "ok",
+    "word_mae_ms": 143.657,
+    "word_acc_20ms": 2.43,
+    "word_matched": 1051,
+    "word_reference": 1098
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 145.797,
+    "word_acc_20ms": 4.11,
+    "word_matched": 1010,
+    "word_reference": 1109
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 112.991,
+    "word_acc_20ms": 5.52,
+    "word_matched": 1222,
+    "word_reference": 1402
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 118.122,
+    "word_acc_20ms": 4.24,
+    "word_matched": 1144,
+    "word_reference": 1256
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 137.014,
+    "word_acc_20ms": 4.26,
+    "word_matched": 1044,
+    "word_reference": 1247
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 132.385,
+    "word_acc_20ms": 6.09,
+    "word_matched": 1075,
+    "word_reference": 1348
+  },
+  {
+    "mode": "B0_whisper",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "ok",
+    "word_mae_ms": 152.186,
+    "word_acc_20ms": 2.13,
+    "word_matched": 987,
+    "word_reference": 1113
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "ok",
+    "word_mae_ms": 54.393,
+    "word_acc_20ms": 33.85,
+    "word_matched": 1279,
+    "word_reference": 1364
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 48.096,
+    "word_acc_20ms": 29.08,
+    "word_matched": 901,
+    "word_reference": 990
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "ok",
+    "word_mae_ms": 40.7,
+    "word_acc_20ms": 34.49,
+    "word_matched": 1106,
+    "word_reference": 1180
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 39.554,
+    "word_acc_20ms": 33.41,
+    "word_matched": 1127,
+    "word_reference": 1218
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 47.162,
+    "word_acc_20ms": 29.95,
+    "word_matched": 940,
+    "word_reference": 1020
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 35.56,
+    "word_acc_20ms": 35.75,
+    "word_matched": 1270,
+    "word_reference": 1362
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "ok",
+    "word_mae_ms": 44.749,
+    "word_acc_20ms": 34.16,
+    "word_matched": 931,
+    "word_reference": 1062
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 43.637,
+    "word_acc_20ms": 30.08,
+    "word_matched": 989,
+    "word_reference": 1065
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "ok",
+    "word_mae_ms": 42.403,
+    "word_acc_20ms": 33.42,
+    "word_matched": 1119,
+    "word_reference": 1201
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "ok",
+    "word_mae_ms": 45.474,
+    "word_acc_20ms": 34.09,
+    "word_matched": 1009,
+    "word_reference": 1146
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 53.553,
+    "word_acc_20ms": 28.62,
+    "word_matched": 828,
+    "word_reference": 874
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 45.864,
+    "word_acc_20ms": 30.62,
+    "word_matched": 1006,
+    "word_reference": 1112
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "ok",
+    "word_mae_ms": 44.739,
+    "word_acc_20ms": 35.22,
+    "word_matched": 900,
+    "word_reference": 1001
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "ok",
+    "word_mae_ms": 44.423,
+    "word_acc_20ms": 30.91,
+    "word_matched": 1061,
+    "word_reference": 1098
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 43.356,
+    "word_acc_20ms": 33.81,
+    "word_matched": 1016,
+    "word_reference": 1109
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 38.492,
+    "word_acc_20ms": 36.36,
+    "word_matched": 1224,
+    "word_reference": 1402
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 36.713,
+    "word_acc_20ms": 36.69,
+    "word_matched": 1146,
+    "word_reference": 1256
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 49.716,
+    "word_acc_20ms": 33.25,
+    "word_matched": 1051,
+    "word_reference": 1247
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 55.51,
+    "word_acc_20ms": 34.09,
+    "word_matched": 1075,
+    "word_reference": 1348
+  },
+  {
+    "mode": "B1_whisper_ctc",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "ok",
+    "word_mae_ms": 48.515,
+    "word_acc_20ms": 32.63,
+    "word_matched": 999,
+    "word_reference": 1113
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [4, 10] of s02_L05.wav"
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 58.339,
+    "word_acc_20ms": 69.81,
+    "word_matched": 901,
+    "word_reference": 990,
+    "phone_mae_ms": 58.311
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [9, 10] of s07_L05.wav"
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 28.881,
+    "word_acc_20ms": 73.03,
+    "word_matched": 1127,
+    "word_reference": 1218,
+    "phone_mae_ms": 22.386
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 36.57,
+    "word_acc_20ms": 68.72,
+    "word_matched": 940,
+    "word_reference": 1020,
+    "phone_mae_ms": 29.555
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 15.863,
+    "word_acc_20ms": 76.26,
+    "word_matched": 1270,
+    "word_reference": 1362,
+    "phone_mae_ms": 14.066
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "ok",
+    "word_mae_ms": 148.749,
+    "word_acc_20ms": 62.84,
+    "word_matched": 931,
+    "word_reference": 1062,
+    "phone_mae_ms": 138.119
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 111.584,
+    "word_acc_20ms": 62.74,
+    "word_matched": 989,
+    "word_reference": 1065,
+    "phone_mae_ms": 103.878
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [12] of s18_L05.wav"
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 11] of s19_L05.wav"
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 34.237,
+    "word_acc_20ms": 72.77,
+    "word_matched": 828,
+    "word_reference": 874,
+    "phone_mae_ms": 25.319
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 83.646,
+    "word_acc_20ms": 62.33,
+    "word_matched": 1006,
+    "word_reference": 1112,
+    "phone_mae_ms": 78.938
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6] of s27_L05.wav"
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6] of s31_L05.wav"
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 63.08,
+    "word_acc_20ms": 67.03,
+    "word_matched": 1016,
+    "word_reference": 1109,
+    "phone_mae_ms": 57.17
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 24.089,
+    "word_acc_20ms": 68.91,
+    "word_matched": 1224,
+    "word_reference": 1402,
+    "phone_mae_ms": 24.752
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 24.179,
+    "word_acc_20ms": 71.99,
+    "word_matched": 1146,
+    "word_reference": 1256,
+    "phone_mae_ms": 23.825
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 37.226,
+    "word_acc_20ms": 64.8,
+    "word_matched": 1051,
+    "word_reference": 1247,
+    "phone_mae_ms": 35.923
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 40.378,
+    "word_acc_20ms": 62.79,
+    "word_matched": 1075,
+    "word_reference": 1348,
+    "phone_mae_ms": 37.343
+  },
+  {
+    "mode": "B2_proposed",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3] of s38_L05.wav"
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "ok",
+    "word_mae_ms": 37.987,
+    "word_acc_20ms": 35.85,
+    "word_matched": 1364,
+    "word_reference": 1364
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 48.136,
+    "word_acc_20ms": 28.74,
+    "word_matched": 990,
+    "word_reference": 990
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "ok",
+    "word_mae_ms": 42.709,
+    "word_acc_20ms": 34.19,
+    "word_matched": 1180,
+    "word_reference": 1180
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 38.661,
+    "word_acc_20ms": 34.32,
+    "word_matched": 1218,
+    "word_reference": 1218
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 45.402,
+    "word_acc_20ms": 30.34,
+    "word_matched": 1020,
+    "word_reference": 1020
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 34.894,
+    "word_acc_20ms": 37.33,
+    "word_matched": 1361,
+    "word_reference": 1362
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "ok",
+    "word_mae_ms": 42.585,
+    "word_acc_20ms": 34.45,
+    "word_matched": 1061,
+    "word_reference": 1062
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 45.716,
+    "word_acc_20ms": 28.83,
+    "word_matched": 1065,
+    "word_reference": 1065
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "ok",
+    "word_mae_ms": 40.504,
+    "word_acc_20ms": 33.29,
+    "word_matched": 1200,
+    "word_reference": 1201
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "ok",
+    "word_mae_ms": 44.29,
+    "word_acc_20ms": 33.55,
+    "word_matched": 1146,
+    "word_reference": 1146
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 55.571,
+    "word_acc_20ms": 27.95,
+    "word_matched": 873,
+    "word_reference": 874
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 44.54,
+    "word_acc_20ms": 30.44,
+    "word_matched": 1112,
+    "word_reference": 1112
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "ok",
+    "word_mae_ms": 45.741,
+    "word_acc_20ms": 34.07,
+    "word_matched": 1001,
+    "word_reference": 1001
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "ok",
+    "word_mae_ms": 42.508,
+    "word_acc_20ms": 31.31,
+    "word_matched": 1097,
+    "word_reference": 1098
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 48.717,
+    "word_acc_20ms": 32.75,
+    "word_matched": 1107,
+    "word_reference": 1109
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 37.637,
+    "word_acc_20ms": 34.84,
+    "word_matched": 1402,
+    "word_reference": 1402
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 39.45,
+    "word_acc_20ms": 34.79,
+    "word_matched": 1256,
+    "word_reference": 1256
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 45.902,
+    "word_acc_20ms": 33.16,
+    "word_matched": 1247,
+    "word_reference": 1247
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 48.304,
+    "word_acc_20ms": 34.01,
+    "word_matched": 1348,
+    "word_reference": 1348
+  },
+  {
+    "mode": "A1_ctc",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "ok",
+    "word_mae_ms": 43.894,
+    "word_acc_20ms": 31.85,
+    "word_matched": 1113,
+    "word_reference": 1113
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [4] of s02_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 16.596,
+    "word_acc_20ms": 75.66,
+    "word_matched": 990,
+    "word_reference": 990,
+    "phone_mae_ms": 13.907
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [9, 10] of s07_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 18.531,
+    "word_acc_20ms": 74.22,
+    "word_matched": 1218,
+    "word_reference": 1218,
+    "phone_mae_ms": 15.91
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 19.402,
+    "word_acc_20ms": 70.83,
+    "word_matched": 1020,
+    "word_reference": 1020,
+    "phone_mae_ms": 15.48
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 13.839,
+    "word_acc_20ms": 77.26,
+    "word_matched": 1361,
+    "word_reference": 1362,
+    "phone_mae_ms": 12.941
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [5] of s15_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 17.405,
+    "word_acc_20ms": 72.07,
+    "word_matched": 1065,
+    "word_reference": 1065,
+    "phone_mae_ms": 13.68
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "ok",
+    "word_mae_ms": 16.783,
+    "word_acc_20ms": 74.25,
+    "word_matched": 1200,
+    "word_reference": 1201,
+    "phone_mae_ms": 13.587
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "ok",
+    "word_mae_ms": 21.195,
+    "word_acc_20ms": 67.63,
+    "word_matched": 1146,
+    "word_reference": 1146,
+    "phone_mae_ms": 15.912
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 21.792,
+    "word_acc_20ms": 73.65,
+    "word_matched": 873,
+    "word_reference": 874,
+    "phone_mae_ms": 17.011
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 20.49,
+    "word_acc_20ms": 66.77,
+    "word_matched": 1112,
+    "word_reference": 1112,
+    "phone_mae_ms": 17.733
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "ok",
+    "word_mae_ms": 18.145,
+    "word_acc_20ms": 71.63,
+    "word_matched": 1001,
+    "word_reference": 1001,
+    "phone_mae_ms": 16.704
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "ok",
+    "word_mae_ms": 16.564,
+    "word_acc_20ms": 72.56,
+    "word_matched": 1097,
+    "word_reference": 1098,
+    "phone_mae_ms": 14.542
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 19.258,
+    "word_acc_20ms": 72.27,
+    "word_matched": 1107,
+    "word_reference": 1109,
+    "phone_mae_ms": 13.481
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 19.699,
+    "word_acc_20ms": 69.69,
+    "word_matched": 1402,
+    "word_reference": 1402,
+    "phone_mae_ms": 19.551
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 16.947,
+    "word_acc_20ms": 73.73,
+    "word_matched": 1256,
+    "word_reference": 1256,
+    "phone_mae_ms": 14.801
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 24.104,
+    "word_acc_20ms": 67.52,
+    "word_matched": 1247,
+    "word_reference": 1247,
+    "phone_mae_ms": 22.385
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 25.607,
+    "word_acc_20ms": 64.28,
+    "word_matched": 1348,
+    "word_reference": 1348,
+    "phone_mae_ms": 23.094
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "ok",
+    "word_mae_ms": 19.056,
+    "word_acc_20ms": 70.71,
+    "word_matched": 1113,
+    "word_reference": 1113,
+    "phone_mae_ms": 17.201
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [4, 10] of s02_L05.wav"
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 58.317,
+    "word_acc_20ms": 69.92,
+    "word_matched": 901,
+    "word_reference": 990,
+    "phone_mae_ms": 58.31
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [9, 10] of s07_L05.wav"
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 28.674,
+    "word_acc_20ms": 73.51,
+    "word_matched": 1127,
+    "word_reference": 1218,
+    "phone_mae_ms": 22.386
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 36.474,
+    "word_acc_20ms": 68.67,
+    "word_matched": 940,
+    "word_reference": 1020,
+    "phone_mae_ms": 29.557
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 15.748,
+    "word_acc_20ms": 77.83,
+    "word_matched": 1270,
+    "word_reference": 1362,
+    "phone_mae_ms": 14.066
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "ok",
+    "word_mae_ms": 148.84,
+    "word_acc_20ms": 62.57,
+    "word_matched": 931,
+    "word_reference": 1062,
+    "phone_mae_ms": 138.121
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 111.633,
+    "word_acc_20ms": 63.4,
+    "word_matched": 989,
+    "word_reference": 1065,
+    "phone_mae_ms": 103.878
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [12] of s18_L05.wav"
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 11] of s19_L05.wav"
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 34.235,
+    "word_acc_20ms": 73.31,
+    "word_matched": 828,
+    "word_reference": 874,
+    "phone_mae_ms": 25.319
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 83.497,
+    "word_acc_20ms": 62.72,
+    "word_matched": 1006,
+    "word_reference": 1112,
+    "phone_mae_ms": 78.935
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6] of s27_L05.wav"
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6] of s31_L05.wav"
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 63.072,
+    "word_acc_20ms": 67.81,
+    "word_matched": 1016,
+    "word_reference": 1109,
+    "phone_mae_ms": 57.17
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 24.09,
+    "word_acc_20ms": 69.16,
+    "word_matched": 1224,
+    "word_reference": 1402,
+    "phone_mae_ms": 24.751
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 24.123,
+    "word_acc_20ms": 71.77,
+    "word_matched": 1146,
+    "word_reference": 1256,
+    "phone_mae_ms": 23.824
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 37.177,
+    "word_acc_20ms": 65.08,
+    "word_matched": 1051,
+    "word_reference": 1247,
+    "phone_mae_ms": 35.922
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 40.443,
+    "word_acc_20ms": 62.93,
+    "word_matched": 1075,
+    "word_reference": 1348,
+    "phone_mae_ms": 37.341
+  },
+  {
+    "mode": "B2_const",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3] of s38_L05.wav"
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [4, 10] of s02_L05.wav"
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 56.433,
+    "word_acc_20ms": 72.7,
+    "word_matched": 901,
+    "word_reference": 990,
+    "phone_mae_ms": 56.625
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [9, 10] of s07_L05.wav"
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 25.843,
+    "word_acc_20ms": 78.79,
+    "word_matched": 1127,
+    "word_reference": 1218,
+    "phone_mae_ms": 19.828
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 34.577,
+    "word_acc_20ms": 72.77,
+    "word_matched": 940,
+    "word_reference": 1020,
+    "phone_mae_ms": 28.36
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 14.203,
+    "word_acc_20ms": 80.04,
+    "word_matched": 1270,
+    "word_reference": 1362,
+    "phone_mae_ms": 12.387
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "ok",
+    "word_mae_ms": 147.691,
+    "word_acc_20ms": 66.43,
+    "word_matched": 931,
+    "word_reference": 1062,
+    "phone_mae_ms": 136.232
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 109.031,
+    "word_acc_20ms": 68.6,
+    "word_matched": 989,
+    "word_reference": 1065,
+    "phone_mae_ms": 101.794
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [12] of s18_L05.wav"
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 11] of s19_L05.wav"
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 31.086,
+    "word_acc_20ms": 78.38,
+    "word_matched": 828,
+    "word_reference": 874,
+    "phone_mae_ms": 22.822
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 81.584,
+    "word_acc_20ms": 66.95,
+    "word_matched": 1006,
+    "word_reference": 1112,
+    "phone_mae_ms": 77.289
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6] of s27_L05.wav"
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6] of s31_L05.wav"
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 60.284,
+    "word_acc_20ms": 73.18,
+    "word_matched": 1016,
+    "word_reference": 1109,
+    "phone_mae_ms": 54.591
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 21.934,
+    "word_acc_20ms": 73.94,
+    "word_matched": 1224,
+    "word_reference": 1402,
+    "phone_mae_ms": 22.847
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 22.686,
+    "word_acc_20ms": 74.78,
+    "word_matched": 1146,
+    "word_reference": 1256,
+    "phone_mae_ms": 22.645
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 35.604,
+    "word_acc_20ms": 68.74,
+    "word_matched": 1051,
+    "word_reference": 1247,
+    "phone_mae_ms": 34.93
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 39.196,
+    "word_acc_20ms": 64.51,
+    "word_matched": 1075,
+    "word_reference": 1348,
+    "phone_mae_ms": 35.72
+  },
+  {
+    "mode": "B2_brqe",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3] of s38_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [4] of s02_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 16.541,
+    "word_acc_20ms": 75.81,
+    "word_matched": 990,
+    "word_reference": 990,
+    "phone_mae_ms": 13.903
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [9, 10] of s07_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 18.365,
+    "word_acc_20ms": 74.79,
+    "word_matched": 1218,
+    "word_reference": 1218,
+    "phone_mae_ms": 15.91
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 19.288,
+    "word_acc_20ms": 70.93,
+    "word_matched": 1020,
+    "word_reference": 1020,
+    "phone_mae_ms": 15.485
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 13.75,
+    "word_acc_20ms": 78.51,
+    "word_matched": 1361,
+    "word_reference": 1362,
+    "phone_mae_ms": 12.939
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [5] of s15_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 17.38,
+    "word_acc_20ms": 72.35,
+    "word_matched": 1065,
+    "word_reference": 1065,
+    "phone_mae_ms": 13.679
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "ok",
+    "word_mae_ms": 16.643,
+    "word_acc_20ms": 74.46,
+    "word_matched": 1200,
+    "word_reference": 1201,
+    "phone_mae_ms": 13.587
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "ok",
+    "word_mae_ms": 21.104,
+    "word_acc_20ms": 67.8,
+    "word_matched": 1146,
+    "word_reference": 1146,
+    "phone_mae_ms": 15.91
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 21.761,
+    "word_acc_20ms": 73.88,
+    "word_matched": 873,
+    "word_reference": 874,
+    "phone_mae_ms": 17.01
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 20.304,
+    "word_acc_20ms": 67.49,
+    "word_matched": 1112,
+    "word_reference": 1112,
+    "phone_mae_ms": 17.733
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "ok",
+    "word_mae_ms": 18.194,
+    "word_acc_20ms": 70.98,
+    "word_matched": 1001,
+    "word_reference": 1001,
+    "phone_mae_ms": 16.702
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "ok",
+    "word_mae_ms": 16.517,
+    "word_acc_20ms": 72.88,
+    "word_matched": 1097,
+    "word_reference": 1098,
+    "phone_mae_ms": 14.541
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 19.203,
+    "word_acc_20ms": 72.81,
+    "word_matched": 1107,
+    "word_reference": 1109,
+    "phone_mae_ms": 13.473
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 19.695,
+    "word_acc_20ms": 69.69,
+    "word_matched": 1402,
+    "word_reference": 1402,
+    "phone_mae_ms": 19.543
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 16.891,
+    "word_acc_20ms": 73.69,
+    "word_matched": 1256,
+    "word_reference": 1256,
+    "phone_mae_ms": 14.801
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 24.068,
+    "word_acc_20ms": 67.72,
+    "word_matched": 1247,
+    "word_reference": 1247,
+    "phone_mae_ms": 22.385
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 25.624,
+    "word_acc_20ms": 64.39,
+    "word_matched": 1348,
+    "word_reference": 1348,
+    "phone_mae_ms": 23.088
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "ok",
+    "word_mae_ms": 18.902,
+    "word_acc_20ms": 71.34,
+    "word_matched": 1113,
+    "word_reference": 1113,
+    "phone_mae_ms": 17.197
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [4] of s02_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "ok",
+    "word_mae_ms": 14.448,
+    "word_acc_20ms": 77.42,
+    "word_matched": 990,
+    "word_reference": 990,
+    "phone_mae_ms": 12.41
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [9, 10] of s07_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "ok",
+    "word_mae_ms": 15.55,
+    "word_acc_20ms": 79.8,
+    "word_matched": 1218,
+    "word_reference": 1218,
+    "phone_mae_ms": 13.804
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "ok",
+    "word_mae_ms": 17.43,
+    "word_acc_20ms": 75.39,
+    "word_matched": 1020,
+    "word_reference": 1020,
+    "phone_mae_ms": 14.255
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "ok",
+    "word_mae_ms": 12.079,
+    "word_acc_20ms": 81.63,
+    "word_matched": 1361,
+    "word_reference": 1362,
+    "phone_mae_ms": 11.276
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [5] of s15_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "ok",
+    "word_mae_ms": 14.769,
+    "word_acc_20ms": 78.22,
+    "word_matched": 1065,
+    "word_reference": 1065,
+    "phone_mae_ms": 11.883
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "ok",
+    "word_mae_ms": 14.656,
+    "word_acc_20ms": 81.54,
+    "word_matched": 1200,
+    "word_reference": 1201,
+    "phone_mae_ms": 12.343
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "ok",
+    "word_mae_ms": 19.722,
+    "word_acc_20ms": 69.94,
+    "word_matched": 1146,
+    "word_reference": 1146,
+    "phone_mae_ms": 15.076
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "ok",
+    "word_mae_ms": 18.235,
+    "word_acc_20ms": 79.95,
+    "word_matched": 873,
+    "word_reference": 874,
+    "phone_mae_ms": 14.323
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "ok",
+    "word_mae_ms": 18.123,
+    "word_acc_20ms": 72.35,
+    "word_matched": 1112,
+    "word_reference": 1112,
+    "phone_mae_ms": 15.919
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "ok",
+    "word_mae_ms": 15.471,
+    "word_acc_20ms": 77.62,
+    "word_matched": 1001,
+    "word_reference": 1001,
+    "phone_mae_ms": 14.604
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "ok",
+    "word_mae_ms": 14.146,
+    "word_acc_20ms": 76.98,
+    "word_matched": 1097,
+    "word_reference": 1098,
+    "phone_mae_ms": 12.86
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "ok",
+    "word_mae_ms": 16.394,
+    "word_acc_20ms": 78.14,
+    "word_matched": 1107,
+    "word_reference": 1109,
+    "phone_mae_ms": 11.557
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "ok",
+    "word_mae_ms": 17.247,
+    "word_acc_20ms": 75.5,
+    "word_matched": 1402,
+    "word_reference": 1402,
+    "phone_mae_ms": 17.724
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "ok",
+    "word_mae_ms": 15.659,
+    "word_acc_20ms": 75.8,
+    "word_matched": 1256,
+    "word_reference": 1256,
+    "phone_mae_ms": 13.898
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "ok",
+    "word_mae_ms": 22.663,
+    "word_acc_20ms": 70.81,
+    "word_matched": 1247,
+    "word_reference": 1247,
+    "phone_mae_ms": 21.418
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "ok",
+    "word_mae_ms": 24.428,
+    "word_acc_20ms": 65.76,
+    "word_matched": 1348,
+    "word_reference": 1348,
+    "phone_mae_ms": 22.396
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "ok",
+    "word_mae_ms": 16.513,
+    "word_acc_20ms": 76.73,
+    "word_matched": 1113,
+    "word_reference": 1113,
+    "phone_mae_ms": 16.539
+  }
+]

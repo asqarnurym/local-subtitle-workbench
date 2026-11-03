@@ -1,0 +1,422 @@
+[
+  {
+    "mode": "A2_proposed",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 4, 5, 6, 7, 9, 10] of s02_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6, 7, 10] of s03_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] of s07_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 5, 6, 7, 8, 9, 10, 11] of s09_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 5, 10] of s11_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 7, 8, 10, 11] of s12_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 5, 6, 7, 8, 9, 10, 11, 12, 13] of s15_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3, 4, 5, 6, 7, 8, 9, 10, 11] of s17_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 3, 6, 7, 8, 9, 10] of s18_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1, 2, 3, 4, 5, 6, 7, 10, 11, 12] of s19_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s20_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s22_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3, 4, 5, 6, 7, 8, 11] of s27_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 4, 5, 6, 7, 8, 11, 12, 13] of s31_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8] of s33_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12] of s34_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s35_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 4, 5, 6, 7, 8] of s36_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 11] of s37_L05.wav"
+  },
+  {
+    "mode": "A2_proposed",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12] of s38_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 4, 5, 6, 7, 9, 10] of s02_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6, 7, 10] of s03_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] of s07_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 5, 6, 7, 8, 9, 10, 11] of s09_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 5, 10] of s11_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 7, 8, 10, 11] of s12_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 5, 6, 7, 8, 9, 10, 11, 12, 13] of s15_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3, 4, 5, 6, 7, 8, 9, 10, 11] of s17_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 3, 6, 7, 8, 9, 10] of s18_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1, 2, 3, 4, 5, 6, 7, 10, 11, 12] of s19_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s20_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s22_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3, 4, 5, 6, 7, 8, 11] of s27_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 4, 5, 6, 7, 8, 11, 12, 13] of s31_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8] of s33_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12] of s34_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s35_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 4, 5, 6, 7, 8] of s36_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 11] of s37_L05.wav"
+  },
+  {
+    "mode": "A2_const",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12] of s38_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s02_L05",
+    "speaker": "s02",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 4, 5, 6, 7, 9, 10] of s02_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s03_L05",
+    "speaker": "s03",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [6, 7, 10] of s03_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s07_L05",
+    "speaker": "s07",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] of s07_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s09_L05",
+    "speaker": "s09",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 5, 6, 7, 8, 9, 10, 11] of s09_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s11_L05",
+    "speaker": "s11",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [2, 3, 5, 10] of s11_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s12_L05",
+    "speaker": "s12",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 7, 8, 10, 11] of s12_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s15_L05",
+    "speaker": "s15",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 5, 6, 7, 8, 9, 10, 11, 12, 13] of s15_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s17_L05",
+    "speaker": "s17",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3, 4, 5, 6, 7, 8, 9, 10, 11] of s17_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s18_L05",
+    "speaker": "s18",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 3, 6, 7, 8, 9, 10] of s18_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s19_L05",
+    "speaker": "s19",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [1, 2, 3, 4, 5, 6, 7, 10, 11, 12] of s19_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s20_L05",
+    "speaker": "s20",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s20_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s22_L05",
+    "speaker": "s22",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s22_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s27_L05",
+    "speaker": "s27",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [3, 4, 5, 6, 7, 8, 11] of s27_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s31_L05",
+    "speaker": "s31",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 4, 5, 6, 7, 8, 11, 12, 13] of s31_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s33_L05",
+    "speaker": "s33",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8] of s33_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s34_L05",
+    "speaker": "s34",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12] of s34_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s35_L05",
+    "speaker": "s35",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] of s35_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s36_L05",
+    "speaker": "s36",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 4, 5, 6, 7, 8] of s36_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s37_L05",
+    "speaker": "s37",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 11] of s37_L05.wav"
+  },
+  {
+    "mode": "A2_brqe",
+    "utterance": "s38_L05",
+    "speaker": "s38",
+    "status": "failed",
+    "error": "AlignmentFailure: mfa produced no alignment for chunk(s) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12] of s38_L05.wav"
+  }
+]

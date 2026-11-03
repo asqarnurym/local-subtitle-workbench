@@ -75,3 +75,5 @@ reports/s1b_long_20261103/*
 !reports/s1b_long_20261103/figures/
 !reports/s1b_long_20261103/runs/
 reports/s1b_long_20261103/runs/*/benchmark_predictions.json
+# Word lock files
+~$*

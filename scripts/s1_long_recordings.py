@@ -5,6 +5,8 @@ benchmark (``speech_benchmark.run_benchmark``); the pipeline core is not changed
 
   python scripts/s1_long_recordings.py build   --output-dir reports/s1_long_20261103
   python scripts/s1_long_recordings.py run     --output-dir reports/s1_long_20261103
+  python scripts/s1_long_recordings.py run     --output-dir reports/s1b_long_20261103 \
+      --reconciler seam_safe   # S1b, docs/S1B_SEAM_SAFE_PROTOCOL.md
   python scripts/s1_long_recordings.py analyze --output-dir reports/s1_long_20261103
   python scripts/s1_long_recordings.py verify  --output-dir reports/s1_long_20261103
 
@@ -22,6 +24,7 @@ import subprocess
 import sys
 import time
 import wave
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 
@@ -61,6 +64,8 @@ DRIFT_EARLY, DRIFT_LATE = (0.0, 120.0), (480.0, 600.0)
 POSITION_MODES = ["A2_proposed", "A2_brqe", "B2_proposed", "B2_brqe"]
 CODE_FILES = (
     "scripts/s1_long_recordings.py",
+    "scripts/seam_safe.py",
+    "docs/S1B_SEAM_SAFE_PROTOCOL.md",
     "scripts/speech_benchmark.py",
     "scripts/analyze_speaker_errors.py",
     "src/subtitle_workbench/pipeline.py",
@@ -351,9 +356,14 @@ def check_build(out: Path) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 
-def run(out: Path) -> int:
+def run(out: Path, reconciler: str = "frozen") -> int:
+    from scripts.seam_safe import seam_safe_reconciliation
+
     meta = check_build(out)
     dest = PROJECT_ROOT / meta["derived_dir"]
+    for record in sorted(out.glob("runs/*/run_record.json")):
+        used = read_json(record).get("reconciler", "frozen")
+        require(used == reconciler, f"{record.parent.name} used reconciler {used!r}")
     for length in LENGTHS:
         for variant, modes in VARIANTS.items():
             run_dir = out / "runs" / f"{length}_{variant}"
@@ -371,26 +381,30 @@ def run(out: Path) -> int:
             from subtitle_workbench.aligner import ForcedAligner
 
             aligner = IsolatingAligner(ForcedAligner(mfa_num_jobs=benchmark.MFA_NUM_JOBS))
-            benchmark.run_benchmark(
-                corpus="buckeye",
-                data_dir=dest / length,
-                output_dir=run_dir,
-                modes=modes,
-                refiner_dir=PROJECT_ROOT / REFINER_DIR,
-                transcriber=NullTranscriber() if variant == "noanchor" else None,
-                aligner=aligner,
-            )
+            seam_log: list[dict[str, Any]] = []
+            with seam_safe_reconciliation(seam_log) if reconciler == "seam_safe" else nullcontext():
+                benchmark.run_benchmark(
+                    corpus="buckeye",
+                    data_dir=dest / length,
+                    output_dir=run_dir,
+                    modes=modes,
+                    refiner_dir=PROJECT_ROOT / REFINER_DIR,
+                    transcriber=NullTranscriber() if variant == "noanchor" else None,
+                    aligner=aligner,
+                )
             write_json(
                 run_dir / "run_record.json",
                 {
                     "length": length,
                     "variant": variant,
+                    "reconciler": reconciler,
                     "seconds": round(time.perf_counter() - t0, 1),
                     "git_before": before,
                     "git_after": git_state(),
                     "code": code_hashes(),
                     "build_sha256": sha_file(out / "build.json"),
                     "isolated_chunking_failures": aligner.isolated_failures,
+                    "seam_reconciliation_log": seam_log,
                     "refiner_files": {
                         f.name: sha_file(f) for f in sorted((PROJECT_ROOT / REFINER_DIR).glob("*"))
                     },
@@ -568,6 +582,7 @@ def analyze_runs(out: Path) -> dict[str, Any]:
         ):
             inputs[f"{run_dir.name}/{f}"] = sha_file(run_dir / f)
         summary[f"{L}_{v}"] = {
+            "reconciler": read_json(run_dir / "run_record.json").get("reconciler", "frozen"),
             "n_utterances": res["n_utterances"],
             "audio_seconds": res["total_audio_duration_seconds"],
             "rtf_total": res["runtime"]["rtf_total"],
@@ -669,9 +684,15 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("command", choices=["build", "run", "analyze", "verify"])
     p.add_argument("--output-dir", type=Path, required=True)
+    p.add_argument("--reconciler", choices=["frozen", "seam_safe"], default="frozen")
     args = p.parse_args(argv)
     out = args.output_dir if args.output_dir.is_absolute() else PROJECT_ROOT / args.output_dir
-    commands = {"build": build, "run": run, "analyze": analyze, "verify": verify}
+    commands = {
+        "build": build,
+        "run": lambda o: run(o, args.reconciler),
+        "analyze": analyze,
+        "verify": verify,
+    }
     try:
         return commands[args.command](out)
     except S1Error as err:

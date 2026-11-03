@@ -184,3 +184,23 @@ python scripts/s1_long_recordings.py run   --output-dir reports/s1b_long_2026110
   при распознавании в другом составе файлов.
 
 По протоколу разрешён длинный прогон S1b с `--reconciler stitch`. Его объём утверждает автор.
+
+## Поправка 4 (03.11.2026, до длинного прогона): объём и параллельный MFA
+
+- **Объём утверждён автором:** полный, как зарегистрировано в S1 — длины L01, L05 и L10;
+  вариант с якорением (все 9 режимов) и без якорения (A2); сшивка `stitch`.
+- **Сборка** `reports/s1b_long_20261103` должна совпасть по хэшам аудио и TextGrid со
+  сборкой S1. Если не совпадёт, прогон не начинается.
+- **Параллельный MFA:** `--mfa-workers 4`. Каждая запись по-прежнему выравнивается одним
+  вызовом MFA с `num_jobs = 1`. Параллельно идут только разные записи, каждая в своей
+  копии каталога MFA (`scripts/parallel_mfa.py`, тесты `tests/test_parallel_mfa.py`).
+- **Пробный прогон** этого пути: две записи L01, оба варианта, в неверсионируемый каталог.
+  Его числа в выводы не входят.
+- **Команды:**
+  ```
+  python scripts/s1_long_recordings.py build --output-dir reports/s1b_long_20261103
+  python scripts/s1_long_recordings.py run   --output-dir reports/s1b_long_20261103 --reconciler stitch --mfa-workers 4
+  python scripts/s1_long_recordings.py analyze --output-dir reports/s1b_long_20261103
+  python scripts/s1_long_recordings.py verify  --output-dir reports/s1b_long_20261103
+  ```
+- Затем по цепочке идут S2 и S3 (`docs/S2_S3_PROTOCOL.md`).

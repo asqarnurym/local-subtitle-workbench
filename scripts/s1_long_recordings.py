@@ -366,7 +366,7 @@ def check_build(out: Path) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 
-def run(out: Path, reconciler: str = "frozen") -> int:
+def run(out: Path, reconciler: str = "frozen", mfa_workers: int = 1) -> int:
     from scripts.seam_safe import seam_safe_reconciliation
     from scripts.seam_stitch import stitched_pipeline
 
@@ -392,7 +392,12 @@ def run(out: Path, reconciler: str = "frozen") -> int:
             t0 = time.perf_counter()
             from subtitle_workbench.aligner import ForcedAligner
 
-            aligner = IsolatingAligner(ForcedAligner(mfa_num_jobs=benchmark.MFA_NUM_JOBS))
+            if mfa_workers > 1:  # recordings in parallel; each still one MFA call
+                from scripts.parallel_mfa import ParallelAligner
+
+                aligner = ParallelAligner.build(mfa_workers, benchmark.MFA_NUM_JOBS, isolate=True)
+            else:
+                aligner = IsolatingAligner(ForcedAligner(mfa_num_jobs=benchmark.MFA_NUM_JOBS))
             seam_log: list[dict[str, Any]] = []
             with contexts[reconciler](seam_log) if reconciler in contexts else nullcontext():
                 benchmark.run_benchmark(
@@ -410,6 +415,8 @@ def run(out: Path, reconciler: str = "frozen") -> int:
                     "length": length,
                     "variant": variant,
                     "reconciler": reconciler,
+                    "mfa_workers": mfa_workers,
+                    "mfa_retries": aligner.mfa_retries,
                     "seconds": round(time.perf_counter() - t0, 1),
                     "git_before": before,
                     "git_after": git_state(),
@@ -697,11 +704,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("command", choices=["build", "run", "analyze", "verify"])
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--reconciler", choices=["frozen", "seam_safe", "stitch"], default="frozen")
+    p.add_argument("--mfa-workers", type=int, default=1, help="recordings aligned in parallel")
     args = p.parse_args(argv)
     out = args.output_dir if args.output_dir.is_absolute() else PROJECT_ROOT / args.output_dir
     commands = {
         "build": build,
-        "run": lambda o: run(o, args.reconciler),
+        "run": lambda o: run(o, args.reconciler, args.mfa_workers),
         "analyze": analyze,
         "verify": verify,
     }

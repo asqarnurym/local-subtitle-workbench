@@ -142,7 +142,8 @@ def main(argv: list[str] | None = None) -> int:
             "single layout produced more than one chunk",
         )
 
-    aligner = ForcedAligner(mfa_num_jobs=benchmark.MFA_NUM_JOBS)
+    # One call per recording; MFA NoAlignmentsError becomes that recording's failure
+    aligner = s1.IsolatingAligner(ForcedAligner(mfa_num_jobs=benchmark.MFA_NUM_JOBS))
     seam_log: list[dict[str, Any]] = []
     aligned: dict[tuple[str, str], dict[str, Any]] = {}
     with seam_safe_reconciliation(seam_log):
@@ -184,6 +185,7 @@ def main(argv: list[str] | None = None) -> int:
                 "log": seam_log,
             },
             "mfa_retries": aligner.mfa_retries,
+            "isolated_failures": aligner.isolated_failures,
             "build_sha256": s1.sha_file(PROJECT_ROOT / S1_BUILD / "build.json"),
             "code": s1.code_hashes(),
             "git_before": before,

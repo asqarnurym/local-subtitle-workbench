@@ -4,7 +4,11 @@
 %
 % Integrity Protocol:
 % 100% of entries are physically backed by local PDF files in 'Thesis/Article base/'.
-% Temporal Standard: 100% >= 2015, >= 85% 2020-2026; zero 20th century legacy relics.
+% Temporal Standard: most entries 2020-2026; primary sources of corpora, standards and
+% classic methods (TIMIT 1993, Moreno 1998, ITU 1998, Buckeye 2002/2005) are allowed as a
+% small share (relaxed 03.11.2026, docs/IMPROVEMENT_PLAN.md section 10.1).
+% Entries marked "verified 2026-11-03" are checked against the PDF in literature/pdf/
+% (docs/LITERATURE_ANNOTATIONS.md, SHA-256 there).
 % Positive Academic Terminology: self-contained edge deployment, local deterministic
 % processing, data sovereignty, student privacy compliance, and bounded execution latency.
 % ==============================================================================
@@ -316,4 +320,113 @@
     year = {2022},
     doi = {10.1007/s10648-021-09652-7},
     note = {Local PDF: Thesis/Article base/Latest trends to optimize computer-based learning_Guidelines from cognitive load theory.pdf}
+}
+
+% ----- Added 2026-11-03: technical core (verified against literature/pdf/) -----
+
+@inproceedings{Rousso2024,
+    author = {Rousso, Rotem and Cohen, Eyal and Keshet, Joseph and Chodroff, Eleanor},
+    title = {Tradition or Innovation: A Comparison of Modern {ASR} Methods for Forced Alignment},
+    booktitle = {Proceedings of Interspeech 2024},
+    year = {2024},
+    doi = {10.21437/Interspeech.2024-429},
+    eprint = {2406.19363},
+    archivePrefix = {arXiv},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/Rousso2024_ForcedAlignmentComparison.pdf (arXiv v1)}
+}
+
+@inproceedings{Rastorgueva2023,
+    author = {Rastorgueva, Elena and Lavrukhin, Vitaly and Ginsburg, Boris},
+    title = {{NeMo} Forced Aligner and its application to word alignment for subtitle generation},
+    booktitle = {Proceedings of Interspeech 2023},
+    year = {2023},
+    note = {Verified 2026-11-03. Show and Tell paper. Local PDF: literature/pdf/Rastorgueva2023_NeMoForcedAligner.pdf}
+}
+
+@inproceedings{Stolcke2014,
+    author = {Stolcke, Andreas and Ryant, Neville and Mitra, Vikramjit and Yuan, Jiahong and Wang, Wen and Liberman, Mark},
+    title = {Highly Accurate Phonetic Segmentation Using Boundary Correction Models and System Fusion},
+    booktitle = {Proceedings of IEEE ICASSP 2014},
+    pages = {5552--5556},
+    year = {2014},
+    doi = {10.1109/ICASSP.2014.6854665},
+    note = {Verified 2026-11-03 (title, authors, abstract). Pages and DOI from the ICASSP index record, not printed in the PDF. Local PDF: literature/pdf/Stolcke2014_BoundaryCorrection.pdf}
+}
+
+@inproceedings{Moreno1998,
+    author = {Moreno, Pedro J. and Joerg, Chris and Van Thong, Jean-Manuel and Glickman, Oren},
+    title = {A Recursive Algorithm for the Forced Alignment of Very Long Audio Segments},
+    booktitle = {Proceedings of the 5th International Conference on Spoken Language Processing (ICSLP 1998)},
+    year = {1998},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/Moreno1998_RecursiveLongAlignment.pdf (ISCA Archive moreno98b)}
+}
+
+@inproceedings{Kurzinger2020,
+    author = {K{\"u}rzinger, Ludwig and Winkelbauer, Dominik and Li, Lujun and Watzel, Tobias and Rigoll, Gerhard},
+    title = {{CTC}-Segmentation of Large Corpora for German End-to-End Speech Recognition},
+    booktitle = {Speech and Computer (SPECOM 2020), LNCS 12335},
+    pages = {267--278},
+    year = {2020},
+    doi = {10.1007/978-3-030-60276-5_27},
+    eprint = {2007.09127},
+    archivePrefix = {arXiv},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/Kurzinger2020_CTCSegmentation.pdf (arXiv)}
+}
+
+@inproceedings{Zhu2022,
+    author = {Zhu, Jian and Zhang, Cong and Jurgens, David},
+    title = {Phone-to-Audio Alignment without Text: A Semi-Supervised Approach},
+    booktitle = {Proceedings of IEEE ICASSP 2022},
+    pages = {8167--8171},
+    year = {2022},
+    doi = {10.1109/ICASSP43922.2022.9746112},
+    eprint = {2110.03876},
+    archivePrefix = {arXiv},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/Zhu2022_Charsiu.pdf (arXiv)}
+}
+
+@article{Pitt2005,
+    author = {Pitt, Mark A. and Johnson, Keith and Hume, Elizabeth and Kiesling, Scott and Raymond, William},
+    title = {The {Buckeye} corpus of conversational speech: labeling conventions and a test of transcriber reliability},
+    journal = {Speech Communication},
+    volume = {45},
+    number = {1},
+    pages = {89--95},
+    year = {2005},
+    doi = {10.1016/j.specom.2004.09.001},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/Pitt2005_BuckeyeCorpus.pdf (author copy)}
+}
+
+@inproceedings{Raymond2002,
+    author = {Raymond, William D. and Pitt, Mark and Johnson, Keith and Hume, Elizabeth and Makashay, Matthew and Dautricourt, Robin and Hilts, Craig},
+    title = {An analysis of transcription consistency in spontaneous speech from the {Buckeye} corpus},
+    booktitle = {Proceedings of the 7th International Conference on Spoken Language Processing (ICSLP 2002)},
+    year = {2002},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/Raymond2002_BuckeyeTranscriptionConsistency.pdf}
+}
+
+@techreport{Garofolo1993,
+    author = {Garofolo, John S. and Lamel, Lori F. and Fisher, William M. and Fiscus, Jonathan G. and Pallett, David S. and Dahlgren, Nancy L.},
+    title = {{DARPA TIMIT} Acoustic-Phonetic Continuous Speech Corpus {CD-ROM}},
+    institution = {National Institute of Standards and Technology},
+    number = {NISTIR 4930},
+    year = {1993},
+    doi = {10.6028/NIST.IR.4930},
+    note = {Verified 2026-11-03 (title page; scanned). Local PDF: literature/pdf/Garofolo1993_TIMIT_NISTIR4930.pdf}
+}
+
+@misc{ITU1998,
+    author = {{ITU-R}},
+    title = {Recommendation {ITU-R} {BT.1359-1}: Relative timing of sound and vision for broadcasting},
+    howpublished = {International Telecommunication Union},
+    year = {1998},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/ITU1998_BT1359-1.pdf}
+}
+
+@misc{EBU2007,
+    author = {{European Broadcasting Union}},
+    title = {{EBU} Recommendation {R37}-2007: The relative timing of the sound and vision components of a television signal},
+    howpublished = {EBU Technical Recommendation, Geneva},
+    year = {2007},
+    note = {Verified 2026-11-03. Local PDF: literature/pdf/EBU2007_R37.pdf}
 }

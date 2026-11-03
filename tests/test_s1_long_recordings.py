@@ -162,3 +162,24 @@ def test_isolating_aligner_records_chunking_errors_per_recording() -> None:
     assert aligner.mfa_retries == ["kept"]
     with pytest.raises(RuntimeError, match="engine crash"):
         aligner.align_requests([SimpleNamespace(audio_path="crash.wav")], engine="mfa")
+
+
+def test_isolating_aligner_separates_no_alignments_from_mfa_crashes() -> None:
+    from types import SimpleNamespace
+
+    from scripts.s1_long_recordings import IsolatingAligner
+    from subtitle_workbench.aligner import AlignmentFailure
+    from subtitle_workbench.mfa_wrapper import MFAExecutionError
+
+    class Inner:
+        def align_requests(self, requests, engine):
+            if requests[0].audio_path == "beam.wav":
+                raise MFAExecutionError("exit code 1: ... NoAlignmentsError: no alignments")
+            raise MFAExecutionError("exit code 3221226505: native crash")
+
+    aligner = IsolatingAligner(Inner())
+    out = aligner.align_requests([SimpleNamespace(audio_path="beam.wav")], engine="mfa")
+    assert isinstance(out[0], AlignmentFailure)
+    assert "NoAlignmentsError" in aligner.isolated_failures[0]["error"]
+    with pytest.raises(MFAExecutionError, match="native crash"):
+        aligner.align_requests([SimpleNamespace(audio_path="crash.wav")], engine="mfa")

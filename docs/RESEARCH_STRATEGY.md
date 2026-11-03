@@ -5,6 +5,11 @@
 **Target Publication:** Scientific Journal of Astana IT University (Trimester 5)  
 **Status:** Approved Research Strategy
 
+> **Пометка 03.11.2026.** Заявления §1 о «доказанном устранении дрейфа на 60-минутных
+> записях» и «гарантированной точности < 20 мс» результатами не подтверждены (см. S1)
+> и в статье не используются. Действующие RQ и формулировка gap — в
+> `docs/IMPROVEMENT_PLAN.md` §10.1. Документ сохраняется как исторический.
+
 ---
 
 ## 1. The Core Scientific Contribution (Problem Statement & Novelty)

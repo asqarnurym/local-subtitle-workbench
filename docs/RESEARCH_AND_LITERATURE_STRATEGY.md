@@ -111,6 +111,14 @@ While the 54 existing local papers comprehensively cover ASR, subtitles, and cog
 └───────────────────────────┴────────────────────────────────────────────────────────┴─────────────────────┘
 ```
 
+> **Пометка 03.11.2026.** Матрица выше проверена по скачанным PDF
+> (`docs/LITERATURE_ANNOTATIONS.md`). Указанные в ней пороги неточны:
+> - Raymond 2002 не даёт «10–16 мс»: согласие сегментации там 75 % в пределах 20 % длины пары фонем;
+> - ITU-R BT.1359-1: заметность рассинхрона от +45 до −125 мс, приемлемость от +90 до −185 мс;
+> - EBU R37: сквозной допуск ≤ 40 мс (звук раньше) и ≤ 60 мс (звук позже).
+>
+> Dixon & Spitz 1980 и van Wassenhove 2007 в открытом доступе не найдены и не обязательны.
+
 ### Action Items for Literature Grounding:
 1. Search and download the 7 gap articles as full-text PDFs into `Thesis/Article base/`.
 2. Extract exact quotes, table numbers, and findings to an annotated index file (`docs/LITERATURE_ANNOTATIONS.md`).

@@ -149,10 +149,12 @@ class IsolatingAligner:
 
     The frozen ``align_requests`` raises when chunk reconciliation of one recording
     fails (``ChunkingError``, e.g. overlapping chunk outputs), which aborts the whole
-    batch. Here that error becomes the failure of that recording only. Any other error
-    (e.g. an MFA crash after its retries) still stops the run. Every run has one
-    recording per speaker, and MFA runs once per speaker in both cases, so the
-    computation per recording is unchanged.
+    batch. Here that error becomes the failure of that recording only. So does MFA's
+    deterministic ``NoAlignmentsError`` (no alignment within the beam for the only
+    utterance of a call), which otherwise aborts the run after its retries (S1b
+    amendment). Any other error (e.g. a native MFA crash after its retries) still stops
+    the run. Every run has one recording per speaker, and MFA runs once per speaker in
+    both cases, so the computation per recording is unchanged.
     """
 
     def __init__(self, inner: Any) -> None:
@@ -165,13 +167,20 @@ class IsolatingAligner:
     def align_requests(self, requests: list, engine: str) -> list:
         from subtitle_workbench.aligner import AlignmentFailure
         from subtitle_workbench.chunker import ChunkingError
+        from subtitle_workbench.mfa_wrapper import MFAExecutionError
 
         out: list = []
         for req in requests:
             try:
                 out += self.inner.align_requests([req], engine=engine)
-            except ChunkingError as err:
-                text = f"{type(err).__name__}: {err}"
+            except (ChunkingError, MFAExecutionError) as err:
+                if isinstance(err, MFAExecutionError) and "NoAlignmentsError" not in str(err):
+                    raise
+                text = (
+                    f"{type(err).__name__}: {err}"
+                    if isinstance(err, ChunkingError)
+                    else "MFAExecutionError: NoAlignmentsError (no alignment within the beam)"
+                )
                 self.isolated_failures.append(
                     {"engine": engine, "audio": Path(req.audio_path).name, "error": text}
                 )

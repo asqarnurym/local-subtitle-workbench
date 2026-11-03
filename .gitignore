@@ -60,3 +60,6 @@ reports/e1_analysis_20261102/figures/*
 reports/e1_analysis_20261102/tables/*
 !reports/e1_analysis_20261102/tables/*.tex
 !reports/brqe_sensitivity_20261102/
+
+# Open-access literature PDFs (docs/LITERATURE_ANNOTATIONS.md lists URLs and SHA-256)
+literature/

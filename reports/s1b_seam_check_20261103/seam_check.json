@@ -1,0 +1,1483 @@
+{
+  "protocol": "docs/S1B_SEAM_SAFE_PROTOCOL.md",
+  "created_utc": "2026-11-03T05:12:18.615818+00:00",
+  "near_seam_s": 1.0,
+  "max_excess_ms": 10.0,
+  "single_max_chunk_s": 64.870375,
+  "results": {
+    "A": {
+      "mode": "A2 (known text + MFA)",
+      "n_boundaries_near": 584,
+      "n_boundaries_far": 8076,
+      "near_mae_multi_ms": 128.3988013698631,
+      "near_mae_single_ms": 16.567979452054896,
+      "near_excess_ms": 111.8308219178082,
+      "far_mae_multi_ms": 43.943103021297645,
+      "far_mae_single_ms": 19.180423476968773,
+      "failed": {
+        "multi": [],
+        "single": [
+          "s34"
+        ]
+      },
+      "pass": false,
+      "per_speaker": {
+        "s02": {
+          "n_seams": 2,
+          "n_words_both": 278,
+          "near": {
+            "n_words": 19,
+            "mae_multi_ms": 148.31052631578982,
+            "mae_single_ms": 17.91578947368443
+          },
+          "far": {
+            "n_words": 259,
+            "mae_multi_ms": 16.738610038609774,
+            "mae_single_ms": 13.012741312741047
+          }
+        },
+        "s03": {
+          "n_seams": 2,
+          "n_words_both": 202,
+          "near": {
+            "n_words": 13,
+            "mae_multi_ms": 189.4269230769231,
+            "mae_single_ms": 11.211538461537202
+          },
+          "far": {
+            "n_words": 189,
+            "mae_multi_ms": 51.21402116402115,
+            "mae_single_ms": 15.833068783068757
+          }
+        },
+        "s07": {
+          "n_seams": 2,
+          "n_words_both": 243,
+          "near": {
+            "n_words": 17,
+            "mae_multi_ms": 54.523529411764486,
+            "mae_single_ms": 25.417647058823224
+          },
+          "far": {
+            "n_words": 226,
+            "mae_multi_ms": 18.703761061947212,
+            "mae_single_ms": 18.651548672566694
+          }
+        },
+        "s09": {
+          "n_seams": 2,
+          "n_words_both": 244,
+          "near": {
+            "n_words": 17,
+            "mae_multi_ms": 34.91764705882407,
+            "mae_single_ms": 12.529411764705834
+          },
+          "far": {
+            "n_words": 227,
+            "mae_multi_ms": 15.783039647577192,
+            "mae_single_ms": 15.753083700440651
+          }
+        },
+        "s11": {
+          "n_seams": 2,
+          "n_words_both": 210,
+          "near": {
+            "n_words": 17,
+            "mae_multi_ms": 24.56470588235274,
+            "mae_single_ms": 18.917647058823533
+          },
+          "far": {
+            "n_words": 193,
+            "mae_multi_ms": 18.933160621761477,
+            "mae_single_ms": 19.002590673574932
+          }
+        },
+        "s12": {
+          "n_seams": 2,
+          "n_words_both": 266,
+          "near": {
+            "n_words": 18,
+            "mae_multi_ms": 30.158333333333506,
+            "mae_single_ms": 11.263888888888395
+          },
+          "far": {
+            "n_words": 248,
+            "mae_multi_ms": 58.693145161290325,
+            "mae_single_ms": 13.926612903225767
+          }
+        },
+        "s15": {
+          "n_seams": 2,
+          "n_words_both": 206,
+          "near": {
+            "n_words": 18,
+            "mae_multi_ms": 136.30833333333342,
+            "mae_single_ms": 8.041666666667169
+          },
+          "far": {
+            "n_words": 188,
+            "mae_multi_ms": 42.90132978723411,
+            "mae_single_ms": 19.27632978723417
+          }
+        },
+        "s17": {
+          "n_seams": 2,
+          "n_words_both": 213,
+          "near": {
+            "n_words": 12,
+            "mae_multi_ms": 73.87500000000044,
+            "mae_single_ms": 12.291666666667034
+          },
+          "far": {
+            "n_words": 201,
+            "mae_multi_ms": 15.01542288557208,
+            "mae_single_ms": 15.254228855721323
+          }
+        },
+        "s18": {
+          "n_seams": 2,
+          "n_words_both": 246,
+          "near": {
+            "n_words": 21,
+            "mae_multi_ms": 108.9714285714287,
+            "mae_single_ms": 11.628571428571565
+          },
+          "far": {
+            "n_words": 225,
+            "mae_multi_ms": 16.856222222222065,
+            "mae_single_ms": 16.656222222222056
+          }
+        },
+        "s19": {
+          "n_seams": 2,
+          "n_words_both": 241,
+          "near": {
+            "n_words": 12,
+            "mae_multi_ms": 138.88750000000047,
+            "mae_single_ms": 22.279166666667887
+          },
+          "far": {
+            "n_words": 229,
+            "mae_multi_ms": 19.006331877729007,
+            "mae_single_ms": 19.000218340611088
+          }
+        },
+        "s20": {
+          "n_seams": 2,
+          "n_words_both": 174,
+          "near": {
+            "n_words": 9,
+            "mae_multi_ms": 283.8888888888894,
+            "mae_single_ms": 11.122222222221762
+          },
+          "far": {
+            "n_words": 165,
+            "mae_multi_ms": 89.52848484848485,
+            "mae_single_ms": 16.065454545454582
+          }
+        },
+        "s22": {
+          "n_seams": 2,
+          "n_words_both": 209,
+          "near": {
+            "n_words": 14,
+            "mae_multi_ms": 147.70714285714283,
+            "mae_single_ms": 16.91428571428626
+          },
+          "far": {
+            "n_words": 195,
+            "mae_multi_ms": 34.656923076922865,
+            "mae_single_ms": 21.208205128204842
+          }
+        },
+        "s27": {
+          "n_seams": 2,
+          "n_words_both": 216,
+          "near": {
+            "n_words": 14,
+            "mae_multi_ms": 327.01071428571396,
+            "mae_single_ms": 13.48214285714341
+          },
+          "far": {
+            "n_words": 202,
+            "mae_multi_ms": 210.3131188118812,
+            "mae_single_ms": 15.595297029703056
+          }
+        },
+        "s31": {
+          "n_seams": 2,
+          "n_words_both": 226,
+          "near": {
+            "n_words": 13,
+            "mae_multi_ms": 167.5807692307688,
+            "mae_single_ms": 17.657692307692283
+          },
+          "far": {
+            "n_words": 213,
+            "mae_multi_ms": 32.08896713615042,
+            "mae_single_ms": 18.55892018779365
+          }
+        },
+        "s33": {
+          "n_seams": 2,
+          "n_words_both": 208,
+          "near": {
+            "n_words": 10,
+            "mae_multi_ms": 101.68500000000122,
+            "mae_single_ms": 32.3650000000006
+          },
+          "far": {
+            "n_words": 198,
+            "mae_multi_ms": 57.66085858585845,
+            "mae_single_ms": 22.61742424242404
+          }
+        },
+        "s34": {
+          "failed": {
+            "multi": null,
+            "single": "AlignmentFailure: MFAExecutionError: NoAlignmentsError (no alignment within the beam)"
+          }
+        },
+        "s35": {
+          "n_seams": 2,
+          "n_words_both": 248,
+          "near": {
+            "n_words": 23,
+            "mae_multi_ms": 70.43913043478287,
+            "mae_single_ms": 11.23913043478337
+          },
+          "far": {
+            "n_words": 225,
+            "mae_multi_ms": 14.562666666666713,
+            "mae_single_ms": 14.604000000000044
+          }
+        },
+        "s36": {
+          "n_seams": 2,
+          "n_words_both": 245,
+          "near": {
+            "n_words": 19,
+            "mae_multi_ms": 52.46578947368348,
+            "mae_single_ms": 21.386842105263145
+          },
+          "far": {
+            "n_words": 226,
+            "mae_multi_ms": 35.42654867256637,
+            "mae_single_ms": 28.35398230088492
+          }
+        },
+        "s37": {
+          "n_seams": 2,
+          "n_words_both": 239,
+          "near": {
+            "n_words": 12,
+            "mae_multi_ms": 437.47916666666623,
+            "mae_single_ms": 31.9458333333329
+          },
+          "far": {
+            "n_words": 227,
+            "mae_multi_ms": 84.84493392070492,
+            "mae_single_ms": 34.91541850220269
+          }
+        },
+        "s38": {
+          "n_seams": 2,
+          "n_words_both": 216,
+          "near": {
+            "n_words": 14,
+            "mae_multi_ms": 155.2000000000002,
+            "mae_single_ms": 17.957142857142625
+          },
+          "far": {
+            "n_words": 202,
+            "mae_multi_ms": 26.588613861386207,
+            "mae_single_ms": 26.727227722772355
+          }
+        }
+      }
+    },
+    "B": {
+      "mode": "B2 (Whisper text + MFA)",
+      "n_boundaries_near": 482,
+      "n_boundaries_far": 6906,
+      "near_mae_multi_ms": 172.12510373443968,
+      "near_mae_single_ms": 46.82717842323643,
+      "near_excess_ms": 125.29792531120324,
+      "far_mae_multi_ms": 77.45295395308423,
+      "far_mae_single_ms": 55.26896901245292,
+      "failed": {
+        "multi": [
+          "s07",
+          "s15"
+        ],
+        "single": [
+          "s07",
+          "s15"
+        ]
+      },
+      "pass": false,
+      "per_speaker": {
+        "s02": {
+          "n_seams": 2,
+          "n_words_both": 266,
+          "near": {
+            "n_words": 14,
+            "mae_multi_ms": 43.07142857142753,
+            "mae_single_ms": 20.74999999999846
+          },
+          "far": {
+            "n_words": 252,
+            "mae_multi_ms": 13.260714285714046,
+            "mae_single_ms": 13.61309523809505
+          }
+        },
+        "s03": {
+          "n_seams": 2,
+          "n_words_both": 184,
+          "near": {
+            "n_words": 7,
+            "mae_multi_ms": 301.9142857142855,
+            "mae_single_ms": 331.28571428571337
+          },
+          "far": {
+            "n_words": 177,
+            "mae_multi_ms": 44.376271186440505,
+            "mae_single_ms": 28.027118644067627
+          }
+        },
+        "s07": {
+          "failed": {
+            "multi": "AlignmentFailure: mfa produced no alignment for chunk(s) [2] of s07_L01.wav",
+            "single": "AlignmentFailure: MFAExecutionError: NoAlignmentsError (no alignment within the beam)"
+          }
+        },
+        "s09": {
+          "n_seams": 2,
+          "n_words_both": 234,
+          "near": {
+            "n_words": 19,
+            "mae_multi_ms": 192.40526315789472,
+            "mae_single_ms": 24.626315789473882
+          },
+          "far": {
+            "n_words": 215,
+            "mae_multi_ms": 22.728837209302466,
+            "mae_single_ms": 19.346976744186197
+          }
+        },
+        "s11": {
+          "n_seams": 2,
+          "n_words_both": 189,
+          "near": {
+            "n_words": 14,
+            "mae_multi_ms": 161.30714285714313,
+            "mae_single_ms": 14.18571428571485
+          },
+          "far": {
+            "n_words": 175,
+            "mae_multi_ms": 26.579999999999895,
+            "mae_single_ms": 26.551428571428463
+          }
+        },
+        "s12": {
+          "n_seams": 2,
+          "n_words_both": 235,
+          "near": {
+            "n_words": 23,
+            "mae_multi_ms": 187.15652173913037,
+            "mae_single_ms": 13.11739130434769
+          },
+          "far": {
+            "n_words": 212,
+            "mae_multi_ms": 115.39929245283021,
+            "mae_single_ms": 21.177594339622644
+          }
+        },
+        "s15": {
+          "failed": {
+            "multi": "AlignmentFailure: mfa produced no alignment for chunk(s) [2] of s15_L01.wav",
+            "single": "AlignmentFailure: MFAExecutionError: NoAlignmentsError (no alignment within the beam)"
+          }
+        },
+        "s17": {
+          "n_seams": 2,
+          "n_words_both": 199,
+          "near": {
+            "n_words": 12,
+            "mae_multi_ms": 39.879166666666684,
+            "mae_single_ms": 10.495833333332852
+          },
+          "far": {
+            "n_words": 187,
+            "mae_multi_ms": 51.169251336898384,
+            "mae_single_ms": 51.30935828877005
+          }
+        },
+        "s18": {
+          "n_seams": 2,
+          "n_words_both": 230,
+          "near": {
+            "n_words": 14,
+            "mae_multi_ms": 216.63928571428548,
+            "mae_single_ms": 16.824999999999996
+          },
+          "far": {
+            "n_words": 216,
+            "mae_multi_ms": 83.73402777777771,
+            "mae_single_ms": 28.735879629629554
+          }
+        },
+        "s19": {
+          "n_seams": 2,
+          "n_words_both": 206,
+          "near": {
+            "n_words": 10,
+            "mae_multi_ms": 223.22999999999934,
+            "mae_single_ms": 25.819999999999503
+          },
+          "far": {
+            "n_words": 196,
+            "mae_multi_ms": 36.67627551020411,
+            "mae_single_ms": 29.40433673469376
+          }
+        },
+        "s20": {
+          "n_seams": 2,
+          "n_words_both": 161,
+          "near": {
+            "n_words": 8,
+            "mae_multi_ms": 448.8125000000001,
+            "mae_single_ms": 39.57499999999969
+          },
+          "far": {
+            "n_words": 153,
+            "mae_multi_ms": 177.83954248366007,
+            "mae_single_ms": 61.710130718954225
+          }
+        },
+        "s22": {
+          "n_seams": 2,
+          "n_words_both": 191,
+          "near": {
+            "n_words": 15,
+            "mae_multi_ms": 111.33333333333334,
+            "mae_single_ms": 21.61333333333258
+          },
+          "far": {
+            "n_words": 176,
+            "mae_multi_ms": 22.45539772727251,
+            "mae_single_ms": 22.937784090908988
+          }
+        },
+        "s27": {
+          "n_seams": 2,
+          "n_words_both": 192,
+          "near": {
+            "n_words": 14,
+            "mae_multi_ms": 245.26428571428622,
+            "mae_single_ms": 140.37142857142913
+          },
+          "far": {
+            "n_words": 178,
+            "mae_multi_ms": 197.74719101123588,
+            "mae_single_ms": 197.8157303370786
+          }
+        },
+        "s31": {
+          "n_seams": 2,
+          "n_words_both": 219,
+          "near": {
+            "n_words": 18,
+            "mae_multi_ms": 41.64166666666603,
+            "mae_single_ms": 22.141666666666378
+          },
+          "far": {
+            "n_words": 201,
+            "mae_multi_ms": 81.25845771144309,
+            "mae_single_ms": 81.23358208955254
+          }
+        },
+        "s33": {
+          "n_seams": 2,
+          "n_words_both": 187,
+          "near": {
+            "n_words": 9,
+            "mae_multi_ms": 236.3555555555548,
+            "mae_single_ms": 12.933333333333191
+          },
+          "far": {
+            "n_words": 178,
+            "mae_multi_ms": 151.44887640449417,
+            "mae_single_ms": 169.38988764044916
+          }
+        },
+        "s34": {
+          "n_seams": 2,
+          "n_words_both": 226,
+          "near": {
+            "n_words": 9,
+            "mae_multi_ms": 212.27777777777928,
+            "mae_single_ms": 49.433333333334176
+          },
+          "far": {
+            "n_words": 217,
+            "mae_multi_ms": 24.246543778801758,
+            "mae_single_ms": 23.664516129032172
+          }
+        },
+        "s35": {
+          "n_seams": 2,
+          "n_words_both": 219,
+          "near": {
+            "n_words": 13,
+            "mae_multi_ms": 187.23461538461518,
+            "mae_single_ms": 20.25769230769237
+          },
+          "far": {
+            "n_words": 206,
+            "mae_multi_ms": 36.02475728155358,
+            "mae_single_ms": 31.553398058252604
+          }
+        },
+        "s36": {
+          "n_seams": 2,
+          "n_words_both": 193,
+          "near": {
+            "n_words": 15,
+            "mae_multi_ms": 106.70333333333264,
+            "mae_single_ms": 24.98333333333325
+          },
+          "far": {
+            "n_words": 178,
+            "mae_multi_ms": 79.27247191011242,
+            "mae_single_ms": 58.18595505617987
+          }
+        },
+        "s37": {
+          "n_seams": 2,
+          "n_words_both": 165,
+          "near": {
+            "n_words": 12,
+            "mae_multi_ms": 327.62083333333436,
+            "mae_single_ms": 154.87916666666868
+          },
+          "far": {
+            "n_words": 153,
+            "mae_multi_ms": 276.63267973856193,
+            "mae_single_ms": 171.2594771241829
+          }
+        },
+        "s38": {
+          "n_seams": 2,
+          "n_words_both": 198,
+          "near": {
+            "n_words": 15,
+            "mae_multi_ms": 90.38999999999918,
+            "mae_single_ms": 68.3633333333327
+          },
+          "far": {
+            "n_words": 183,
+            "mae_multi_ms": 47.173770491803424,
+            "mae_single_ms": 23.100546448087513
+          }
+        }
+      }
+    }
+  },
+  "seams": {
+    "n_multi_chunk_recordings": 38,
+    "frozen_reconciler_would_fail": 37,
+    "monotone_pass_used": 33,
+    "words_clipped": 208,
+    "words_total": 8571,
+    "log": [
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          26.61,
+          51.88
+        ],
+        "n_words": 278,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 8,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          23.98,
+          49.46
+        ],
+        "n_words": 202,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          26.54,
+          47.66
+        ],
+        "n_words": 243,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.3,
+          49.96
+        ],
+        "n_words": 244,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 3,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          24.68,
+          46.02
+        ],
+        "n_words": 210,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.22,
+          57.44
+        ],
+        "n_words": 266,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 7,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          25.4,
+          50.56
+        ],
+        "n_words": 206,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 6,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          23.86,
+          45.6
+        ],
+        "n_words": 213,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          22.22,
+          49.97
+        ],
+        "n_words": 248,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 6,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          27.89,
+          51.17
+        ],
+        "n_words": 241,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 4,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          27.72,
+          55.86
+        ],
+        "n_words": 174,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 6,
+        "max_clip_shift_ms": 470.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          23.3,
+          47.34
+        ],
+        "n_words": 209,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 7,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          21.41,
+          46.76
+        ],
+        "n_words": 216,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 7,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          23.08,
+          43.84
+        ],
+        "n_words": 228,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 6,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          22.22,
+          46.35
+        ],
+        "n_words": 212,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 4,
+        "max_clip_shift_ms": 500.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          25.14,
+          54.54
+        ],
+        "n_words": 271,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 4,
+        "max_clip_shift_ms": 500.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          28.04,
+          48.72
+        ],
+        "n_words": 248,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 470.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.98,
+          58.84
+        ],
+        "n_words": 245,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.98,
+          49.66
+        ],
+        "n_words": 239,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 9,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          25.2,
+          47.93
+        ],
+        "n_words": 216,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 7,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 278,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 202,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 243,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 244,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 210,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 266,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 206,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 213,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 248,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 241,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 174,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 209,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 216,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 228,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 212,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 248,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 245,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 239,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 216,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          27.44,
+          57.32
+        ],
+        "n_words": 274,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 4,
+        "max_clip_shift_ms": 460.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          28.04,
+          58.03
+        ],
+        "n_words": 192,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 6,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.89,
+          59.38
+        ],
+        "n_words": 246,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 7,
+        "max_clip_shift_ms": 450.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.04,
+          58.76
+        ],
+        "n_words": 202,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          28.34,
+          58.12
+        ],
+        "n_words": 254,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 7,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          27.14,
+          57.06
+        ],
+        "n_words": 207,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          20.2,
+          49.97
+        ],
+        "n_words": 239,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 6,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          26.57,
+          55.18
+        ],
+        "n_words": 224,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 4,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.61,
+          57.38
+        ],
+        "n_words": 171,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 7,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          28.58,
+          58.49
+        ],
+        "n_words": 204,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          26.96,
+          56.08
+        ],
+        "n_words": 209,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          28.76,
+          58.42
+        ],
+        "n_words": 224,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.96,
+          57.58
+        ],
+        "n_words": 196,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.7,
+          59.28
+        ],
+        "n_words": 250,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 4,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          29.79,
+          59.79
+        ],
+        "n_words": 234,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          26.72,
+          56.71
+        ],
+        "n_words": 230,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          26.98,
+          56.97
+        ],
+        "n_words": 198,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 5,
+        "max_clip_shift_ms": 500.0,
+        "method": "monotone_pass"
+      },
+      {
+        "n_chunks": 3,
+        "seams_s": [
+          25.5,
+          55.3
+        ],
+        "n_words": 208,
+        "frozen_reconciler_ok": false,
+        "n_clipped": 4,
+        "max_clip_shift_ms": 500.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 274,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 192,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 246,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 202,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 254,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 207,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 239,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 224,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 171,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 204,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 209,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 224,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 196,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 250,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 234,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 230,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 198,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      },
+      {
+        "n_chunks": 1,
+        "seams_s": [],
+        "n_words": 208,
+        "frozen_reconciler_ok": true,
+        "n_clipped": 0,
+        "max_clip_shift_ms": 0.0,
+        "method": "frozen_after_clip"
+      }
+    ]
+  },
+  "mfa_retries": [
+    {
+      "speaker": "s34",
+      "n_items": 1,
+      "attempt": 1,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s34",
+      "n_items": 1,
+      "attempt": 2,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s34",
+      "n_items": 1,
+      "attempt": 3,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s07",
+      "n_items": 1,
+      "attempt": 1,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s07",
+      "n_items": 1,
+      "attempt": 2,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s07",
+      "n_items": 1,
+      "attempt": 3,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s15",
+      "n_items": 1,
+      "attempt": 1,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s15",
+      "n_items": 1,
+      "attempt": 2,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    },
+    {
+      "speaker": "s15",
+      "n_items": 1,
+      "attempt": 3,
+      "error": "MFA execution failed with exit code 1:  INFO     Setting up corpus information...                                     "
+    }
+  ],
+  "isolated_failures": [
+    {
+      "engine": "mfa",
+      "audio": "s34_L01.wav",
+      "error": "MFAExecutionError: NoAlignmentsError (no alignment within the beam)"
+    },
+    {
+      "engine": "mfa",
+      "audio": "s07_L01.wav",
+      "error": "MFAExecutionError: NoAlignmentsError (no alignment within the beam)"
+    },
+    {
+      "engine": "mfa",
+      "audio": "s15_L01.wav",
+      "error": "MFAExecutionError: NoAlignmentsError (no alignment within the beam)"
+    }
+  ],
+  "build_sha256": "622b304a48be6e0c4da49013973ee98601f6e0a3528216e43908b7e431257824",
+  "code": {
+    "scripts/s1_long_recordings.py": "8e586d01036a5a977fd3b9c6e66c24bdd083eb4f17e0bf5c461c4ee210955783",
+    "scripts/seam_safe.py": "6b1d273c598875b57a6667709648a033d44d08d42addcd8feae643dfe6dea34c",
+    "docs/S1B_SEAM_SAFE_PROTOCOL.md": "111eec9b95bba1083ef595e70d9e0a284c60b9b6e0f6518458bc2e8ecc0696e9",
+    "scripts/speech_benchmark.py": "1ad4aa8da1fef2d4df949d601ebdb624c38ef7c2e241e1339a52744e7b43b0e0",
+    "scripts/analyze_speaker_errors.py": "ce74accc93aab7d47b01314d37f37f2020d80a1857edb3a12ed65dcace95a28d",
+    "src/subtitle_workbench/pipeline.py": "eb92cb04f294d26373bb4e1c84f513564d55c5730aa6bc0e669f51965e7d0f87",
+    "src/subtitle_workbench/anchoring.py": "fec7b6293a40e9d3adedac977ea572a469924b6bf9e537e68393555f69558ba3",
+    "src/subtitle_workbench/chunker.py": "ab6cf80d8d83198c365fa35c90b295b2b2240b4f2663426c26530da84bdd2a2c",
+    "src/subtitle_workbench/aligner.py": "b74add0e6756fb91cce8df937a5462d1bf93759d976f345c03ba11e0dc448e80",
+    "src/subtitle_workbench/metrics.py": "ab2daad6af8c0767eeb4940b0ca01af46760d4a952bcf6f4c3897acd8a9e9414",
+    "src/subtitle_workbench/refiner.py": "4aa56abe1f0a66d84cdf347e6916bc147b93df0d591c9ccb1d2e155dfd79d0da",
+    "uv.lock": "36986a9a23459f21ca87b61b9fd7f13e05ad9694fbdd00c5c1f1c89d5f5c30a7",
+    "pyproject.toml": "6e555d3226f1a8315ec339d20b35edfcb8d23472cb31d27308836986c1bd3184"
+  },
+  "git_before": {
+    "revision": "8768d372c2482e3d0753b4ab34b9826e785136d0",
+    "dirty": false
+  },
+  "git_after": {
+    "revision": "8768d372c2482e3d0753b4ab34b9826e785136d0",
+    "dirty": false
+  },
+  "seconds": 6975.3
+}

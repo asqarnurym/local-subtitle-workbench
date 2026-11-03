@@ -63,3 +63,4 @@ reports/e1_analysis_20261102/tables/*
 
 # Open-access literature PDFs (docs/LITERATURE_ANNOTATIONS.md lists URLs and SHA-256)
 literature/
+!reports/s1b_seam_check_20261103/

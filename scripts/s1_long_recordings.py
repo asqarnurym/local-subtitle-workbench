@@ -65,6 +65,7 @@ POSITION_MODES = ["A2_proposed", "A2_brqe", "B2_proposed", "B2_brqe"]
 CODE_FILES = (
     "scripts/s1_long_recordings.py",
     "scripts/seam_safe.py",
+    "scripts/seam_stitch.py",
     "docs/S1B_SEAM_SAFE_PROTOCOL.md",
     "scripts/speech_benchmark.py",
     "scripts/analyze_speaker_errors.py",
@@ -367,7 +368,9 @@ def check_build(out: Path) -> dict[str, Any]:
 
 def run(out: Path, reconciler: str = "frozen") -> int:
     from scripts.seam_safe import seam_safe_reconciliation
+    from scripts.seam_stitch import stitched_pipeline
 
+    contexts = {"seam_safe": seam_safe_reconciliation, "stitch": stitched_pipeline}
     meta = check_build(out)
     dest = PROJECT_ROOT / meta["derived_dir"]
     for record in sorted(out.glob("runs/*/run_record.json")):
@@ -391,7 +394,7 @@ def run(out: Path, reconciler: str = "frozen") -> int:
 
             aligner = IsolatingAligner(ForcedAligner(mfa_num_jobs=benchmark.MFA_NUM_JOBS))
             seam_log: list[dict[str, Any]] = []
-            with seam_safe_reconciliation(seam_log) if reconciler == "seam_safe" else nullcontext():
+            with contexts[reconciler](seam_log) if reconciler in contexts else nullcontext():
                 benchmark.run_benchmark(
                     corpus="buckeye",
                     data_dir=dest / length,
@@ -693,7 +696,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("command", choices=["build", "run", "analyze", "verify"])
     p.add_argument("--output-dir", type=Path, required=True)
-    p.add_argument("--reconciler", choices=["frozen", "seam_safe"], default="frozen")
+    p.add_argument("--reconciler", choices=["frozen", "seam_safe", "stitch"], default="frozen")
     args = p.parse_args(argv)
     out = args.output_dir if args.output_dir.is_absolute() else PROJECT_ROOT / args.output_dir
     commands = {

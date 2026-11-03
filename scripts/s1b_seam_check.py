@@ -48,7 +48,13 @@ def compare(utts: list, jobs: dict, aligned: dict, scenario: str) -> dict[str, A
     for utt in utts:
         multi, single = aligned[(scenario, "multi")][utt.id], aligned[(scenario, "single")][utt.id]
         if isinstance(multi, str) or isinstance(single, str):
-            per_speaker[utt.speaker_id] = {"failed": {"multi": multi, "single": single}}
+            # Only the failure text is kept; the other layout may hold aligned words
+            per_speaker[utt.speaker_id] = {
+                "failed": {
+                    layout: res if isinstance(res, str) else None
+                    for layout, res in (("multi", multi), ("single", single))
+                }
+            }
             continue
         seams = [c.start for c in jobs[(scenario, "multi")][utt.id].chunks[1:]]
         em = {i: (s, es, ee) for i, s, es, ee in s1.word_errors(multi, utt.ref_words)}

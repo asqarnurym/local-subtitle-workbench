@@ -19,7 +19,7 @@
 
 Не проверено:
 - Полное сравнение дерева (его не было и здесь).
-- Файлы проекта «AIML Article» в облаке: `docs/improvement-plan.md` и `docs/validation-audit-2026-10-27.md`. Они могут устареть относительно `docs/RUNBOOK.md` и `docs/IMPROVEMENT_PLAN.md`. Ни один из них не открывался.
+- Файлы облачного проекта статьи: `docs/improvement-plan.md` и `docs/validation-audit-2026-10-27.md`. Они могут устареть относительно `docs/RUNBOOK.md` и `docs/IMPROVEMENT_PLAN.md`. Ни один из них не открывался.
 
 ## 2. Состояние git
 
@@ -129,7 +129,7 @@ All checks passed!
 ## 4. Не проверено
 
 - Сравнение с облаком по md5 (см. раздел 1).
-- Файлы «AIML Article» в облаке.
+- Файлы облачного проекта статьи.
 - `mfa version` и установка MFA (MFA нет).
 - Реальные прогоны Whisper и MFA (по заданию не запускались). Ни одного числа для статьи нет.
 - Причина `whisper_cuda_available() = False` при видимом GPU.
@@ -146,7 +146,7 @@ All checks passed!
 4. **RUNBOOK.md, §1.1:** ожидаемое значение `True`; факт `False`. Раздел описывает, что делать, но не отмечает, что сейчас не работает.
 5. **IMPROVEMENT_PLAN.md, §2.1:** TIMIT-sample описан как «скачивается скриптом»; по заданию он не скачан. Расхождения между текстом и состоянием нет, это просто не выполнено.
 6. **IMPROVEMENT_PLAN.md, §1 (E9):** в тексте «загрузчик Buckeye: нативный `.words/.phones` → клипы», в то время как `speech_benchmark.py` читает TextGrid через `parse_buckeye_textgrid`. Оба формата есть в клипах (`.TextGrid` и `.txt`), противоречия по сути нет, но стоит уточнить, что источник для бенчмарка — TextGrid.
-7. **Облачные файлы «AIML Article»** (`docs/improvement-plan.md`, `docs/validation-audit-2026-10-27.md`): не проверялись, могут отставать от RUNBOOK и IMPROVEMENT_PLAN.
+7. **Файлы облачного проекта статьи** (`docs/improvement-plan.md`, `docs/validation-audit-2026-10-27.md`): не проверялись, могут отставать от RUNBOOK и IMPROVEMENT_PLAN.
 
 ## 6. Следующие шаги
 

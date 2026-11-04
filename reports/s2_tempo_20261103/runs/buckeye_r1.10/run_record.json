@@ -1,0 +1,29 @@
+{
+  "study": "S2",
+  "corpus": "buckeye",
+  "rate": 1.1,
+  "mfa_workers": 4,
+  "mfa_retries": [],
+  "seconds": 1555.6,
+  "git_before": {
+    "revision": "bc9834d252734f4d85a9c6fea723d24ffd13bfa0",
+    "dirty": false
+  },
+  "git_after": {
+    "revision": "bc9834d252734f4d85a9c6fea723d24ffd13bfa0",
+    "dirty": false
+  },
+  "code": {
+    "scripts/s2_s3_substudies.py": "1a305c9c53601f3c18f2b0d611d431d9820af29ddd23681b3f26f3a422a24d03",
+    "scripts/tempo.py": "439213eef8c88221a0abb7c41695906805e74890e5dad0bc6c9740b3d208eb77",
+    "scripts/parallel_mfa.py": "ca3523cb0224d689b60ffdd78b49fcceff903a95894e7043d7a2e26267664567",
+    "docs/S2_S3_PROTOCOL.md": "033657153518c1c45c90ca532c094d02319c3730e75977523287934a76695687",
+    "scripts/speech_benchmark.py": "1ad4aa8da1fef2d4df949d601ebdb624c38ef7c2e241e1339a52744e7b43b0e0",
+    "uv.lock": "36986a9a23459f21ca87b61b9fd7f13e05ad9694fbdd00c5c1f1c89d5f5c30a7"
+  },
+  "refiner_files": {
+    "brqe.json": "bd518226b33507d853b7592a5c8cfd6c564a38824eb546e62b8893f4bae011ba",
+    "brqe.pt": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+    "const_offsets.json": "ca2e1a8f00d52e784cb98e3974aca10f7aad6da619799d966644eab455efa936"
+  }
+}

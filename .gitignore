@@ -77,3 +77,12 @@ reports/s1b_long_20261103/*
 reports/s1b_long_20261103/runs/*/benchmark_predictions.json
 # Word lock files
 ~$*
+# S2 evidence; large prediction files stay local.
+!reports/s2_tempo_20261103/
+reports/s2_tempo_20261103/*
+!reports/s2_tempo_20261103/analysis.json
+!reports/s2_tempo_20261103/build.json
+!reports/s2_tempo_20261103/scaled_detail.json
+!reports/s2_tempo_20261103/figures/
+!reports/s2_tempo_20261103/runs/
+reports/s2_tempo_20261103/runs/*/benchmark_predictions.json

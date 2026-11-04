@@ -1,0 +1,572 @@
+{
+  "schema_version": 2,
+  "timestamp": "2026-11-04T01:12:25.246817+00:00",
+  "corpus": "buckeye",
+  "reference_type": "gold",
+  "data_provenance": "MODEL_EXECUTION",
+  "warning": null,
+  "offline_synthetic": false,
+  "seed": 42,
+  "bootstrap_resamples": 2000,
+  "n_utterances": 200,
+  "n_speakers": 20,
+  "total_audio_duration_seconds": 370.731,
+  "config": {
+    "modes": [
+      "B0_whisper",
+      "B1_whisper_ctc",
+      "B2_proposed",
+      "A1_ctc",
+      "A2_proposed",
+      "B2_const",
+      "B2_brqe",
+      "A2_const",
+      "A2_brqe"
+    ],
+    "ci_unit": "speaker",
+    "excluded_corpus_defects": {},
+    "asr": {
+      "model": "large-v3",
+      "device": "cuda",
+      "compute_type": "int8_float16"
+    },
+    "aligners": {
+      "mfa": {
+        "engine": "mfa",
+        "dictionary": "english_us_arpa",
+        "acoustic_model": "english_us_arpa",
+        "g2p_model": "english_us_arpa",
+        "fine_tune": true,
+        "speaker_adaptation": true,
+        "num_jobs": 1,
+        "invocation": "per_speaker"
+      },
+      "ctc": {
+        "engine": "ctc",
+        "model": "torchaudio.pipelines.MMS_FA"
+      }
+    },
+    "refiners": {
+      "dir": "C:/Users/nurym/Desktop/local-subtitle-workbench/models/brqe",
+      "brqe_weights_sha256": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+      "brqe_config": {
+        "epochs": 12,
+        "batch_size": 512,
+        "lr": 0.001,
+        "weight_decay": 0.0001,
+        "cls_weight": 0.5,
+        "seed": 20260401,
+        "hidden": 128,
+        "dropout": 0.2
+      },
+      "const_offsets_sha256": "ca2e1a8f00d52e784cb98e3974aca10f7aad6da619799d966644eab455efa936",
+      "trained_on": {
+        "run": "reports/brqe_train_run",
+        "sample": {
+          "path": "reports/buckeye_train_sample_20260401.json",
+          "sha256": "c27f6de24c06eb92cf3a3352a95abe24c729ac07cee609d03c8582e88b06b876",
+          "seed": 20260401,
+          "per_speaker": 150,
+          "n_utterances": 3000
+        },
+        "split": {
+          "path": "reports/buckeye_split_20260401.json",
+          "sha256": "49bcad6e6f686ad3ab26d1f9800e2c4dee519a1dbd4b441471e9b2ba5a0af2f7"
+        },
+        "run_code": {
+          "source_sha256": "09605a45f3222dfb475b2691ace6e9e5ca0afc6f34c9588df1777bddfc689c03",
+          "git_revision": "9dc8018de6d9debef7d6765b40630903eaf2cbdd",
+          "git_worktree_dirty": false
+        },
+        "n_utterances": 3000,
+        "n_speakers": 20
+      }
+    },
+    "mfa_retries": []
+  },
+  "modes": {
+    "B0_whisper": {
+      "name": "Whisper word timestamps",
+      "scenario": "B",
+      "engine": null,
+      "n_utterances_ok": 198,
+      "n_utterances_failed": 2,
+      "word_metrics": {
+        "mae_ms": 101.08,
+        "acc_20ms": 10.05,
+        "ci_95": [
+          94.77,
+          107.35
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3302,
+        "num_matched": 1651,
+        "num_reference": 1831,
+        "coverage": 0.9017
+      },
+      "phone_metrics": null
+    },
+    "B1_whisper_ctc": {
+      "name": "Whisper + CTC (MMS_FA)",
+      "scenario": "B",
+      "engine": "ctc",
+      "n_utterances_ok": 198,
+      "n_utterances_failed": 2,
+      "word_metrics": {
+        "mae_ms": 31.55,
+        "acc_20ms": 44.16,
+        "ci_95": [
+          29.49,
+          33.93
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3306,
+        "num_matched": 1653,
+        "num_reference": 1831,
+        "coverage": 0.9028
+      },
+      "phone_metrics": null
+    },
+    "B2_proposed": {
+      "name": "Proposed: Whisper + anchoring + MFA",
+      "scenario": "B",
+      "engine": "mfa",
+      "n_utterances_ok": 198,
+      "n_utterances_failed": 2,
+      "word_metrics": {
+        "mae_ms": 20.14,
+        "acc_20ms": 76.07,
+        "ci_95": [
+          17.33,
+          23.29
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3306,
+        "num_matched": 1653,
+        "num_reference": 1831,
+        "coverage": 0.9028
+      },
+      "phone_metrics": {
+        "mae_ms": 15.37,
+        "acc_20ms": 83.31,
+        "ci_95": [
+          13.53,
+          17.38
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 8736,
+        "num_matched": 4368,
+        "num_reference": 5274,
+        "coverage": 0.8282
+      }
+    },
+    "A1_ctc": {
+      "name": "Known text + CTC (MMS_FA)",
+      "scenario": "A",
+      "engine": "ctc",
+      "n_utterances_ok": 200,
+      "n_utterances_failed": 0,
+      "word_metrics": {
+        "mae_ms": 30.92,
+        "acc_20ms": 44.6,
+        "ci_95": [
+          29.02,
+          32.93
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3686,
+        "num_matched": 1843,
+        "num_reference": 1843,
+        "coverage": 1.0
+      },
+      "phone_metrics": null
+    },
+    "A2_proposed": {
+      "name": "Proposed: known text + anchoring + MFA",
+      "scenario": "A",
+      "engine": "mfa",
+      "n_utterances_ok": 200,
+      "n_utterances_failed": 0,
+      "word_metrics": {
+        "mae_ms": 14.64,
+        "acc_20ms": 77.13,
+        "ci_95": [
+          13.86,
+          15.54
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3686,
+        "num_matched": 1843,
+        "num_reference": 1843,
+        "coverage": 1.0
+      },
+      "phone_metrics": {
+        "mae_ms": 12.66,
+        "acc_20ms": 84.08,
+        "ci_95": [
+          11.8,
+          13.52
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 9088,
+        "num_matched": 4544,
+        "num_reference": 5297,
+        "coverage": 0.8578
+      }
+    },
+    "B2_const": {
+      "name": "B2 + constant offset (BRQE rival)",
+      "scenario": "B",
+      "engine": "mfa",
+      "n_utterances_ok": 198,
+      "n_utterances_failed": 2,
+      "word_metrics": {
+        "mae_ms": 20.3,
+        "acc_20ms": 75.74,
+        "ci_95": [
+          17.52,
+          23.5
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3306,
+        "num_matched": 1653,
+        "num_reference": 1831,
+        "coverage": 0.9028
+      },
+      "phone_metrics": {
+        "mae_ms": 15.37,
+        "acc_20ms": 83.26,
+        "ci_95": [
+          13.53,
+          17.38
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 8736,
+        "num_matched": 4368,
+        "num_reference": 5274,
+        "coverage": 0.8282
+      }
+    },
+    "B2_brqe": {
+      "name": "B2 + BRQE refinement",
+      "scenario": "B",
+      "engine": "mfa",
+      "n_utterances_ok": 198,
+      "n_utterances_failed": 2,
+      "word_metrics": {
+        "mae_ms": 18.36,
+        "acc_20ms": 80.07,
+        "ci_95": [
+          15.47,
+          21.63
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3306,
+        "num_matched": 1653,
+        "num_reference": 1831,
+        "coverage": 0.9028
+      },
+      "phone_metrics": {
+        "mae_ms": 13.97,
+        "acc_20ms": 84.99,
+        "ci_95": [
+          12.05,
+          15.95
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 8722,
+        "num_matched": 4361,
+        "num_reference": 5274,
+        "coverage": 0.8269
+      },
+      "quality_estimation": {
+        "label": "base MFA word boundary error > 20 ms",
+        "n_words": 1653,
+        "positive_rate": 0.418,
+        "roc_auc": 0.7453267583513604,
+        "pr_auc": 0.6858774516196431,
+        "word_mae_after_rejection_ms": {
+          "reject_0pct": 18.36,
+          "reject_10pct": 17.84,
+          "reject_20pct": 17.56,
+          "reject_30pct": 15.31,
+          "reject_50pct": 13.35
+        }
+      }
+    },
+    "A2_const": {
+      "name": "A2 + constant offset (BRQE rival)",
+      "scenario": "A",
+      "engine": "mfa",
+      "n_utterances_ok": 200,
+      "n_utterances_failed": 0,
+      "word_metrics": {
+        "mae_ms": 14.76,
+        "acc_20ms": 77.05,
+        "ci_95": [
+          13.98,
+          15.65
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3686,
+        "num_matched": 1843,
+        "num_reference": 1843,
+        "coverage": 1.0
+      },
+      "phone_metrics": {
+        "mae_ms": 12.66,
+        "acc_20ms": 84.03,
+        "ci_95": [
+          11.8,
+          13.52
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 9088,
+        "num_matched": 4544,
+        "num_reference": 5297,
+        "coverage": 0.8578
+      }
+    },
+    "A2_brqe": {
+      "name": "A2 + BRQE refinement",
+      "scenario": "A",
+      "engine": "mfa",
+      "n_utterances_ok": 200,
+      "n_utterances_failed": 0,
+      "word_metrics": {
+        "mae_ms": 12.59,
+        "acc_20ms": 81.96,
+        "ci_95": [
+          11.83,
+          13.41
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 3686,
+        "num_matched": 1843,
+        "num_reference": 1843,
+        "coverage": 1.0
+      },
+      "phone_metrics": {
+        "mae_ms": 11.2,
+        "acc_20ms": 85.83,
+        "ci_95": [
+          10.33,
+          12.09
+        ],
+        "ci_unit": "speaker",
+        "n_clusters": 20,
+        "n_boundaries": 9076,
+        "num_matched": 4538,
+        "num_reference": 5297,
+        "coverage": 0.8567
+      },
+      "quality_estimation": {
+        "label": "base MFA word boundary error > 20 ms",
+        "n_words": 1843,
+        "positive_rate": 0.4135,
+        "roc_auc": 0.7634845251189115,
+        "pr_auc": 0.6949809748243924,
+        "word_mae_after_rejection_ms": {
+          "reject_0pct": 12.59,
+          "reject_10pct": 12.29,
+          "reject_20pct": 11.58,
+          "reject_30pct": 10.73,
+          "reject_50pct": 9.1
+        }
+      }
+    }
+  },
+  "statistical_significance": {
+    "B2_vs_B0": {
+      "baseline": "B0_whisper",
+      "proposed": "B2_proposed",
+      "metric": "word_mae",
+      "aggregation": "utterance_mean",
+      "pairing": "utterance_id",
+      "n_pairs": 198,
+      "n_unpaired_excluded": 0,
+      "n_speakers": 20,
+      "wilcoxon_w": 56.0,
+      "p_value_raw": 0.0,
+      "p_value_holm": 0.0,
+      "p_value": 0.0,
+      "cliffs_delta": 0.9535,
+      "effect_size": "large",
+      "significant_0_05": true
+    },
+    "B2_vs_B1": {
+      "baseline": "B1_whisper_ctc",
+      "proposed": "B2_proposed",
+      "metric": "word_mae",
+      "aggregation": "utterance_mean",
+      "pairing": "utterance_id",
+      "n_pairs": 198,
+      "n_unpaired_excluded": 0,
+      "n_speakers": 20,
+      "wilcoxon_w": 2256.0,
+      "p_value_raw": 0.0,
+      "p_value_holm": 0.0,
+      "p_value": 0.0,
+      "cliffs_delta": 0.6658,
+      "effect_size": "large",
+      "significant_0_05": true
+    },
+    "A2_vs_A1": {
+      "baseline": "A1_ctc",
+      "proposed": "A2_proposed",
+      "metric": "word_mae",
+      "aggregation": "utterance_mean",
+      "pairing": "utterance_id",
+      "n_pairs": 200,
+      "n_unpaired_excluded": 0,
+      "n_speakers": 20,
+      "wilcoxon_w": 200.0,
+      "p_value_raw": 0.0,
+      "p_value_holm": 0.0,
+      "p_value": 0.0,
+      "cliffs_delta": 0.9002,
+      "effect_size": "large",
+      "significant_0_05": true
+    },
+    "B2brqe_vs_B2": {
+      "baseline": "B2_proposed",
+      "proposed": "B2_brqe",
+      "metric": "word_mae",
+      "aggregation": "utterance_mean",
+      "pairing": "utterance_id",
+      "n_pairs": 198,
+      "n_unpaired_excluded": 0,
+      "n_speakers": 20,
+      "wilcoxon_w": 4359.0,
+      "p_value_raw": 1.035571628449361e-11,
+      "p_value_holm": 1.035571628449361e-11,
+      "p_value": 1.035571628449361e-11,
+      "cliffs_delta": 0.1701,
+      "effect_size": "small",
+      "significant_0_05": true
+    },
+    "B2brqe_vs_B2const": {
+      "baseline": "B2_const",
+      "proposed": "B2_brqe",
+      "metric": "word_mae",
+      "aggregation": "utterance_mean",
+      "pairing": "utterance_id",
+      "n_pairs": 198,
+      "n_unpaired_excluded": 0,
+      "n_speakers": 20,
+      "wilcoxon_w": 4021.0,
+      "p_value_raw": 5.193623309196482e-13,
+      "p_value_holm": 1.0387246618392965e-12,
+      "p_value": 1.0387246618392965e-12,
+      "cliffs_delta": 0.1812,
+      "effect_size": "small",
+      "significant_0_05": true
+    },
+    "A2brqe_vs_A2": {
+      "baseline": "A2_proposed",
+      "proposed": "A2_brqe",
+      "metric": "word_mae",
+      "aggregation": "utterance_mean",
+      "pairing": "utterance_id",
+      "n_pairs": 200,
+      "n_unpaired_excluded": 0,
+      "n_speakers": 20,
+      "wilcoxon_w": 3790.0,
+      "p_value_raw": 2.220446049250313e-14,
+      "p_value_holm": 6.661338147750939e-14,
+      "p_value": 6.661338147750939e-14,
+      "cliffs_delta": 0.2638,
+      "effect_size": "small",
+      "significant_0_05": true
+    },
+    "A2brqe_vs_A2const": {
+      "baseline": "A2_const",
+      "proposed": "A2_brqe",
+      "metric": "word_mae",
+      "aggregation": "utterance_mean",
+      "pairing": "utterance_id",
+      "n_pairs": 200,
+      "n_unpaired_excluded": 0,
+      "n_speakers": 20,
+      "wilcoxon_w": 3420.0,
+      "p_value_raw": 4.440892098500626e-16,
+      "p_value_holm": 1.7763568394002505e-15,
+      "p_value": 1.7763568394002505e-15,
+      "cliffs_delta": 0.2761,
+      "effect_size": "small",
+      "significant_0_05": true
+    }
+  },
+  "runtime": {
+    "note": "transparency only; not an evaluation target",
+    "total_seconds": 1605.664,
+    "audio_seconds": 370.731,
+    "n_utterances": 200,
+    "rtf_total": 4.3311,
+    "stages": {
+      "asr_and_chunking": {
+        "seconds": 208.209,
+        "rtf": 0.5616
+      },
+      "align_B1_whisper_ctc": {
+        "seconds": 109.396,
+        "rtf": 0.2951
+      },
+      "align_B2_proposed": {
+        "seconds": 598.181,
+        "rtf": 1.6135
+      },
+      "align_A1_ctc": {
+        "seconds": 108.396,
+        "rtf": 0.2924
+      },
+      "align_A2_proposed": {
+        "seconds": 576.065,
+        "rtf": 1.5539
+      },
+      "mel_features": {
+        "seconds": 0.313,
+        "rtf": 0.0008
+      },
+      "refine_B2_const": {
+        "seconds": 0.235,
+        "rtf": 0.0006
+      },
+      "refine_B2_brqe": {
+        "seconds": 1.31,
+        "rtf": 0.0035
+      },
+      "refine_A2_const": {
+        "seconds": 0.208,
+        "rtf": 0.0006
+      },
+      "refine_A2_brqe": {
+        "seconds": 1.486,
+        "rtf": 0.004
+      }
+    }
+  },
+  "hardware": {
+    "platform": "Windows-10-10.0.26340-SP0",
+    "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+    "python_version": "3.11.17",
+    "cuda_available": true,
+    "whisper_cuda_available": true,
+    "torch_cuda_available": false,
+    "cuda_device_name": null
+  }
+}

@@ -453,7 +453,10 @@ class TorchAudioAligner:
             with torch.inference_mode():
                 emissions, _ = self._model(waveform)
                 emissions = torch.log_softmax(emissions, dim=-1)
-                if len(token_ids) > emissions.size(1):
+                required_frames = len(token_ids) + sum(
+                    a == b for a, b in zip(token_ids, token_ids[1:])
+                )
+                if required_frames > emissions.size(1):
                     return []
                 ali, scores = torchaudio.functional.forced_align(
                     emissions, torch.tensor([token_ids], device=emissions.device), blank=0

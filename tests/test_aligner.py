@@ -228,6 +228,33 @@ def test_real_mms_dictionary_hyphen_targets_pass_upstream_validation() -> None:
     assert aligned.shape == (1, 40)
 
 
+@pytest.mark.parametrize(
+    "text,frames,expected_words",
+    [
+        ("aaa", 3, []),
+        ("aaa", 4, []),
+        ("aaa", 5, ["aaa"]),
+        ("a a", 2, []),
+        ("a a", 3, ["a", "a"]),
+        ("aba", 3, ["aba"]),
+    ],
+)
+def test_ctc_repeated_tokens_require_separating_blank_frames(text, frames, expected_words):
+    torch = pytest.importorskip("torch")
+    pytest.importorskip("torchaudio")
+
+    class FakeModel:
+        def __call__(self, waveform):
+            return torch.full((1, frames, 3), 1 / 3).log(), None
+
+    aligner = TorchAudioAligner(device="cpu")
+    aligner._model = FakeModel()
+    aligner._device = torch.device("cpu")
+    aligner._dictionary = {"-": 0, "a": 1, "b": 2}
+    words = aligner.align(np.zeros(16000, dtype=np.float32), text)
+    assert [word.text for word in words] == expected_words
+
+
 def test_words_from_token_spans_splits_by_token_count() -> None:
     targets = ctc_word_targets("ab c", _MMS_LIKE_DICT)
     # a: frames 2-4, b: 5-7, c: 10-12; frame = 20 ms

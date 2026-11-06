@@ -336,13 +336,14 @@ def align_ctc_trellis(
 def ctc_word_targets(transcript: str, dictionary: dict[str, int]) -> list[tuple[str, list[int]]]:
     """Map each whitespace-separated word to (in-vocabulary lowercase text, token IDs).
 
-    Characters outside the vocabulary are dropped. Words with no in-vocabulary
-    character are left out; they appear as unmatched reference words (coverage),
-    never as fabricated timings.
+    Characters outside the vocabulary and the blank label (ID 0) are dropped.
+    MMS_FA includes '-' in its dictionary as blank, not a transcript character.
+    Words with no remaining character are left out; they appear as unmatched
+    reference words (coverage), never as fabricated timings.
     """
     targets: list[tuple[str, list[int]]] = []
     for word in transcript.split():
-        chars = [c for c in word.lower() if c in dictionary]
+        chars = [c for c in word.lower() if c in dictionary and dictionary[c] != 0]
         if chars:
             targets.append(("".join(chars), [dictionary[c] for c in chars]))
     return targets

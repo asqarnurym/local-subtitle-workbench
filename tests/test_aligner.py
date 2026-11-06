@@ -205,6 +205,29 @@ def test_ctc_word_targets_has_no_separator_or_star_tokens() -> None:
     assert ctc_word_targets("42 !!", _MMS_LIKE_DICT) == []
 
 
+def test_ctc_word_targets_excludes_dictionary_blank_label() -> None:
+    targets = ctc_word_targets("well-known - don't hello☃", _MMS_LIKE_DICT)
+    assert [word for word, _ in targets] == ["wellknown", "don't", "hello"]
+    assert all(0 not in ids for _, ids in targets)
+    assert ctc_word_targets("-- -", _MMS_LIKE_DICT) == []
+    assert targets[1][1] == [_MMS_LIKE_DICT[c] for c in "don't"]
+
+
+def test_real_mms_dictionary_hyphen_targets_pass_upstream_validation() -> None:
+    torch = pytest.importorskip("torch")
+    torchaudio = pytest.importorskip("torchaudio")
+    dictionary = torchaudio.pipelines.MMS_FA.get_dict(star=None)
+    targets = ctc_word_targets("well-known -", dictionary)
+    assert [word for word, _ in targets] == ["wellknown"]
+    ids = [token for _, tokens in targets for token in tokens]
+    assert 0 not in ids
+    # Exercise the real operator's input contract with synthetic emissions only;
+    # no model load/download and no accuracy claim is made from this self-test.
+    emissions = torch.full((1, 40, len(dictionary)), 1 / len(dictionary)).log()
+    aligned, _ = torchaudio.functional.forced_align(emissions, torch.tensor([ids]), blank=0)
+    assert aligned.shape == (1, 40)
+
+
 def test_words_from_token_spans_splits_by_token_count() -> None:
     targets = ctc_word_targets("ab c", _MMS_LIKE_DICT)
     # a: frames 2-4, b: 5-7, c: 10-12; frame = 20 ms

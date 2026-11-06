@@ -140,6 +140,21 @@ Evidence, verdicts and rejected options: `docs/MFA_FAILURE_BACKLOG.md`.
 
 ## 4. Backlog Execution & Promotion Policy
 
+### S3: optional analysis of the same reference-word subset (06.11.2026)
+
+Different ASR models recognize different words. MAE on matched words therefore
+changes both with timing quality and with the selection of evaluable words.
+After the primary S3 analysis, consider an explicitly exploratory paired analysis:
+for each model versus large-v3, evaluate boundary errors on the intersection of
+matched reference-word indices within each clip, then aggregate by speaker.
+Report retained words, clips and speakers; an empty intersection is missing data,
+not zero error. Keep the primary full-coverage/failure tables and Holm families
+unchanged. This analysis isolates timing on shared recognized content; it does
+not estimate accuracy on missing words and must not be used to tune BRQE.
+
+No analysis or new experiment for this idea has been run. It is a backlog item,
+not a preregistered S3 hypothesis or a promotion criterion.
+
 1. **Isolation Guarantee:** Analog implementations must be located exclusively in `src/subtitle_workbench/experimental/` or `tests/analogs/`. They must not alter the default behavior of the core CLI tool `subtitle-workbench`.
 2. **Promotion to Core:** An analog is promoted to the primary pipeline if and only if:
    - It demonstrates statistically significant superior accuracy ($\Delta \text{MAE} < 0, p < 0.01$) on the frozen benchmark.

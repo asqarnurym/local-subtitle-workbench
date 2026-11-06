@@ -1,0 +1,167 @@
+{
+  "tiny": {
+    "mfa_retries": [
+      {
+        "speaker": "s02",
+        "n_items": 50,
+        "attempt": 1,
+        "error": "MFA execution failed with exit code 3221226505:  INFO     Setting up corpus information...                                     "
+      },
+      {
+        "speaker": "s03",
+        "n_items": 50,
+        "attempt": 1,
+        "error": "MFA execution failed with exit code 3221226505:  INFO     Setting up corpus information...                                     "
+      },
+      {
+        "speaker": "s07",
+        "n_items": 50,
+        "attempt": 1,
+        "error": "MFA execution failed with exit code 3221226505:  INFO     Setting up corpus information...                                     "
+      },
+      {
+        "speaker": "s09",
+        "n_items": 50,
+        "attempt": 1,
+        "error": "MFA execution failed with exit code 3221226505:  INFO     Setting up corpus information...                                     "
+      }
+    ],
+    "seconds": 1302.1,
+    "failures": {
+      "B0_whisper": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 14
+      },
+      "B1_whisper_ctc": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 14
+      },
+      "B2_proposed": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 14,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s3701a_0022.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s3701a_0054.wav": 1
+      },
+      "B2_const": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 14,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s3701a_0022.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s3701a_0054.wav": 1
+      },
+      "B2_brqe": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 14,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s3701a_0022.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s3701a_0054.wav": 1
+      }
+    }
+  },
+  "base": {
+    "mfa_retries": [],
+    "seconds": 1212.8,
+    "failures": {
+      "B0_whisper": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 6
+      },
+      "B1_whisper_ctc": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 6
+      },
+      "B2_proposed": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 6,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s0902b_0028.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1202a_0033.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s2203b_0020.wav": 1
+      },
+      "B2_const": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 6,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s0902b_0028.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1202a_0033.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s2203b_0020.wav": 1
+      },
+      "B2_brqe": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 6,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s0902b_0028.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1202a_0033.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s2203b_0020.wav": 1
+      }
+    }
+  },
+  "small": {
+    "mfa_retries": [],
+    "seconds": 1335.6,
+    "failures": {
+      "B0_whisper": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 3
+      },
+      "B1_whisper_ctc": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 3
+      },
+      "B2_proposed": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 3,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1
+      },
+      "B2_const": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 3,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1
+      },
+      "B2_brqe": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 3,
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1
+      }
+    }
+  },
+  "medium": {
+    "mfa_retries": [],
+    "seconds": 1626.0,
+    "failures": {
+      "B0_whisper": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 1,
+        "ValueError: no speech segments detected in audio": 1
+      },
+      "B1_whisper_ctc": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 1,
+        "ValueError: no speech segments detected in audio": 1
+      },
+      "B2_proposed": {
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 1,
+        "ValueError: no speech segments detected in audio": 1
+      },
+      "B2_const": {
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 1,
+        "ValueError: no speech segments detected in audio": 1
+      },
+      "B2_brqe": {
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 1,
+        "ValueError: no speech segments detected in audio": 1
+      }
+    }
+  },
+  "large-v3-turbo": {
+    "mfa_retries": [],
+    "seconds": 1617.5,
+    "failures": {
+      "B0_whisper": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 2
+      },
+      "B1_whisper_ctc": {
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 2
+      },
+      "B2_proposed": {
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 2
+      },
+      "B2_const": {
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 2
+      },
+      "B2_brqe": {
+        "AlignmentFailure: mfa produced no alignment for chunk(s) [0] of s1203b_0030.wav": 1,
+        "MetricComputationError: Zero matching tokens found between prediction and reference": 2
+      }
+    }
+  }
+}

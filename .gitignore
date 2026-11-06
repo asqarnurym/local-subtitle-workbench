@@ -86,3 +86,26 @@ reports/s2_tempo_20261103/*
 !reports/s2_tempo_20261103/figures/
 !reports/s2_tempo_20261103/runs/
 reports/s2_tempo_20261103/runs/*/benchmark_predictions.json
+
+# Curated S3 evidence. Predictions, model binaries and diagnostic workspaces stay local.
+!reports/s3_asr_size_20261106/
+reports/s3_asr_size_20261106/*
+!reports/s3_asr_size_20261106/analysis.json
+!reports/s3_asr_size_20261106/failure_audit.json
+!reports/s3_asr_size_20261106/final_check.json
+!reports/s3_asr_size_20261106/environment.json
+!reports/s3_asr_size_20261106/runtime_incidents.json
+!reports/s3_asr_size_20261106/results.md
+!reports/s3_asr_size_20261106/model_cache_*.json
+!reports/s3_asr_size_20261106/figures/
+reports/s3_asr_size_20261106/figures/*
+!reports/s3_asr_size_20261106/figures/*.png
+!reports/s3_asr_size_20261106/figures/*.pdf
+!reports/s3_asr_size_20261106/runs/
+reports/s3_asr_size_20261106/runs/*
+!reports/s3_asr_size_20261106/runs/*/
+reports/s3_asr_size_20261106/runs/*/*
+!reports/s3_asr_size_20261106/runs/*/run_record.json
+!reports/s3_asr_size_20261106/runs/*/manifest.json
+!reports/s3_asr_size_20261106/runs/*/benchmark_results.json
+!reports/s3_asr_size_20261106/runs/*/benchmark_utterances.json

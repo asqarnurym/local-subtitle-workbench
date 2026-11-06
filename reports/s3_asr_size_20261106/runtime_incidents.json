@@ -1,0 +1,49 @@
+[
+  {
+    "kind": "native_model_download_failure",
+    "model": "base",
+    "attempts": 2,
+    "observed": "Stack overflow; worker exit 1",
+    "cause": "not established",
+    "independent_review": "independent_s3_check",
+    "workaround": "HF_HUB_DISABLE_XET=1 in fresh prefetch subprocess only; documented HTTP transport, same model repository and weights",
+    "workaround_verified_models": [
+      "base",
+      "small"
+    ],
+    "evidence": [
+      "download_base_attempt1.log",
+      "model_cache_base.json",
+      "model_cache_small.json"
+    ]
+  },
+  {
+    "kind": "native_mfa_failure",
+    "first_observed_speakers": [
+      "s07",
+      "s02",
+      "s03",
+      "s09"
+    ],
+    "attempts_failed": 4,
+    "returncode": 3221226505,
+    "timeout": false,
+    "cause": "not established",
+    "independent_review": "verify_mfa_native_failure",
+    "resolution": "all four calls succeeded on the next unchanged attempt",
+    "evidence": "diagnostics/tiny/*/exit.json, stderr.log, process.json; final run_record.mfa_retries retains accounting"
+  },
+  {
+    "kind": "observer_IO_failure",
+    "primary_error": "OSError errno22 during atomic temp open",
+    "secondary_error": "WinError1450 insufficient system resources during cleanup",
+    "cause": "exact exhausted resource unknown; valid path; separate write probes passed",
+    "independent_review": "independent_s3_check",
+    "resolution": "old observer exited; restart observer only with separate logs; main base unaffected",
+    "evidence": [
+      "observer.err",
+      "observer_recovered.err",
+      "postprocess_status_before_io_recovery.json"
+    ]
+  }
+]

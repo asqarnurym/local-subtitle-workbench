@@ -21,3 +21,4 @@ reports/s1b_seam_check_20261103/** -text whitespace=cr-at-eol
 reports/s1b_seam_check_stitch_20261103/** -text whitespace=cr-at-eol
 reports/s1b_long_20261103/** -text whitespace=cr-at-eol
 reports/s2_tempo_20261103/** -text whitespace=cr-at-eol
+reports/s3_asr_size_20261106/** -text whitespace=cr-at-eol

@@ -1,0 +1,34 @@
+{
+  "study": "S3",
+  "asr_model": "base",
+  "output_sha256": {
+    "benchmark_results.json": "dd19946a13a8e980725b489bf841d14dc85f5e38d841c71eebb178d0f7368191",
+    "benchmark_utterances.json": "b8c9e7ee90cf439637219f7fe693322645ce0ab31be9478491577f0c2be62298",
+    "benchmark_predictions.json": "923a569cef54e6a2adb4f72d732500825c3ddaff9aa8f556a1f31b74c3870c31",
+    "manifest.json": "7920bed7e42cc9eca512b8f13c086f765395a037c83a644748f71817a0f55efe"
+  },
+  "mfa_workers": 4,
+  "mfa_retries": [],
+  "seconds": 1212.8,
+  "git_before": {
+    "revision": "d23e92a044427cfb0dd3e9b008ef6d74fa9221ce",
+    "dirty": false
+  },
+  "git_after": {
+    "revision": "64a3662c93e80a3e9f996221eecf576cc1fa95df",
+    "dirty": false
+  },
+  "code": {
+    "scripts/s2_s3_substudies.py": "278ea24a7e807828cdce3d792a900b5dead0a6c49a43b89109d657a77d0cabdc",
+    "scripts/tempo.py": "439213eef8c88221a0abb7c41695906805e74890e5dad0bc6c9740b3d208eb77",
+    "scripts/parallel_mfa.py": "f3288085a6dd9444b75ddd0cebd517989f15f9935333805715bb985244790cc4",
+    "docs/S2_S3_PROTOCOL.md": "806ea38e7ddddbf208842ac05eaa774714b669dcf6dc3cd7b42f9b66411662c7",
+    "scripts/speech_benchmark.py": "e0767c7e9759317628cf8ce3848126e00527031e02d8ab76a1f9cc259666eec8",
+    "uv.lock": "36986a9a23459f21ca87b61b9fd7f13e05ad9694fbdd00c5c1f1c89d5f5c30a7"
+  },
+  "refiner_files": {
+    "brqe.json": "bd518226b33507d853b7592a5c8cfd6c564a38824eb546e62b8893f4bae011ba",
+    "brqe.pt": "93c7c959e6232799daa646ed87d9c333cc01f898ad22e30fa03c02cbb824aa19",
+    "const_offsets.json": "ca2e1a8f00d52e784cb98e3974aca10f7aad6da619799d966644eab455efa936"
+  }
+}

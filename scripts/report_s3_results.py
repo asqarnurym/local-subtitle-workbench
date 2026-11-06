@@ -84,9 +84,11 @@ def build(out: Path) -> dict:
             difference = test.get("mean_difference_ms")
             interval = test.get("mean_difference_ci_95_ms")
             pvalue = test.get("p_value_holm")
+            delta_text = "NA" if difference is None else f"{difference:+.2f}"
+            ci_text = "NA" if interval is None else f"{interval[0]:+.2f}…{interval[1]:+.2f}"
+            p_text = "NA" if pvalue is None else f"{pvalue:.4f}"
             lines.append(
-                f"| {mode} | {model} | {test['n_pairs']} | "
-                f"{difference if difference is not None else 'NA'} | {interval} | {pvalue} |"
+                f"| {mode} | {model} | {test['n_pairs']} | {delta_text} | {ci_text} | {p_text} |"
             )
     lines += [
         "",
@@ -129,10 +131,11 @@ def figures(out: Path, analysis: dict) -> None:
     for ax in axes:
         ax.tick_params(axis="x", rotation=35)
         ax.grid(alpha=0.25)
-        ax.legend(frameon=False)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper center", ncols=2, frameon=False)
     axes[0].set_ylabel("Mean speaker word MAE, ms")
     axes[1].set_ylabel("Matched word coverage, %")
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0, 1, 0.92))
     target = out / "figures"
     target.mkdir(exist_ok=True)
     fig.savefig(target / "s3_asr_size.png", dpi=300)

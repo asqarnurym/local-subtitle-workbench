@@ -19,6 +19,33 @@ sys.path.insert(0, str(ROOT))
 from scripts import experiment_safety as safety  # noqa: E402
 
 
+def publish_status(path: Path, value: dict, *, critical: bool = True) -> bool:
+    """Keep the awake guard alive through a transient heartbeat-write failure.
+
+    A terminal success record is critical and may never be silently skipped.
+    During waiting, stderr is the fallback audit channel until the next heartbeat.
+    """
+    for attempt in range(3):
+        try:
+            safety.atomic_json(path, value)
+            return True
+        except OSError as err:
+            print(
+                f"Observer status I/O attempt {attempt + 1}/3: {err!r}", file=sys.stderr, flush=True
+            )
+            if attempt == 2:
+                if critical:
+                    raise
+                print(
+                    "Observer keeps watching; heartbeat publication will retry next cycle.",
+                    file=sys.stderr,
+                    flush=True,
+                )
+                return False
+            time.sleep(attempt + 1)
+    return False
+
+
 @contextlib.contextmanager
 def keep_awake():
     if os.name != "nt":
@@ -76,7 +103,7 @@ def main() -> int:
                         raise RuntimeError(
                             "Supervisor heartbeat stale or observer lifetime exceeded"
                         )
-                    safety.atomic_json(
+                    publish_status(
                         out / "postprocess_status.json",
                         {
                             "state": "waiting",
@@ -84,6 +111,7 @@ def main() -> int:
                             "automatic_sleep_inhibited": os.name == "nt",
                             "supervisor": status,
                         },
+                        critical=False,
                     )
                     time.sleep(30)
                 command(
@@ -117,7 +145,7 @@ def main() -> int:
                         "scripts/audit_literature_inventory.py",
                     ],
                 )
-            safety.atomic_json(
+            publish_status(
                 out / "postprocess_status.json",
                 {
                     "state": "artifacts_ready_for_review",
@@ -128,13 +156,11 @@ def main() -> int:
             )
             return 0
         except BaseException as err:
-            safety.atomic_json(
-                out / "postprocess_status.json",
-                {
-                    "state": "inspection_required",
-                    "error": f"{type(err).__name__}: {err}",
-                },
-            )
+            with contextlib.suppress(OSError):
+                publish_status(
+                    out / "postprocess_status.json",
+                    {"state": "inspection_required", "error": f"{type(err).__name__}: {err}"},
+                )
             raise
 
 

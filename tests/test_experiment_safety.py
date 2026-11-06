@@ -7,6 +7,36 @@ import pytest
 
 from scripts import experiment_safety as safe
 from scripts import supervise_experiments as supervisor
+from scripts import watch_s3_completion as observer
+
+
+def test_observer_recovers_transient_status_io_without_losing_awake_loop(monkeypatch, tmp_path):
+    writes = []
+
+    def transient(path, value):
+        writes.append(value)
+        if len(writes) < 3:
+            raise OSError(22, "transient resource pressure")
+
+    monkeypatch.setattr(observer.safety, "atomic_json", transient)
+    monkeypatch.setattr(observer.time, "sleep", lambda _: None)
+    assert observer.publish_status(tmp_path / "state.json", {"state": "waiting"}, critical=False)
+    assert len(writes) == 3
+
+
+def test_observer_io_failure_cannot_publish_false_terminal_success(monkeypatch, tmp_path):
+    def unavailable(*args):
+        raise OSError(22, "injected write failure")
+
+    monkeypatch.setattr(observer.safety, "atomic_json", unavailable)
+    monkeypatch.setattr(observer.time, "sleep", lambda _: None)
+    assert (
+        observer.publish_status(tmp_path / "state.json", {"state": "waiting"}, critical=False)
+        is False
+    )
+    with pytest.raises(OSError):
+        observer.publish_status(tmp_path / "state.json", {"state": "artifacts_ready_for_review"})
+    assert not (tmp_path / "state.json").exists()
 
 
 def test_smoke_sample_uses_real_benchmark_loader(monkeypatch, tmp_path):
@@ -22,6 +52,7 @@ def test_smoke_sample_uses_real_benchmark_loader(monkeypatch, tmp_path):
         )
 
     monkeypatch.setattr(sub, "_run_one", fake_run)
+    monkeypatch.setattr(safe, "shared_lock", lambda: tmp_path / "test_experiment.lock")
     assert supervisor.smoke(tmp_path, 4) == 0
 
 

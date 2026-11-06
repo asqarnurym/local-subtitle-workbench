@@ -32,6 +32,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts import experiment_safety as safety  # noqa: E402
 from scripts import s1_long_recordings as s1  # noqa: E402
 from scripts import speech_benchmark as benchmark  # noqa: E402
 from scripts.tempo import stretch_pcm16  # noqa: E402
@@ -180,34 +181,51 @@ def _aligner(workers: int) -> Any:
 
 
 def _run_one(run_dir: Path, workers: int, record: dict[str, Any], **kwargs: Any) -> None:
+    expected_ids = (
+        safety.effective_sample_ids(PROJECT_ROOT, Path(kwargs["utterance_list"]))
+        if kwargs.get("utterance_list")
+        else None
+    )
     if (run_dir / "run_record.json").exists():
+        safety.validate_complete(run_dir, record, expected_ids, kwargs.get("modes"))
         print(f"[=] {run_dir.name}: done, skipped", flush=True)
         return
     require(
-        not (run_dir / "benchmark_results.json").exists(),
-        f"{run_dir}: results without run record; inspect before rerunning",
+        not run_dir.exists() or not any(run_dir.iterdir()),
+        f"{run_dir}: incomplete attempt; preserve and inspect before rerunning",
     )
     before = s1.git_state()
     require(not before["dirty"], "Worktree is dirty; commit before running")
     print(f"[*] {run_dir.name}: start {time.strftime('%H:%M:%S')}", flush=True)
     t0 = time.perf_counter()
+    start_code = code_hashes()
+    start_refiner = {
+        f.name: s1.sha_file(f) for f in sorted((PROJECT_ROOT / s1.REFINER_DIR).glob("*"))
+    }
+    safety.atomic_json(run_dir / "attempt.json", {**record, "git": before, "code": start_code})
     aligner = _aligner(workers)
     benchmark.run_benchmark(
         output_dir=run_dir, refiner_dir=PROJECT_ROOT / s1.REFINER_DIR, aligner=aligner, **kwargs
     )
-    s1.write_json(
+    require(code_hashes() == start_code, "Code changed during run")
+    require(
+        {f.name: s1.sha_file(f) for f in sorted((PROJECT_ROOT / s1.REFINER_DIR).glob("*"))}
+        == start_refiner,
+        "BRQE weights changed during run",
+    )
+    outputs = safety.validate_bundle(run_dir, expected_ids, kwargs.get("modes"))
+    safety.atomic_json(
         run_dir / "run_record.json",
         {
             **record,
+            "output_sha256": outputs,
             "mfa_workers": workers,
             "mfa_retries": aligner.mfa_retries,
             "seconds": round(time.perf_counter() - t0, 1),
             "git_before": before,
             "git_after": s1.git_state(),
-            "code": code_hashes(),
-            "refiner_files": {
-                f.name: s1.sha_file(f) for f in sorted((PROJECT_ROOT / s1.REFINER_DIR).glob("*"))
-            },
+            "code": start_code,
+            "refiner_files": start_refiner,
         },
     )
     print(f"[+] {run_dir.name}: {time.perf_counter() - t0:.0f} s", flush=True)
@@ -228,9 +246,9 @@ def s2_run(out: Path, workers: int) -> int:
     return 0
 
 
-def s3_run(out: Path, workers: int) -> int:
+def s3_run(out: Path, workers: int, sizes: list[str] | None = None) -> int:
     out.mkdir(parents=True, exist_ok=True)
-    for size in S3_SIZES:
+    for size in sizes if sizes is not None else S3_SIZES:
         _run_one(
             out / "runs" / f"buckeye_{size}",
             workers,
@@ -344,14 +362,18 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("command", choices=["s2-build", "s2-run", "s3-run", "analyze"])
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--mfa-workers", type=int, default=1)
+    p.add_argument("--asr-model", choices=S3_SIZES, help="S3: run one pre-specified model")
     a = p.parse_args(argv)
     out = a.output_dir if a.output_dir.is_absolute() else PROJECT_ROOT / a.output_dir
     commands = {
         "s2-build": lambda: s2_build(out),
         "s2-run": lambda: s2_run(out, a.mfa_workers),
-        "s3-run": lambda: s3_run(out, a.mfa_workers),
+        "s3-run": lambda: s3_run(out, a.mfa_workers, [a.asr_model] if a.asr_model else None),
         "analyze": lambda: analyze(out),
     }
+    if a.command.endswith("-run"):
+        with safety.exclusive_lock(safety.shared_lock()):
+            return commands[a.command]()
     return commands[a.command]()
 
 

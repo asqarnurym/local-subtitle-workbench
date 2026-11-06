@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import json
+import os
 import platform
 import sys
 import tempfile
@@ -461,6 +462,18 @@ def _error_text(err: BaseException) -> str:
     return f"{type(err).__name__}: {err}"
 
 
+def _check_infrastructure_error(err: Exception) -> None:
+    """Opt-in guard: resource/environment failures must not become scientific rows."""
+    if os.environ.get("LSW_STRICT_INFRASTRUCTURE") != "1":
+        return
+    from subtitle_workbench.asr import VRAMAllocationError
+
+    if isinstance(err, (MemoryError, ImportError, FileNotFoundError, VRAMAllocationError)):
+        raise RuntimeError(
+            f"Infrastructure failure; experiment stopped: {_error_text(err)}"
+        ) from err
+
+
 def execute_modes(
     utterances: list[BenchmarkUtterance],
     modes: list[str],
@@ -488,7 +501,7 @@ def execute_modes(
     log(f"[*] Stage 1/2: ASR and chunking for {len(utterances)} utterances")
     t0 = time.perf_counter()
     try:
-        for utt in utterances:
+        for index, utt in enumerate(utterances):
             for scenario in sorted(scenarios):
                 try:
                     jobs[scenario][utt.id] = prepare_alignment_job(
@@ -499,7 +512,10 @@ def execute_modes(
                         vad_backend=vad_backend,
                     )
                 except Exception as err:  # recorded, not dropped
+                    _check_infrastructure_error(err)
                     jobs[scenario][utt.id] = _error_text(err)
+            if (index + 1) % 25 == 0:
+                log(f"[*] ASR progress: {index + 1}/{len(utterances)}")
     finally:
         cached.unload()
     timings["asr_and_chunking"] = round(time.perf_counter() - t0, 3)
@@ -560,6 +576,7 @@ def execute_modes(
             try:
                 mels[u.id] = extractor(read_wav_mono(u.wav_path))
             except Exception as err:
+                _check_infrastructure_error(err)
                 mel_errors[u.id] = f"mel features failed: {type(err).__name__}: {err}"
         timings["mel_features"] = round(time.perf_counter() - t0, 3)
         for mode in refined:
@@ -579,6 +596,7 @@ def execute_modes(
                         refiners[spec.refiner], utt.id, spec.scenario, base[0], base[1], mels
                     )
                 except Exception as err:
+                    _check_infrastructure_error(err)
                     results[mode][utt.id] = f"refinement failed: {type(err).__name__}: {err}"
             timings[f"refine_{mode}"] = round(time.perf_counter() - t0, 3)
     return results

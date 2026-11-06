@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import threading
@@ -56,14 +57,48 @@ def test_ctc_and_single_worker_stay_sequential_in_the_first_worker() -> None:
 
 
 def test_rooted_runner_sets_mfa_root_for_the_child_only(monkeypatch, tmp_path) -> None:
-    seen: dict = {}
-
-    def fake_run(cmd, **kwargs):
-        seen.update(kwargs)
-        return subprocess.CompletedProcess(cmd, 0, "", "")
-
-    monkeypatch.setattr(parallel_mfa.subprocess, "run", fake_run)
     monkeypatch.setattr(parallel_mfa, "_ensure_mfa_on_path", lambda: None)
-    RootedRunner(tmp_path).run(["mfa", "version"])
-    assert seen["env"]["MFA_ROOT_DIR"] == str(tmp_path) and seen["check"] is True
-    assert "MFA_ROOT_DIR" not in __import__("os").environ or True
+    previous = os.environ.get("MFA_ROOT_DIR")
+    result = RootedRunner(tmp_path).run(
+        [sys.executable, "-c", "import os; print(os.environ['MFA_ROOT_DIR'])"]
+    )
+    assert result.stdout.strip() == str(tmp_path)
+    assert os.environ.get("MFA_ROOT_DIR") == previous
+
+
+def test_runner_failure_preserves_diagnostics(monkeypatch, tmp_path) -> None:
+    import pytest
+
+    monkeypatch.setattr(parallel_mfa, "_ensure_mfa_on_path", lambda: None)
+    with pytest.raises(subprocess.CalledProcessError):
+        RootedRunner(tmp_path).run(
+            [
+                sys.executable,
+                "-c",
+                "import sys; print('failure detail', file=sys.stderr); sys.exit(3)",
+            ]
+        )
+    error_log = next((tmp_path / "diagnostics").glob("*/stderr.log"))
+    assert "failure detail" in error_log.read_text()
+
+
+def test_runner_timeout_stops_descendant_heartbeat(monkeypatch, tmp_path) -> None:
+    import pytest
+
+    monkeypatch.setattr(parallel_mfa, "_ensure_mfa_on_path", lambda: None)
+    marker = tmp_path / "child_alive.txt"
+    child_code = (
+        "import time; from pathlib import Path; "
+        f"p=Path({str(marker)!r}); "
+        "exec('while True:\\n p.write_text(str(time.time()))\\n time.sleep(0.03)')"
+    )
+    parent_code = (
+        "import subprocess, sys, time; "
+        f"subprocess.Popen([sys.executable, '-c', {child_code!r}]); time.sleep(60)"
+    )
+    with pytest.raises(subprocess.TimeoutExpired):
+        RootedRunner(tmp_path).run([sys.executable, "-c", parent_code], timeout=1)
+    assert marker.exists(), "the child must have actually started"
+    value = marker.read_text()
+    time.sleep(0.2)
+    assert marker.read_text() == value

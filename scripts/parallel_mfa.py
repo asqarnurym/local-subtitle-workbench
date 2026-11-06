@@ -15,11 +15,14 @@ import os
 import shutil
 import subprocess
 import tempfile
+import time
+import uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from queue import Queue
 from typing import Any
 
+from scripts.experiment_safety import ProcessTree, atomic_json, kill_tree, process_options
 from subtitle_workbench.mfa_wrapper import SubprocessRunner, _ensure_mfa_on_path
 
 MFA_HOME = Path.home() / "Documents" / "MFA"
@@ -47,16 +50,65 @@ class RootedRunner(SubprocessRunner):
 
     def run(self, cmd: list[str], timeout: float | None = None) -> subprocess.CompletedProcess:
         _ensure_mfa_on_path()
-        return subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            check=True,
-            timeout=timeout,
-            env=dict(os.environ, MFA_ROOT_DIR=str(self.root)),
+        # A frozen speaker batch normally takes minutes; an hour is a safety bound,
+        # not an alignment parameter. Every call gets a durable diagnostic directory.
+        timeout = timeout if timeout is not None else 3600.0
+        diagnostics = Path(os.environ.get("LSW_DIAGNOSTICS_DIR", self.root / "diagnostics"))
+        target = diagnostics / f"{self.root.name}_{uuid.uuid4().hex}"
+        target.mkdir(parents=True, exist_ok=False)
+        started = time.monotonic()
+        timed_out = False
+        with (target / "stdout.log").open("wb") as out, (target / "stderr.log").open("wb") as err:
+            proc = subprocess.Popen(
+                cmd,
+                stdout=out,
+                stderr=err,
+                env=dict(os.environ, MFA_ROOT_DIR=str(self.root)),
+                **process_options(),
+            )
+            tree = None
+            try:
+                tree = ProcessTree(proc)
+                atomic_json(
+                    target / "process.json",
+                    {
+                        "pid": proc.pid,
+                        "command": cmd,
+                        "timeout": timeout,
+                    },
+                )
+                proc.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                timed_out = True
+            finally:
+                if tree is not None:
+                    tree.close()
+                if proc.poll() is None:
+                    kill_tree(proc)
+        stdout = (target / "stdout.log").read_text(encoding="utf-8", errors="replace")
+        stderr = (target / "stderr.log").read_text(encoding="utf-8", errors="replace")
+        # Capture MFA analysis/logs before the frozen wrapper removes its staging root.
+        if len(cmd) > 5 and cmd[1] == "align":
+            output = Path(cmd[5])
+            if output.is_dir():
+                for source in output.rglob("*"):
+                    if source.is_file() and source.suffix.lower() in {".csv", ".log"}:
+                        dest = target / "mfa_output" / source.relative_to(output)
+                        dest.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(source, dest)
+        atomic_json(
+            target / "exit.json",
+            {
+                "returncode": proc.returncode,
+                "timed_out": timed_out,
+                "seconds": round(time.monotonic() - started, 3),
+            },
         )
+        if timed_out:
+            raise subprocess.TimeoutExpired(cmd, timeout, output=stdout, stderr=stderr)
+        if proc.returncode:
+            raise subprocess.CalledProcessError(proc.returncode, cmd, stdout, stderr)
+        return subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr)
 
 
 class ParallelAligner:
@@ -73,8 +125,13 @@ class ParallelAligner:
         from subtitle_workbench.aligner import ForcedAligner
 
         workers = []
+        if n < 1:
+            raise ValueError("At least one MFA worker is required")
+        session = f"p{os.getpid()}_{uuid.uuid4().hex[:8]}"
         for k in range(n):
-            inner = ForcedAligner(mfa_num_jobs=num_jobs, mfa_runner=RootedRunner(mfa_root(f"w{k}")))
+            inner = ForcedAligner(
+                mfa_num_jobs=num_jobs, mfa_runner=RootedRunner(mfa_root(f"{session}_w{k}"))
+            )
             workers.append(IsolatingAligner(inner) if isolate else inner)
         return cls(workers)
 

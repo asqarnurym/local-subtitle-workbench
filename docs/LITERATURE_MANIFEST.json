@@ -1,0 +1,862 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-06",
+  "scope_source": "C:\\Users\\nurym\\Desktop\\Thesis\\.agents\\teamwork\\orchestrator_3\\PROJECT.md",
+  "status": "preparatory_audit_not_final_journal_compliance",
+  "journal_requirements_url": "https://journal.astanait.edu.kz/index.php/ojs/requirements",
+  "limitations": [
+    "Age exceptions for seminal corpus/method papers require editorial resolution; not assumed granted.",
+    "No manuscript exists; citation coverage/order and final selected-source quotas cannot yet be certified.",
+    "Scopus/WoS eligibility must be checked per source; DOI registration does not establish indexing."
+  ],
+  "entries": [
+    {
+      "key": "Gernsbacher2015",
+      "title": "Video Captions Benefit Everyone",
+      "year": "2015",
+      "doi": "10.1177/2372732215602130",
+      "selection": "article_candidate",
+      "role": "Caption accessibility motivation",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Video Captions Benefit Everyone.pdf",
+          "sha256": "d6aaafc001dee166c3c9544647ddbf4b73b5400b40e8722bcaf1d1493ffa907d",
+          "pages": 8
+        }
+      ],
+      "age_in_2026": 11
+    },
+    {
+      "key": "Horlin2024",
+      "title": "I can be a ``normal'' student: the role of lecture capture in supporting disabled and neurodivergent students' participation in higher education",
+      "year": "2024",
+      "doi": "10.1007/s10734-024-01201-5",
+      "selection": "article_candidate",
+      "role": "Lecture capture and disabled/neurodivergent participation",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\I can be a “normal” student the role of lecture capture in supporting disabled and neurodivergent students’ participation in higher education.pdf",
+          "sha256": "4398c0a6a50de08f67321939cdbbf8989cd61476c69ca91ed8d34ab5c1eeb00d",
+          "pages": 18
+        }
+      ],
+      "age_in_2026": 2
+    },
+    {
+      "key": "LeCunff2024",
+      "title": "Neurodiversity and cognitive load in online learning: A focus group study",
+      "year": "2024",
+      "doi": "10.1371/journal.pone.0301932",
+      "selection": "article_candidate",
+      "role": "Qualitative evidence on cognitive load; not evidence of our educational efficacy",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Neurodiversity and cognitive load in online learning A focus group study.pdf",
+          "sha256": "1273cfb25ffd22f396e510b3d707b87822b1d061aea711628fcd0af42ef48284",
+          "pages": 25
+        }
+      ],
+      "age_in_2026": 2
+    },
+    {
+      "key": "Sumi2025",
+      "title": "A Systematic Review of Audio Visual Synchronization: Focus on Facial Expressions and Lip Movements",
+      "year": "2025",
+      "doi": null,
+      "selection": "dissertation_reserve",
+      "role": "Lip/face synchronization does not validate subtitle timing thresholds",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\A Systematic Review of Audio Visual Synchronization_Focus on Facial Expressions and Lip Movements.pdf",
+          "sha256": "4879b40da6ae2472ed7960f3b38a7e19ecc37b92017a66534f3674c65fe94889",
+          "pages": 6
+        }
+      ],
+      "age_in_2026": 1
+    },
+    {
+      "key": "Ingavelez2022",
+      "title": "Automatic Adaptation of Open Educational Resources: An Approach From a Multilevel Methodology Based on Students' Preferences, Educational Special Needs, Artificial Intelligence and Accessibility Metadata",
+      "year": "2022",
+      "doi": "10.1109/ACCESS.2021.3139537",
+      "selection": "dissertation_reserve",
+      "role": "OER adaptation outside the measured alignment question",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Automatic Adaptation of Open Educational Resources An Approach From a Multilevel Methodology Based on Students’ Preferences.pdf",
+          "sha256": "48a8c68b676f8ceddd3d12bb5ffdf7c8e9a30d7c27c80480b4107d14f76a20ef",
+          "pages": 14
+        }
+      ],
+      "age_in_2026": 4
+    },
+    {
+      "key": "Sweller2020",
+      "title": "Something old, something new from cognitive load theory",
+      "year": "2020",
+      "doi": "10.1016/j.chb.2020.106503",
+      "selection": "dissertation_reserve",
+      "role": "General cognitive-load context; thesis reserve",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Something old, something new from cognitive load theory.pdf",
+          "sha256": "c0623056c69ee5d2ac223195ef69060e83101645d39e44418ea7aa32ed559002",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 6
+    },
+    {
+      "key": "Mayer2020",
+      "title": "Five Strategies for Optimizing Instructional Materials: Instructor- and Learner-Managed Cognitive Load",
+      "year": "2021",
+      "doi": "10.1007/s10648-021-09606-9",
+      "selection": "dissertation_reserve",
+      "role": "Instructional design strategies; educational efficacy not measured here",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Five Strategies for Optimizing Instructional Materials Instructor- and Learner-Managed Cognitive Load.pdf",
+          "sha256": "905e0d297482f0aefffb64511169b2c021d50feadb029c7cf5ad1eb49fde254f",
+          "pages": 29
+        }
+      ],
+      "age_in_2026": 5
+    },
+    {
+      "key": "Kruger2016",
+      "title": "Measuring cognitive load in the presence of educational video: Towards a multimodal methodology",
+      "year": "2016",
+      "doi": "10.14742/ajet.3084",
+      "selection": "dissertation_reserve",
+      "role": "Cognitive-load measurement for future thesis user study",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Measuring cognitive load in the presence of educational video Towards a multimodal methodology.pdf",
+          "sha256": "29063ac3020ddd8f1192b7636a881bca00e57566f1e91e93e7ff6585bce80d41",
+          "pages": 13
+        }
+      ],
+      "age_in_2026": 10
+    },
+    {
+      "key": "Radford2023",
+      "title": "Robust Speech Recognition via Large-Scale Weak Supervision",
+      "year": "2023",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "Whisper architecture and training; ASR component",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Robust Speech Recognition via Large-Scale Weak Supervision.pdf",
+          "sha256": "03ea2a4bd8074d252b75657a49a707259e73c4b187dc9ba6ebfc7bf5043ae675",
+          "pages": 28
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Bain2023",
+      "title": "{WhisperX}: Time-Accurate Speech Transcription of Long-Form Audio",
+      "year": "2023",
+      "doi": "10.21437/Interspeech.2023-78",
+      "selection": "article_candidate",
+      "role": "WhisperX pipeline analogy; not a directly executed competitor",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\WhisperX Time-Accurate Speech Transcription of Long-Form Audio.pdf",
+          "sha256": "796e7f6c47c4bf98dbfec88cd73abe07dc546e3a96550964d7b910a9e0c7a85c",
+          "pages": 6
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Wagner2024",
+      "title": "{CrisperWhisper}: Accurate Timestamps on Verbatim Speech Transcriptions",
+      "year": "2024",
+      "doi": "10.21437/Interspeech.2024-731",
+      "selection": "article_candidate",
+      "role": "Verbatim recognition and word timestamp alternatives",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Wagner2024_CrisperWhisper_ISCA.pdf",
+          "sha256": "dd1b75d326e3c49ff1b16b4a686de75dc292a6d12f09f92725e7a0b94a54fefb",
+          "pages": 5
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\CrisperWhisper_Accurate Timestamps on Verbatim Speech Transcriptions.pdf",
+          "sha256": "0c51048cba443faa715b6464414d3473150b01f85026a783be716ad6a00eb167",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 2
+    },
+    {
+      "key": "Machacek2023",
+      "title": "Turning {Whisper} into Real-Time Transcription System",
+      "year": "2023",
+      "doi": "10.18653/v1/2023.ijcnlp-demo.3",
+      "selection": "dissertation_reserve",
+      "role": "Streaming local agreement; different task from offline forced alignment",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Machacek2023_WhisperStreaming_ACL.pdf",
+          "sha256": "d5b05981c98e342f40cb9822f3d791af272c8a20ddfac239a8e822abb4819e99",
+          "pages": 8
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Turning_Whisper_into_Real-Time_Transcription_Syste.pdf",
+          "sha256": "a5c1d12b6630d03d09060eb8939a0b630be8f70b1552713ba4ef7d6b652bfeb1",
+          "pages": 7
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "McKinnon2026",
+      "title": "Window Size Versus Accuracy Experiments in Voice Activity Detectors",
+      "year": "2026",
+      "doi": "10.48550/arXiv.2601.17270",
+      "selection": "dissertation_reserve",
+      "role": "VAD window context; verified preprint only",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\McKinnon2026_WindowSizeVoiceActivityDetectors.pdf",
+          "sha256": "033c2ba18a5944a38788049df31fe0349cf67702c52c0a7276d81fec1ddf44fa",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 0
+    },
+    {
+      "key": "Belkhouja2022",
+      "title": "Dynamic Time Warping based Adversarial Framework for Time-Series Domain",
+      "year": "2023",
+      "doi": "10.1109/TPAMI.2022.3224754",
+      "selection": "dissertation_reserve",
+      "role": "Adversarial time-series DTW does not substantiate this alignment method",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Dynamic Time Warping based Adversarial Framework for Time-Series Domain.pdf",
+          "sha256": "6b53d7f437e7b1c00e87ec18703f15093d5b4fa88aa5d8a841b7e47ce8a4c0ad",
+          "pages": 23
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Sun2023",
+      "title": "Eventfulness for Interactive Video Alignment",
+      "year": "2023",
+      "doi": "10.1145/3592118",
+      "selection": "dissertation_reserve",
+      "role": "Interactive video events outside current speech alignment question",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Eventfulness for Interactive Video Alignment.pdf",
+          "sha256": "1acf58940d65e6eb4ee8160e7085105d8bbf896c7ddf323cb0019d9f9a99d319",
+          "pages": 10
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Baevski2020",
+      "title": "wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations",
+      "year": "2020",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "wav2vec 2.0 architecture underlying the CTC family",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Baevski2020_Wav2Vec2Framework.pdf",
+          "sha256": "4a881708378143547a5c053f62090104afb49782a4c71d78441dde0a818758ff",
+          "pages": 19
+        }
+      ],
+      "age_in_2026": 6
+    },
+    {
+      "key": "Pratap2023",
+      "title": "Scaling Speech Technology to 1,000+ Languages",
+      "year": "2024",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "MMS forced-alignment acoustic model",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Pratap2023_MassivelyMultilingualSpeech.pdf",
+          "sha256": "f83bf79e989b901b8fbf344d5940b1820534d67fd4bb3af5695d844825fbe490",
+          "pages": 41
+        }
+      ],
+      "age_in_2026": 2
+    },
+    {
+      "key": "McAuliffe2017",
+      "title": "Montreal Forced Aligner: Trainable Text-Speech Alignment Using {Kaldi}",
+      "year": "2017",
+      "doi": "10.21437/Interspeech.2017-1386",
+      "selection": "article_candidate",
+      "role": "MFA foundational method",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\McAuliffe2017_MontrealForcedAligner.pdf",
+          "sha256": "bdc30caaaa6effac58372bc76dd1664f515a91f13f3c7e67edb0edcc1d41e981",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 9
+    },
+    {
+      "key": "Malik2021",
+      "title": "Automatic speech recognition: a survey",
+      "year": "2021",
+      "doi": "10.1007/s11042-020-10073-7",
+      "selection": "dissertation_reserve",
+      "role": "General ASR survey, not needed to pad technical references",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Automatic speech recognition a survey.pdf",
+          "sha256": "b4df58eed6042dc4347a6650874dcec3351270c360e91dc3cc8d12a2ce274e41",
+          "pages": 47
+        }
+      ],
+      "age_in_2026": 5
+    },
+    {
+      "key": "Borah2026",
+      "title": "Low-latency transformer model for streaming automatic speech recognition",
+      "year": "2022",
+      "doi": "10.1049/ell2.12349",
+      "selection": "dissertation_reserve",
+      "role": "Streaming Transformer latency outside present offline experiment",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Low‐latency transformer model for streaming automatic speech recognition.pdf",
+          "sha256": "35daa3c6d0adf4cee16c5e8d1125b80a079dc4f664a9712fc9cf974c12be1d7d",
+          "pages": 3
+        }
+      ],
+      "age_in_2026": 4
+    },
+    {
+      "key": "Malakul2023",
+      "title": "The effects of using an auto-subtitle system in educational videos to facilitate learning for secondary school students: learning comprehension, cognitive load, and satisfaction",
+      "year": "2023",
+      "doi": "10.1186/s40561-023-00224-2",
+      "selection": "article_candidate",
+      "role": "Educational auto-caption motivation and limitations",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\The effects of using an auto‑subtitle system in educational videos to facilitate learning for secondary school students learning comprehension, cognitive load, and satisfaction.pdf",
+          "sha256": "cc167311527f858bf6fcec2eb0cbad91479c5cac6c04237de08e559352907151",
+          "pages": 17
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Mirzaei2018",
+      "title": "Exploiting Automatic Speech Recognition Errors to Enhance Partial and Synchronized Caption for Facilitating Second Language Listening",
+      "year": "2018",
+      "doi": "10.1016/j.csl.2017.11.001",
+      "selection": "article_candidate",
+      "role": "ASR errors and synchronized captioning analogy",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Exploiting Automatic Speech Recognition Errors to Enhance Partial and Synchronized Caption for Facilitating Second Language Listening.pdf",
+          "sha256": "3ec298cc37cda9e42f68e35f335c3f0c872d7537267401b5a0f53225e5cebacf",
+          "pages": 21
+        }
+      ],
+      "age_in_2026": 8
+    },
+    {
+      "key": "Teng2024",
+      "title": "Comparing incidental learning of single words and collocations from different captioning conditions: The role of vocabulary knowledge and working memory",
+      "year": "2024",
+      "doi": "10.1111/jcal.12910",
+      "selection": "article_candidate",
+      "role": "Captioning conditions and learning; no causal claim about our pipeline",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Comparing incidental learning of single words and collocations from different captioning conditions The role of vocabulary knowledge and working memory.pdf",
+          "sha256": "764a9600259cf5f787caa0d35256bf0182de03211492198fef66872d3c07c9cb",
+          "pages": 17
+        }
+      ],
+      "age_in_2026": 2
+    },
+    {
+      "key": "Hsu2021",
+      "title": "{HuBERT}: Self-Supervised Speech Representation Learning by Masked Prediction of Hidden Units",
+      "year": "2021",
+      "doi": "10.1109/TASLP.2021.3122291",
+      "selection": "dissertation_reserve",
+      "role": "HuBERT not the implemented MMS model",
+      "metadata_status": "pending_primary_source_check",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Hsu2021_HuBERTSelfSupervisedSpeech.pdf",
+          "sha256": "3a919c3ede82b15c3c28f648ea8c8ef7417bab533b04f9b2b97a324c9be688d9",
+          "pages": 10
+        }
+      ],
+      "age_in_2026": 5
+    },
+    {
+      "key": "Gandhi2023",
+      "title": "Distil-{Whisper}: Robust Knowledge Distillation via Large-Scale Pseudo Labelling",
+      "year": "2023",
+      "doi": "10.48550/arXiv.2311.00430",
+      "selection": "dissertation_reserve",
+      "role": "Distillation not evaluated by S3 size comparison; preprint status retained",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Gandhi2023_DistilWhisperKnowledgeDistillation.pdf",
+          "sha256": "98f13a4ef2762a05ce9e43848eb46921c0a0b44f97ca95526462e32b4e30ddae",
+          "pages": 30
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Gong2023",
+      "title": "{Whisper-AT}: Noise-Robust Automatic Speech Recognizers are Also Strong General Audio Event Taggers",
+      "year": "2023",
+      "doi": "10.21437/Interspeech.2023-2193",
+      "selection": "dissertation_reserve",
+      "role": "Noise/audio tagging context; no noise experiment here",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Gong2023_WhisperAT_ISCA.pdf",
+          "sha256": "0ae52aa88ef64a640b3935854949b60acdf639fcee0f38eacbdce82bca74ad9e",
+          "pages": 5
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Whisper-AT_Noise-Robust Automatic Speech Recognizers.pdf",
+          "sha256": "0e4f208fda817896a480e141323bf8f35a382110f135e12f3bc28388bb993be8",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Cooper2024",
+      "title": "Cognitive load and neurodiversity in online education: a preliminary framework",
+      "year": "2025",
+      "doi": "10.3389/feduc.2024.1437673",
+      "selection": "dissertation_reserve",
+      "role": "Broad educational framework; reserve for dissertation",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Cognitive load and neurodiversity in online education a preliminary framework for educational research and policy.pdf",
+          "sha256": "ea861771dad3ca97e9ed5f14219ef6838f683cdc488e33170b398a967e727eee",
+          "pages": 11
+        }
+      ],
+      "age_in_2026": 1
+    },
+    {
+      "key": "Skulmowski2022",
+      "title": "Latest trends to optimize computer-based learning: Guidelines from cognitive load theory",
+      "year": "2020",
+      "doi": "10.1016/j.chb.2020.106458",
+      "selection": "dissertation_reserve",
+      "role": "General cognitive-load editorial, not evidence of alignment accuracy",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Latest trends to optimize computer-based learning_Guidelines from cognitive load theory.pdf",
+          "sha256": "d4eacdbee23b0b28515ed0e7b7ad794449f295ad817cbedef7723e3cf553b776",
+          "pages": 4
+        }
+      ],
+      "age_in_2026": 6
+    },
+    {
+      "key": "Rousso2024",
+      "title": "Tradition or Innovation: A Comparison of Modern {ASR} Methods for Forced Alignment",
+      "year": "2024",
+      "doi": "10.21437/Interspeech.2024-429",
+      "selection": "article_candidate",
+      "role": "Closest independent MFA/WhisperX/MMS comparison on TIMIT and Buckeye",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Rousso2024_ForcedAlignmentComparison.pdf",
+          "sha256": "fa29f90008ebc14f50a01cbd271669acaf2e7b2396c502e2ac73bde6dfb99401",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 2
+    },
+    {
+      "key": "Rastorgueva2023",
+      "title": "{NeMo} Forced Aligner and its application to word alignment for subtitle generation",
+      "year": "2023",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "Subtitle word alignment and long-form comparator",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Rastorgueva2023_NeMoForcedAligner.pdf",
+          "sha256": "7cd1795bd2feb844f156021045384037c810d48fbf3a0db9f51870b06ece4067",
+          "pages": 2
+        }
+      ],
+      "age_in_2026": 3
+    },
+    {
+      "key": "Stolcke2014",
+      "title": "Highly Accurate Phonetic Segmentation Using Boundary Correction Models and System Fusion",
+      "year": "2014",
+      "doi": "10.1109/ICASSP.2014.6854665",
+      "selection": "article_candidate",
+      "role": "Prior boundary-correction models; prevents unsupported novelty claim",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Stolcke2014_BoundaryCorrection.pdf",
+          "sha256": "09651dea6ee11a36d1383481a3f758984ea80092a2ee6e5fcc728a61ce7b7c3e",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 12
+    },
+    {
+      "key": "Moreno1998",
+      "title": "A Recursive Algorithm for the Forced Alignment of Very Long Audio Segments",
+      "year": "1998",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "Recursive long-form alignment predecessor",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Moreno1998_RecursiveLongAlignment.pdf",
+          "sha256": "bb66daa071911ecec15318f13c483ff05dcb224ef8a9c579a082ea5e53c22139",
+          "pages": 4
+        }
+      ],
+      "age_in_2026": 28
+    },
+    {
+      "key": "Kurzinger2020",
+      "title": "{CTC}-Segmentation of Large Corpora for German End-to-End Speech Recognition",
+      "year": "2020",
+      "doi": "10.1007/978-3-030-60276-5_27",
+      "selection": "article_candidate",
+      "role": "CTC segmentation of long audio",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Kurzinger2020_CTCSegmentation.pdf",
+          "sha256": "3c71864510debae281c8f439ad384edbd78c13aa2f41bc9ad0e3969a215507f3",
+          "pages": 12
+        }
+      ],
+      "age_in_2026": 6
+    },
+    {
+      "key": "Zhu2022",
+      "title": "Phone-to-Audio Alignment without Text: A Semi-Supervised Approach",
+      "year": "2022",
+      "doi": "10.1109/ICASSP43922.2022.9746112",
+      "selection": "article_candidate",
+      "role": "Alternative phone-to-audio alignment family",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Zhu2022_Charsiu.pdf",
+          "sha256": "67d085ad3edaa056102e12a5cbd6eea0099308293e1eed74206c94801c03690b",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 4
+    },
+    {
+      "key": "Pitt2005",
+      "title": "The {Buckeye} corpus of conversational speech: labeling conventions and a test of transcriber reliability",
+      "year": "2005",
+      "doi": "10.1016/j.specom.2004.09.001",
+      "selection": "article_candidate",
+      "role": "Buckeye corpus and labeling reliability",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Pitt2005_BuckeyeCorpus.pdf",
+          "sha256": "bd02eed3f265d4b36831a3c9e3d9d88bac1322830792c3e010fd7b4f61aff272",
+          "pages": 7
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\archive_ancient\\Pitt2005_BuckeyeCorpusLabelingReliability.pdf",
+          "sha256": "bd02eed3f265d4b36831a3c9e3d9d88bac1322830792c3e010fd7b4f61aff272",
+          "pages": 7
+        }
+      ],
+      "age_in_2026": 21
+    },
+    {
+      "key": "Raymond2002",
+      "title": "An analysis of transcription consistency in spontaneous speech from the {Buckeye} corpus",
+      "year": "2002",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "Annotation consistency; do not convert relative tolerances into invented milliseconds",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Raymond2002_BuckeyeTranscriptionConsistency.pdf",
+          "sha256": "421f8b95603800e3abb2fc3e399626ce99fc9e6611a06ff08225f66e24755286",
+          "pages": 4
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\archive_ancient\\Raymond2002_BuckeyeAnnotatorReliability.pdf",
+          "sha256": "421f8b95603800e3abb2fc3e399626ce99fc9e6611a06ff08225f66e24755286",
+          "pages": 4
+        }
+      ],
+      "age_in_2026": 24
+    },
+    {
+      "key": "McAuliffe2026",
+      "title": "Montreal Forced Aligner and the state of speech-to-text alignment in 2026",
+      "year": "2026",
+      "doi": "10.21437/Interspeech.2026-2734",
+      "selection": "article_candidate",
+      "role": "Current MFA comparison and limitations",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\McAuliffe2026_Interspeech.pdf",
+          "sha256": "3994e24c486449d984bc36b8d37f35c46e9d1290923934840e747c13f6b06d33",
+          "pages": 10
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\McAuliffe2026_MFA2026.pdf",
+          "sha256": "e31c4c160333dc7f812183ef9d1e2c2300326fe2221753ef4bc7a40bc8344cc0",
+          "pages": 10
+        }
+      ],
+      "age_in_2026": 0
+    },
+    {
+      "key": "Mu2026",
+      "title": "{LLM-ForcedAligner}: A Non-Autoregressive and Accurate {LLM}-Based Forced Aligner for Multilingual and Long-Form Speech",
+      "year": "2026",
+      "doi": "10.18653/v1/2026.acl-long.1174",
+      "selection": "article_candidate",
+      "role": "Modern multilingual/long-form neural forced-alignment comparator; compare qualitatively only",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Mu2026_ACL.pdf",
+          "sha256": "b18aa8d9b30bff962f2c794de9eb20a4117ba23b1293529d798367fb73c83c9e",
+          "pages": 12
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Mu2026_LLMForcedAligner.pdf",
+          "sha256": "e61855af290e61d6434845b54854e3bd33fe4c03ad5f50a354393e1332aebdc4",
+          "pages": 12
+        }
+      ],
+      "age_in_2026": 0
+    },
+    {
+      "key": "Garofolo1993",
+      "title": "{DARPA TIMIT} Acoustic-Phonetic Continuous Speech Corpus {CD-ROM}",
+      "year": "1993",
+      "doi": "10.6028/NIST.IR.4930",
+      "selection": "article_candidate",
+      "role": "TIMIT corpus provenance",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Garofolo1993_TIMIT_NISTIR4930.pdf",
+          "sha256": "ab6ee9f8f8aaa55f3c395a3efcb916e915c35fc48b4ff22c1ea6264034c8e1da",
+          "pages": 94
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\archive_ancient\\Garofolo1993_TIMITDocumentation.pdf",
+          "sha256": "ab6ee9f8f8aaa55f3c395a3efcb916e915c35fc48b4ff22c1ea6264034c8e1da",
+          "pages": 94
+        }
+      ],
+      "age_in_2026": 33
+    },
+    {
+      "key": "ITU1998",
+      "title": "Recommendation {ITU-R} {BT.1359-1}: Relative timing of sound and vision for broadcasting",
+      "year": "1998",
+      "doi": null,
+      "selection": "dissertation_reserve",
+      "role": "Audio-vision broadcasting thresholds do not establish subtitle Acc@20ms",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\ITU1998_BT1359-1.pdf",
+          "sha256": "1e6f61373b6900d76dcc0be13af8d86055794876e325ff7bc630f44a0d775acc",
+          "pages": 5
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\archive_ancient\\ITUR1998_RelativeTimingSoundVision.pdf",
+          "sha256": "1e6f61373b6900d76dcc0be13af8d86055794876e325ff7bc630f44a0d775acc",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 28
+    },
+    {
+      "key": "EBU2007",
+      "title": "{EBU} Recommendation {R37}-2007: The relative timing of the sound and vision components of a television signal",
+      "year": "2007",
+      "doi": null,
+      "selection": "dissertation_reserve",
+      "role": "Audio-vision broadcasting tolerance, not a subtitle threshold",
+      "metadata_status": "previous_check_in_annotations",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\EBU2007_R37.pdf",
+          "sha256": "045d5619b9c14d9139ec7c9434c271c77602bae74aee8bd3c557656364024f93",
+          "pages": 3
+        },
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\archive_ancient\\EBU2007_RelativeTimingSoundVision.pdf",
+          "sha256": "045d5619b9c14d9139ec7c9434c271c77602bae74aee8bd3c557656364024f93",
+          "pages": 3
+        }
+      ],
+      "age_in_2026": 19
+    },
+    {
+      "key": "Liu2020Blockwise",
+      "title": "Statistical Testing on {ASR} Performance via Blockwise Bootstrap",
+      "year": "2020",
+      "doi": "10.21437/Interspeech.2020-1338",
+      "selection": "article_candidate",
+      "role": "Dependence of utterances within speaker and block resampling; not identical estimator",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Liu2020_BlockwiseBootstrap.pdf",
+          "sha256": "bdb5ff98ed77f1bcdbef02cf1ab6f72759a40e10009f11866bf10d81dcae0191",
+          "pages": 5
+        }
+      ],
+      "age_in_2026": 6
+    }
+  ]
+}

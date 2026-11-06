@@ -1,0 +1,38 @@
+[
+  {
+    "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Wagner2024_CrisperWhisper_ISCA.pdf",
+    "sha256": "dd1b75d326e3c49ff1b16b4a686de75dc292a6d12f09f92725e7a0b94a54fefb",
+    "pages": 5,
+    "bytes": 1121904,
+    "url": "https://www.isca-archive.org/interspeech_2024/zusag24_interspeech.pdf",
+    "retrieved": "2026-11-06",
+    "source": "publisher/official conference archive"
+  },
+  {
+    "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Machacek2023_WhisperStreaming_ACL.pdf",
+    "sha256": "d5b05981c98e342f40cb9822f3d791af272c8a20ddfac239a8e822abb4819e99",
+    "pages": 8,
+    "bytes": 284076,
+    "url": "https://aclanthology.org/2023.ijcnlp-demo.3.pdf",
+    "retrieved": "2026-11-06",
+    "source": "publisher/official conference archive"
+  },
+  {
+    "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Gong2023_WhisperAT_ISCA.pdf",
+    "sha256": "0ae52aa88ef64a640b3935854949b60acdf639fcee0f38eacbdce82bca74ad9e",
+    "pages": 5,
+    "bytes": 390622,
+    "url": "https://www.isca-archive.org/interspeech_2023/gong23d_interspeech.pdf",
+    "retrieved": "2026-11-06",
+    "source": "publisher/official conference archive"
+  },
+  {
+    "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Liu2020_BlockwiseBootstrap.pdf",
+    "sha256": "bdb5ff98ed77f1bcdbef02cf1ab6f72759a40e10009f11866bf10d81dcae0191",
+    "pages": 5,
+    "bytes": 390584,
+    "url": "https://www.isca-archive.org/interspeech_2020/liu20c_interspeech.pdf",
+    "retrieved": "2026-11-06",
+    "source": "publisher/official conference archive"
+  }
+]

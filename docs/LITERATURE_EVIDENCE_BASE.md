@@ -1,5 +1,10 @@
 # Master Literature Evidence Matrix & Modern Empirical Grounding Base
 
+> Historical snapshot; superseded for current selection by
+> `docs/LITERATURE_MANIFEST.json` and `docs/LITERATURE_AUDIT_20261106.md`.
+> Counts, recency percentages and several bibliographic identities below are
+> outdated. Do not reuse them as current verified evidence.
+
 **Project:** Local Subtitle Forced Alignment Workbench (`local-subtitle-workbench`)  
 **Research Context:** Master's Thesis & Scientific Publication 2 (Astana IT University / IEEE Standard)  
 **Document Designation:** Modernized Authoritative Literature Evidence Base (`LITERATURE_EVIDENCE_BASE.md`)  

@@ -9,6 +9,22 @@ from scripts import experiment_safety as safe
 from scripts import supervise_experiments as supervisor
 
 
+def test_smoke_sample_uses_real_benchmark_loader(monkeypatch, tmp_path):
+    from scripts import s2_s3_substudies as sub
+    from scripts.speech_benchmark import load_utterance_sample
+
+    def fake_run(run, workers, record, **kwargs):
+        sample = load_utterance_sample(kwargs["utterance_list"])
+        assert len(sample["utterance_ids"]) == 2
+        assert len({i[:3] for i in sample["utterance_ids"]}) == 2
+        safe.atomic_json(
+            run / "benchmark_results.json", {"modes": {"test": {"n_utterances_failed": 0}}}
+        )
+
+    monkeypatch.setattr(sub, "_run_one", fake_run)
+    assert supervisor.smoke(tmp_path, 4) == 0
+
+
 def test_s3_uses_frozen_exclusion_without_changing_original_sample():
     root = Path(__file__).resolve().parents[1]
     sample = root / "reports/buckeye_test_sample_20260401.json"

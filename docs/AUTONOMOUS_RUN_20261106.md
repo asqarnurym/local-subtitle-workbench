@@ -71,6 +71,11 @@ medium → large-v3-turbo и анализ по существующему про
 
 ## Литературный этап
 
+Первая проверка smoke остановлена до загрузки моделей: служебному sample не
+хватало schema_version. Это дефект нового setup; исправлен с тестом через
+настоящий load_utterance_sample. Каталог не перезаписывается, сохраняется как
+`reports/s3_preflight_failure_20261106/` перед новой попыткой.
+
 Найден исторический project scope:
 `C:/Users/nurym/Desktop/Thesis/.agents/teamwork/orchestrator_3/PROJECT.md`.
 Он описывает реестр с полными текстами и страницами доказательств, но его

@@ -106,7 +106,14 @@ def smoke(out: Path, workers: int) -> int:
     # Two speakers exercise both concurrent MFA roots and the CTC path.
     chosen = [ids[0], next(i for i in ids if i[:3] != ids[0][:3])]
     sample = out / "smoke_sample.json"
-    safety.atomic_json(sample, {"corpus": "buckeye", "utterance_ids": chosen})
+    safety.atomic_json(
+        sample,
+        {
+            "schema_version": benchmark_sample_schema(),
+            "corpus": "buckeye",
+            "utterance_ids": chosen,
+        },
+    )
     with safety.exclusive_lock(safety.shared_lock()):
         sub._run_one(
             out / "smoke",
@@ -123,6 +130,12 @@ def smoke(out: Path, workers: int) -> int:
     if any(m["n_utterances_failed"] for m in result["modes"].values()):
         raise safety.IntegrityError("Smoke produced failed clips; inspect before a full run")
     return 0
+
+
+def benchmark_sample_schema() -> int:
+    from scripts.speech_benchmark import SAMPLE_SCHEMA_VERSION
+
+    return SAMPLE_SCHEMA_VERSION
 
 
 def main() -> int:

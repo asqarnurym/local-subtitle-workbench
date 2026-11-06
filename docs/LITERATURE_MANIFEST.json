@@ -19,7 +19,7 @@
       "role": "Caption accessibility motivation",
       "metadata_status": "pending_primary_source_check",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "not_individually_verified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Video Captions Benefit Everyone.pdf",
@@ -27,7 +27,13 @@
           "pages": 8
         }
       ],
-      "age_in_2026": 11
+      "age_in_2026": 11,
+      "indexing_evidence": {
+        "journal": "Policy Insights from the Behavioral and Brain Sciences",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 865,
+        "publisher_source": null
+      }
     },
     {
       "key": "Horlin2024",
@@ -38,7 +44,7 @@
       "role": "Lecture capture and disabled/neurodivergent participation",
       "metadata_status": "previous_check_in_annotations",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "not_individually_verified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\I can be a “normal” student the role of lecture capture in supporting disabled and neurodivergent students’ participation in higher education.pdf",
@@ -46,7 +52,13 @@
           "pages": 18
         }
       ],
-      "age_in_2026": 2
+      "age_in_2026": 2,
+      "indexing_evidence": {
+        "journal": "Higher Education",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 405,
+        "publisher_source": "https://link.springer.com/journal/10734"
+      }
     },
     {
       "key": "LeCunff2024",
@@ -57,7 +69,7 @@
       "role": "Qualitative evidence on cognitive load; not evidence of our educational efficacy",
       "metadata_status": "previous_check_in_annotations",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "publisher_reports_venue_Scopus_and_Web_of_Science; article-level coverage not certified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Neurodiversity and cognitive load in online learning A focus group study.pdf",
@@ -66,7 +78,13 @@
         }
       ],
       "age_in_2026": 2,
-      "indexing_source": "https://journals.plos.org/plosone/s/journal-information"
+      "indexing_source": "https://journals.plos.org/plosone/s/journal-information",
+      "indexing_evidence": {
+        "journal": "PLOS ONE",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 863,
+        "publisher_source": "https://journals.plos.org/plosone/s/journal-information"
+      }
     },
     {
       "key": "Sumi2025",
@@ -334,7 +352,7 @@
       "role": "MMS forced-alignment acoustic model",
       "metadata_status": "previous_check_in_annotations",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "not_individually_verified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Pratap2023_MassivelyMultilingualSpeech.pdf",
@@ -342,7 +360,13 @@
           "pages": 41
         }
       ],
-      "age_in_2026": 2
+      "age_in_2026": 2,
+      "indexing_evidence": {
+        "journal": "Journal of Machine Learning Research",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 618,
+        "publisher_source": null
+      }
     },
     {
       "key": "McAuliffe2017",
@@ -410,7 +434,7 @@
       "role": "Educational auto-caption motivation and limitations",
       "metadata_status": "checked_20261106",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "not_individually_verified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\The effects of using an auto‑subtitle system in educational videos to facilitate learning for secondary school students learning comprehension, cognitive load, and satisfaction.pdf",
@@ -418,7 +442,13 @@
           "pages": 17
         }
       ],
-      "age_in_2026": 3
+      "age_in_2026": 3,
+      "indexing_evidence": {
+        "journal": "Smart Learning Environments",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 1008,
+        "publisher_source": "https://link.springer.com/journal/40561"
+      }
     },
     {
       "key": "Mirzaei2018",
@@ -429,7 +459,7 @@
       "role": "ASR errors and synchronized captioning analogy",
       "metadata_status": "checked_20261106",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "not_individually_verified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Exploiting Automatic Speech Recognition Errors to Enhance Partial and Synchronized Caption for Facilitating Second Language Listening.pdf",
@@ -437,7 +467,13 @@
           "pages": 21
         }
       ],
-      "age_in_2026": 8
+      "age_in_2026": 8,
+      "indexing_evidence": {
+        "journal": "Computer Speech and Language",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 222,
+        "publisher_source": null
+      }
     },
     {
       "key": "Teng2024",
@@ -448,7 +484,7 @@
       "role": "Captioning conditions and learning; no causal claim about our pipeline",
       "metadata_status": "checked_20261106",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "not_individually_verified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\Thesis\\Article base\\Comparing incidental learning of single words and collocations from different captioning conditions The role of vocabulary knowledge and working memory.pdf",
@@ -456,7 +492,13 @@
           "pages": 17
         }
       ],
-      "age_in_2026": 2
+      "age_in_2026": 2,
+      "indexing_evidence": {
+        "journal": "Journal of Computer Assisted Learning",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 566,
+        "publisher_source": null
+      }
     },
     {
       "key": "Hsu2021",
@@ -681,7 +723,7 @@
       "role": "Buckeye corpus and labeling reliability",
       "metadata_status": "previous_check_in_annotations",
       "supporting_pages_status": "see LITERATURE_ANNOTATIONS; not every claim checked by this inventory",
-      "indexing_status": "not_individually_verified",
+      "indexing_status": "2026 university list reports both WoS and Scopus; individual article coverage not certified",
       "local_files": [
         {
           "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Pitt2005_BuckeyeCorpus.pdf",
@@ -694,7 +736,13 @@
           "pages": 7
         }
       ],
-      "age_in_2026": 21
+      "age_in_2026": 21,
+      "indexing_evidence": {
+        "journal": "Speech Communication",
+        "university_source": "https://drupalwebprod-files.up.ac.za/Public/2026-03/Integrated_list_2026.pdf?VersionId=5PUTU_ig0W50CduAW1hsBKY1rx.nFdBa",
+        "pdf_page": 1026,
+        "publisher_source": null
+      }
     },
     {
       "key": "Raymond2002",
@@ -858,6 +906,31 @@
         }
       ],
       "age_in_2026": 6
+    },
+    {
+      "key": "Dror2018",
+      "title": "The Hitchhiker's Guide to Testing Statistical Significance in Natural Language Processing",
+      "year": "2018",
+      "doi": "10.18653/v1/P18-1128",
+      "selection": "article_candidate",
+      "role": "Matched-pair statistical test selection and Wilcoxon assumptions; complements speaker-block bootstrap source",
+      "metadata_status": "checked_20261106",
+      "supporting_pages_status": "PDF p5 = journal p1387: matched-sample Wilcoxon and symmetric-difference null",
+      "indexing_status": "not_individually_verified",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Dror2018_StatisticalSignificance.pdf",
+          "sha256": "e3b6e07cf7e404443e4b516db9b2a72c5d24a38285a9a6691ed2e3b01b02235b",
+          "pages": 10
+        }
+      ],
+      "age_in_2026": 8
     }
-  ]
+  ],
+  "indexing_quota_snapshot": {
+    "article_candidates": 25,
+    "journal_entries_listed_in_both_databases": 8,
+    "fraction": 0.32,
+    "status": "provisional venue-level evidence; not certification of individual paper coverage or final bibliography"
+  }
 }

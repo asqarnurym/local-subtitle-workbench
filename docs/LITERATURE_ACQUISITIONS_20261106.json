@@ -34,5 +34,14 @@
     "url": "https://www.isca-archive.org/interspeech_2020/liu20c_interspeech.pdf",
     "retrieved": "2026-11-06",
     "source": "publisher/official conference archive"
+  },
+  {
+    "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Dror2018_StatisticalSignificance.pdf",
+    "sha256": "e3b6e07cf7e404443e4b516db9b2a72c5d24a38285a9a6691ed2e3b01b02235b",
+    "pages": 10,
+    "bytes": 239199,
+    "url": "https://aclanthology.org/P18-1128.pdf",
+    "retrieved": "2026-11-06",
+    "source": "ACL Anthology, CC-BY4.0 research full text"
   }
 ]

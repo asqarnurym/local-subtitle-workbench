@@ -454,7 +454,7 @@ class TorchAudioAligner:
                 emissions, _ = self._model(waveform)
                 emissions = torch.log_softmax(emissions, dim=-1)
                 required_frames = len(token_ids) + sum(
-                    a == b for a, b in zip(token_ids, token_ids[1:])
+                    a == b for a, b in zip(token_ids, token_ids[1:], strict=False)
                 )
                 if required_frames > emissions.size(1):
                     return []

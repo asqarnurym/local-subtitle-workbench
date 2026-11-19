@@ -1,0 +1,106 @@
+{
+  "scenarios": {
+    "A": {
+      "n_words_full": 9153,
+      "brqe_auc_full_recomputed": 0.7564686473815576,
+      "brqe_auc_full_frozen": 0.7564686473815576,
+      "n_words_evaluated": 9153,
+      "share_of_full": 1.0,
+      "positive_rate": 0.4967770130012018,
+      "roc_auc": {
+        "brqe": 0.7564686473815576,
+        "disagreement": 0.5578349865604965,
+        "combined": 0.7137260413526271
+      },
+      "pr_auc": {
+        "brqe": 0.7472292664698374,
+        "disagreement": 0.5810208013710726,
+        "combined": 0.7145573600918214
+      },
+      "auc_combined_minus_brqe_ci_95": [
+        -0.050439978189592866,
+        -0.036142831902760214
+      ],
+      "auc_disagreement_minus_brqe_ci_95": [
+        -0.2189565507858664,
+        -0.17928426062415234
+      ],
+      "complements_brqe": false
+    },
+    "B": {
+      "n_words_full": 8165,
+      "brqe_auc_full_recomputed": 0.7485066938080773,
+      "brqe_auc_full_frozen": 0.7485066938080773,
+      "n_words_evaluated": 8165,
+      "share_of_full": 1.0,
+      "positive_rate": 0.5169626454378444,
+      "roc_auc": {
+        "brqe": 0.7485066938080773,
+        "disagreement": 0.5788419416488503,
+        "combined": 0.724880799806627
+      },
+      "pr_auc": {
+        "brqe": 0.7524031205971626,
+        "disagreement": 0.6443098105097358,
+        "combined": 0.7447266768989984
+      },
+      "auc_combined_minus_brqe_ci_95": [
+        -0.03480325941464807,
+        -0.012986160015801869
+      ],
+      "auc_disagreement_minus_brqe_ci_95": [
+        -0.19522747876451127,
+        -0.14480349343770968
+      ],
+      "complements_brqe": false
+    }
+  },
+  "s1b": {
+    "L01": {
+      "A2_proposed": {
+        "recordings": 20,
+        "mfa_failed": 0,
+        "mfa_failed_ctc_ok": 0
+      },
+      "B2_proposed": {
+        "recordings": 20,
+        "mfa_failed": 2,
+        "mfa_failed_ctc_ok": 2
+      }
+    },
+    "L05": {
+      "A2_proposed": {
+        "recordings": 20,
+        "mfa_failed": 3,
+        "mfa_failed_ctc_ok": 3
+      },
+      "B2_proposed": {
+        "recordings": 20,
+        "mfa_failed": 7,
+        "mfa_failed_ctc_ok": 7
+      }
+    },
+    "L10": {
+      "A2_proposed": {
+        "recordings": 20,
+        "mfa_failed": 6,
+        "mfa_failed_ctc_ok": 6
+      },
+      "B2_proposed": {
+        "recordings": 20,
+        "mfa_failed": 12,
+        "mfa_failed_ctc_ok": 12
+      }
+    }
+  },
+  "meta": {
+    "protocol": "docs/P1_P4_PROTOCOL.md",
+    "finished": "2026-11-20T02:04:49+05:00",
+    "seconds": 29.1,
+    "code": {
+      "source_sha256": "3150cacc00e8932a62eaf8661f5ff7e95f0f587500e6847fd85beee26728a2d7",
+      "git_revision": "c209c748cb10fcd8f07d6f31cd7270809544d177",
+      "git_worktree_dirty": true
+    }
+  }
+}

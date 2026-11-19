@@ -1,0 +1,376 @@
+{
+  "corpora": {
+    "buckeye": {
+      "A1_ctc+A2_proposed": {
+        "pair": [
+          "A1_ctc",
+          "A2_proposed"
+        ],
+        "n_speakers": 20,
+        "n_common_boundaries": 18306,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 19.8820674471852,
+          "ctc": 40.787220954213964,
+          "oracle": 14.156480910042735,
+          "average": 26.470009000173793
+        },
+        "pooled_mae_ms": {
+          "mfa": 19.561651917404127,
+          "ctc": 40.549562984813726,
+          "oracle": 14.086365126188134,
+          "average": 26.222465311919585
+        },
+        "oracle_gain_ms": {
+          "mean": 5.725586537142464,
+          "ci_95": [
+            4.3655687542425685,
+            7.547560226697817
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -6.587941552988593,
+          "ci_95": [
+            -7.6281020719093835,
+            -5.475585559286959
+          ]
+        }
+      },
+      "A1_ctc+A2_brqe": {
+        "pair": [
+          "A1_ctc",
+          "A2_brqe"
+        ],
+        "n_speakers": 20,
+        "n_common_boundaries": 18306,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 17.2459888843911,
+          "ctc": 40.787220954213964,
+          "oracle": 11.925162116169668,
+          "average": 25.28817676310371
+        },
+        "pooled_mae_ms": {
+          "mfa": 16.974483775811212,
+          "ctc": 40.549562984813726,
+          "oracle": 11.893461160275322,
+          "average": 25.05439746531192
+        },
+        "oracle_gain_ms": {
+          "mean": 5.320826768221425,
+          "ci_95": [
+            3.970495841486193,
+            7.09941781765211
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -8.04218787871262,
+          "ci_95": [
+            -9.167494975753849,
+            -6.9251832858241205
+          ]
+        }
+      },
+      "B1_whisper_ctc+B2_proposed": {
+        "pair": [
+          "B1_whisper_ctc",
+          "B2_proposed"
+        ],
+        "n_speakers": 20,
+        "n_common_boundaries": 16330,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 30.745845585520016,
+          "ctc": 41.748565970606904,
+          "oracle": 16.368334125726307,
+          "average": 31.59180158414153
+        },
+        "pooled_mae_ms": {
+          "mfa": 30.134941824862214,
+          "ctc": 41.28943661971831,
+          "oracle": 16.09622167789345,
+          "average": 31.1123790569504
+        },
+        "oracle_gain_ms": {
+          "mean": 14.377511459793704,
+          "ci_95": [
+            11.104413168467197,
+            17.512026163839206
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -0.8459559986215177,
+          "ci_95": [
+            -2.4729394679313055,
+            0.871671993832811
+          ]
+        }
+      },
+      "B1_whisper_ctc+B2_brqe": {
+        "pair": [
+          "B1_whisper_ctc",
+          "B2_brqe"
+        ],
+        "n_speakers": 20,
+        "n_common_boundaries": 16330,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 28.251427138616634,
+          "ctc": 41.748565970606904,
+          "oracle": 14.158454885925241,
+          "average": 30.468675605269386
+        },
+        "pooled_mae_ms": {
+          "mfa": 27.673612982241274,
+          "ctc": 41.28943661971831,
+          "oracle": 13.909087568891612,
+          "average": 29.99832823025107
+        },
+        "oracle_gain_ms": {
+          "mean": 14.092972252691402,
+          "ci_95": [
+            10.859845096327703,
+            17.21203433578658
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -2.2172484666527446,
+          "ci_95": [
+            -3.8024770910755272,
+            -0.553402267688452
+          ]
+        }
+      }
+    },
+    "timit": {
+      "A1_ctc+A2_proposed": {
+        "pair": [
+          "A1_ctc",
+          "A2_proposed"
+        ],
+        "n_speakers": 16,
+        "n_common_boundaries": 2788,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 20.259132869318233,
+          "ctc": 36.934397829508825,
+          "oracle": 13.546945130218875,
+          "average": 23.883304083841132
+        },
+        "pooled_mae_ms": {
+          "mfa": 20.25778263988522,
+          "ctc": 36.92383715925394,
+          "oracle": 13.55669799139168,
+          "average": 23.87910043041607
+        },
+        "oracle_gain_ms": {
+          "mean": 6.712187739099359,
+          "ci_95": [
+            4.653716189420744,
+            10.253184773208892
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -3.624171214522901,
+          "ci_95": [
+            -5.054660930458116,
+            -1.5966679634021228
+          ]
+        }
+      },
+      "A1_ctc+A2_brqe": {
+        "pair": [
+          "A1_ctc",
+          "A2_brqe"
+        ],
+        "n_speakers": 16,
+        "n_common_boundaries": 2788,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 19.9318989904489,
+          "ctc": 36.934397829508825,
+          "oracle": 12.487604948822199,
+          "average": 24.286566798716485
+        },
+        "pooled_mae_ms": {
+          "mfa": 19.89273816355811,
+          "ctc": 36.92383715925394,
+          "oracle": 12.477535150645627,
+          "average": 24.26208536585366
+        },
+        "oracle_gain_ms": {
+          "mean": 7.444294041626701,
+          "ci_95": [
+            5.382633756275878,
+            10.979477636642521
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -4.354667808267582,
+          "ci_95": [
+            -5.8771355120286035,
+            -2.3222783386676915
+          ]
+        }
+      },
+      "B1_whisper_ctc+B2_proposed": {
+        "pair": [
+          "B1_whisper_ctc",
+          "B2_proposed"
+        ],
+        "n_speakers": 16,
+        "n_common_boundaries": 2722,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 20.43029012072552,
+          "ctc": 36.89841095584424,
+          "oracle": 13.575047341762469,
+          "average": 23.908271702547367
+        },
+        "pooled_mae_ms": {
+          "mfa": 20.46409551800147,
+          "ctc": 36.90928434974284,
+          "oracle": 13.58515429831007,
+          "average": 23.925753122703895
+        },
+        "oracle_gain_ms": {
+          "mean": 6.855242778963049,
+          "ci_95": [
+            4.667906777964246,
+            10.533387119550692
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -3.477981581821849,
+          "ci_95": [
+            -4.999566833705948,
+            -1.2862882319734024
+          ]
+        }
+      },
+      "B1_whisper_ctc+B2_brqe": {
+        "pair": [
+          "B1_whisper_ctc",
+          "B2_brqe"
+        ],
+        "n_speakers": 16,
+        "n_common_boundaries": 2722,
+        "share_of_mfa_boundaries_in_common_set": 1.0,
+        "share_within_jointly_successful_clips": 1.0,
+        "speaker_mean_mae_ms": {
+          "mfa": 20.082225853318725,
+          "ctc": 36.89841095584424,
+          "oracle": 12.476006308597427,
+          "average": 24.367432744293815
+        },
+        "pooled_mae_ms": {
+          "mfa": 20.0829412196914,
+          "ctc": 36.90928434974284,
+          "oracle": 12.471455547391622,
+          "average": 24.364947097722258
+        },
+        "oracle_gain_ms": {
+          "mean": 7.606219544721301,
+          "ci_95": [
+            5.463172033740668,
+            11.256351197694443
+          ]
+        },
+        "average_fusion_gain_ms": {
+          "mean": -4.2852068909750916,
+          "ci_95": [
+            -5.899852691992183,
+            -2.1599746275064455
+          ]
+        }
+      }
+    }
+  },
+  "sanity": [
+    {
+      "label": "buckeye/A1_ctc",
+      "recomputed_mae_ms": 40.5127,
+      "frozen_mae_ms": 40.51
+    },
+    {
+      "label": "buckeye/A2_proposed",
+      "recomputed_mae_ms": 19.5617,
+      "frozen_mae_ms": 19.56
+    },
+    {
+      "label": "buckeye/A2_brqe",
+      "recomputed_mae_ms": 16.9745,
+      "frozen_mae_ms": 16.97
+    },
+    {
+      "label": "buckeye/B1_whisper_ctc",
+      "recomputed_mae_ms": 41.278,
+      "frozen_mae_ms": 41.28
+    },
+    {
+      "label": "buckeye/B2_proposed",
+      "recomputed_mae_ms": 30.1349,
+      "frozen_mae_ms": 30.13
+    },
+    {
+      "label": "buckeye/B2_brqe",
+      "recomputed_mae_ms": 27.6736,
+      "frozen_mae_ms": 27.67
+    },
+    {
+      "label": "timit/A1_ctc",
+      "recomputed_mae_ms": 36.9238,
+      "frozen_mae_ms": 36.92
+    },
+    {
+      "label": "timit/A2_proposed",
+      "recomputed_mae_ms": 20.2578,
+      "frozen_mae_ms": 20.26
+    },
+    {
+      "label": "timit/A2_brqe",
+      "recomputed_mae_ms": 19.8927,
+      "frozen_mae_ms": 19.89
+    },
+    {
+      "label": "timit/B1_whisper_ctc",
+      "recomputed_mae_ms": 36.9093,
+      "frozen_mae_ms": 36.91
+    },
+    {
+      "label": "timit/B2_proposed",
+      "recomputed_mae_ms": 20.4641,
+      "frozen_mae_ms": 20.46
+    },
+    {
+      "label": "timit/B2_brqe",
+      "recomputed_mae_ms": 20.0829,
+      "frozen_mae_ms": 20.08
+    }
+  ],
+  "decision": {
+    "rule": "oracle gain over MFA+BRQE (speaker mean, Buckeye) >= 2.0 ms in any scenario keeps G-4",
+    "oracle_gain_over_brqe_ms": {
+      "A": 5.320826768221425,
+      "B": 14.092972252691402
+    },
+    "g4_status": "stays a candidate"
+  },
+  "meta": {
+    "protocol": "docs/P1_P4_PROTOCOL.md",
+    "finished": "2026-11-20T02:03:31+05:00",
+    "seconds": 26.4,
+    "code": {
+      "source_sha256": "3150cacc00e8932a62eaf8661f5ff7e95f0f587500e6847fd85beee26728a2d7",
+      "git_revision": "c209c748cb10fcd8f07d6f31cd7270809544d177",
+      "git_worktree_dirty": true
+    }
+  }
+}

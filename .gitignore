@@ -109,3 +109,5 @@ reports/s3_asr_size_20261106/runs/*/*
 !reports/s3_asr_size_20261106/runs/*/manifest.json
 !reports/s3_asr_size_20261106/runs/*/benchmark_results.json
 !reports/s3_asr_size_20261106/runs/*/benchmark_utterances.json
+# P-1...P-4 exploratory analyses (docs/P1_P4_RESULTS.md)
+!reports/p1_p4_20261120/

@@ -1,0 +1,125 @@
+{
+  "sanity": [
+    {
+      "label": "brqe_train_run/A2_proposed",
+      "recomputed_mae_ms": 18.7102,
+      "frozen_mae_ms": 18.71
+    },
+    {
+      "label": "brqe_train_run/B2_proposed",
+      "recomputed_mae_ms": 24.4595,
+      "frozen_mae_ms": 24.46
+    }
+  ],
+  "train": {
+    "A2_proposed": {
+      "n_speakers": 20,
+      "mfa_speaker_mean_mae_ms": 18.68532557349031,
+      "grid": [
+        {
+          "window_ms": 10,
+          "alpha": 0.5,
+          "speaker_mean_mae_ms": 18.978154205735287,
+          "gain_ms": -0.29282863224497646
+        },
+        {
+          "window_ms": 10,
+          "alpha": 1.0,
+          "speaker_mean_mae_ms": 19.75200807878162,
+          "gain_ms": -1.0666825052913111
+        },
+        {
+          "window_ms": 20,
+          "alpha": 0.5,
+          "speaker_mean_mae_ms": 19.98601948189034,
+          "gain_ms": -1.3006939084000315
+        },
+        {
+          "window_ms": 20,
+          "alpha": 1.0,
+          "speaker_mean_mae_ms": 22.92698846500192,
+          "gain_ms": -4.241662891511609
+        },
+        {
+          "window_ms": 30,
+          "alpha": 0.5,
+          "speaker_mean_mae_ms": 21.107167958578337,
+          "gain_ms": -2.421842385088027
+        },
+        {
+          "window_ms": 30,
+          "alpha": 1.0,
+          "speaker_mean_mae_ms": 26.177771483791,
+          "gain_ms": -7.492445910300688
+        }
+      ],
+      "selected": {
+        "window_ms": 10,
+        "alpha": 0.5,
+        "speaker_mean_mae_ms": 18.978154205735287,
+        "gain_ms": -0.29282863224497646
+      },
+      "goes_to_test": false
+    },
+    "B2_proposed": {
+      "n_speakers": 20,
+      "mfa_speaker_mean_mae_ms": 24.64636459459569,
+      "grid": [
+        {
+          "window_ms": 10,
+          "alpha": 0.5,
+          "speaker_mean_mae_ms": 24.939635868934392,
+          "gain_ms": -0.2932712743387036
+        },
+        {
+          "window_ms": 10,
+          "alpha": 1.0,
+          "speaker_mean_mae_ms": 25.70710365635994,
+          "gain_ms": -1.0607390617642523
+        },
+        {
+          "window_ms": 20,
+          "alpha": 0.5,
+          "speaker_mean_mae_ms": 25.897570531616395,
+          "gain_ms": -1.251205937020707
+        },
+        {
+          "window_ms": 20,
+          "alpha": 1.0,
+          "speaker_mean_mae_ms": 28.775246782839623,
+          "gain_ms": -4.128882188243935
+        },
+        {
+          "window_ms": 30,
+          "alpha": 0.5,
+          "speaker_mean_mae_ms": 26.98035252018654,
+          "gain_ms": -2.3339879255908507
+        },
+        {
+          "window_ms": 30,
+          "alpha": 1.0,
+          "speaker_mean_mae_ms": 31.93889027470642,
+          "gain_ms": -7.292525680110732
+        }
+      ],
+      "selected": {
+        "window_ms": 10,
+        "alpha": 0.5,
+        "speaker_mean_mae_ms": 24.939635868934392,
+        "gain_ms": -0.2932712743387036
+      },
+      "goes_to_test": false
+    }
+  },
+  "test": {},
+  "meta": {
+    "protocol": "docs/P1_P4_PROTOCOL.md",
+    "finished": "2026-11-20T02:05:54+05:00",
+    "seconds": 46.5,
+    "code": {
+      "source_sha256": "3150cacc00e8932a62eaf8661f5ff7e95f0f587500e6847fd85beee26728a2d7",
+      "git_revision": "c209c748cb10fcd8f07d6f31cd7270809544d177",
+      "git_worktree_dirty": true
+    }
+  }
+}

@@ -1,0 +1,135 @@
+% IEEE DG 2027 paper skeleton (structure only, no content yet).
+% Template: IEEE conference (docs/templates/ieee_dg/), header and author block as in the
+% DG 2026 paper (Prototype/academic_paper/paper.tex). 4-6 pages, English, A4.
+% Rules: numbers only from docs/CLAIM_LEDGER.csv or reports/; ideas from
+% docs/IMPROVEMENT_CANDIDATES.md and docs/ROBUSTNESS_AUDIT_PLAN.md are NOT results.
+% DG rules: no symbols, special characters or math in title and abstract; do not change
+% margins, columns or fonts; no manual heading numbers; no page numbers.
+% A blind copy (main_blind.tex) is made from this file before submission.
+\documentclass[conference,a4paper]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\makeatletter
+\def\ps@IEEEtitlepagestyle{%
+\def\@oddhead{\normalfont\fontsize{7}{8}\selectfont
+\begin{minipage}[t]{\textwidth}
+\raggedright
+2027 IEEE 4th International Student Conference on Digital Generation\\
+24--26 February, 2027, Astana, Kazakhstan
+\end{minipage}\hfil}%
+\let\@evenhead\@oddhead
+\let\@oddfoot\@empty
+\let\@evenfoot\@empty}
+\makeatother
+
+\begin{document}
+
+% Title candidates and rationale: docs/paper/dg2027/TITLE_KEYWORDS_RQ.md
+\title{Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Askar Nurym}
+\IEEEauthorblockA{\textit{School of Software Engineering} \\
+\textit{Astana IT University}\\
+Astana, Kazakhstan \\
+255453@astanait.edu.kz}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Tamara Zhukabayeva}
+\IEEEauthorblockA{\textit{School of Software Engineering} \\
+\textit{Astana IT University}\\
+Astana, Kazakhstan \\
+t.zhukabayeva@astanait.edu.kz}
+}
+
+\maketitle
+
+\begin{abstract}
+% One paragraph. Problem (caption timing for accessibility), what was compared (scenario A
+% known transcript vs B ASR text; B0, B1, A1 baselines vs Whisper plus MFA), BRQE,
+% corpora (TIMIT read, Buckeye spontaneous, manual boundaries, held-out speakers),
+% main numbers from CLAIM-101..106 (with coverage for scenario B), long-recording finding
+% (CLAIM-107..110), honest limitation. No symbols or math.
+Abstract to be written.
+\end{abstract}
+
+\begin{IEEEkeywords}
+forced alignment, word boundary accuracy, speech-text alignment, automatic speech recognition, Montreal Forced Aligner, boundary refinement, reliability estimation, captions, accessibility, educational video
+\end{IEEEkeywords}
+
+\section{Introduction}
+% Problem: captions help many learners only if timing is right; word-level timing enables
+% karaoke-style highlighting. Practical choice for captioning: is the transcript known?
+% Gap (IMPROVEMENT_PLAN 10.1): both scenarios rarely compared in one pipeline on manual
+% boundaries with speaker-level statistics; aligners give no per-boundary reliability;
+% long recordings and chunking cost. Link to the previous DG 2026 work (cite, one sentence):
+% it measured throughput, accuracy was left open; this paper measures it.
+% Research questions (TITLE_KEYWORDS_RQ.md): RQ1, RQ2, RQ3.
+% Contributions (3 items).
+
+\section{Related Work}
+\subsection{Caption Timing and Accessibility}
+% Captions and learning; synchronization quality matters. No claims of learning effect
+% of our system.
+\subsection{ASR Timestamps and Forced Alignment}
+% Whisper timestamps, WhisperX-style CTC alignment, MMS, NFA, MFA/Kaldi; benchmarks of
+% aligners on manual boundaries.
+\subsection{Boundary Refinement and Confidence}
+% Post-alignment correction (prior art, no priority claim), reliability or confidence
+% estimation.
+
+\section{Method}
+\subsection{Pipeline}
+% Algorithm 1 (algorithms.tex). Author's pipeline diagram (figure).
+\subsection{Transcript Anchoring}
+% Eq. 6-7 (equations.tex) or Algorithm 3 if space allows.
+\subsection{Boundary Refinement and Quality Estimation}
+% Algorithm 2, Eq. 8-11. Inclusion decided by the pre-registered speaker CV rule.
+\subsection{Long Recordings}
+% Overlap-and-stitch (Algorithm 4 or two sentences).
+
+\section{Experimental Setup}
+\subsection{Corpora and Speaker Split}
+% TIMIT sample 160 utterances, 16 speakers; Buckeye 999 clips, 20 held-out test speakers;
+% BRQE trained on 20 disjoint speakers (3000 clips). Frozen tags.
+\subsection{Compared Modes}
+% B0, B1, B2, A1, A2, constant offset, BRQE. WhisperX and NFA programs were not run.
+\subsection{Metrics and Statistics}
+% Eq. 1-5: MAE, Acc@20ms, coverage, speaker-level exact Wilcoxon with Holm, speaker
+% bootstrap CI.
+\subsection{Implementation}
+% Local consumer laptop (RTX 3050 Laptop, 4 GB), Whisper large-v3 int8_float16, MFA 3.4.3;
+% reproducibility (protocols before numbers, hashes). Speed is not an evaluation metric.
+
+\section{Results}
+\subsection{Boundary Accuracy with and without a Known Transcript}
+% RQ1: one merged table with coverage; ECDF figure (Buckeye). CLAIM-101, 102, 106.
+\subsection{Boundary Refinement and Reliability}
+% RQ2: CLAIM-103, 104 (negative TIMIT result must stay), 105; reliability-retention figure;
+% sensitivity in one sentence.
+\subsection{Long Recordings}
+% RQ3: CLAIM-107..110; failures beside errors; survivors stated.
+
+\section{Discussion}
+% Interpretation, comparison with published aligner benchmarks (qualitative only),
+% limitations: spliced long recordings, survivors, read vs spontaneous transfer, engine
+% cores instead of WhisperX and NFA programs, single seed, no user study; accent and noise
+% (S4, S6) as limitations with hypotheses; tempo and Whisper size (S2, S3) in one sentence.
+
+\section{Conclusion}
+% Answers to RQ1-RQ3 in plain words; no future-work promises beyond one sentence.
+
+\section*{Acknowledgment}
+% Optional.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,75 @@
+% Algorithms for the DG 2027 paper; source mapping in ../PSEUDOCODE.md.
+% Use \input{algorithms} pieces as needed; Algorithm 1 and 2 are recommended.
+
+\begin{algorithm}[t]
+\caption{Proposed alignment pipeline for one recording}
+\label{alg:pipeline}
+\begin{algorithmic}[1]
+\Require audio $x$ (16 kHz mono), optional transcript $T$, speaker $s$
+\Ensure word and phone boundaries, word reliability $\rho$
+\State $P \gets \textsc{SileroVAD}(x)$ \Comment{pauses $\ge 0.4$ s}
+\State $H \gets \textsc{Whisper}(x)$ \Comment{large-v3, word timestamps}
+\If{$T$ is given} \Comment{scenario A}
+  \State $W \gets \textsc{AnchorTranscript}(T, H)$
+\Else \Comment{scenario B}
+  \State $W \gets$ words of $H$
+\EndIf
+\State $C \gets \textsc{Chunk}(W, P)$ \Comment{$\le 30$ s, cut at pauses}
+\State $A \gets \textsc{MFA}(C)$ \Comment{one call per speaker}
+\State $A \gets \textsc{Reconcile}(A)$ \Comment{global monotonic timeline}
+\State $(A', \rho) \gets \textsc{BRQE}(x, A)$
+\State \Return $A', \rho$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{BRQE inference}
+\label{alg:brqe}
+\begin{algorithmic}[1]
+\Require audio $x$, aligned words and phones with boundary times $t_b$
+\Ensure refined boundaries $t'_b$, word reliability $\rho_w$
+\State $M \gets$ normalized log-mel of $x$ (64 bands, 25 ms window, 5 ms hop)
+\ForAll{boundaries $b$}
+  \State $X_b \gets M$ window of $\pm 100$ ms at $t_b$; $z_b \gets$ six scalars
+  \State $(\Delta_b, p_b) \gets \textsc{BRQENet}(X_b, z_b)$ \Comment{Eq.~(8)}
+  \State $t'_b \gets t_b + \Delta_b$
+\EndFor
+\State resolve overlaps between neighbours at their midpoint
+\State keep original times for tokens shorter than 5 ms
+\State $\rho_w \gets 1 - \max(p^{\mathrm{start}}_w, p^{\mathrm{end}}_w)$ for every word $w$
+\State \Return $t', \rho$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Transcript anchoring (scenario A)}
+\label{alg:anchor}
+\begin{algorithmic}[1]
+\Require reference words $r_{1..n}$, ASR words $h_{1..m}$ with times
+\Ensure approximate times for all reference words
+\State $w \gets \max(50,\ 0.1\max(n,m),\ |n-m|+1)$
+\State fill $S(i,j)$ by Eq.~(6) for $|j - i\,m/n| \le w$
+\State backtrace; exact matches on the path are candidate anchors
+\State keep anchors that start after the previous anchor ends
+\ForAll{runs of unanchored words between anchors}
+  \State split the gap in proportion to word length (Eq.~(7))
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Overlap-and-stitch for long recordings}
+\label{alg:stitch}
+\begin{algorithmic}[1]
+\State detect pauses with VAD speech padding 30 ms
+\State chunk as in Algorithm~\ref{alg:pipeline}
+\State add neighbouring words to each chunk for at least 3 s of overlap per side
+\State align all chunks with MFA
+\ForAll{seams between tracks $k$ and $k{+}1$}
+  \State anchor $\gets$ shared word with equal text and both boundaries within 20 ms, closest to the seam
+  \State keep track $k$ up to the anchor and track $k{+}1$ after it
+  \State if no anchor exists, cut at the seam time (logged)
+\EndFor
+\State enforce a monotonic timeline
+\end{algorithmic}
+\end{algorithm}

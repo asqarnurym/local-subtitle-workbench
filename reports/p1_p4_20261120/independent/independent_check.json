@@ -1,0 +1,2784 @@
+{
+ "sanity_pooled_mae": {
+  "buckeye:B0_whisper": {
+   "mine": 126.52131820968731,
+   "frozen": 126.52,
+   "ok": true
+  },
+  "buckeye:B1_whisper_ctc": {
+   "mine": 41.277976991800266,
+   "frozen": 41.28,
+   "ok": true
+  },
+  "buckeye:B2_proposed": {
+   "mine": 30.134941824862214,
+   "frozen": 30.13,
+   "ok": true
+  },
+  "buckeye:A1_ctc": {
+   "mine": 40.51274082943289,
+   "frozen": 40.51,
+   "ok": true
+  },
+  "buckeye:A2_proposed": {
+   "mine": 19.561651917404127,
+   "frozen": 19.56,
+   "ok": true
+  },
+  "buckeye:B2_const": {
+   "mine": 30.11345988977342,
+   "frozen": 30.11,
+   "ok": true
+  },
+  "buckeye:B2_brqe": {
+   "mine": 27.673612982241274,
+   "frozen": 27.67,
+   "ok": true
+  },
+  "buckeye:A2_const": {
+   "mine": 19.52309078990495,
+   "frozen": 19.52,
+   "ok": true
+  },
+  "buckeye:A2_brqe": {
+   "mine": 16.974483775811212,
+   "frozen": 16.97,
+   "ok": true
+  },
+  "timit:B0_whisper": {
+   "mine": 152.9832015475313,
+   "frozen": 152.98,
+   "ok": true
+  },
+  "timit:B1_whisper_ctc": {
+   "mine": 36.90928434974283,
+   "frozen": 36.91,
+   "ok": true
+  },
+  "timit:B2_proposed": {
+   "mine": 20.46409551800147,
+   "frozen": 20.46,
+   "ok": true
+  },
+  "timit:A1_ctc": {
+   "mine": 36.92383715925394,
+   "frozen": 36.92,
+   "ok": true
+  },
+  "timit:A2_proposed": {
+   "mine": 20.257782639885225,
+   "frozen": 20.26,
+   "ok": true
+  },
+  "timit:B2_const": {
+   "mine": 20.543615723732547,
+   "frozen": 20.54,
+   "ok": true
+  },
+  "timit:B2_brqe": {
+   "mine": 20.082941219691403,
+   "frozen": 20.08,
+   "ok": true
+  },
+  "timit:A2_const": {
+   "mine": 20.344439741750357,
+   "frozen": 20.34,
+   "ok": true
+  },
+  "timit:A2_brqe": {
+   "mine": 19.89273816355811,
+   "frozen": 19.89,
+   "ok": true
+  },
+  "brqe_train_run:A2_proposed": {
+   "mine": 18.710216958958597,
+   "frozen": 18.71,
+   "ok": true
+  },
+  "brqe_train_run:B2_proposed": {
+   "mine": 24.4594793693658,
+   "frozen": 24.46,
+   "ok": true
+  },
+  "s3_tiny:B2_proposed": {
+   "mine": 26.127628811777075,
+   "frozen": 26.13,
+   "ok": true
+  },
+  "s3_tiny:B2_brqe": {
+   "mine": 23.593460830704522,
+   "frozen": 23.59,
+   "ok": true
+  },
+  "s3_base:B2_proposed": {
+   "mine": 28.247409692762567,
+   "frozen": 28.25,
+   "ok": true
+  },
+  "s3_base:B2_brqe": {
+   "mine": 25.78029952436046,
+   "frozen": 25.78,
+   "ok": true
+  },
+  "s3_small:B2_proposed": {
+   "mine": 28.496017535193875,
+   "frozen": 28.5,
+   "ok": true
+  },
+  "s3_small:B2_brqe": {
+   "mine": 26.062200543344037,
+   "frozen": 26.06,
+   "ok": true
+  },
+  "s3_medium:B2_proposed": {
+   "mine": 28.892930402930403,
+   "frozen": 28.89,
+   "ok": true
+  },
+  "s3_medium:B2_brqe": {
+   "mine": 26.412863247863246,
+   "frozen": 26.41,
+   "ok": true
+  },
+  "s3_large-v3-turbo:B2_proposed": {
+   "mine": 27.701698319941563,
+   "frozen": 27.7,
+   "ok": true
+  },
+  "s3_large-v3-turbo:B2_brqe": {
+   "mine": 25.273125152179208,
+   "frozen": 25.27,
+   "ok": true
+  }
+ },
+ "p1": {
+  "buckeye": {
+   "A1_ctc+A2_proposed": {
+    "n_clips": 997,
+    "n_speakers": 20,
+    "n_boundaries": 18306,
+    "mae_mfa": 19.8820674471852,
+    "mae_ctc": 40.787220954213964,
+    "mae_oracle": 14.156480910042735,
+    "mae_average": 26.470009000173793,
+    "oracle_gain": 5.7255865371424655,
+    "average_gain": -6.5879415529885925,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   },
+   "A1_ctc+A2_brqe": {
+    "n_clips": 997,
+    "n_speakers": 20,
+    "n_boundaries": 18306,
+    "mae_mfa": 17.2459888843911,
+    "mae_ctc": 40.787220954213964,
+    "mae_oracle": 11.925162116169668,
+    "mae_average": 25.28817676310371,
+    "oracle_gain": 5.320826768221432,
+    "average_gain": -8.04218787871261,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   },
+   "B1_whisper_ctc+B2_proposed": {
+    "n_clips": 997,
+    "n_speakers": 20,
+    "n_boundaries": 16330,
+    "mae_mfa": 30.745845585520016,
+    "mae_ctc": 41.748565970606904,
+    "mae_oracle": 16.368334125726307,
+    "mae_average": 31.59180158414153,
+    "oracle_gain": 14.377511459793709,
+    "average_gain": -0.8459559986215126,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   },
+   "B1_whisper_ctc+B2_brqe": {
+    "n_clips": 997,
+    "n_speakers": 20,
+    "n_boundaries": 16330,
+    "mae_mfa": 28.251427138616634,
+    "mae_ctc": 41.748565970606904,
+    "mae_oracle": 14.158454885925241,
+    "mae_average": 30.468675605269386,
+    "oracle_gain": 14.092972252691393,
+    "average_gain": -2.2172484666527517,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   }
+  },
+  "timit": {
+   "A1_ctc+A2_proposed": {
+    "n_clips": 160,
+    "n_speakers": 16,
+    "n_boundaries": 2788,
+    "mae_mfa": 20.259132869318233,
+    "mae_ctc": 36.934397829508825,
+    "mae_oracle": 13.546945130218875,
+    "mae_average": 23.883304083841132,
+    "oracle_gain": 6.712187739099358,
+    "average_gain": -3.6241712145228995,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   },
+   "A1_ctc+A2_brqe": {
+    "n_clips": 160,
+    "n_speakers": 16,
+    "n_boundaries": 2788,
+    "mae_mfa": 19.9318989904489,
+    "mae_ctc": 36.934397829508825,
+    "mae_oracle": 12.487604948822199,
+    "mae_average": 24.286566798716485,
+    "oracle_gain": 7.444294041626701,
+    "average_gain": -4.354667808267585,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   },
+   "B1_whisper_ctc+B2_proposed": {
+    "n_clips": 160,
+    "n_speakers": 16,
+    "n_boundaries": 2722,
+    "mae_mfa": 20.43029012072552,
+    "mae_ctc": 36.89841095584424,
+    "mae_oracle": 13.575047341762469,
+    "mae_average": 23.908271702547367,
+    "oracle_gain": 6.855242778963051,
+    "average_gain": -3.4779815818218474,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   },
+   "B1_whisper_ctc+B2_brqe": {
+    "n_clips": 160,
+    "n_speakers": 16,
+    "n_boundaries": 2722,
+    "mae_mfa": 20.082225853318725,
+    "mae_ctc": 36.89841095584424,
+    "mae_oracle": 12.476006308597427,
+    "mae_average": 24.367432744293815,
+    "oracle_gain": 7.606219544721299,
+    "average_gain": -4.28520689097509,
+    "share_mfa_boundaries_all_ok_clips": 1.0,
+    "share_mfa_boundaries_common_clips": 1.0
+   }
+  },
+  "decision": "G-4 stays candidate",
+  "decision_gains_buckeye_brqe": [
+   5.320826768221432,
+   14.092972252691393
+  ]
+ },
+ "p3": {
+  "B2_proposed": {
+   "tiny": {
+    "n_clips_ok_both": 982,
+    "n_clips": 979,
+    "n_speakers": 20,
+    "n_boundaries": 14742,
+    "mae_large_v3": 30.617320566734215,
+    "mae_model": 27.565443153960224,
+    "mean_diff": -3.0518774127740005,
+    "p_raw": 0.11398696899414062,
+    "retained_share_vs_frozen_all_ok": 0.9027556644213105,
+    "retained_share_vs_model_all_ok": 0.9688485804416404,
+    "retained_share_vs_frozen_common_clips": 0.9083179297597043,
+    "clip_share_vs_frozen_ok": 0.9819458375125376,
+    "speaker_share": 1.0,
+    "p_holm": 0.4559478759765625
+   },
+   "base": {
+    "n_clips_ok_both": 989,
+    "n_clips": 989,
+    "n_speakers": 20,
+    "n_boundaries": 15106,
+    "mae_large_v3": 29.857536874827304,
+    "mae_model": 29.719047119545213,
+    "mean_diff": -0.13848975528209345,
+    "p_raw": 0.7561664581298828,
+    "retained_share_vs_frozen_all_ok": 0.9250459277403552,
+    "retained_share_vs_model_all_ok": 0.9709474225478854,
+    "retained_share_vs_frozen_common_clips": 0.9345459044790894,
+    "clip_share_vs_frozen_ok": 0.9919759277833501,
+    "speaker_share": 1.0,
+    "p_holm": 0.7561664581298828
+   },
+   "small": {
+    "n_clips_ok_both": 995,
+    "n_clips": 993,
+    "n_speakers": 20,
+    "n_boundaries": 15756,
+    "mae_large_v3": 30.137867463058193,
+    "mae_model": 27.91714267299613,
+    "mean_diff": -2.2207247900620692,
+    "p_raw": 0.029575347900390625,
+    "retained_share_vs_frozen_all_ok": 0.9648499693815065,
+    "retained_share_vs_model_all_ok": 0.9728327982217831,
+    "retained_share_vs_frozen_common_clips": 0.9655595048412796,
+    "clip_share_vs_frozen_ok": 0.995987963891675,
+    "speaker_share": 1.0,
+    "p_holm": 0.14787673950195312
+   },
+   "medium": {
+    "n_clips_ok_both": 996,
+    "n_clips": 994,
+    "n_speakers": 20,
+    "n_boundaries": 15906,
+    "mae_large_v3": 29.580505860534203,
+    "mae_model": 27.429341249548067,
+    "mean_diff": -2.1511646109861386,
+    "p_raw": 0.20244979858398438,
+    "retained_share_vs_frozen_all_ok": 0.9740355174525414,
+    "retained_share_vs_model_all_ok": 0.971062271062271,
+    "retained_share_vs_frozen_common_clips": 0.9742741639103271,
+    "clip_share_vs_frozen_ok": 0.9969909729187563,
+    "speaker_share": 1.0,
+    "p_holm": 0.4559478759765625
+   },
+   "large-v3-turbo": {
+    "n_clips_ok_both": 996,
+    "n_clips": 995,
+    "n_speakers": 20,
+    "n_boundaries": 16078,
+    "mae_large_v3": 30.148628038531164,
+    "mae_model": 28.648580105605003,
+    "mean_diff": -1.5000479329261633,
+    "p_raw": 0.1230926513671875,
+    "retained_share_vs_frozen_all_ok": 0.9845682792406614,
+    "retained_share_vs_model_all_ok": 0.9786949111273435,
+    "retained_share_vs_frozen_common_clips": 0.984809506308955,
+    "clip_share_vs_frozen_ok": 0.9979939819458375,
+    "speaker_share": 1.0,
+    "p_holm": 0.4559478759765625
+   }
+  },
+  "B2_brqe": {
+   "tiny": {
+    "n_clips_ok_both": 982,
+    "n_clips": 979,
+    "n_speakers": 20,
+    "n_boundaries": 14742,
+    "mae_large_v3": 27.89046403628152,
+    "mae_model": 24.784053835064512,
+    "mean_diff": -3.1064102012170047,
+    "p_raw": 0.09730720520019531,
+    "retained_share_vs_frozen_all_ok": 0.9027556644213105,
+    "retained_share_vs_model_all_ok": 0.9688485804416404,
+    "retained_share_vs_frozen_common_clips": 0.9083179297597043,
+    "clip_share_vs_frozen_ok": 0.9819458375125376,
+    "speaker_share": 1.0,
+    "p_holm": 0.38922882080078125
+   },
+   "base": {
+    "n_clips_ok_both": 989,
+    "n_clips": 989,
+    "n_speakers": 20,
+    "n_boundaries": 15106,
+    "mae_large_v3": 27.154619816275975,
+    "mae_model": 27.023732801686045,
+    "mean_diff": -0.13088701458993182,
+    "p_raw": 0.8694877624511719,
+    "retained_share_vs_frozen_all_ok": 0.9250459277403552,
+    "retained_share_vs_model_all_ok": 0.9709474225478854,
+    "retained_share_vs_frozen_common_clips": 0.9345459044790894,
+    "clip_share_vs_frozen_ok": 0.9919759277833501,
+    "speaker_share": 1.0,
+    "p_holm": 0.8694877624511719
+   },
+   "small": {
+    "n_clips_ok_both": 995,
+    "n_clips": 993,
+    "n_speakers": 20,
+    "n_boundaries": 15756,
+    "mae_large_v3": 27.479686858698233,
+    "mae_model": 25.2437105194934,
+    "mean_diff": -2.235976339204835,
+    "p_raw": 0.029575347900390625,
+    "retained_share_vs_frozen_all_ok": 0.9648499693815065,
+    "retained_share_vs_model_all_ok": 0.9728327982217831,
+    "retained_share_vs_frozen_common_clips": 0.9655595048412796,
+    "clip_share_vs_frozen_ok": 0.995987963891675,
+    "speaker_share": 1.0,
+    "p_holm": 0.14787673950195312
+   },
+   "medium": {
+    "n_clips_ok_both": 996,
+    "n_clips": 994,
+    "n_speakers": 20,
+    "n_boundaries": 15906,
+    "mae_large_v3": 26.92420413858588,
+    "mae_model": 24.766947838284338,
+    "mean_diff": -2.157256300301546,
+    "p_raw": 0.20244979858398438,
+    "retained_share_vs_frozen_all_ok": 0.9740355174525414,
+    "retained_share_vs_model_all_ok": 0.971062271062271,
+    "retained_share_vs_frozen_common_clips": 0.9742741639103271,
+    "clip_share_vs_frozen_ok": 0.9969909729187563,
+    "speaker_share": 1.0,
+    "p_holm": 0.40489959716796875
+   },
+   "large-v3-turbo": {
+    "n_clips_ok_both": 996,
+    "n_clips": 995,
+    "n_speakers": 20,
+    "n_boundaries": 16078,
+    "mae_large_v3": 27.516743138616086,
+    "mae_model": 26.0082956818649,
+    "mean_diff": -1.5084474567511856,
+    "p_raw": 0.1230926513671875,
+    "retained_share_vs_frozen_all_ok": 0.9845682792406614,
+    "retained_share_vs_model_all_ok": 0.9786949111273435,
+    "retained_share_vs_frozen_common_clips": 0.984809506308955,
+    "clip_share_vs_frozen_ok": 0.9979939819458375,
+    "speaker_share": 1.0,
+    "p_holm": 0.38922882080078125
+   }
+  }
+ },
+ "p4": {
+  "A": {
+   "n_words_all_base": 9153,
+   "brqe_auc_all_base": 0.7564686473815576,
+   "brqe_prauc_all_base": 0.7472296445203064,
+   "frozen_brqe_auc": 0.7564686473815576,
+   "frozen_brqe_prauc": 0.7472292664698374,
+   "n_words": 9153,
+   "positive_rate": 0.4967770130012018,
+   "n_speakers": 20,
+   "roc_auc_brqe": 0.7564686473815576,
+   "pr_auc_brqe": 0.7472296445203064,
+   "roc_auc_disagreement": 0.5578355595311228,
+   "pr_auc_disagreement": 0.5809937102937209,
+   "roc_auc_combined": 0.7137262562166119,
+   "pr_auc_combined": 0.7145545878659706,
+   "auc_diff_combined_minus_brqe": -0.042742391164945714,
+   "auc_diff_ci95": [
+    -0.05043962282534511,
+    -0.036142467911228014
+   ],
+   "complements": false
+  },
+  "B": {
+   "n_words_all_base": 8165,
+   "brqe_auc_all_base": 0.7485066938080773,
+   "brqe_prauc_all_base": 0.7524034815573737,
+   "frozen_brqe_auc": 0.7485066938080773,
+   "frozen_brqe_prauc": 0.7524031205971626,
+   "n_words": 8165,
+   "positive_rate": 0.5169626454378444,
+   "n_speakers": 20,
+   "roc_auc_brqe": 0.7485066938080773,
+   "pr_auc_brqe": 0.7524034815573737,
+   "roc_auc_disagreement": 0.5788422720263264,
+   "pr_auc_disagreement": 0.6442713660658657,
+   "roc_auc_combined": 0.7248811902527351,
+   "pr_auc_combined": 0.7447205583837089,
+   "auc_diff_combined_minus_brqe": -0.02362550355534221,
+   "auc_diff_ci95": [
+    -0.034803160502110256,
+    -0.012986337035738168
+   ],
+   "complements": false
+  },
+  "p4b_s1b": {
+   "L01": {
+    "n_recordings": 20,
+    "A_mfa_failed": 0,
+    "A_ctc_ok": 20,
+    "A_mfa_failed_ctc_ok": 0,
+    "B_mfa_failed": 2,
+    "B_ctc_ok": 20,
+    "B_mfa_failed_ctc_ok": 2
+   },
+   "L05": {
+    "n_recordings": 20,
+    "A_mfa_failed": 3,
+    "A_ctc_ok": 20,
+    "A_mfa_failed_ctc_ok": 3,
+    "B_mfa_failed": 7,
+    "B_ctc_ok": 20,
+    "B_mfa_failed_ctc_ok": 7
+   },
+   "L10": {
+    "n_recordings": 20,
+    "A_mfa_failed": 6,
+    "A_ctc_ok": 20,
+    "A_mfa_failed_ctc_ok": 6,
+    "B_mfa_failed": 12,
+    "B_ctc_ok": 20,
+    "B_mfa_failed_ctc_ok": 12
+   }
+  }
+ },
+ "p2": {
+  "train": {
+   "A": {
+    "mode": "A2_proposed",
+    "n_clips": 3000,
+    "mae_mfa": 18.68532557349031,
+    "grid": [
+     {
+      "W_ms": 10,
+      "alpha": 0.5,
+      "mae": 18.970914973092356,
+      "gain": -0.28558939960204555
+     },
+     {
+      "W_ms": 10,
+      "alpha": 1.0,
+      "mae": 19.737940351820818,
+      "gain": -1.0526147783305078
+     },
+     {
+      "W_ms": 20,
+      "alpha": 0.5,
+      "mae": 19.976040526727544,
+      "gain": -1.2907149532372344
+     },
+     {
+      "W_ms": 20,
+      "alpha": 1.0,
+      "mae": 22.910639519941988,
+      "gain": -4.225313946451678
+     },
+     {
+      "W_ms": 30,
+      "alpha": 0.5,
+      "mae": 21.10885895993312,
+      "gain": -2.4235333864428092
+     },
+     {
+      "W_ms": 30,
+      "alpha": 1.0,
+      "mae": 26.176149602407794,
+      "gain": -7.4908240289174834
+     }
+    ],
+    "selected": {
+     "W_ms": 10,
+     "alpha": 0.5
+    },
+    "selected_gain": -0.28558939960204555,
+    "test_run": false
+   },
+   "B": {
+    "mode": "B2_proposed",
+    "n_clips": 2990,
+    "mae_mfa": 24.64636459459569,
+    "grid": [
+     {
+      "W_ms": 10,
+      "alpha": 0.5,
+      "mae": 24.930961378008856,
+      "gain": -0.28459678341316774
+     },
+     {
+      "W_ms": 10,
+      "alpha": 1.0,
+      "mae": 25.690958312148467,
+      "gain": -1.0445937175527789
+     },
+     {
+      "W_ms": 20,
+      "alpha": 0.5,
+      "mae": 25.891376096052795,
+      "gain": -1.2450115014571068
+     },
+     {
+      "W_ms": 20,
+      "alpha": 1.0,
+      "mae": 28.771266553857252,
+      "gain": -4.124901959261564
+     },
+     {
+      "W_ms": 30,
+      "alpha": 0.5,
+      "mae": 26.982142135881865,
+      "gain": -2.335777541286177
+     },
+     {
+      "W_ms": 30,
+      "alpha": 1.0,
+      "mae": 31.93508253173415,
+      "gain": -7.288717937138461
+     }
+    ],
+    "selected": {
+     "W_ms": 10,
+     "alpha": 0.5
+    },
+    "selected_gain": -0.28459678341316774,
+    "test_run": false
+   }
+  },
+  "test": {}
+ },
+ "comparison": {
+  "summary": {
+   "P-1": {
+    "MATCH": 73
+   },
+   "P-2": {
+    "MATCH": 25,
+    "MISMATCH": 6
+   },
+   "P-3": {
+    "MATCH": 80
+   },
+   "P-4": {
+    "MATCH": 12,
+    "CLOSE": 12
+   },
+   "P-4b": {
+    "MATCH": 18
+   }
+  },
+  "rows": [
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/mae_mfa",
+    "independent": 19.8820674471852,
+    "original": 19.8820674471852,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/mae_ctc",
+    "independent": 40.787220954213964,
+    "original": 40.787220954213964,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/mae_oracle",
+    "independent": 14.156480910042735,
+    "original": 14.156480910042735,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/mae_average",
+    "independent": 26.470009000173793,
+    "original": 26.470009000173793,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/oracle_gain",
+    "independent": 5.7255865371424655,
+    "original": 5.725586537142464,
+    "diff": 1.7763568394002505e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/average_gain",
+    "independent": -6.5879415529885925,
+    "original": -6.587941552988593,
+    "diff": 8.881784197001252e-16,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/n_boundaries",
+    "independent": 18306,
+    "original": 18306,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_proposed/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/mae_mfa",
+    "independent": 17.2459888843911,
+    "original": 17.2459888843911,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/mae_ctc",
+    "independent": 40.787220954213964,
+    "original": 40.787220954213964,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/mae_oracle",
+    "independent": 11.925162116169668,
+    "original": 11.925162116169668,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/mae_average",
+    "independent": 25.28817676310371,
+    "original": 25.28817676310371,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/oracle_gain",
+    "independent": 5.320826768221432,
+    "original": 5.320826768221425,
+    "diff": 6.217248937900877e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/average_gain",
+    "independent": -8.04218787871261,
+    "original": -8.04218787871262,
+    "diff": 8.881784197001252e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/n_boundaries",
+    "independent": 18306,
+    "original": 18306,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/A1_ctc+A2_brqe/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/mae_mfa",
+    "independent": 30.745845585520016,
+    "original": 30.745845585520016,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/mae_ctc",
+    "independent": 41.748565970606904,
+    "original": 41.748565970606904,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/mae_oracle",
+    "independent": 16.368334125726307,
+    "original": 16.368334125726307,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/mae_average",
+    "independent": 31.59180158414153,
+    "original": 31.59180158414153,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/oracle_gain",
+    "independent": 14.377511459793709,
+    "original": 14.377511459793704,
+    "diff": 5.329070518200751e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/average_gain",
+    "independent": -0.8459559986215126,
+    "original": -0.8459559986215177,
+    "diff": 5.10702591327572e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/n_boundaries",
+    "independent": 16330,
+    "original": 16330,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_proposed/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/mae_mfa",
+    "independent": 28.251427138616634,
+    "original": 28.251427138616634,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/mae_ctc",
+    "independent": 41.748565970606904,
+    "original": 41.748565970606904,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/mae_oracle",
+    "independent": 14.158454885925241,
+    "original": 14.158454885925241,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/mae_average",
+    "independent": 30.468675605269386,
+    "original": 30.468675605269386,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/oracle_gain",
+    "independent": 14.092972252691393,
+    "original": 14.092972252691402,
+    "diff": -8.881784197001252e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/average_gain",
+    "independent": -2.2172484666527517,
+    "original": -2.2172484666527446,
+    "diff": -7.105427357601002e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/n_boundaries",
+    "independent": 16330,
+    "original": 16330,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "buckeye/B1_whisper_ctc+B2_brqe/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/mae_mfa",
+    "independent": 20.259132869318233,
+    "original": 20.259132869318233,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/mae_ctc",
+    "independent": 36.934397829508825,
+    "original": 36.934397829508825,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/mae_oracle",
+    "independent": 13.546945130218875,
+    "original": 13.546945130218875,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/mae_average",
+    "independent": 23.883304083841132,
+    "original": 23.883304083841132,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/oracle_gain",
+    "independent": 6.712187739099358,
+    "original": 6.712187739099359,
+    "diff": -8.881784197001252e-16,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/average_gain",
+    "independent": -3.6241712145228995,
+    "original": -3.624171214522901,
+    "diff": 1.3322676295501878e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/n_boundaries",
+    "independent": 2788,
+    "original": 2788,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_proposed/n_speakers",
+    "independent": 16,
+    "original": 16,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/mae_mfa",
+    "independent": 19.9318989904489,
+    "original": 19.9318989904489,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/mae_ctc",
+    "independent": 36.934397829508825,
+    "original": 36.934397829508825,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/mae_oracle",
+    "independent": 12.487604948822199,
+    "original": 12.487604948822199,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/mae_average",
+    "independent": 24.286566798716485,
+    "original": 24.286566798716485,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/oracle_gain",
+    "independent": 7.444294041626701,
+    "original": 7.444294041626701,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/average_gain",
+    "independent": -4.354667808267585,
+    "original": -4.354667808267582,
+    "diff": -3.552713678800501e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/n_boundaries",
+    "independent": 2788,
+    "original": 2788,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/A1_ctc+A2_brqe/n_speakers",
+    "independent": 16,
+    "original": 16,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/mae_mfa",
+    "independent": 20.43029012072552,
+    "original": 20.43029012072552,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/mae_ctc",
+    "independent": 36.89841095584424,
+    "original": 36.89841095584424,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/mae_oracle",
+    "independent": 13.575047341762469,
+    "original": 13.575047341762469,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/mae_average",
+    "independent": 23.908271702547367,
+    "original": 23.908271702547367,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/oracle_gain",
+    "independent": 6.855242778963051,
+    "original": 6.855242778963049,
+    "diff": 1.7763568394002505e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/average_gain",
+    "independent": -3.4779815818218474,
+    "original": -3.477981581821849,
+    "diff": 1.7763568394002505e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/n_boundaries",
+    "independent": 2722,
+    "original": 2722,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_proposed/n_speakers",
+    "independent": 16,
+    "original": 16,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/mae_mfa",
+    "independent": 20.082225853318725,
+    "original": 20.082225853318725,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/mae_ctc",
+    "independent": 36.89841095584424,
+    "original": 36.89841095584424,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/mae_oracle",
+    "independent": 12.476006308597427,
+    "original": 12.476006308597427,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/mae_average",
+    "independent": 24.367432744293815,
+    "original": 24.367432744293815,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/oracle_gain",
+    "independent": 7.606219544721299,
+    "original": 7.606219544721301,
+    "diff": -2.6645352591003757e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/average_gain",
+    "independent": -4.28520689097509,
+    "original": -4.2852068909750916,
+    "diff": 1.7763568394002505e-15,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/share_mfa_common",
+    "independent": 1.0,
+    "original": 1.0,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/n_boundaries",
+    "independent": 2722,
+    "original": 2722,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "timit/B1_whisper_ctc+B2_brqe/n_speakers",
+    "independent": 16,
+    "original": 16,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-1",
+    "item": "decision",
+    "independent": "G-4 stays candidate",
+    "original": {
+     "decision": {
+      "rule": "oracle gain over MFA+BRQE (speaker mean, Buckeye) >= 2.0 ms in any scenario keeps G-4",
+      "oracle_gain_over_brqe_ms": {
+       "A": 5.320826768221425,
+       "B": 14.092972252691402
+      },
+      "g4_status": "stays a candidate"
+     }
+    },
+    "diff": null,
+    "status": "MATCH",
+    "note": "both: oracle gain >= 2 ms for BRQE pairs in both scenarios -> G-4 stays a candidate"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/mae_mfa",
+    "independent": 18.68532557349031,
+    "original": 18.68532557349031,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W10_a0.5/mae",
+    "independent": 18.970914973092356,
+    "original": 18.978154205735287,
+    "diff": -0.007239232642930915,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W10_a0.5/gain",
+    "independent": -0.28558939960204555,
+    "original": -0.29282863224497646,
+    "diff": 0.007239232642930915,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W10_a1.0/mae",
+    "independent": 19.737940351820818,
+    "original": 19.75200807878162,
+    "diff": -0.014067726960803384,
+    "status": "MISMATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W10_a1.0/gain",
+    "independent": -1.0526147783305078,
+    "original": -1.0666825052913111,
+    "diff": 0.014067726960803384,
+    "status": "MISMATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W20_a0.5/mae",
+    "independent": 19.976040526727544,
+    "original": 19.98601948189034,
+    "diff": -0.00997895516279712,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W20_a0.5/gain",
+    "independent": -1.2907149532372344,
+    "original": -1.3006939084000315,
+    "diff": 0.00997895516279712,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W20_a1.0/mae",
+    "independent": 22.910639519941988,
+    "original": 22.92698846500192,
+    "diff": -0.016348945059931452,
+    "status": "MISMATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W20_a1.0/gain",
+    "independent": -4.225313946451678,
+    "original": -4.241662891511609,
+    "diff": 0.016348945059931452,
+    "status": "MISMATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W30_a0.5/mae",
+    "independent": 21.10885895993312,
+    "original": 21.107167958578337,
+    "diff": 0.0016910013547821734,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W30_a0.5/gain",
+    "independent": -2.4235333864428092,
+    "original": -2.421842385088027,
+    "diff": -0.0016910013547821734,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W30_a1.0/mae",
+    "independent": 26.176149602407794,
+    "original": 26.177771483791,
+    "diff": -0.0016218813832047374,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/W30_a1.0/gain",
+    "independent": -7.4908240289174834,
+    "original": -7.492445910300688,
+    "diff": 0.0016218813832047374,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/selected",
+    "independent": [
+     10,
+     0.5
+    ],
+    "original": [
+     10,
+     0.5
+    ],
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-2",
+    "item": "A2_proposed/test_run",
+    "independent": false,
+    "original": false,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/mae_mfa",
+    "independent": 24.64636459459569,
+    "original": 24.64636459459569,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W10_a0.5/mae",
+    "independent": 24.930961378008856,
+    "original": 24.939635868934392,
+    "diff": -0.00867449092553585,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W10_a0.5/gain",
+    "independent": -0.28459678341316774,
+    "original": -0.2932712743387036,
+    "diff": 0.00867449092553585,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W10_a1.0/mae",
+    "independent": 25.690958312148467,
+    "original": 25.70710365635994,
+    "diff": -0.0161453442114734,
+    "status": "MISMATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W10_a1.0/gain",
+    "independent": -1.0445937175527789,
+    "original": -1.0607390617642523,
+    "diff": 0.0161453442114734,
+    "status": "MISMATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W20_a0.5/mae",
+    "independent": 25.891376096052795,
+    "original": 25.897570531616395,
+    "diff": -0.006194435563600109,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W20_a0.5/gain",
+    "independent": -1.2450115014571068,
+    "original": -1.251205937020707,
+    "diff": 0.006194435563600109,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W20_a1.0/mae",
+    "independent": 28.771266553857252,
+    "original": 28.775246782839623,
+    "diff": -0.003980228982371159,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W20_a1.0/gain",
+    "independent": -4.124901959261564,
+    "original": -4.128882188243935,
+    "diff": 0.003980228982371159,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W30_a0.5/mae",
+    "independent": 26.982142135881865,
+    "original": 26.98035252018654,
+    "diff": 0.0017896156953263187,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W30_a0.5/gain",
+    "independent": -2.335777541286177,
+    "original": -2.3339879255908507,
+    "diff": -0.0017896156953263187,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W30_a1.0/mae",
+    "independent": 31.93508253173415,
+    "original": 31.93889027470642,
+    "diff": -0.003807742972270489,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/W30_a1.0/gain",
+    "independent": -7.288717937138461,
+    "original": -7.292525680110732,
+    "diff": 0.003807742972270489,
+    "status": "MATCH",
+    "note": "original uses N_FFT=512 (zero-padded) and np.hanning (symmetric); independent used n_fft=400 and periodic Hann. With 512+symmetric the independent code reproduces the original to 1e-12 (diagnose.json)"
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/selected",
+    "independent": [
+     10,
+     0.5
+    ],
+    "original": [
+     10,
+     0.5
+    ],
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-2",
+    "item": "B2_proposed/test_run",
+    "independent": false,
+    "original": false,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-2",
+    "item": "test block empty",
+    "independent": true,
+    "original": true,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/mae_large_v3",
+    "independent": 30.617320566734215,
+    "original": 30.617320566734215,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/mae_model",
+    "independent": 27.565443153960224,
+    "original": 27.565443153960224,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/mean_diff",
+    "independent": -3.0518774127740005,
+    "original": -3.0518774127740005,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/p_raw",
+    "independent": 0.11398696899414062,
+    "original": 0.11398696899414062,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/p_holm",
+    "independent": 0.4559478759765625,
+    "original": 0.4559478759765625,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/retained_share",
+    "independent": 0.9083179297597043,
+    "original": 0.9083179297597043,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/n_clips",
+    "independent": 979,
+    "original": 979,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/tiny/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/mae_large_v3",
+    "independent": 29.857536874827304,
+    "original": 29.857536874827304,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/mae_model",
+    "independent": 29.719047119545213,
+    "original": 29.719047119545213,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/mean_diff",
+    "independent": -0.13848975528209345,
+    "original": -0.13848975528209345,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/p_raw",
+    "independent": 0.7561664581298828,
+    "original": 0.7561664581298828,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/p_holm",
+    "independent": 0.7561664581298828,
+    "original": 0.7561664581298828,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/retained_share",
+    "independent": 0.9345459044790894,
+    "original": 0.9345459044790894,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/n_clips",
+    "independent": 989,
+    "original": 989,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/base/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/mae_large_v3",
+    "independent": 30.137867463058193,
+    "original": 30.137867463058193,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/mae_model",
+    "independent": 27.91714267299613,
+    "original": 27.91714267299613,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/mean_diff",
+    "independent": -2.2207247900620692,
+    "original": -2.2207247900620692,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/p_raw",
+    "independent": 0.029575347900390625,
+    "original": 0.029575347900390625,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/p_holm",
+    "independent": 0.14787673950195312,
+    "original": 0.14787673950195312,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/retained_share",
+    "independent": 0.9655595048412796,
+    "original": 0.9655595048412796,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/n_clips",
+    "independent": 993,
+    "original": 993,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/small/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/mae_large_v3",
+    "independent": 29.580505860534203,
+    "original": 29.580505860534203,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/mae_model",
+    "independent": 27.429341249548067,
+    "original": 27.429341249548067,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/mean_diff",
+    "independent": -2.1511646109861386,
+    "original": -2.1511646109861386,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/p_raw",
+    "independent": 0.20244979858398438,
+    "original": 0.20244979858398438,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/p_holm",
+    "independent": 0.4559478759765625,
+    "original": 0.4559478759765625,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/retained_share",
+    "independent": 0.9742741639103271,
+    "original": 0.9742741639103271,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/n_clips",
+    "independent": 994,
+    "original": 994,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/medium/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/mae_large_v3",
+    "independent": 30.148628038531164,
+    "original": 30.148628038531164,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/mae_model",
+    "independent": 28.648580105605003,
+    "original": 28.648580105605003,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/mean_diff",
+    "independent": -1.5000479329261633,
+    "original": -1.5000479329261633,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/p_raw",
+    "independent": 0.1230926513671875,
+    "original": 0.1230926513671875,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/p_holm",
+    "independent": 0.4559478759765625,
+    "original": 0.4559478759765625,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/retained_share",
+    "independent": 0.984809506308955,
+    "original": 0.984809506308955,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/n_clips",
+    "independent": 995,
+    "original": 995,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_proposed/large-v3-turbo/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/mae_large_v3",
+    "independent": 27.89046403628152,
+    "original": 27.89046403628152,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/mae_model",
+    "independent": 24.784053835064512,
+    "original": 24.784053835064512,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/mean_diff",
+    "independent": -3.1064102012170047,
+    "original": -3.1064102012170047,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/p_raw",
+    "independent": 0.09730720520019531,
+    "original": 0.09730720520019531,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/p_holm",
+    "independent": 0.38922882080078125,
+    "original": 0.38922882080078125,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/retained_share",
+    "independent": 0.9083179297597043,
+    "original": 0.9083179297597043,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/n_clips",
+    "independent": 979,
+    "original": 979,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/tiny/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/mae_large_v3",
+    "independent": 27.154619816275975,
+    "original": 27.154619816275975,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/mae_model",
+    "independent": 27.023732801686045,
+    "original": 27.023732801686045,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/mean_diff",
+    "independent": -0.13088701458993182,
+    "original": -0.13088701458993182,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/p_raw",
+    "independent": 0.8694877624511719,
+    "original": 0.8694877624511719,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/p_holm",
+    "independent": 0.8694877624511719,
+    "original": 0.8694877624511719,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/retained_share",
+    "independent": 0.9345459044790894,
+    "original": 0.9345459044790894,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/n_clips",
+    "independent": 989,
+    "original": 989,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/base/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/mae_large_v3",
+    "independent": 27.479686858698233,
+    "original": 27.479686858698233,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/mae_model",
+    "independent": 25.2437105194934,
+    "original": 25.2437105194934,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/mean_diff",
+    "independent": -2.235976339204835,
+    "original": -2.235976339204835,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/p_raw",
+    "independent": 0.029575347900390625,
+    "original": 0.029575347900390625,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/p_holm",
+    "independent": 0.14787673950195312,
+    "original": 0.14787673950195312,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/retained_share",
+    "independent": 0.9655595048412796,
+    "original": 0.9655595048412796,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/n_clips",
+    "independent": 993,
+    "original": 993,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/small/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/mae_large_v3",
+    "independent": 26.92420413858588,
+    "original": 26.92420413858588,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/mae_model",
+    "independent": 24.766947838284338,
+    "original": 24.766947838284338,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/mean_diff",
+    "independent": -2.157256300301546,
+    "original": -2.157256300301546,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/p_raw",
+    "independent": 0.20244979858398438,
+    "original": 0.20244979858398438,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/p_holm",
+    "independent": 0.40489959716796875,
+    "original": 0.40489959716796875,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/retained_share",
+    "independent": 0.9742741639103271,
+    "original": 0.9742741639103271,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/n_clips",
+    "independent": 994,
+    "original": 994,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/medium/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/mae_large_v3",
+    "independent": 27.516743138616086,
+    "original": 27.516743138616086,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/mae_model",
+    "independent": 26.0082956818649,
+    "original": 26.0082956818649,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/mean_diff",
+    "independent": -1.5084474567511856,
+    "original": -1.5084474567511856,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/p_raw",
+    "independent": 0.1230926513671875,
+    "original": 0.1230926513671875,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/p_holm",
+    "independent": 0.38922882080078125,
+    "original": 0.38922882080078125,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/retained_share",
+    "independent": 0.984809506308955,
+    "original": 0.984809506308955,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": "original denominator = large-v3 matched boundaries on jointly-ok clips"
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/n_clips",
+    "independent": 995,
+    "original": 995,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-3",
+    "item": "B2_brqe/large-v3-turbo/n_speakers",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/n_words",
+    "independent": 9153,
+    "original": 9153,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/n_words_full",
+    "independent": 9153,
+    "original": 9153,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/positive_rate",
+    "independent": 0.4967770130012018,
+    "original": 0.4967770130012018,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/brqe_auc_full",
+    "independent": 0.7564686473815576,
+    "original": 0.7564686473815576,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/roc_auc_brqe",
+    "independent": 0.7564686473815576,
+    "original": 0.7564686473815576,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/pr_auc_brqe",
+    "independent": 0.7472296445203064,
+    "original": 0.7472292664698374,
+    "diff": 3.7805046892991356e-07,
+    "status": "CLOSE",
+    "note": "original uses refiner.pr_auc (AP without tie grouping, order-dependent on ties); independent groups tied scores. Untied AP reproduces original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/roc_auc_disagreement",
+    "independent": 0.5578355595311228,
+    "original": 0.5578349865604965,
+    "diff": 5.729706263890577e-07,
+    "status": "CLOSE",
+    "note": "original disagreement in ms (x1000), independent in s: x1000 merges a few float near-ties; with ms the independent ROC-AUC equals the original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/pr_auc_disagreement",
+    "independent": 0.5809937102937209,
+    "original": 0.5810208013710726,
+    "diff": -2.709107735165972e-05,
+    "status": "CLOSE",
+    "note": "original uses refiner.pr_auc (AP without tie grouping, order-dependent on ties); independent groups tied scores. Untied AP reproduces original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/roc_auc_combined",
+    "independent": 0.7137262562166119,
+    "original": 0.7137260413526271,
+    "diff": 2.148639848265077e-07,
+    "status": "CLOSE",
+    "note": "original disagreement in ms (x1000), independent in s: x1000 merges a few float near-ties; with ms the independent ROC-AUC equals the original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/pr_auc_combined",
+    "independent": 0.7145545878659706,
+    "original": 0.7145573600918214,
+    "diff": -2.772225850766752e-06,
+    "status": "CLOSE",
+    "note": "original uses refiner.pr_auc (AP without tie grouping, order-dependent on ties); independent groups tied scores. Untied AP reproduces original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/auc_diff_ci95",
+    "independent": [
+     -0.05043962282534511,
+     -0.036142467911228014
+    ],
+    "original": [
+     -0.050439978189592866,
+     -0.036142831902760214
+    ],
+    "diff": [
+     3.5536424775745035e-07,
+     3.639915321998477e-07
+    ],
+    "status": "CLOSE",
+    "note": "same RNG/seed/resampling; sub-1e-6 differences from the tie handling above"
+   },
+   {
+    "analysis": "P-4",
+    "item": "A/complements",
+    "independent": false,
+    "original": false,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/n_words",
+    "independent": 8165,
+    "original": 8165,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/n_words_full",
+    "independent": 8165,
+    "original": 8165,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/positive_rate",
+    "independent": 0.5169626454378444,
+    "original": 0.5169626454378444,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/brqe_auc_full",
+    "independent": 0.7485066938080773,
+    "original": 0.7485066938080773,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/roc_auc_brqe",
+    "independent": 0.7485066938080773,
+    "original": 0.7485066938080773,
+    "diff": 0.0,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/pr_auc_brqe",
+    "independent": 0.7524034815573737,
+    "original": 0.7524031205971626,
+    "diff": 3.6096021105436193e-07,
+    "status": "CLOSE",
+    "note": "original uses refiner.pr_auc (AP without tie grouping, order-dependent on ties); independent groups tied scores. Untied AP reproduces original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/roc_auc_disagreement",
+    "independent": 0.5788422720263264,
+    "original": 0.5788419416488503,
+    "diff": 3.303774761542755e-07,
+    "status": "CLOSE",
+    "note": "original disagreement in ms (x1000), independent in s: x1000 merges a few float near-ties; with ms the independent ROC-AUC equals the original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/pr_auc_disagreement",
+    "independent": 0.6442713660658657,
+    "original": 0.6443098105097358,
+    "diff": -3.844444387013368e-05,
+    "status": "CLOSE",
+    "note": "original uses refiner.pr_auc (AP without tie grouping, order-dependent on ties); independent groups tied scores. Untied AP reproduces original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/roc_auc_combined",
+    "independent": 0.7248811902527351,
+    "original": 0.724880799806627,
+    "diff": 3.90446108111675e-07,
+    "status": "CLOSE",
+    "note": "original disagreement in ms (x1000), independent in s: x1000 merges a few float near-ties; with ms the independent ROC-AUC equals the original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/pr_auc_combined",
+    "independent": 0.7447205583837089,
+    "original": 0.7447266768989984,
+    "diff": -6.118515289532667e-06,
+    "status": "CLOSE",
+    "note": "original uses refiner.pr_auc (AP without tie grouping, order-dependent on ties); independent groups tied scores. Untied AP reproduces original exactly"
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/auc_diff_ci95",
+    "independent": [
+     -0.034803160502110256,
+     -0.012986337035738168
+    ],
+    "original": [
+     -0.03480325941464807,
+     -0.012986160015801869
+    ],
+    "diff": [
+     9.891253781313392e-08,
+     -1.770199362996494e-07
+    ],
+    "status": "CLOSE",
+    "note": "same RNG/seed/resampling; sub-1e-6 differences from the tie handling above"
+   },
+   {
+    "analysis": "P-4",
+    "item": "B/complements",
+    "independent": false,
+    "original": false,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L01/A2_proposed/recordings",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L01/A2_proposed/mfa_failed",
+    "independent": 0,
+    "original": 0,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L01/A2_proposed/mfa_failed_ctc_ok",
+    "independent": 0,
+    "original": 0,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L01/B2_proposed/recordings",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L01/B2_proposed/mfa_failed",
+    "independent": 2,
+    "original": 2,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L01/B2_proposed/mfa_failed_ctc_ok",
+    "independent": 2,
+    "original": 2,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L05/A2_proposed/recordings",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L05/A2_proposed/mfa_failed",
+    "independent": 3,
+    "original": 3,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L05/A2_proposed/mfa_failed_ctc_ok",
+    "independent": 3,
+    "original": 3,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L05/B2_proposed/recordings",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L05/B2_proposed/mfa_failed",
+    "independent": 7,
+    "original": 7,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L05/B2_proposed/mfa_failed_ctc_ok",
+    "independent": 7,
+    "original": 7,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L10/A2_proposed/recordings",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L10/A2_proposed/mfa_failed",
+    "independent": 6,
+    "original": 6,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L10/A2_proposed/mfa_failed_ctc_ok",
+    "independent": 6,
+    "original": 6,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L10/B2_proposed/recordings",
+    "independent": 20,
+    "original": 20,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L10/B2_proposed/mfa_failed",
+    "independent": 12,
+    "original": 12,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   },
+   {
+    "analysis": "P-4b",
+    "item": "L10/B2_proposed/mfa_failed_ctc_ok",
+    "independent": 12,
+    "original": 12,
+    "diff": null,
+    "status": "MATCH",
+    "note": ""
+   }
+  ],
+  "diagnosis_runs": {
+   "p2": {
+    "nfft512_symhann": {
+     "A2_proposed": [
+      18.978154205735287,
+      19.75200807878162,
+      19.986019481890335,
+      22.92698846500192,
+      21.107167958578334,
+      26.177771483791
+     ],
+     "B2_proposed": [
+      24.939635868934396,
+      25.70710365635994,
+      25.897570531616395,
+      28.775246782839623,
+      26.980352520186536,
+      31.93889027470642
+     ]
+    },
+    "nfft512_periodic": {
+     "A2_proposed": [
+      18.973467985372093,
+      19.743490342635244,
+      19.983176992043713,
+      22.92355854055837,
+      21.108332755392105,
+      26.181398148433324
+     ],
+     "B2_proposed": [
+      24.935529073886748,
+      25.699653995777037,
+      25.894899006988318,
+      28.77062273521674,
+      26.982086274763056,
+      31.942349749870356
+     ]
+    },
+    "nfft400_symhann": {
+     "A2_proposed": [
+      18.968020718484887,
+      19.733352337023913,
+      19.97169988689896,
+      22.89908913037311,
+      21.106921188450805,
+      26.175417026294877
+     ],
+     "B2_proposed": [
+      24.928248675169016,
+      25.68675199432614,
+      25.885256730635234,
+      28.756116542572137,
+      26.979474885415936,
+      31.933470513089258
+     ]
+    }
+   },
+   "p4": {
+    "A": {
+     "roc_dis_ms": 0.5578349865604965,
+     "roc_comb_ms": 0.7137260413526271,
+     "ap_untied_brqe": 0.7472292664698374,
+     "ap_untied_dis_ms": 0.5810208013710726,
+     "ap_untied_comb_ms": 0.7145573600918214
+    },
+    "B": {
+     "roc_dis_ms": 0.5788419416488503,
+     "roc_comb_ms": 0.724880799806627,
+     "ap_untied_brqe": 0.7524031205971626,
+     "ap_untied_dis_ms": 0.6443098105097358,
+     "ap_untied_comb_ms": 0.7447266768989984
+    }
+   }
+  },
+  "provenance_note": "original p1..p4.json meta: source_sha256 3150cacc..., git_worktree_dirty=true at c209c74; committed scripts/p1_p4_analyses.py at 62a0c17 has sha256 e250cc41... (differs from the recorded source hash)"
+ }
+}

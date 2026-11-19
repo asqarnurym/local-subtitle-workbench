@@ -1,0 +1,85 @@
+% Equations for the DG 2027 paper; sources and required/desirable status in ../FORMULAS.md.
+% Numbering here follows FORMULAS.md; in the paper LaTeX renumbers automatically.
+
+% Eq. 1-2: boundary error, MAE, Acc@20ms
+\begin{equation}
+e_b = 1000\,\lvert \hat{t}_b - t_b \rvert,\qquad
+\mathrm{MAE} = \frac{1}{\lvert\mathcal{B}\rvert}\sum_{b\in\mathcal{B}} e_b
+\label{eq:mae}
+\end{equation}
+\begin{equation}
+\mathrm{Acc@20} = \frac{100}{\lvert\mathcal{B}\rvert}\sum_{b\in\mathcal{B}} \mathbb{1}[e_b \le 20]
+\label{eq:acc}
+\end{equation}
+
+% Eq. 3: coverage
+\begin{equation}
+\mathrm{Cov} = N_{\mathrm{matched}} / N_{\mathrm{reference}}
+\label{eq:coverage}
+\end{equation}
+
+% Eq. 4: speaker-level comparison and Holm
+\begin{equation}
+d_s = \mathrm{MAE}_s^{\mathrm{prop}} - \mathrm{MAE}_s^{\mathrm{base}}
+\label{eq:speaker}
+\end{equation}
+\begin{equation}
+p^{\mathrm{Holm}}_{(k)} = \max_{j\le k}\min\bigl(1,(K-j+1)\,p_{(j)}\bigr)
+\label{eq:holm}
+\end{equation}
+
+% Eq. 6: banded anchoring recurrence; cells only where |j - i m/n| <= w (state in text)
+\begin{equation}
+S(i,j)=\max\begin{cases}
+S(i{-}1,j{-}1)+\sigma(r_i,h_j)\\
+S(i{-}1,j)+g\\
+S(i,j{-}1)+g
+\end{cases}
+\label{eq:anchor}
+\end{equation}
+
+% Eq. 7: interpolation of unanchored words
+\begin{equation}
+\tau_k = \bigl(t^{\mathrm{start}}_b - t^{\mathrm{end}}_a\bigr)\,\ell_k \Big/ \textstyle\sum_q \ell_q
+\label{eq:interp}
+\end{equation}
+
+% Eq. 8: BRQE heads
+\begin{equation}
+h_b=\mathrm{MLP}([\mathrm{CNN}(X_b);z_b])
+\label{eq:brqe-h}
+\end{equation}
+\begin{equation}
+\Delta_b=\Delta_{\max}\tanh(w_r^{\top}h_b),\qquad
+p_b=\sigma(w_c^{\top}h_b)
+\label{eq:brqe}
+\end{equation}
+
+% Eq. 9: BRQE loss
+\begin{equation}
+\mathcal{L}=\frac{1}{20\lvert\mathcal{B}_r\rvert}\sum_{b\in\mathcal{B}_r}1000\,\lvert\Delta_b-\epsilon_b\rvert
++\lambda\,\mathrm{BCE}\bigl(p_b,\mathbb{1}[\lvert\epsilon_b\rvert>0.02]\bigr)
+\label{eq:loss}
+\end{equation}
+
+% Eq. 10: word reliability and evaluation label
+\begin{equation}
+\rho_w = 1-\max(p_w^{\mathrm{start}},p_w^{\mathrm{end}})
+\label{eq:reliability}
+\end{equation}
+\begin{equation}
+y_w=\mathbb{1}[\max(e_w^{\mathrm{start}},e_w^{\mathrm{end}})>20]
+\label{eq:label}
+\end{equation}
+
+% Eq. 11: constant-offset rival
+\begin{equation}
+\delta_{k,c}=\operatorname*{median}_{b\in\mathcal{B}^{\mathrm{train}}_{k,c},\,\lvert\epsilon_b\rvert\le 0.1}\epsilon_b
+\label{eq:const}
+\end{equation}
+
+% Eq. 12: seam cost (S1b)
+\begin{equation}
+\Delta_{\mathrm{seam}}=\mathrm{MAE}^{\mathrm{chunked}}_{\mathrm{near}}-\mathrm{MAE}^{\mathrm{one}}_{\mathrm{near}}
+\label{eq:seam}
+\end{equation}

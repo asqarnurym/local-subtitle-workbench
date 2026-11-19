@@ -39,6 +39,15 @@ RQ4 (tempo, Whisper size) is answered in one sentence in the Discussion (CLAIM-1
 
 What makes them valid: each names the population (English read and spontaneous speech), the comparison (A vs B; BRQE vs constant offset; lengths), the measure (MAE, Acc@20 ms, coverage, ROC-AUC, failures) and the reference (manual boundaries, held-out speakers).
 
+## Update 21.11.2026 after the literature search
+
+FA-Bench (Chu et al., arXiv, Oct 2026) already compares a reference transcript with recognizer output on TIMIT and Buckeye with held-out speakers (`literature/REFERENCE_AUDIT.md` §1). RQ1 stays as a question, but contribution 1 below is reworded as an independent consistency check, and the paper's weight moves to BRQE and long recordings. The original wording is kept below for reference.
+
+**Proposed contributions (replace the list below if the author agrees):**
+1. A lightweight boundary refinement and reliability module trained only on disjoint speakers and frozen before testing, compared with a constant-offset rival on held-out spontaneous speech, with its negative transfer to read speech reported.
+2. Evidence on one- to ten-minute recordings that chunk seams, not length, drive the error and that one failed chunk removes whole recordings; an overlap-and-stitch fix that passes a pre-registered seam check.
+3. Known-transcript and recognized-text alignment measured in one local pipeline with speaker-level exact tests and coverage beside every error; the numbers agree in order with recent independent benchmarks.
+
 ## Contributions (for the Introduction)
 
 1. A same-pipeline comparison of known-transcript and recognized-text alignment on manual word and phone boundaries of read and spontaneous speech, with speaker-level statistics and coverage reported beside every error.

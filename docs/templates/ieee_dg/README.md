@@ -25,4 +25,4 @@ Not copied: `IEEEexample.bib`, `IEEEfull.bib`, `IEEEtranS.bst`, `fig1.png`, the 
 
 - A blind version was prepared (`academic_paper/main_blind.tex`, `paper_blind.tex`). Plan for an anonymised copy as well.
 - The first page header was set by hand in `paper.tex`: `2026 IEEE 3rd International Student Conference on Digital Generation`, the dates and Astana. For 2027 the header becomes the 4th conference, 24–26 February 2027.
-- The university ran a Strikeplagiarism check on the text, including an AI-content indicator. The 2026 drafts got AI indicators of 64–100% and had to be rewritten by hand (`Prototype/strikeplagiarism_audit.md`). Write the text yourself from the start, and check the final blind PDF with a fresh run.
+- The 2026 blind drafts were run through Strikeplagiarism, which reports an AI-content indicator: 64% for the first version and 100% for the second (`Prototype/.tmp/strike_reports/blind_report_1st.txt`, `blind_report_2nd.txt`; analysis in `strikeplagiarism_audit.md`, Prototype commit `dec3d2e`, deleted from that working tree). No document found says who requires this check or that DG 2027 requires it. Ask the author before treating it as a rule.

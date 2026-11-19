@@ -61,7 +61,7 @@ ROC-AUC оценки надёжности на 10 минутах: 0,740 (A2), 0,
 
 Причины сбоев и варианты исправления — `docs/MFA_FAILURE_BACKLOG.md`.
 
-## 5. Предложения для CLAIM_LEDGER (не утверждены)
+## 5. Предложения для CLAIM_LEDGER (утверждены автором 20.11.2026, внесены в CLAIM_LEDGER)
 
 - **CLAIM-107.** With overlap-and-stitch chunking, the excess word-boundary error near chunk
   seams on 60 s recordings falls from +111.8 to −0.4 ms (A2) and from +125.3 to −15.4 ms (B2)

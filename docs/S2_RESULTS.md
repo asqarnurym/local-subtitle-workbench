@@ -74,7 +74,7 @@
 Темп получен вокодером: это не то же самое, что живая быстрая речь, где меняется и артикуляция.
 На темпе 0,8 возможны артефакты самого вокодера; отделить их от эффекта темпа нельзя.
 
-## 5. Предложения для CLAIM_LEDGER (не утверждены)
+## 5. Предложения для CLAIM_LEDGER (утверждены автором 20.11.2026, внесены в CLAIM_LEDGER)
 
 - **CLAIM-111.** Under pitch-preserving time-stretching from 0.8 to 1.25, word coverage stays
   within 97.5–97.9 % (TIMIT) and 89.9–90.8 % (Buckeye), and known-text MFA error on the original

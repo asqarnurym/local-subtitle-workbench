@@ -925,6 +925,215 @@
         }
       ],
       "age_in_2026": 8
+    },
+    {
+      "key": "Chu2026FABench",
+      "title": "FA-Bench: A Benchmark for Phone- and Word-Level Timestamp Accuracy in Forced Alignment and ASR on Clean and Noisy Speech",
+      "year": "2026",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "Same two-track comparison on TIMIT/Buckeye; matched-word MAE critique; external consistency check",
+      "metadata_status": "checked 2026-11-21 against PDF",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\FABench2026.pdf",
+          "sha256": "35cfbc5e41ffb4b90289051888bdb340c66dc7e75a5e4046243895809b83005d"
+        }
+      ],
+      "age_in_2026": 0,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Zolkepli2026",
+      "title": "Where Words Begin and End",
+      "year": "2026",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "MFA most precise of nine aligners; CTC starts words late",
+      "metadata_status": "checked 2026-11-21 against PDF",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Zolkepli2026_WhereWordsBeginEnd.pdf",
+          "sha256": "b05a05d5d20216729f78a49608204caf79216c73e4450e7e92f7a450b094fbb0"
+        }
+      ],
+      "age_in_2026": 0,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Vaidya2026",
+      "title": "FuseAlign: Forced Alignment in the Wild",
+      "year": "2026",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "Long-form ASR-transcript aligner; presence head; mismatch propagation",
+      "metadata_status": "checked 2026-11-21 against PDF",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Vaidya2026_FuseAlign.pdf",
+          "sha256": "f5eb5a163a36efc76b0f51add84bdb09983f9fb851d41f10a1031d89a7f2015b"
+        }
+      ],
+      "age_in_2026": 0,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Kelley2024",
+      "title": "The Mason-Alberta Phonetic Segmenter: a forced alignment system based on deep neural networks and interpolation",
+      "year": "2024",
+      "doi": "10.1515/phon-2024-0015",
+      "selection": "article_candidate",
+      "role": "Neural aligner with sub-frame interpolation",
+      "metadata_status": "checked 2026-11-21 against PDF and Crossref",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Kelley2024_MAPS.pdf",
+          "sha256": "84672428e5dcc3295cbaa24c093ece8192ee16cee54177650bf92615b96a4fe4"
+        }
+      ],
+      "age_in_2026": 2,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Kelley2026",
+      "title": "Gradient boundaries through confidence intervals for forced alignment estimates using model ensembles",
+      "year": "2026",
+      "doi": "10.1515/phon-2025-0039",
+      "selection": "article_candidate",
+      "role": "Per-boundary uncertainty; closest to the reliability head",
+      "metadata_status": "checked 2026-11-21 against PDF and Crossref",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Kelley2025_GradientBoundaries.pdf",
+          "sha256": "d3910965c3637762b8900e7b0a752a0bb1236085001045fb44cc02c12244d8dc"
+        }
+      ],
+      "age_in_2026": 0,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Yeh2025",
+      "title": "Whisper Has an Internal Word Aligner",
+      "year": "2025",
+      "doi": "10.1109/ASRU65441.2025.11434635",
+      "selection": "article_candidate",
+      "role": "Whisper word timestamps and stricter tolerances",
+      "metadata_status": "checked 2026-11-21 against PDF and Crossref",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Yeh2025_WhisperInternalAligner.pdf",
+          "sha256": "20f2900e37218192e8a27cb87f678ec4ef32bf2238de18263f3a8bbf776a41d0"
+        }
+      ],
+      "age_in_2026": 1,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Thompson2026",
+      "title": "Are Caption Metrics Broken? Latency, Deaf and Hard of Hearing User Ratings, and Cross-Technology Bias",
+      "year": "2026",
+      "doi": "10.1145/3797867.3829032",
+      "selection": "article_candidate",
+      "role": "Caption timing matters to DHH viewers (seconds scale)",
+      "metadata_status": "checked 2026-11-21 against PDF and Crossref",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\CaptionMetrics2026_LatencyDHH.pdf",
+          "sha256": "bfbae77a728f845f48ed65cb67c456d32445114ccb443a6c27a1ed800b8066f9"
+        }
+      ],
+      "age_in_2026": 0,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Povey2011",
+      "title": "The Kaldi Speech Recognition Toolkit",
+      "year": "2011",
+      "doi": null,
+      "selection": "article_candidate",
+      "role": "Kaldi under MFA",
+      "metadata_status": "checked 2026-11-21 against PDF",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Povey2011_Kaldi.pdf",
+          "sha256": "07f6ee1b47c832c96476b6495c3a2d0fd770799eb4e7d352ec776f751f4c303e"
+        }
+      ],
+      "age_in_2026": 15,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Multilingual2026",
+      "title": "Multilingual Word-Level Forced Alignment with Self-Supervised Representations and Learned Dynamic Programming",
+      "year": "2026",
+      "doi": null,
+      "selection": "dissertation_reserve",
+      "role": "Neural aligner claimed better than MFA on TIMIT/Buckeye; preprint",
+      "metadata_status": "checked 2026-11-21 against PDF",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Multilingual2026_LearnedDP.pdf",
+          "sha256": "2e32910c669de94822cb5246b55a99f21fd6b59ecb2efac0a03a651e4a90993a"
+        }
+      ],
+      "age_in_2026": 0,
+      "indexing_evidence": null
+    },
+    {
+      "key": "RefFree2026",
+      "title": "Phoneme- and Word-Level Metrics Using Self-Supervised Speech Representations for Forced Alignment Evaluation",
+      "year": "2026",
+      "doi": null,
+      "selection": "dissertation_reserve",
+      "role": "Reference-free alignment metrics",
+      "metadata_status": "checked 2026-11-21 against PDF",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\RefFree2026_FAMetrics.pdf",
+          "sha256": "2391fd51730501345e6689f7997e7ec7dfe1fb794308c4e2d7d731e98dd9dcf0"
+        }
+      ],
+      "age_in_2026": 0,
+      "indexing_evidence": null
+    },
+    {
+      "key": "Manenti2016",
+      "title": "CNN-based phone segmentation experiments in a less-represented language",
+      "year": "2016",
+      "doi": null,
+      "selection": "dissertation_reserve",
+      "role": "CNN boundary detection on Buckeye at 20 ms",
+      "metadata_status": "checked 2026-11-21 against PDF",
+      "supporting_pages_status": "see docs/paper/dg2027/literature/EVIDENCE_NEW_SOURCES.md",
+      "indexing_status": "not checked",
+      "local_files": [
+        {
+          "path": "C:\\Users\\nurym\\Desktop\\local-subtitle-workbench\\literature\\pdf\\Manenti2016_CNNPhoneSegmentation.pdf",
+          "sha256": "5e71774d0d218e5302b3fc39b42f97a2367c4218c53aa6a79913e9e4605c7134"
+        }
+      ],
+      "age_in_2026": 10,
+      "indexing_evidence": null
     }
   ],
   "indexing_quota_snapshot": {
@@ -932,5 +1141,11 @@
     "journal_entries_listed_in_both_databases": 8,
     "fraction": 0.32,
     "status": "provisional venue-level evidence; not certification of individual paper coverage or final bibliography"
-  }
+  },
+  "updates": [
+    {
+      "date": "2026-11-21",
+      "note": "Added 11 sources from the DG 2027 literature search; see docs/paper/dg2027/literature/REFERENCE_AUDIT.md"
+    }
+  ]
 }

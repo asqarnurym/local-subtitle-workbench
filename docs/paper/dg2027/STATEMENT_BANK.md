@@ -380,7 +380,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: CLAIM-106 reason; `docs/CORPORA_TAXONOMY.md` line 32; (c) Garofolo1993, NISTIR 4930 scan, PDF pp. 17 and 62 (word boundaries by dynamic programming string alignment with the phonetic segments), p. 51 (phone boundaries "hand corrected").
   - Note: corrected. "Manual word boundaries" is not accurate for TIMIT. `AUTHOR:` "manual boundaries" also stands in RQ1 and in AB-03, INT-06, INT-10, RW-B-10, LIM-09; "reference boundaries based on hand-corrected labels" is safe for both corpora.
 - **SET-A-02** [REQUIRED] Spontaneous speech comes from the Buckeye corpus [Pitt2005]: conversational American English from 40 talkers from central Ohio, with word and phone labels that were aligned automatically and then corrected by hand.
-  - Support: (c) Pitt2005 p. 89 (abstract: 307,000 words, 40 talkers, central Ohio) and PDF p. 4 (Entropics Aligner, then the labeller); LA line 125; `src/subtitle_workbench/buckeye.py` docstring (hand-corrected labels).
+  - Support: (c) Pitt2005 p. 89 (abstract: 307,000 words, 40 talkers, central Ohio) and PDF p. 4 (Entropics Aligner, then "hand-correcting the phonemic labels and their alignment"); LA line 125; `src/subtitle_workbench/buckeye.py` docstring (hand-corrected labels).
 - **SET-A-03** [REQUIRED] The 40 Buckeye speakers were split at random, with a fixed seed, into 20 training and 20 test speakers. BRQE saw only the training speakers.
   - Support: (b) `reports/buckeye_split_20260401.json` (n_speakers = 40, test_speakers 20, train_speakers 20, seed = 20260401, method).
 - **SET-A-04** [REQUIRED] Clips are maximal runs of at least three ordinary words without labelled silence, non-speech or unknown tokens, 1 to 30 s long. They get up to 0.25 s of adjoining silence and never extend into interviewer speech or noise.
@@ -469,9 +469,9 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: CPU for CTC and BRQE: frozen JSON hardware.torch_cuda_available = false, whisper_cuda_available = true. The GPU model is not in the JSON (cuda_device_name = null; §10d); its platform string reads Windows-10-10.0.26340, a build number of Windows 11.
 - **SET-D-02** [REQUIRED] Processing time was logged for transparency only and is not an evaluation metric.
   - Support: (b) `reports/buckeye/benchmark_results.json` runtime.note = "transparency only; not an evaluation target"; rule 5.
-- **SET-D-03** [REQUIRED] Samples, splits, BRQE weights and the benchmark code were frozen under tags before the reported test runs. After a first Buckeye run stopped on an empty audio file, two fixes (exclusion of empty clips; retry of a crashed MFA call) were made under new tags; no retry was needed in the reported run.
-  - Support: CLAIM-101, 104, 106 sources and reasons (tags `bench-frozen-20261029`, `-29b`, `-29c`); `IMPROVEMENT_PLAN.md` "C3/D, первая попытка"; (b) config.mfa_retries = [].
-  - Note: rewritten; "before the test runs" hid the stopped run. The sentence on the integrity check is now SET-D-06. See also M-C-11 (pilots).
+- **SET-D-03** [REQUIRED] Samples, splits, BRQE weights and the benchmark code were frozen under tags before the reported test runs. Three earlier Buckeye runs stopped before any metric was written (an empty audio file, an MFA crash and a Python crash). The first two led to fixes under new tags (exclusion of empty clips; retry of a crashed MFA call); the reported run needed no retry.
+  - Support: CLAIM-101, 104, 106 sources and reasons (tags `bench-frozen-20261029`, `-29b`, `-29c`); `IMPROVEMENT_PLAN.md` "C3/D, первая попытка" to "D, третья попытка" (results are written at the end of a run); (b) config.mfa_retries = [].
+  - Note: rewritten; "before the test runs" hid the stopped runs. The sentence on the integrity check is now SET-D-06. See also M-C-11 (pilots).
 - **SET-D-06** [OPTIONAL] An integrity check regenerated the frozen tables byte for byte from the stored results.
   - Support: `ARTIFACT_VALIDATION.md` §1 (21.11.2026; `verify_frozen_evidence.py`, PASS_WITH_LIMITATIONS; six tables). It predates CLAIM-111…118, so "every claim's source" was removed.
 - **SET-D-04** [OPTIONAL] Separate re-implementations of the analyses by the authors' own tools gave the same numbers:

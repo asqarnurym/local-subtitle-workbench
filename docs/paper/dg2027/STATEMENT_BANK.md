@@ -2,7 +2,7 @@
 
 > **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
 >
-> **Check status.** Results (§6), Table I (§9), Method (§4) and Setup (§5): checked against the sources on 24.11.2026. Discussion, Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
+> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5) and Discussion (§7): checked against the sources on 24.11.2026. Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -613,75 +613,78 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 7. Discussion (target 600 words, including Limitations)
 
+> Checked 24.11.2026 against the CLAIMs, the report JSON files and the PDFs. `AUTHOR:` marks a decision for the author.
+
 ### 7.1 Interpretation (target 330)
 
-- **DIS-01** [REQUIRED] For caption timing, the results suggest improving the transcript before the aligner. With recognized text, accuracy is lost at misrecognized words, while boundaries between correctly recognized words are placed as well as with the known transcript.
-  - Support: CLAIM-117, CLAIM-114; contribution 3 (`TITLE_KEYWORDS_RQ.md` line 61); `main.tex` Discussion plan.
-  - Note: "suggest", because CLAIM-117 is descriptive.
-- **DIS-02** [OPTIONAL] At coarse tolerances the transcript matters more than the aligner: from 70 ms on, CTC with the known text overtakes MFA with Whisper's text on Buckeye (Fig. 2).
+- **DIS-01** [REQUIRED] On spontaneous speech, recognized text lowers boundary F1 at 20 ms from 0.710 to 0.624 (word coverage 89.0 %; secondary analysis). In a post-hoc look at the boundaries that both texts share, the error was also larger with recognized text (MAE 26.1 vs 17.6 ms) at an equal median of 10.0 ms, with more errors above 100 ms (3.2 % vs 1.4 %). The data do not show which part of the loss comes from recognition and which from alignment.
+  - Support: CLAIM-114, CLAIM-102 (coverage), CLAIM-117 (24.11.2026 wording).
+  - Note: rewritten. The advice "improve the transcript before the aligner" and "placed as well as" were removed (contribution 3: no advice, no causal claim). "Post-hoc" must stay. If RES-A-09 is used, keep only the first and last sentences.
+- **DIS-02** [OPTIONAL] The order of systems depends on the tolerance: from 70 ms on, CTC with the known text has a higher F1 than MFA with Whisper's text on Buckeye (B2 word coverage 89.0 %; Fig. 2).
   - Support: (b) see RES-A-11.
-  - Note: **needs CLAIM before submission**.
-- **DIS-03** [REQUIRED] Our MFA results (boundary F1 at 20 ms of 0.68–0.71) and the system order MFA > CTC > Whisper timestamps are consistent with recent benchmarks [Chu2026FABench], [Zolkepli2026], [McAuliffe2026], [Rousso2024]. Absolute values for Whisper and CTC differ, as do boundary definitions, clips and speaker splits.
-  - Support: CLAIM-116 (qualitative only; never say one benchmark is better). The order in the other works is as in INT-06.
-  - Note: rule 3, plural and short, and the one Discussion citation of FA-Bench. Never write "confirm" or "validate".
+  - Note: **needs CLAIM before submission**. "The transcript matters more than the aligner" was removed (descriptive, no test). Use here or in RES-A-11, not both.
+- **DIS-03** [REQUIRED] Our MFA results and the order of MFA ahead of CTC alignment are consistent with recent benchmarks [Chu2026FABench], [Zolkepli2026], [McAuliffe2026], [Rousso2024]. Absolute values differ, as do boundary definitions, clips and speaker splits.
+  - Support: CLAIM-116 (qualitative only; never say one benchmark is better); McAuliffe2026 Table 4 (MFA ahead of WhisperX, MMS, NeMo); Zolkepli2026 p. 12; Rousso2024 (MFA ahead of WhisperX and MMS, LA line 64).
+  - Note: narrowed. CLAIM-116 rests on FA-Bench alone, and the place of Whisper's own timestamps behind CTC is not in all four works, so the third system and the F1 range 0.68–0.71 were removed. Rule 3, plural and short; the one Discussion citation of FA-Bench. Never write "confirm" or "validate".
 - **DIS-04** [OPTIONAL] For example, mean MFA word-boundary errors of 19.93 and 21.75 ms on TIMIT and Buckeye [McAuliffe2026] and 19.1 and 21.0 ms [Zolkepli2026] are of the same order as ours (20.3 and 19.6 ms).
   - Support: (c) McAuliffe2026 p. 352, Table 4 (LA lines 151–152); Zolkepli2026 p. 12, Table 6 (EVN line 19); CLAIM-106 and CLAIM-101.
   - Note: qualitative only (different clips and preparation; LA line 164).
-- **DIS-05** [REQUIRED] Whisper's timestamps shift whole words early: the mean signed start error is −115.0 ms on Buckeye and −147.5 ms on TIMIT, while the mean duration error is only −21.3 and −10.3 ms. Per word, however, the absolute duration error is 86.4 and 101.2 ms, so a single constant shift could correct the mean but not each word.
-  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.{buckeye, timit}.modes.B0_whisper.signed.mean_signed_start_ms, mean_signed_duration_ms and mean_abs_duration_ms; `docs/FA_EXTRAS_RESULTS.md` §4.
-  - Note: **needs CLAIM before submission**. Planned in `main.tex` (Discussion comment). Report Whisper coverage if a B0 number needs it: 88.8 % Buckeye and 97.35 % TIMIT (Table I).
-- **DIS-06** [OPTIONAL] A similar early shift of about 150 ms at both word ends has been reported for Whisper [Chu2026FABench].
+- **DIS-05** [REQUIRED] Whisper's timestamps are early on average: the mean signed start error is −115.0 ms on Buckeye and −147.5 ms on TIMIT, and the mean signed duration error is −21.3 and −10.3 ms (word coverage 88.8 % and 97.4 %). Per word, however, the mean absolute duration error is 86.4 and 101.2 ms, so a constant shift would not correct every word.
+  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.{buckeye, timit}.modes.B0_whisper.signed (86.45, rounded as in `docs/FA_EXTRAS_RESULTS.md` §4); coverage `benchmark_results.json`.
+  - Note: **needs CLAIM before submission**; descriptive, matched words only. "Shift whole words" was softened to a mean.
+- **DIS-06** [OPTIONAL] A similar early shift of about 150 ms has been reported for Whisper [Chu2026FABench].
   - Support: (c) Chu2026FABench pp. 1, 4; EVN line 12.
   - Note: this would be a second FA-Bench citation in the Discussion. Merge it into DIS-03's citation or drop it (rule 1).
-- **DIS-07** [REQUIRED] CTC alignment starts words 39–46 ms late and ends them 15–23 ms early, so its words are about 60 ms too short. This agrees with the report that, on the forced CTC path, the first character frame falls a median 33 ms after the manual word start, with most frames inside a word blank [Zolkepli2026].
+- **DIS-07** [REQUIRED] On average, CTC alignment starts words 39–46 ms late and ends them 15–23 ms early, so its words are about 60 ms too short. This is in line with the report that, on the forced CTC path, the first character frame falls a median 33 ms after the human word start and the last ends a median 26 ms before the human end, with a median 67 % of the frames inside a word blank [Zolkepli2026].
   - Support: (b) fa_extras.json corpora.*.modes.{A1_ctc, B1_whisper_ctc}.signed (start +38.8 to +45.6 ms, end −14.8 to −23.3 ms, duration −58.2 to −62.3 ms); `docs/FA_EXTRAS_RESULTS.md` §4. (c) Zolkepli2026 arXiv p. 4 (median 33 ms; "a median 67% of the frames inside a human word are blank"); EVN line 20.
-  - Note: **needs CLAIM before submission**.
+  - Note: **needs CLAIM before submission**. Our values are means, theirs are medians of character frames on TIMIT with MMS-300M; B1 coverage is 89.0 % and 97.6 %.
 - **DIS-08** [OPTIONAL] CTC models have peaky output distributions, and MMS words were also found to be about 60 ms shorter than manual words on Buckeye and TIMIT [Huang2024].
   - Support: (c) Huang2024 pp. 1, 3 (Table 1, WDUR 181 vs 241 ms and 242 vs 305 ms); EVN lines 88–90.
   - Note: reserve reference.
-- **DIS-09** [REQUIRED] On spontaneous speech, BRQE gains most where MFA is least accurate, at the ends of speech segments. On read speech it corrects only segment edges and is worse than MFA at tolerances from 30 ms. The module was trained on one corpus with one seed, and the cause of this gap between corpora was not tested.
-  - Support: CLAIM-118, CLAIM-104, CLAIM-113; RES-B-13 (b); `IMPROVEMENT_PLAN.md` §10.1 ("обучение на одном корпусе и одном seed").
-  - Note: do not interpret it as speech-style specificity (CLAIM-104 reason). Optional addition: [Kelley2024] saw MFA marginally ahead of neural segmentation beyond about 25–30 ms (RW-C-08).
-- **DIS-10** [REQUIRED] The reliability score could let a captioner check flagged words first instead of every word, as proposed for uncertainty ranges of boundaries [Kelley2026]. This use was not measured.
-  - Support: CLAIM-105 reason (use "may be mentioned only as a possibility in the discussion"); (c) Kelley2026 p. 1 (EVN line 40).
-  - Note: the clause moved here from accepted contribution 1.
-- **DIS-11** [REQUIRED] In a small pilot, seam errors came from text being placed over a neighbour's speech near the seams. This agrees with the remark that an aligner which must place every token can let one mismatch shift neighbouring intervals [Vaidya2026], and MFA failures on long inputs have also been reported [Rastorgueva2023].
-  - Support: `IMPROVEMENT_PLAN.md` §10.3 (mechanism from a 6-recording microtest, descriptive); (c) Vaidya2026 p. 6 (EVN lines 28–29); Rastorgueva2023 p. 5258 (LA lines 91–92).
-  - Note: "in a small pilot" must stay.
-- **DIS-12** [OPTIONAL] Long-form aligners and evaluations report overall accuracy or failure counts. Separating seam error, length effect and chunk failures, as here, shows which part of a long-recording pipeline to fix.
-  - Support: positioning rule 5; CLAIM-107–110; LA line 160 (McAuliffe2026: long-recording mode not evaluated); Rastorgueva2023 (200 ms precision and recall, files aligned).
-  - Note: risk of an absence claim about all long-form work; keep it optional and soften to "the works cited here".
-- **DIS-13** [REQUIRED] Under pitch-preserving time-stretching from 0.8 to 1.25, word coverage stays within 97.5–97.9 % (TIMIT) and 89.9–90.8 % (Buckeye), and known-text MFA error on the original time scale stays within 19.8–20.4 ms and 17.9–20.3 ms. On spontaneous speech, only strong slowing raises the scaled error (+2.1 ms for A2 and +2.8 ms for A2 with BRQE at 0.8, Holm p = 0.026 and 0.004), in a test added after the numbers were known.
-  - Support: CLAIM-111, CLAIM-112 (the post-hoc marker must stay).
-  - Note: S2 gets one sentence in the paper. Add "vocoder tempo is not natural fast speech" (CLAIM-111 reason) here or in LIM-10.
-- **DIS-14** [REQUIRED] Across these tempos, BRQE keeps a 2.8–3.5 ms gain over MFA on Buckeye. On TIMIT it does not improve, and at 1.25 it is worse than MFA (21.8 vs 20.2 ms).
+- **DIS-09** [REQUIRED] BRQE lowers the error on spontaneous speech, but does not significantly improve read speech, where its F1 is lower than MFA's at tolerances from 30 to 80 ms. The module was trained on one corpus with one seed, and the cause of this gap between corpora was not tested.
+  - Support: CLAIM-103, CLAIM-104, CLAIM-113; RES-B-13 (b); `IMPROVEMENT_PLAN.md` §10.1 ("обучение на одном корпусе и одном seed").
+  - Note: rewritten without CLAIM-118. RES-B-13 **needs CLAIM before submission**. Do not interpret it as speech-style specificity (CLAIM-104 reason). Do not explain where the gain comes from unless RES-B-18 (about 40 % at the edges of cut clips) is used too.
+- **DIS-10** [REQUIRED] One possible use of the reliability score is to mark words for review, as proposed for uncertainty ranges of boundaries [Kelley2026]. This use was not measured.
+  - Support: CLAIM-105 reason (use "may be mentioned only as a possibility in the discussion"); (c) Kelley2026 arXiv p. 1 ("finding boundaries that should be reviewed").
+  - Note: "instead of every word" was removed: it implies saved labour. The clause moved here from accepted contribution 1.
+- **DIS-11** [REQUIRED] In a small pilot, seams fell inside speech when VAD found no pauses, so the chunk padding held a neighbour's speech without its text. An aligner that must place every token can then shift neighbouring intervals [Vaidya2026]. MFA failures on long recordings have also been reported: 5 of 16 files were aligned in [Rastorgueva2023].
+  - Support: `IMPROVEMENT_PLAN.md` §10.3 (microtest on 6 recordings, descriptive); (c) Vaidya2026 arXiv p. 6 ("one mismatch can shift neighboring intervals"); Rastorgueva2023 PDF p. 2, Table 1 (= p. 5258).
+  - Note: "seam errors came from" was removed; the mechanism was not tested. "In a small pilot" must stay.
+- **DIS-12** [OPTIONAL] The long-recording evaluation cited here reports overall accuracy and the number of files aligned [Rastorgueva2023]. Our protocol reports seam error, length effect and chunk failures separately.
+  - Support: positioning rule 5; CLAIM-107–110; Rastorgueva2023 Table 1 (200 ms precision and recall, files aligned).
+  - Note: limited to one cited work; the general statement about long-form work and "shows which part to fix" were removed.
+- **DIS-13** [REQUIRED] Under pitch-preserving time-stretching from 0.8 to 1.25, word coverage stays within 97.5–97.9 % (TIMIT) and 89.9–90.8 % (Buckeye), and known-text MFA error on the original time scale stays within 19.8–20.4 ms and 17.9–20.3 ms. In tests added after the numbers were known, only strong slowing raises the scaled error on spontaneous speech (+2.1 ms for A2 and +2.8 ms for A2 with BRQE at 0.8, Holm p = 0.026 and 0.004).
+  - Support: CLAIM-111 (descriptive ranges, not an equivalence test), CLAIM-112 (the post-hoc marker must stay); `reports/s2_tempo_20261103/scaled_detail.json`.
+  - Note: ranges are speaker means over 160 TIMIT and 200 Buckeye clips. On TIMIT the same post-hoc tests give Holm p < 0.05 for A2 and B2 at 1.1 and 1.25 and for both BRQE modes at 1.25 (signs of mean and median differ for A2 and B2); CLAIM-112 speaks of spontaneous speech only, so do not write "no effect on read speech". S2 gets one sentence. Add "vocoder tempo is not natural fast speech" here or in LIM-10.
+- **DIS-14** [REQUIRED] Across these tempos and with the known text, BRQE keeps a 2.8–3.5 ms gain over MFA on Buckeye. On TIMIT it does not improve, and at 1.25 it is worse than MFA (21.8 vs 20.2 ms).
   - Support: CLAIM-113.
   - Note: drop if RES-B-14 is used.
-- **DIS-15** [OPTIONAL] Replacing Whisper large-v3 with five smaller or faster Whisper variants gave no significant difference in MAE after MFA (all Holm p ≥ 0.9467, all 95 % CIs including zero), which is not evidence of equivalence.
+- **DIS-15** [OPTIONAL] Replacing Whisper large-v3 with five smaller or faster Whisper variants gave no significant difference in word MAE of B2 or B2 with BRQE on Buckeye (all Holm p ≥ 0.94, all 95 % CIs including zero; word coverage 83.7–89.6 %, failed clips 2 to 17 of 999). This is not evidence of equivalence, and the recognized words differ between variants.
   - Support: (b) `docs/S3_RESULTS.md` ("Сравнения и ограничения"); `reports/s3_asr_size_20261106/analysis.json`.
   - Note: **needs CLAIM before submission**. Coverage and failure rates differ between variants (83.65–89.56 % coverage), so mention them if a number is given. Do not use the S3 figure (`ARTIFACT_VALIDATION.md` §2).
 
 ### 7.2 Limitations (target 270)
 
-- **LIM-01** [REQUIRED] Matched-word scores for recognized text are about 11 % optimistic. Word coverage and boundary F1 are therefore reported beside them.
-  - Support: CLAIM-115.
-- **LIM-02** [REQUIRED] Buckeye clips are runs of ordinary words without event tags, noise or interviewer speech, 1–30 s long, and may be easier than full conversational utterances.
+- **LIM-01** [REQUIRED] On Buckeye, matched-word Acc@20 for recognized text aligned by MFA is about 11 % (relative) above recall over all reference boundaries. Word coverage and boundary F1 are therefore reported beside these scores.
+  - Support: CLAIM-115 (7.7–8.3 points; 0.3 points for the known transcript); see RES-A-08.
+  - Note: "scores … are about 11 % optimistic" covered MAE too; the figure is for Acc@20 only.
+- **LIM-02** [REQUIRED] Buckeye clips are runs of ordinary words without labelled silence, event tags, noise or interviewer speech, 1–30 s long, and may be easier than full conversational utterances.
   - Support: `src/subtitle_workbench/buckeye.py`; `literature/FABENCH_REPO_REVIEW.md` item 5 ("Скорее всего, наш набор проще"); `main.tex` Discussion comment.
 - **LIM-03** [REQUIRED] Noise, reverberation and accented speech were not tested.
   - Support: `IMPROVEMENT_PLAN.md` §9.2 (S4 accent and S6 noise are not run and are reported as limitations).
   - Note: do not state the S4 and S6 hypotheses as expected results.
 - **LIM-04** [REQUIRED] The long recordings were spliced from clips, so their joins are not natural speech and they stand in for lectures only partly. Their error figures cover surviving recordings.
   - Support: `docs/S1_LONG_RECORDINGS_PROTOCOL.md` rule 5; CLAIM-108 reason.
-- **LIM-05** [REQUIRED] BRQE was trained on one spontaneous corpus with one seed and did not transfer to read speech.
+- **LIM-05** [REQUIRED] BRQE was trained on one spontaneous corpus with one seed and did not significantly improve read speech.
   - Support: CLAIM-104, CLAIM-113; `IMPROVEMENT_PLAN.md` §10.1.
 - **LIM-06** [REQUIRED] B1 and A1 reproduce the alignment cores of WhisperX-style and MMS pipelines, not the WhisperX and NFA programs.
   - Support: `IMPROVEMENT_PLAN.md` §10.1; `PSEUDOCODE.md` notes.
 - **LIM-07** [REQUIRED] TIMIT results come from the 160-utterance NLTK sample, not the full corpus.
   - Support: CLAIM-106 reason.
-- **LIM-08** [REQUIRED] Boundary F1 and the boundary-group analyses were added after the main results, once a new benchmark appeared, and the group analyses are descriptive without tests.
-  - Support: CLAIM-114 reason; CLAIM-117 and CLAIM-118 reasons.
-  - Note: do not name FA-Bench here, which would be a third Discussion mention.
-- **LIM-09** [REQUIRED] No user study was run. The paper measures timing against manual boundaries, not comprehension, learning or accessibility benefit for viewers.
+- **LIM-08** [REQUIRED] The speaker-level tests, boundary F1 and the boundary-group analyses were added after the main results; the group analyses have no tests. The comparison on shared boundaries was post-hoc and without a protocol.
+  - Support: `docs/E1_ANALYSIS_RESULTS.md` intro; CLAIM-114 and CLAIM-117 reasons; `docs/FA_EXTRAS_PROTOCOL.md` ("тестовые дикторы Buckeye уже много раз использованы").
+  - Note: CLAIM-118 removed from the support. Do not name FA-Bench here, which would be a third Discussion mention.
+- **LIM-09** [REQUIRED] No user study was run. The paper measures timing against reference boundaries based on hand-corrected labels, not comprehension, learning or accessibility benefit for viewers.
   - Support: `TITLE_KEYWORDS_RQ.md` lines 3 and 63; rule 5.
 - **LIM-10** [OPTIONAL] Tempo was changed by a vocoder, which is not natural fast speech.
   - Support: CLAIM-111 reason.
@@ -690,6 +693,9 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **LIM-12** [OPTIONAL] Rankings on clean speech may not hold under degradation [Chu2026FABench].
   - Support: (c) Chu2026FABench p. 4 ("a clean-speech MAE ranking does not survive degradation").
   - Note: an extra FA-Bench citation, so use it only instead of DIS-03's.
+- **LIM-13** [REQUIRED] Pilots used to find defects before the freeze included clips of the test speakers, and the overlap-and-stitch design was chosen on 6 of the 20 recordings of its check.
+  - Support: M-C-11, RES-C-10.
+  - Note: added in the check; **needs CLAIM before submission**. If M-C-11 and RES-C-10 stay in their sections, this can be dropped.
 
 ---
 
@@ -860,8 +866,8 @@ All 25 selected keys appear in at least one REQUIRED statement. No selected key 
 | 114 | RES-A-06, RES-B-04, SET-C-05, INT-13, INT-15, AB-07, CON-02 | "Secondary, added after the main results" kept in each use |
 | 115 | RES-A-08, LIM-01, Table I caption | See item 5 in (d) |
 | 116 | DIS-03 | Qualitative, plural |
-| 117 | RES-A-09 (rewritten); DIS-01, INT-15, AB-07, CON-02, CON-06 still use the old wording | Post-hoc, no protocol, not a cause |
-| 118 | none: withdrawn 24.11.2026; INT-13, AB-04 and DIS-09 still use it and are to be rewritten in their checks (RES-B-06 removed) | Do not use |
+| 117 | RES-A-09, DIS-01 (rewritten); INT-15, AB-07, CON-02, CON-06 still use the old wording | Post-hoc, no protocol, not a cause |
+| 118 | none: withdrawn 24.11.2026; INT-13 and AB-04 still use it and are to be rewritten in their checks (RES-B-06 removed) | Do not use |
 
 Every CLAIM is used.
 

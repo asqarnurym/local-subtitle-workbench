@@ -48,6 +48,27 @@ FA-Bench (Chu et al., arXiv, Oct 2026) already compares a reference transcript w
 2. Evidence on one- to ten-minute recordings that chunk seams, not length, drive the error and that one failed chunk removes whole recordings; an overlap-and-stitch fix that passes a pre-registered seam check.
 3. Known-transcript and recognized-text alignment measured in one local pipeline with speaker-level exact tests and coverage beside every error; the numbers agree in order with recent independent benchmarks.
 
+## Positioning after FA-Bench (proposal 23.11.2026, author's decision)
+
+Author's requirement (23.11.2026): the paper must not read as a check of someone else's preprint and must not lose its own value.
+
+**Rules for the text.**
+1. FA-Bench is one of several recent evaluations (Chu2026FABench, Zolkepli2026, McAuliffe2026), cited together in Related Work and once in the Discussion. It is never named in the abstract, the title or the contributions. The words "verify", "validate", "replicate" or "confirm FA-Bench" are not used.
+2. Agreement goes in our favour, plural and short: "Our MFA and Whisper figures are consistent with recent benchmarks [..]" (CLAIM-116). It supports our numbers; it is not a result.
+3. The type of paper differs and is stated: those works *rank existing systems*; this paper *proposes and tests additions to an alignment pipeline for captioning* (a refinement and reliability module, an overlap-and-stitch scheme for long recordings) and measures what the choice of transcript costs inside that pipeline.
+4. The F1 analysis is our robustness check against a known criticism of MAE, cited to its source: "Because matched-word MAE can favour recognition-based systems [Chu2026], we also report boundary F1 that charges missed and inserted words; all conclusions hold (CLAIM-114), and matched-word scores for recognized text are about 11 % optimistic (CLAIM-115)." That is what a careful paper does, not a check of their work.
+5. Gap = what our paper does that none of the read works does (checked against EVIDENCE_NEW_SOURCES.md; state as a difference, never "first"):
+   - a learned post-alignment module that also outputs a per-boundary reliability score, evaluated by ROC-AUC and a rejection curve on held-out speakers of spontaneous speech (Cuozzo2018: refinement only, read single-speaker TTS data; Kelley2026: ensemble intervals around a neural aligner; FuseAlign: word presence, not boundary error);
+   - the cost of chunk seams and of chunk failures on 1–10 minute recordings measured against manual boundaries (long-form aligners — NFA, LLM-ForcedAligner, FuseAlign — report accuracy, not where it is lost);
+   - speaker-level exact tests for every comparison (FA-Bench reports none; text search for Wilcoxon, bootstrap and confidence intervals found nothing).
+
+**Proposed contributions v2 (replace the list below if the author agrees).**
+1. A lightweight boundary refinement and reliability module for forced alignment, trained only on disjoint speakers and frozen before testing. On held-out spontaneous speech it beats a constant-offset rival under both MAE and boundary F1, mostly at speech-segment edges, and its reliability score detects boundaries more than 20 ms off (ROC-AUC 0.75). Its negative transfer to read speech is reported.
+2. Evidence on one- to ten-minute recordings that chunk seams, not length, drive the error and that one failed chunk removes whole recordings, with an overlap-and-stitch scheme that passes a pre-registered seam check.
+3. A measurement, inside one local captioning pipeline with speaker-level tests, of what recognized text costs compared with a known transcript, and where the cost arises: on boundaries between correctly recognized words both scenarios are equally accurate, so the loss comes from recognition, not alignment.
+
+Why this is stronger than "a same-pipeline comparison": item 3 now ends in a practical finding for captioning (improve the transcript, not the aligner), which the benchmarks do not state for a pipeline; items 1–2 are methods, not measurements of existing tools.
+
 ## Contributions (for the Introduction)
 
 1. A same-pipeline comparison of known-transcript and recognized-text alignment on manual word and phone boundaries of read and spontaneous speech, with speaker-level statistics and coverage reported beside every error.

@@ -55,7 +55,7 @@ t.zhukabayeva@astanait.edu.kz}
 % One paragraph, in the order of the contributions (TITLE_KEYWORDS_RQ.md): problem (caption
 % timing for accessibility); the refinement and reliability module and its gain on held-out
 % spontaneous speech (CLAIM-103, 105, 114); long recordings (CLAIM-107..110); what recognized
-% text costs and that the cost comes from recognition (CLAIM-114, 117); corpora (TIMIT read,
+% text costs (CLAIM-114, 115); corpora (TIMIT read,
 % Buckeye spontaneous, manual boundaries, held-out speakers); one honest limit (read speech).
 % No symbols or math. Do not name other benchmarks here.
 Abstract to be written.
@@ -67,7 +67,7 @@ forced alignment, word boundary accuracy, speech-text alignment, automatic speec
 
 \section{Introduction}
 % Problem: captions help many learners only if timing is right; word-level timing enables
-% karaoke-style highlighting and lets a captioner check only doubtful words.
+% karaoke-style highlighting.
 % Positioning (TITLE_KEYWORDS_RQ.md, "Positioning"): recent benchmarks rank existing aligners
 % and recognizers on short utterances [Chu2026FABench, Zolkepli2026, McAuliffe2026,
 % Rousso2024]; this paper proposes and tests additions to a local captioning pipeline.
@@ -119,19 +119,18 @@ forced alignment, word boundary accuracy, speech-text alignment, automatic speec
 \section{Results}
 \subsection{Boundary Accuracy with and without a Known Transcript}
 % RQ1: one merged table (MAE, Acc@20, coverage, F1@20). CLAIM-101, 102, 106, 114, 115.
-% Where B loses: CLAIM-117 (equal accuracy between correctly recognized words).
+% Where B loses: CLAIM-117 (post-hoc, say so).
 % Figure: F1 against tolerance (reports/fa_extras_20261123/f1_tolerance_en.pdf) instead of
 % ECDF; it also shows the scenario-B ceiling near 0.86 on Buckeye.
 \subsection{Boundary Refinement and Reliability}
-% RQ2: CLAIM-103, 105, 114 (all 20 speakers under MAE and F1); CLAIM-118 (largest
-% corrections at segment ends); CLAIM-104 negative TIMIT result must stay (worse than MFA from
+% RQ2: CLAIM-103, 105, 114 (all 20 speakers under MAE and F1); CLAIM-104 negative TIMIT result must stay (worse than MFA from
 % 30 ms tolerance, FA_EXTRAS_RESULTS.md 3); reliability-retention figure; sensitivity in one
 % sentence.
 \subsection{Long Recordings}
 % RQ3: CLAIM-107..110; failures beside errors; survivors stated.
 
 \section{Discussion}
-% CLAIM-117 and 118 SUSPENDED 24.11.2026: do not use until reworded.
+% CLAIM-117 is a post-hoc observation: no cause, no advice. CLAIM-118 withdrawn.
 % Our figures are consistent with recent benchmarks (CLAIM-116; plural, one sentence).
 % Whisper shifts whole words about 115-150 ms early and CTC starts words about 40 ms late
 % (reports/fa_extras_20261123/fa_extras.json), as reported elsewhere.

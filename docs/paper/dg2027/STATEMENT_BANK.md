@@ -1,6 +1,6 @@
 # Statement bank for the DG 2027 paper
 
-> **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on CLAIM-117 or CLAIM-118 must not be used.
+> **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 

@@ -2,7 +2,7 @@
 
 > **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
 >
-> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5) and Discussion (§7): checked against the sources on 24.11.2026. Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
+> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5), Discussion (§7) and Introduction (§2): checked against the sources on 24.11.2026. Related Work, Conclusion and the Abstract plan: not checked yet.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -111,65 +111,64 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 2. Introduction (target 550 words)
 
-- **INT-01** [REQUIRED] Captions make video accessible to deaf and hard-of-hearing viewers, and they also help many other viewers [Gernsbacher2015], [Horlin2024].
-  - Support: (c) Gernsbacher2015 p. 195 (abstract: captions "benefit everyone who watches videos") and p. 196 ("captions benefit persons who are D/deaf or hard of hearing … Captions also benefit hearing persons"). Horlin2024 p. 2082 (see RW-A-02).
+> Checked 24.11.2026 against the CLAIMs, the report files and the PDFs. `AUTHOR:` marks a decision for the author.
+
+- **INT-01** [REQUIRED] Captions make video accessible to deaf and hard-of-hearing viewers, and studies report that they also help hearing viewers [Gernsbacher2015].
+  - Support: (c) Gernsbacher2015 p. 195 (abstract: captions "benefit everyone who watches videos") and p. 196 ("captions benefit persons who are D/deaf or hard of hearing … Captions also benefit hearing persons"). Horlin2024 was removed here: its 48 % counts pausing, speed change and captions together, so it does not show that captions help.
   - Note: pages read from the full text (rule 2); detail is in RW-A.
-- **INT-02** [REQUIRED] Caption users also care about timing: in a survey on live-television captions with delays of seconds, delay lowered quality ratings, and several participants found it more disruptive than caption errors [Thompson2026].
-  - Support: (c) Thompson2026 p. 1 (216 participants; latency affects ratings) and p. 20 ("delay was more disruptive than caption errors"); EVN lines 52–54.
+- **INT-02** [REQUIRED] Caption users also care about timing: in a survey on television captions shown with delays of two to twelve seconds or without delay, ratings were lower with delay, and several participants found it more disruptive than caption errors [Thompson2026].
+  - Support: (c) Thompson2026 arXiv p. 1 (216 participants; delays up to 7–12 s for TV, mean 2 s for ASR), pp. 12–13 (mean quality 5.09 vs 3.66 for TV, 5.20 vs 4.81 for ASR) and p. 20 ("delay was more disruptive than caption errors"); EVN lines 52–54.
   - Note: seconds scale only. Do not imply that 20 ms matters to viewers.
 - **INT-03** [REQUIRED] Word-level timing lets a player highlight each word as it is spoken, and open aligners already produce subtitle files of this kind [Rastorgueva2023].
   - Support: (c) Rastorgueva2023 p. 5257: NFA "can generate subtitle files for highlighting words or tokens as they are spoken"; LA line 87.
   - Note: our exporter writes WebVTT with one inline timestamp per word (`src/subtitle_workbench/export.py`, `export_karaoke_vtt`).
-- **INT-04** [REQUIRED] A reliability score for each word could let a captioner check doubtful words first instead of every word. Per-boundary uncertainty has already been proposed to find boundaries that should be reviewed [Kelley2026].
-  - Support: (c) Kelley2026 p. 1, the range "facilitating tasks like finding boundaries that should be reviewed"; EVN line 40.
-  - Note: motivation only. Review effort was not measured (CLAIM-105 reason). Keep "could".
+- **INT-04** [REQUIRED] A time alone does not say how far it can be trusted. Per-boundary uncertainty has been proposed to find boundaries that should be reviewed [Kelley2026]; this paper scores the reliability of each word.
+  - Support: (c) Kelley2026 arXiv p. 1 ("facilitating tasks like finding boundaries that should be reviewed"); EVN line 40.
+  - Note: the sentence on a captioner who checks words "instead of every word" was removed (saved labour; CLAIM-105 reason allows review only as a possibility in the Discussion, DIS-10).
 - **INT-05** [REQUIRED] Open tools produce word times in two ways:
   - an automatic speech recognition (ASR) model such as Whisper reports its own word timestamps [Radford2023];
   - a forced aligner places a known or recognized transcript on the audio. Examples are the Montreal Forced Aligner (MFA) [McAuliffe2017] and aligners based on connectionist temporal classification (CTC) [Pratap2024], [Hwang2023].
   - Support: (c) Radford2023 arXiv p. 3 (the model predicts timestamps unless told not to); McAuliffe2017 p. 498 ("speech and its corresponding orthographic transcription are automatically aligned at the word and phone level"); Pratap2024 arXiv v1 §3.1.3, p. 6 (acoustic model trained with CTC; "Forced Alignment using CTC"); Hwang2023 p. 3, EVN line 82.
-- **INT-06** [REQUIRED] Recent evaluations against manual boundaries on TIMIT and Buckeye place MFA ahead of CTC-based aligners and of recognizer timestamps [Rousso2024], [McAuliffe2026], [Zolkepli2026], [Chu2026FABench].
+- **INT-06** [REQUIRED] Recent evaluations on TIMIT and Buckeye place MFA ahead of the CTC-based aligners they test [Rousso2024], [McAuliffe2026], [Zolkepli2026], [Chu2026FABench].
   - Support: (c):
-    - Rousso2024 p. 1 and p. 4 ("MFA outperforms MMS and WhisperX … at all time resolutions"); LA lines 64–65;
-    - McAuliffe2026 p. 352, Table 4 (MFA ARPA 3.0: 19.93 and 21.75 ms; MMS 43.06 and 49.54; WhisperX 110.04 and 110.90); LA lines 151–153;
-    - Zolkepli2026 p. 12, Table 6 (MFA 19.1 and 21.0; MMS 37.5 and 41.4; WhisperX 46.9 and 50.2); EVN line 19;
-    - Chu2026FABench Table 1 (MFA 3.4 21.8 and 21.3; MMS-FA 31.1 and 37.1; WhisperX 37.2 and 41.7; Whisper 148.0 and 122.7); EVN line 11.
-  - Note: positioning rule 1 (cite FA-Bench only within the group). Do not write "MFA is the most precise aligner": neural aligners trained on human boundaries can beat it (EVN line 22).
-- **INT-07** [REQUIRED] These works rank existing aligners and recognizers on short utterances. This paper instead proposes and tests additions to a local captioning pipeline, and measures inside it what the choice of transcript costs.
-  - Support: positioning rule 2 (`TITLE_KEYWORDS_RQ.md` line 48); "short utterances": Vaidya2026 p. 1 ("relying on short, clean speech, perfect transcripts", EVN line 27); McAuliffe2026 p. 351 (utterances separated by 300 ms of silence, LA line 156).
+    - Rousso2024 p. 1 and p. 4 ("MFA outperformed both WhisperX and MMS", on words that WhisperX and MMS recognized correctly); LA lines 64–65;
+    - McAuliffe2026 p. 352, Table 4 (MFA ARPA 3.0: 19.93 and 21.75 ms; MMS 43.06 and 49.54; WhisperX 110.04 and 110.90; the PDF text layer scrambles the table, values as checked in LA lines 151–153); p. 352 text: "MFA 3.0 substantially outperforms all three ASR-based aligners";
+    - Zolkepli2026 p. 12, Table 6 (MFA 19.1 and 21.0; MMS 37.5 and 41.4; WhisperX 46.9 and 50.2);
+    - Chu2026FABench p. 3, Table 1 (MFA 3.4 21.8 and 21.3; MMS-FA 31.1 and 37.1; WhisperX 37.2 and 41.7).
+  - Note: "recognizer timestamps" was removed: Rousso2024 and McAuliffe2026 do not test them. "Manual boundaries" was removed (TIMIT words, SET-A-01). Positioning rule 1 (cite FA-Bench only within the group). Do not write "MFA is the most precise aligner": the same works show neural aligners ahead of MFA (Zolkepli2026 abstract; MAPS in Chu2026FABench Table 1).
+- **INT-07** [REQUIRED] These works compare or propose aligners and recognizers, mostly on short utterances. This paper proposes and tests additions to a local captioning pipeline, and measures inside it what the choice of transcript costs.
+  - Support: positioning rule 2 (`TITLE_KEYWORDS_RQ.md` line 48); Vaidya2026 p. 1 ("short, clean speech, perfect transcripts"); McAuliffe2026 p. 351 (utterances separated by 300 ms of silence).
+  - Note: "rank existing aligners" was corrected: McAuliffe2026 presents MFA 3.0 and Zolkepli2026 trains a new aligner. `AUTHOR:` rule 2 itself says "rank existing aligners"; it needs the same change.
 - **INT-08** [REQUIRED] The paper differs from those evaluations in three ways:
   - it adds a learned module that refines each aligner boundary and scores its reliability, tested on speakers unseen in training;
   - it measures where accuracy is lost on recordings of one to ten minutes;
-  - it tests every comparison speaker by speaker.
+  - it tests its main comparisons speaker by speaker.
   - Support: positioning rule 5 (`TITLE_KEYWORDS_RQ.md` lines 51–54); CLAIM-103, 105, 107–110; E1 protocol (`docs/E1_ANALYSIS_RESULTS.md` §1).
-  - Note: a difference, not a priority claim. FA-Bench also holds out speakers (EVN line 13), so the difference is the speaker-level tests, not the split alone.
-- **INT-09** [REQUIRED] Prior work [Nurym2026] built a multimodal accessibility pipeline with word-level captions and reported its processing speed, but left caption accuracy against a manual reference for future work. The present paper measures and improves the word timing of such a pipeline.
-  - Support: `Prototype/academic_paper/paper.tex` line 52 (abstract: "actual accuracy has not been manually evaluated during this research … Manual validation of caption accuracy … is left for future work"; RTF reported) and line 363; `IMPROVEMENT_PLAN.md` §11.3.
-  - Note: third person for the blind copy. The 2026 paper meant transcription accuracy (WER/CER), so do not write that it left "timing accuracy" open.
-- **INT-10** [REQUIRED] RQ1: How large is the word-boundary error of open pipelines that combine speech recognition with forced alignment, measured against manual boundaries on read (TIMIT) and spontaneous (Buckeye) English, and how much does a known transcript reduce it compared with recognized text?
-  - Support: `TITLE_KEYWORDS_RQ.md` line 34.
+  - Note: a difference, not a priority claim. FA-Bench also holds out speakers (EVN line 13), so the difference is the speaker-level tests, not the split alone. "Every comparison" was removed (tolerance curves and the CLAIM-117 observation have no speaker test). "Unseen in training": see M-C-11 for the pilots.
+- **INT-09** [REQUIRED] Prior work [Nurym2026] built a multimodal accessibility pipeline with ASR-based word-level captions and reported its processing speed, but left manual validation of caption accuracy for future work. The present paper measures the word timing of a captioning pipeline and tests a learned correction of it.
+  - Support: `Prototype/academic_paper/paper.tex` line 52 (abstract: "actual accuracy has not been manually evaluated during this research … Manual validation of caption accuracy and description quality is left for future work"; RTF reported); `IMPROVEMENT_PLAN.md` §11.3.
+  - Note: "improves" was removed. Third person for the blind copy. The 2026 paper meant transcription accuracy (WER/CER), so do not write that it left "timing accuracy" open.
+- **INT-10** [REQUIRED] RQ1: How large is the word-boundary error of open pipelines that combine speech recognition with forced alignment, measured against reference boundaries based on hand-corrected labels on read (TIMIT) and spontaneous (Buckeye) English, and how much does a known transcript reduce it compared with recognized text?
+  - Support: `TITLE_KEYWORDS_RQ.md` line 36.
+  - Note: differs from RQ1 in that file in two places: "word- and phone-boundary" is cut to "word-boundary" (no phone result is in the Results), and "manual boundaries" is replaced (SET-A-01). `AUTHOR:` approve or restore.
 - **INT-11** [REQUIRED] RQ2: Does a lightweight learned post-alignment module reduce forced-alignment boundary error more than a constant-offset correction on held-out speakers, and does its reliability score separate words whose boundaries are more than 20 ms off?
-  - Support: `TITLE_KEYWORDS_RQ.md` line 35.
+  - Support: `TITLE_KEYWORDS_RQ.md` line 37.
   - Note: "words whose boundaries" replaces "boundaries", because the label is per word (`FORMULAS.md` Eq. 10; CLAIM-105 reason).
 - **INT-12** [REQUIRED] RQ3: On recordings of one to ten minutes, how do recording length and chunking affect boundary error and the share of failed alignments?
-  - Support: `TITLE_KEYWORDS_RQ.md` line 36.
-- **INT-13** [REQUIRED] Contribution 1, refinement and reliability. A lightweight boundary refinement and quality estimation (BRQE) module corrects each MFA boundary and scores its reliability. It is trained only on speakers disjoint from the test set and frozen before testing. On held-out spontaneous speech it beats a constant-offset correction under both mean absolute error (MAE) and boundary F1 for all 20 test speakers, with its largest corrections at the ends of speech segments. Its reliability score detects words with boundaries more than 20 ms off (ROC-AUC 0.756 and 0.749), and its failure to improve read speech is reported.
+  - Support: `TITLE_KEYWORDS_RQ.md` line 38.
+- **INT-13** [REQUIRED] Contribution 1, refinement and reliability. A lightweight boundary refinement and quality estimation (BRQE) module corrects each MFA boundary and scores the reliability of each word. It is trained only on speakers disjoint from the test set and frozen before testing. On held-out spontaneous speech it beats a constant-offset correction under both mean absolute error (MAE) and boundary F1 for all 20 test speakers, and its reliability score detects words with boundaries more than 20 ms off (ROC-AUC about 0.75). It does not significantly improve read speech.
   - Support:
-    - CLAIM-103, 105, 114, 118, 104;
-    - 20 of 20 speakers under MAE: (b) `reports/e1_analysis_20261102/analysis.json` corpora.buckeye.speaker_comparisons.A2brqe_vs_A2const and B2brqe_vs_B2const, n_speakers_improved = 20, listed as evidence in `TITLE_KEYWORDS_RQ.md` line 59.
+    - CLAIM-103, 104, 105, 114; contribution 1 (`TITLE_KEYWORDS_RQ.md`, corrected text);
+    - 20 of 20 speakers under MAE: (b) `reports/e1_analysis_20261102/analysis.json` A2brqe_vs_A2const and B2brqe_vs_B2const, n_speakers_improved = 20.
   - Note:
-    - **Needs CLAIM before submission** for the MAE speaker count.
-    - The accepted text ends with "so a captioner can review a short list instead of every word". That clause was moved to DIS-10, because the CLAIM-105 reason allows review only as a possibility in the Discussion (§10d).
-    - Three sentences; shorten if needed.
-- **INT-14** [REQUIRED] Contribution 2, long recordings. On recordings of one to ten minutes, accuracy is lost at chunk seams rather than with length, and an overlap-and-stitch scheme passes a pre-registered seam check. Failed recordings grow with length, because a single failed chunk fails the whole recording.
-  - Support: CLAIM-107 (pre-registered check C), CLAIM-108, CLAIM-109, CLAIM-110.
-  - Note: CLAIM-109's chunk explanation is descriptive (state this in RES-C-04).
-- **INT-15** [REQUIRED] Contribution 3, the cost of a recognized transcript. Inside one local pipeline on a 4 GB laptop GPU, with speaker-level tests and a metric that charges missed words, recognized text costs about 9 points of boundary F1 at 20 ms on spontaneous speech (0.624 vs 0.710, word coverage 89.0 %). The cost comes from recognition, not alignment: boundaries between correctly recognized words are placed equally well in both scenarios.
-  - Support:
-    - CLAIM-114 (0.710 vs 0.624; difference 0.086, `docs/F1_RESULTS.md` §3 item 1);
-    - CLAIM-102 (coverage);
-    - CLAIM-117;
-    - `docs/ARCHITECTURE.md` line 5 (4 GB GPU).
-  - Note: "For captioning, effort is better spent on the transcript" belongs in DIS-01 (interpretation).
+    - CLAIM-118 and "ends of speech segments" removed. **Needs CLAIM before submission** for the MAE speaker count.
+    - "Frozen before testing": the weights (M-C-08); pilots on test speakers are in M-C-11.
+- **INT-14** [REQUIRED] Contribution 2, long recordings. On recordings of one to ten minutes, the original chunking raises the error near chunk seams, and an overlap-and-stitch scheme passes a pre-registered seam check. Failed recordings grow with length, because a single failed chunk fails the whole recording; no length effect on the error was found among the recordings that aligned.
+  - Support: CLAIM-107 (pre-registered check C; seams measured on one-minute recordings), CLAIM-108, CLAIM-109, CLAIM-110.
+  - Note: "accuracy is lost at chunk seams rather than with length" was weakened: the length test is not significant, which the protocol does not read as absence (`docs/S1B_RESULTS.md` §3), and only survivors are scored. The seam check covers 60 s recordings only. `AUTHOR:` contribution 2 in `TITLE_KEYWORDS_RQ.md` has the stronger wording.
+- **INT-15** [REQUIRED] Contribution 3, what a recognized transcript costs. Inside one local pipeline on a 4 GB laptop GPU, with speaker-level tests and a metric that charges missed words, boundary F1 at 20 ms on spontaneous speech is 0.624 with recognized text (word coverage 89.0 %) and 0.710 with a known transcript. The paper reports what the difference consists of as a post-hoc observation.
+  - Support: CLAIM-114 (secondary analysis), CLAIM-102 (coverage), CLAIM-117 (24.11.2026 wording), CLAIM-101; `docs/ARCHITECTURE.md` line 5 (4 GB GPU); contribution 3 (`TITLE_KEYWORDS_RQ.md`, corrected text).
+  - Note: "the cost comes from recognition, not alignment", "placed equally well" and "about 9 points" were removed. No advice on where effort is better spent.
 - **INT-16** [OPTIONAL] No novelty is claimed for post-alignment boundary correction itself, which has precedents in boundary correction over HMM alignment and CNN refinement of MFA boundaries [Stolcke2014], [Cuozzo2018].
   - Support: `TITLE_KEYWORDS_RQ.md` line 63; (c) Stolcke2014 p. 5552 (LA lines 97–100); Cuozzo2018 author copy pp. 1–2 (EVN line 68).
   - Note: if dropped here, keep RW-C-01.
@@ -866,8 +865,8 @@ All 25 selected keys appear in at least one REQUIRED statement. No selected key 
 | 114 | RES-A-06, RES-B-04, SET-C-05, INT-13, INT-15, AB-07, CON-02 | "Secondary, added after the main results" kept in each use |
 | 115 | RES-A-08, LIM-01, Table I caption | See item 5 in (d) |
 | 116 | DIS-03 | Qualitative, plural |
-| 117 | RES-A-09, DIS-01 (rewritten); INT-15, AB-07, CON-02, CON-06 still use the old wording | Post-hoc, no protocol, not a cause |
-| 118 | none: withdrawn 24.11.2026; INT-13 and AB-04 still use it and are to be rewritten in their checks (RES-B-06 removed) | Do not use |
+| 117 | RES-A-09, DIS-01, INT-15 (rewritten); AB-07, CON-02, CON-06 still use the old wording | Post-hoc, no protocol, not a cause |
+| 118 | none: withdrawn 24.11.2026; AB-04 still uses it and is to be rewritten in its check (RES-B-06 removed) | Do not use |
 
 Every CLAIM is used.
 

@@ -82,9 +82,27 @@ Each entry was read from the downloaded full text (`literature/pdf/`, plain text
 - **Forced alignment (p3, §3).** TorchAudio 2.1 adds CTC-based forced alignment: `forced_align` "computes frame-level alignments between audio and transcripts using a CTC-trained neural network model", on CPU and GPU; a tutorial shows alignment "for more than 1000 languages using the CTC-based alignment model" from MMS.
 - **Use in the paper.** Software citation for our CTC baselines (A1, B1): `torchaudio.pipelines.MMS_FA` with `forced_align` (`src/subtitle_workbench/ctc_aligner.py`). Pratap2024 covers the MMS model, this covers the alignment implementation.
 
-## Read but kept in reserve (not for the 6-page paper)
+## Reserve read 23.11.2026 (full texts in `literature/text/`)
 
-- **Found 23.11.2026, not read (candidates):** Huang et al., *Less Peaky and More Accurate CTC Forced Alignment by Label Priors*, arXiv:2406.02560 (ICASSP 2024) — on CTC boundary shifts like our late CTC starts; *Scaling Forced Alignment to End-User Devices*, arXiv:2609.21145 (2026) — local, on-device alignment.
+### Huang2024 — R. Huang, X. Zhang, Z. Ni, L. Sun, M. Hira, J. Hwang, V. Manohar, V. Pratap, M. Wiesner, S. Watanabe, D. Povey, S. Khudanpur, *Less Peaky and More Accurate CTC Forced Alignment by Label Priors*, Proc. IEEE ICASSP 2024, pp. 11831–11835, doi:10.1109/ICASSP48485.2024.10446111 (Crossref). Read from arXiv:2406.02560v3. SHA-256 `bbf64ff1…`
+- **Problem (p1).** CTC models have "peaky output distributions", which "can cause inaccurate forced alignments".
+- **Table 1 (p3), ms, Buckeye / TIMIT.** Average predicted word duration (WDUR) for MMS: 181 / 242 ms against 241 / 305 ms in the manual reference, i.e. MMS words about 60 ms too short on both corpora. MFA word boundary error 41 / 23 ms, MMS 53 / 37 ms (their WBE averages start and end per utterance — not our metric).
+- **Use in the paper.** Independent support for our signed-error finding: our CTC (torchaudio MMS_FA) words are 58 ms (Buckeye) and 62 ms (TIMIT) too short (`reports/fa_extras_20261123/fa_extras.json`). One clause in the Discussion with Zolkepli2026.
+
+### Sorenson2026 — L. Sorenson, M. Crandall, E. K. Ringger, S. D. Richardson (BYU), *Scaling Forced Alignment to End-User Devices*, arXiv:2609.21145v1, Sep 2026 (preprint). SHA-256 `e052c075…`
+- **Content (p1).** Linear-memory (Hirschberg) Viterbi for CTC forced alignment: memory for three-hour inputs from 140 GB to 5 MB, a third of torchaudio's CPU time; pruning keeps alignment within 250 ms of the unpruned result in more than 98 % of cases. Accuracy is agreement with unpruned alignment, not manual boundaries.
+- **Remark (p4).** Cutting silence with VAD "introduces cascaded errors (like other chunk-based alignment systems)".
+- **Use in the paper.** Optional: long-audio alignment on end-user hardware (our 4 GB laptop GPU) and an independent remark that chunking causes cascaded errors (our CLAIM-107…110). Preprint; do not quote numbers.
+
+### Rousso2026 — R. Rousso, E. Cohen, J. Keshet, *Fully Differentiable Neural Forced Alignment via Soft Dynamic Programming*, arXiv:2606.25460v1, Jun 2026 ("submitted to the IEEE"). SHA-256 `30816e09…`
+- **Content (p1, p6–7).** FALCON: phoneme aligner with an identity branch, a boundary branch and a differentiable soft-DP decoder. Table I: phone-level accuracy within 25 ms on Buckeye 69.9 % against 60.6 % for MFA; MFA is better at 10 ms. Word level is evaluated zero-shot with MFA's dictionary and G2P.
+- **Use in the paper.** Optional, one clause in Related Work: neural phoneme aligners trained on manual boundaries now beat MFA at 25–100 ms on TIMIT and Buckeye (with Zolkepli2026, Multilingual2026). FA-Bench notes FALCON's training overlaps its Buckeye split. Preprint.
+
+### Strgar2022 — L. Strgar, D. Harwath, *Phoneme Segmentation Using Self-Supervised Speech Models*, Proc. IEEE SLT 2022, pp. 1067–1073, doi:10.1109/SLT54892.2023.10022827 (Crossref). Read from arXiv:2211.01461v1. SHA-256 `1e49fa71…`
+- **Evaluation (p4–5).** Precision and recall of boundaries are ambiguous when several predictions fall within one tolerance window; a strict scheme "prohibits double counting", a lenient one allows it; results "consistently show deviations of 3-4%" (supervised) and 5–7 % (unsupervised).
+- **Use in the paper.** Optional, one clause where boundary F1 is defined: our matching is strict by construction (each predicted word is paired with at most one reference word). Cite only if the F1 definition is given in the paper.
+
+## Read but kept in reserve (not for the 6-page paper)
 
 
 - **Multilingual2026** — Weber, Zehavi, Rousso, Keshet, *Multilingual Word-Level Forced Alignment with Self-Supervised Representations and Learned Dynamic Programming*, arXiv:2606.10675v1 (Jun 2026). Claims to outperform MFA and MMS on TIMIT and Buckeye. Preprint; optional one-clause citation with FuseAlign and Zolkepli.

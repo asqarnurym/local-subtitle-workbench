@@ -2,7 +2,7 @@
 
 > **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
 >
-> **Check status.** Results (§6), Table I (§9) and Method (§4): checked against the sources on 24.11.2026. Setup, Discussion, Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
+> **Check status.** Results (§6), Table I (§9), Method (§4) and Setup (§5): checked against the sources on 24.11.2026. Discussion, Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -52,7 +52,7 @@
 - **Mode names**, used in text and Table I:
   - B0: Whisper timestamps;
   - B1: Whisper text and CTC;
-  - B2: Whisper text, anchoring and MFA (proposed, scenario B);
+  - B2: Whisper text and MFA (proposed, scenario B; no anchoring);
   - A1: known text and CTC;
   - A2: known text, anchoring and MFA (proposed, scenario A);
   - "+const": constant offset;
@@ -364,7 +364,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: (d) `PSEUDOCODE.md` Algorithm 4, lines 1–4; `scripts/seam_stitch.py` (SPEECH_PAD_MS = 30, MIN_OVERLAP_S = 3.0).
 - **M-D-03** [REQUIRED] At each seam, the two tracks are joined at an anchor word. The anchor has the same normalized text in both tracks and both of its boundaries within 20 ms, and it is the closest such word to the seam. The first word of the earlier track and the last word of the later track are not used. Without an anchor, the cut falls at the seam time, and the timeline is made monotonic.
   - Support: (d) `scripts/seam_stitch.py` `stitch` (loops over a[1:] and b[:-1]; ANCHOR_TOL_S = 0.02).
-  - Note: corrected to the code. The protocol and `PSEUDOCODE.md` say "not a track's outermost word"; the code excludes only the words far from the seam and allows the last word of the earlier track and the first word of the later one. `AUTHOR:` describe it as in the code (recommended) and correct `PSEUDOCODE.md` and `algorithms.tex`.
+  - Note: corrected to the code. The protocol and `PSEUDOCODE.md` say "not a track's outermost word"; the code excludes only the words far from the seam and allows the last word of the earlier track and the first word of the later one. `AUTHOR:` describe it as in the code (recommended) and correct `PSEUDOCODE.md` line 87.
 - **M-D-04** [REQUIRED] A long recording counts as failed when any of its chunks fails to align, and failures are reported beside errors.
   - Support: `docs/S1_LONG_RECORDINGS_PROTOCOL.md` (runs paragraph, failure rule; rule 3); `docs/S1B_RESULTS.md` §1.
 
@@ -372,27 +372,31 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 5. Experimental Setup (target 650 words)
 
+> Checked 24.11.2026 against the code, the reports and the PDFs. `AUTHOR:` marks a decision for the author.
+
 ### 5.A Corpora and Speaker Split (target 200)
 
-- **SET-A-01** [REQUIRED] Read speech comes from TIMIT [Garofolo1993], in the NLTK sample of 160 utterances from 16 speakers with manual word and phone boundaries, not the full corpus.
-  - Support: CLAIM-106 reason; `docs/CORPORA_TAXONOMY.md` line 32; (c) Garofolo1993 p. 5 of the scan text (time-aligned word transcriptions).
-- **SET-A-02** [REQUIRED] Spontaneous speech comes from the Buckeye corpus [Pitt2005]: conversational American English from 40 talkers from central Ohio, with hand-corrected word and phone labels.
-  - Support: (c) Pitt2005 p. 89 (abstract: 307,000 words, 40 talkers, central Ohio); LA line 125; `src/subtitle_workbench/buckeye.py` docstring (hand-corrected labels).
+- **SET-A-01** [REQUIRED] Read speech comes from TIMIT [Garofolo1993], in the NLTK sample of 160 utterances from 16 speakers, not the full corpus. Its phone boundaries were placed automatically and corrected by hand; its word boundaries were derived from the phone segments by a string alignment program.
+  - Support: CLAIM-106 reason; `docs/CORPORA_TAXONOMY.md` line 32; (c) Garofolo1993, NISTIR 4930 scan, PDF pp. 17 and 62 (word boundaries by dynamic programming string alignment with the phonetic segments), p. 51 (phone boundaries "hand corrected").
+  - Note: corrected. "Manual word boundaries" is not accurate for TIMIT. `AUTHOR:` "manual boundaries" also stands in RQ1 and in AB-03, INT-06, INT-10, RW-B-10, LIM-09; "reference boundaries based on hand-corrected labels" is safe for both corpora.
+- **SET-A-02** [REQUIRED] Spontaneous speech comes from the Buckeye corpus [Pitt2005]: conversational American English from 40 talkers from central Ohio, with word and phone labels that were aligned automatically and then corrected by hand.
+  - Support: (c) Pitt2005 p. 89 (abstract: 307,000 words, 40 talkers, central Ohio) and PDF p. 4 (Entropics Aligner, then the labeller); LA line 125; `src/subtitle_workbench/buckeye.py` docstring (hand-corrected labels).
 - **SET-A-03** [REQUIRED] The 40 Buckeye speakers were split at random, with a fixed seed, into 20 training and 20 test speakers. BRQE saw only the training speakers.
   - Support: (b) `reports/buckeye_split_20260401.json` (n_speakers = 40, test_speakers 20, train_speakers 20, seed = 20260401, method).
-- **SET-A-04** [REQUIRED] Clips are maximal runs of ordinary words without non-speech or unknown tokens, 1 to 30 s long, that never extend into interviewer speech or noise.
-  - Support: (d) `src/subtitle_workbench/buckeye.py` (docstring; min_duration = 1.0, max_duration = 30.0).
-  - Note: this makes our clips easier than full utterances (LIM-02).
+- **SET-A-04** [REQUIRED] Clips are maximal runs of at least three ordinary words without labelled silence, non-speech or unknown tokens, 1 to 30 s long. They get up to 0.25 s of adjoining silence and never extend into interviewer speech or noise.
+  - Support: (d) `src/subtitle_workbench/buckeye.py` `segment_track` (min_words = 3, min_duration = 1.0, max_duration = 30.0, margin = 0.25), `is_regular_word` (`<sil>` ends a run).
+  - Note: clip edges are our cuts, not ends of utterances. This makes our clips easier than full utterances (LIM-02).
 - **SET-A-05** [REQUIRED] The test set has 50 random clips per test speaker. One clip with empty audio was excluded, leaving 999 clips.
   - Support: (b) `reports/buckeye/benchmark_results.json` config.sample (per_speaker = 50, n_utterances = 1000) and config.excluded_corpus_defects (s1901b_0119: empty audio); CLAIM-101 reason.
-- **SET-A-06** [REQUIRED] Long recordings were built for each test speaker by joining consecutive test clips without inserted pauses into recordings of 60, 300 and 600 s. Reference labels are shifted by each clip's offset, and shorter recordings are prefixes of longer ones.
+- **SET-A-06** [REQUIRED] Long recordings were built for each test speaker by joining that speaker's consecutive clips without inserted pauses until they reach at least 60, 300 or 600 s. Reference labels are shifted by each clip's offset, and shorter recordings are prefixes of longer ones.
   - Support: (d) `docs/S1_LONG_RECORDINGS_PROTOCOL.md`, data paragraph.
+  - Note: all clips of the speaker are used, not the 50 test-sample clips ("test clips" was corrected).
 - **SET-A-07** [REQUIRED] The joins between clips are not natural speech.
   - Support: `docs/S1_LONG_RECORDINGS_PROTOCOL.md` (data paragraph, "стыки клипов не являются естественной речью"; rule 5).
   - Note: repeated as a limit in LIM-04.
-- **SET-A-08** [OPTIONAL] Buckeye has no official split, so splits differ between papers, and ours differs from FA-Bench's [Chu2026FABench].
-  - Support: (c) Chu2026FABench p. 1 ("Buckeye ships no official split") and p. 2 (their split); EVN line 13.
-  - Note: an extra FA-Bench citation beyond rule 1. Use only if the Discussion citation (DIS-03) is dropped.
+- **SET-A-08** [OPTIONAL] Buckeye has no official split, so splits differ between papers.
+  - Support: (c) Chu2026FABench p. 1 ("Buckeye ships no official split, so every paper picks its own"); EVN line 13.
+  - Note: an extra FA-Bench citation beyond rule 1. "Ours differs from FA-Bench's" was removed: it invites a comparison of splits. Use only if the Discussion citation (DIS-03) is dropped.
 - **SET-A-09** [OPTIONAL] The tempo variants use 160 TIMIT and 200 Buckeye clips, time-stretched with pitch preserved by factors of 0.8 to 1.25.
   - Support: (b) `docs/S2_RESULTS.md` §1; CLAIM-111.
   - Note: only if DIS-13 is kept.
@@ -402,21 +406,21 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **SET-B-01** [REQUIRED] Five modes are compared:
   - B0: Whisper's own word timestamps;
   - B1: Whisper's words aligned by CTC with torchaudio MMS_FA [Pratap2024], [Hwang2023];
-  - B2: Whisper's words anchored and aligned by MFA;
+  - B2: Whisper's words aligned by MFA (no anchoring);
   - A1: the known transcript aligned by CTC;
   - A2: the known transcript anchored and aligned by MFA.
   - Support: (b) `reports/buckeye/benchmark_results.json` config.modes and modes.*.name; config.aligners.ctc.model = torchaudio.pipelines.MMS_FA; EVN line 83.
-  - Note: a small table or one sentence.
+  - Note: B2 corrected: `pipeline.py` anchors only a known transcript; the frozen mode name "Whisper + anchoring + MFA" and the mode list in §0.2 are imprecise. A small table or one sentence.
 - **SET-B-02** [REQUIRED] A2 and B2 are also run with the constant offset and with BRQE, giving nine modes in all.
   - Support: (b) config.modes (9 entries).
 - **SET-B-03** [REQUIRED] B1 follows the WhisperX idea of aligning Whisper's text with a separate phoneme-level model [Bain2023]. The WhisperX and NFA programs themselves were not run.
-  - Support: (d) `PSEUDOCODE.md`, notes under Algorithm 1; `IMPROVEMENT_PLAN.md` §10.1; (c) Bain2023 p. 4489.
+  - Support: (d) `PSEUDOCODE.md`, notes under Algorithm 1; `IMPROVEMENT_PLAN.md` §10.1; (c) Bain2023, arXiv:2303.00747v2 pp. 1–2 (§2.4 forced phoneme alignment). The PDF at hand is the arXiv version, so "p. 4489" was removed.
 - **SET-B-04** [OPTIONAL] Commercial services were not measured.
   - Support: `IMPROVEMENT_PLAN.md` §10.1.
 
 ### 5.C Metrics and Statistics (target 240)
 
-- **SET-C-01** [REQUIRED] For each reference word matched to a predicted word, its start and end each give one boundary error. MAE averages these errors, and Acc@20 is the share within 20 ms, as in \eqref{eq:mae} and \eqref{eq:acc}. MAE was fixed before the experiments as the primary metric.
+- **SET-C-01** [REQUIRED] For each reference word matched to a predicted word, its start and end each give one boundary error. MAE averages these errors, and Acc@20 is the share within 20 ms, as in \eqref{eq:mae} and \eqref{eq:acc}. MAE was fixed as the primary metric before the test runs.
   - Support: (d) `FORMULAS.md` Eqs. 1–2; CLAIM-114 reason ("MAE stays the pre-registered primary metric").
 - **SET-C-02** [REQUIRED] The 20 ms tolerance follows common practice in segmentation studies [Stolcke2014].
   - Support: (c) Stolcke2014 p. 5553 ("percentage of the automatically labeled boundaries … within 20 ms of the manually labeled boundaries, which has been widely used in previous studies"); LA line 199.
@@ -425,34 +429,34 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: (d) `FORMULAS.md` Eq. 3; `metrics.py::_align_token_sequences`.
 - **SET-C-04** [REQUIRED] MAE and Acc@20 use matched words only, so word coverage is reported beside every scenario-B error.
   - Support: CLAIM-102 reason ("must be reported next to MAE"); `IMPROVEMENT_PLAN.md` §10.1.
-- **SET-C-05** [REQUIRED] Matched-word MAE can favour systems that depend on recognition, because missed words drop out of it [Chu2026FABench]. Boundary F1 at 20 ms, as in \eqref{eq:f1}, therefore counts every predicted and every reference boundary, with the boundaries of failed clips as misses. It was added as a secondary check after the main results, under a protocol written before its numbers; MAE stays primary.
+- **SET-C-05** [REQUIRED] Matched-word MAE can favour systems that depend on recognition, because missed words drop out of it [Chu2026FABench]. Boundary F1 at 20 ms, as in \eqref{eq:f1}, therefore counts every predicted and every reference boundary, with the boundaries of failed clips as misses. We added it as a secondary check after the main results, under a protocol written before its numbers; MAE stays primary.
   - Support:
-    - (c) Chu2026FABench pp. 1, 3 (matched-word MAE "drops by 9% to 14%"); EVN line 10;
+    - (c) Chu2026FABench pp. 1, 3 (one aligner's Buckeye MAE "drops by 9% to 14%" when scored on recognized words only; its TIMIT MAE does not move); EVN line 10;
     - (d) `FORMULAS.md` Eq. 3a;
     - CLAIM-114 reason ("Secondary analysis added after FA-Bench … say so in any paper wording");
     - `docs/F1_RESULTS.md` line 3 (protocol `docs/F1_PROTOCOL.md` committed before the numbers).
   - Note: positioning rule 4. This is the second permitted FA-Bench citation. Two sentences.
-- **SET-C-06** [REQUIRED] Comparisons are tested speaker by speaker, as in \eqref{eq:speaker}. Each speaker's MAE is pooled over the clips scored by both modes, and the paired differences go into an exact two-sided Wilcoxon signed-rank test. p-values within each family are adjusted by Holm's step-down procedure [Holm1979], as in \eqref{eq:holm}.
-  - Support: (d) `FORMULAS.md` Eq. 4; `docs/E1_ANALYSIS_RESULTS.md` §1; (c) Holm1979 pp. 66–67 (procedure and Theorem 1); EVN lines 75–76.
+- **SET-C-06** [REQUIRED] Comparisons are tested speaker by speaker, as in \eqref{eq:speaker}. Each speaker's MAE is pooled over the clips scored by both modes, and the paired differences go into an exact two-sided Wilcoxon signed-rank test. p-values within each corpus and family (seven comparisons for MAE, five for F1) are adjusted by Holm's step-down procedure [Holm1979], as in \eqref{eq:holm}.
+  - Support: (d) `FORMULAS.md` Eq. 4; `docs/E1_ANALYSIS_RESULTS.md` §1; `f1_results.json` tests_edge20 (five entries); (c) Holm1979 pp. 66–67 (procedure and Theorem 1), from EVN lines 75–76 (the scan has no text layer; not reread 24.11.2026). In F1 the speaker value is F1, not MAE. The tests pair clips, not identical word sets, where the two modes match different words.
   - Note: do not attribute the adjusted-p notation to Holm (EVN line 78).
 - **SET-C-07** [REQUIRED] Speaker-level tests are used because errors of utterances from the same speaker can be correlated, and resampling single utterances does not handle such dependence [Liu2020Blockwise].
   - Support: (c) Liu2020Blockwise p. 596 ("this method fails in dealing with dependent data … ASR performance on utterances from the same speaker could be correlated"); p. 597 (blocks by speakers).
   - Note: our estimator is a speaker cluster bootstrap, not their blockwise bootstrap (manifest role: "not identical estimator").
 - **SET-C-08** [REQUIRED] 95 % CIs come from a percentile bootstrap over speakers with 2,000 resamples.
   - Support: (d) `FORMULAS.md` Eq. 5; (b) `reports/buckeye/benchmark_results.json` bootstrap_resamples = 2000, seed = 42, config.ci_unit = speaker.
-- **SET-C-09** [REQUIRED] A word counts as erroneous for the reliability evaluation when the larger error of its two uncorrected MFA boundaries exceeds 20 ms, as in \eqref{eq:label}. The score is evaluated by ROC-AUC and by a rejection curve: the MAE of the words kept after rejecting the least reliable share.
-  - Support: (d) `FORMULAS.md` Eq. 10; CLAIM-105 reason (label definition).
+- **SET-C-09** [REQUIRED] A word counts as erroneous for the reliability evaluation when the larger error of its two uncorrected MFA boundaries exceeds 20 ms, as in \eqref{eq:label}. The score is evaluated by ROC-AUC and by a rejection curve: the MAE, after BRQE, of the matched words kept after rejecting the least reliable share. Both use matched words only.
+  - Support: (d) `FORMULAS.md` Eq. 10; `scripts/speech_benchmark.py` `quality_estimation`; CLAIM-105 reason (label definition).
 - **SET-C-10** [OPTIONAL] With 20 speakers, an exact two-sided test reaches its smallest possible p-value, 2/2²⁰ ≈ 1.9 × 10⁻⁶, when all 20 differences have the same sign.
   - Support: `docs/F1_RESULTS.md` line 33; `IMPROVEMENT_PLAN.md` §6.5 (2/2²⁰ ≈ 1.907·10⁻⁶).
   - Note: helps the reader see why many p-values are identical.
-- **SET-C-11** [OPTIONAL] Each predicted word is paired with at most one reference word, so a boundary cannot be counted twice. Lenient schemes that allow this change reported scores by several percent [Strgar2022].
-  - Support: (c) Strgar2022 arXiv pp. 4–5; EVN lines 102–103.
+- **SET-C-11** [OPTIONAL] Each predicted word is paired with at most one reference word, so a boundary cannot be counted twice. Lenient schemes that allow this changed reported phone-boundary scores by several percent [Strgar2022].
+  - Support: (c) Strgar2022 arXiv p. 5 ("3-4%" supervised, "5-7%" unsupervised); EVN lines 102–103.
   - Note: reserve reference, only if the F1 definition is given (it is: SET-C-05).
 - **SET-C-12** [OPTIONAL] Secondary descriptive analyses split boundaries into groups:
   - by whether both, one or none of the neighbouring words were recognized;
-  - by position at segment edges or inside segments;
+  - by position at the edges of our cut clips or inside them;
   - by signed start, end and duration errors.
-  - Support: (d) `docs/FA_EXTRAS_PROTOCOL.md`; `docs/FA_EXTRAS_RESULTS.md` line 3 (protocol committed before numbers).
+  - Support: (d) `docs/FA_EXTRAS_PROTOCOL.md`; `docs/FA_EXTRAS_RESULTS.md` line 3 (protocol committed before numbers). The same-boundary recheck behind CLAIM-117 had no protocol; do not cover it with this statement.
   - Note: needed if RES-A-09 or RES-B-18 is used without explanation.
 - **SET-C-13** [OPTIONAL] If Cliff's delta is reported, define it as in `FORMULAS.md` and add a reference for it.
   - Support: `FORMULAS.md` (note under Eq. 5).
@@ -460,19 +464,22 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ### 5.D Implementation (target 90)
 
-- **SET-D-01** [REQUIRED] All runs used one laptop: AMD Ryzen 9 5900HX, NVIDIA GeForce RTX 3050 Laptop GPU with 4 GB memory, Windows 11. Whisper ran on the GPU, and MFA 3.4.3 ran on the CPU.
+- **SET-D-01** [REQUIRED] All runs used one laptop: AMD Ryzen 9 5900HX, NVIDIA GeForce RTX 3050 Laptop GPU with 4 GB memory, Windows 11. Whisper ran on the GPU; MFA 3.4.3, the CTC aligner and BRQE ran on the CPU.
   - Support: `docs/ARCHITECTURE.md` lines 5 and 95; `docs/RUNBOOK.md` line 3; (b) `reports/buckeye/benchmark_results.json` config.asr.device = cuda, hardware.platform and hardware.processor.
-  - Note: the frozen JSON has cuda_device_name = null (§10d).
+  - Note: CPU for CTC and BRQE: frozen JSON hardware.torch_cuda_available = false, whisper_cuda_available = true. The GPU model is not in the JSON (cuda_device_name = null; §10d); its platform string reads Windows-10-10.0.26340, a build number of Windows 11.
 - **SET-D-02** [REQUIRED] Processing time was logged for transparency only and is not an evaluation metric.
   - Support: (b) `reports/buckeye/benchmark_results.json` runtime.note = "transparency only; not an evaluation target"; rule 5.
-- **SET-D-03** [REQUIRED] Samples, splits, BRQE weights and the benchmark code were frozen under tags before the test runs. An integrity check regenerated all frozen tables and resolved every claim's source.
-  - Support: CLAIM-101, 106 sources (tags `bench-frozen-20261029c`, `bench-frozen-20261029`); `ARTIFACT_VALIDATION.md` §1 (`verify_frozen_evidence.py`, PASS_WITH_LIMITATIONS).
-- **SET-D-04** [OPTIONAL] Independent re-implementations of the secondary analyses matched the original results:
-  - speaker tests: 503,898 boundary records;
+- **SET-D-03** [REQUIRED] Samples, splits, BRQE weights and the benchmark code were frozen under tags before the reported test runs. After a first Buckeye run stopped on an empty audio file, two fixes (exclusion of empty clips; retry of a crashed MFA call) were made under new tags; no retry was needed in the reported run.
+  - Support: CLAIM-101, 104, 106 sources and reasons (tags `bench-frozen-20261029`, `-29b`, `-29c`); `IMPROVEMENT_PLAN.md` "C3/D, первая попытка"; (b) config.mfa_retries = [].
+  - Note: rewritten; "before the test runs" hid the stopped run. The sentence on the integrity check is now SET-D-06. See also M-C-11 (pilots).
+- **SET-D-06** [OPTIONAL] An integrity check regenerated the frozen tables byte for byte from the stored results.
+  - Support: `ARTIFACT_VALIDATION.md` §1 (21.11.2026; `verify_frozen_evidence.py`, PASS_WITH_LIMITATIONS; six tables). It predates CLAIM-111…118, so "every claim's source" was removed.
+- **SET-D-04** [OPTIONAL] Separate re-implementations of the analyses by the authors' own tools gave the same numbers:
+  - speaker tests and intervals: 14 tests and 60 intervals recomputed from 503,898 boundary records;
   - boundary F1: 660 of 660 values;
   - boundary groups and tolerance sweep: 1,620 of 1,620 values.
   - Support: `docs/E1_ANALYSIS_RESULTS.md` §6; `docs/F1_RESULTS.md` §6; `docs/FA_EXTRAS_RESULTS.md` §6.
-  - Note: "independent" means a separate implementation, not another research group (E1 §6).
+  - Note: "independent" was removed: the matching rules, normalizer and phone folding were shared, and no other research group took part (E1 §6). The CLAIM-117 recheck is not covered.
 - **SET-D-05** [OPTIONAL] MFA was called once per speaker with one job to avoid two known issues of MFA 3.4.3.
   - Support: `IMPROVEMENT_PLAN.md` decisions D4 and D5; `docs/RUNBOOK.md` line 51.
   - Note: do not mention the parallel MFA of the sub-studies (author decision 09.11.2026, `IMPROVEMENT_PLAN.md` §10.10).

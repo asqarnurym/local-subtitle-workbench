@@ -1,0 +1,4726 @@
+{
+  "tolerance": {
+    "match": 1e-06,
+    "close": 0.005
+  },
+  "counts": {
+    "match": 660,
+    "close": 0,
+    "mismatch": 0
+  },
+  "non_matches": [],
+  "conclusions": [
+    {
+      "corpus": "buckeye",
+      "pair": "A2_proposed - B2_proposed",
+      "author_mean": 0.08489251957802273,
+      "indep_mean": 0.08489251957802273,
+      "author_holm": 9.5367431640625e-06,
+      "indep_holm": 9.5367431640625e-06,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "buckeye",
+      "pair": "B2_brqe - B2_const",
+      "author_mean": 0.05773784137012818,
+      "indep_mean": 0.05773784137012818,
+      "author_holm": 9.5367431640625e-06,
+      "indep_holm": 9.5367431640625e-06,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "buckeye",
+      "pair": "A2_brqe - A2_const",
+      "author_mean": 0.060756326752097634,
+      "indep_mean": 0.060756326752097634,
+      "author_holm": 9.5367431640625e-06,
+      "indep_holm": 9.5367431640625e-06,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "buckeye",
+      "pair": "A2_proposed - A1_ctc",
+      "author_mean": 0.36936881693315277,
+      "indep_mean": 0.36936881693315277,
+      "author_holm": 9.5367431640625e-06,
+      "indep_holm": 9.5367431640625e-06,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "buckeye",
+      "pair": "B2_proposed - B1_whisper_ctc",
+      "author_mean": 0.31336264706807665,
+      "indep_mean": 0.31336264706807665,
+      "author_holm": 9.5367431640625e-06,
+      "indep_holm": 9.5367431640625e-06,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "timit",
+      "pair": "A2_proposed - B2_proposed",
+      "author_mean": 0.022628683202753887,
+      "indep_mean": 0.022628683202753887,
+      "author_holm": 0.00091552734375,
+      "indep_holm": 0.00091552734375,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "timit",
+      "pair": "B2_brqe - B2_const",
+      "author_mean": 0.02483819337409074,
+      "indep_mean": 0.02483819337409074,
+      "author_holm": 0.08251953125,
+      "indep_holm": 0.08251953125,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "timit",
+      "pair": "A2_brqe - A2_const",
+      "author_mean": 0.02251315301649262,
+      "indep_mean": 0.02251315301649262,
+      "author_holm": 0.08251953125,
+      "indep_holm": 0.08251953125,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "timit",
+      "pair": "A2_proposed - A1_ctc",
+      "author_mean": 0.3390387059635961,
+      "indep_mean": 0.3390387059635961,
+      "author_holm": 0.000152587890625,
+      "indep_holm": 0.000152587890625,
+      "same_conclusion": true
+    },
+    {
+      "corpus": "timit",
+      "pair": "B2_proposed - B1_whisper_ctc",
+      "author_mean": 0.3249297396351589,
+      "indep_mean": 0.3249297396351589,
+      "author_holm": 0.000152587890625,
+      "indep_holm": 0.000152587890625,
+      "same_conclusion": true
+    }
+  ],
+  "all_rows": [
+    {
+      "path": "buckeye.B0_whisper.n_failed_clips",
+      "author": 1,
+      "independent": 1,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge20.precision",
+      "author": 0.06369175222836511,
+      "independent": 0.06369175222836511,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge20.recall",
+      "author": 0.06143214713244096,
+      "independent": 0.06143214713244096,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge20.f1",
+      "author": 0.06254154664303126,
+      "independent": 0.06254154664303126,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge20.f1_ci_95[0]",
+      "author": 0.05554568389306542,
+      "independent": 0.05554568389306542,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge20.f1_ci_95[1]",
+      "author": 0.0702235841002299,
+      "independent": 0.0702235841002299,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge50.precision",
+      "author": 0.16760690511113618,
+      "independent": 0.16760690511113618,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge50.recall",
+      "author": 0.16166068124931984,
+      "independent": 0.16166068124931984,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge50.f1",
+      "author": 0.16458010192776423,
+      "independent": 0.16458010192776423,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge50.f1_ci_95[0]",
+      "author": 0.1463888088458337,
+      "independent": 0.14638880884583372,
+      "abs_diff": 2.7755575615628914e-17,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.edge50.f1_ci_95[1]",
+      "author": 0.18289065145103306,
+      "independent": 0.182890651451033,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.ctx20.precision",
+      "author": 0.059968407988265825,
+      "independent": 0.059968407988265825,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.ctx20.recall",
+      "author": 0.05784089672434432,
+      "independent": 0.05784089672434432,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.ctx20.f1",
+      "author": 0.05888544205628186,
+      "independent": 0.05888544205628186,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.ctx20.f1_ci_95[0]",
+      "author": 0.05190470551755335,
+      "independent": 0.05190470551755335,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.ctx20.f1_ci_95[1]",
+      "author": 0.06649802750618247,
+      "independent": 0.06649802750618249,
+      "abs_diff": 1.3877787807814457e-17,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.unmatched_cost",
+      "author": 0.007767852867559037,
+      "independent": 0.007767852867559037,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s02",
+      "author": 0.08617747440273037,
+      "independent": 0.08617747440273037,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s03",
+      "author": 0.06354515050167224,
+      "independent": 0.06354515050167224,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s07",
+      "author": 0.07237512742099898,
+      "independent": 0.07237512742099898,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s09",
+      "author": 0.04596527068437181,
+      "independent": 0.04596527068437181,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s11",
+      "author": 0.042151162790697666,
+      "independent": 0.042151162790697666,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s12",
+      "author": 0.0512396694214876,
+      "independent": 0.0512396694214876,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s15",
+      "author": 0.06324972737186477,
+      "independent": 0.06324972737186477,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s17",
+      "author": 0.034103410341034104,
+      "independent": 0.034103410341034104,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s18",
+      "author": 0.05616605616605617,
+      "independent": 0.05616605616605617,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s19",
+      "author": 0.09927360774818401,
+      "independent": 0.09927360774818401,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s20",
+      "author": 0.05844155844155845,
+      "independent": 0.05844155844155845,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s22",
+      "author": 0.08892128279883382,
+      "independent": 0.08892128279883382,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s27",
+      "author": 0.05402160864345738,
+      "independent": 0.05402160864345738,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s31",
+      "author": 0.06714285714285714,
+      "independent": 0.06714285714285714,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s33",
+      "author": 0.04880694143167029,
+      "independent": 0.04880694143167029,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s34",
+      "author": 0.06741573033707865,
+      "independent": 0.06741573033707865,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s35",
+      "author": 0.08739837398373984,
+      "independent": 0.08739837398373984,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s36",
+      "author": 0.06683804627249358,
+      "independent": 0.06683804627249358,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s37",
+      "author": 0.06013579049466537,
+      "independent": 0.06013579049466537,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B0_whisper.speaker_f1_edge20.s38",
+      "author": 0.04150943396226415,
+      "independent": 0.04150943396226415,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.n_failed_clips",
+      "author": 1,
+      "independent": 1,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge20.precision",
+      "author": 0.3160861233231879,
+      "independent": 0.3160861233231879,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge20.recall",
+      "author": 0.30514745891827183,
+      "independent": 0.30514745891827183,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge20.f1",
+      "author": 0.3105204872646733,
+      "independent": 0.3105204872646733,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge20.f1_ci_95[0]",
+      "author": 0.2952708865142826,
+      "independent": 0.2952708865142826,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge20.f1_ci_95[1]",
+      "author": 0.32610153410101217,
+      "independent": 0.3261015341010122,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge50.precision",
+      "author": 0.6637921316649757,
+      "independent": 0.6637921316649757,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge50.recall",
+      "author": 0.6408205463053651,
+      "independent": 0.6408205463053651,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge50.f1",
+      "author": 0.6521040974529347,
+      "independent": 0.6521040974529347,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge50.f1_ci_95[0]",
+      "author": 0.6263415941012516,
+      "independent": 0.6263415941012516,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.edge50.f1_ci_95[1]",
+      "author": 0.6755059600778823,
+      "independent": 0.6755059600778823,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.ctx20.precision",
+      "author": 0.29782437154773983,
+      "independent": 0.29782437154773983,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.ctx20.recall",
+      "author": 0.28751768418761564,
+      "independent": 0.28751768418761564,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.ctx20.f1",
+      "author": 0.29258028792912516,
+      "independent": 0.29258028792912516,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.ctx20.f1_ci_95[0]",
+      "author": 0.277263378372241,
+      "independent": 0.277263378372241,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.ctx20.f1_ci_95[1]",
+      "author": 0.30873123056465734,
+      "independent": 0.3087312305646574,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.unmatched_cost",
+      "author": 0.038052541081728175,
+      "independent": 0.038052541081728175,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s02",
+      "author": 0.318259385665529,
+      "independent": 0.318259385665529,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s03",
+      "author": 0.25501113585746105,
+      "independent": 0.25501113585746105,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s07",
+      "author": 0.3119266055045871,
+      "independent": 0.3119266055045871,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s09",
+      "author": 0.31971399387129723,
+      "independent": 0.31971399387129723,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s11",
+      "author": 0.2985507246376811,
+      "independent": 0.2985507246376811,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s12",
+      "author": 0.3694214876033058,
+      "independent": 0.3694214876033058,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s15",
+      "author": 0.34351145038167935,
+      "independent": 0.34351145038167935,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s17",
+      "author": 0.2835164835164835,
+      "independent": 0.2835164835164835,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s18",
+      "author": 0.3663003663003663,
+      "independent": 0.3663003663003663,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s19",
+      "author": 0.29818181818181816,
+      "independent": 0.29818181818181816,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s20",
+      "author": 0.29090909090909095,
+      "independent": 0.29090909090909095,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s22",
+      "author": 0.3071324599708879,
+      "independent": 0.3071324599708879,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s27",
+      "author": 0.27370948379351745,
+      "independent": 0.27370948379351745,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s31",
+      "author": 0.3209700427960057,
+      "independent": 0.3209700427960057,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s33",
+      "author": 0.35357917570498915,
+      "independent": 0.35357917570498915,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s34",
+      "author": 0.31460674157303375,
+      "independent": 0.31460674157303375,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s35",
+      "author": 0.35264227642276424,
+      "independent": 0.35264227642276424,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s36",
+      "author": 0.2455012853470437,
+      "independent": 0.2455012853470437,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s37",
+      "author": 0.26964112512124155,
+      "independent": 0.26964112512124155,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B1_whisper_ctc.speaker_f1_edge20.s38",
+      "author": 0.2869238005644402,
+      "independent": 0.2869238005644402,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.n_failed_clips",
+      "author": 2,
+      "independent": 2,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge20.precision",
+      "author": 0.6359431407942239,
+      "independent": 0.6359431407942239,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge20.recall",
+      "author": 0.613450865164871,
+      "independent": 0.613450865164871,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge20.f1",
+      "author": 0.6244945438431285,
+      "independent": 0.6244945438431285,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge20.f1_ci_95[0]",
+      "author": 0.5968795051147483,
+      "independent": 0.5968795051147483,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge20.f1_ci_95[1]",
+      "author": 0.6492478458417272,
+      "independent": 0.6492478458417271,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge50.precision",
+      "author": 0.8321299638989169,
+      "independent": 0.8321299638989169,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge50.recall",
+      "author": 0.8026988790945696,
+      "independent": 0.8026988790945696,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge50.f1",
+      "author": 0.8171495042375228,
+      "independent": 0.8171495042375228,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge50.f1_ci_95[0]",
+      "author": 0.7890172000960773,
+      "independent": 0.7890172000960775,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.edge50.f1_ci_95[1]",
+      "author": 0.8418755608480615,
+      "independent": 0.8418755608480615,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.ctx20.precision",
+      "author": 0.6059905234657039,
+      "independent": 0.6059905234657039,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.ctx20.recall",
+      "author": 0.5845576232451845,
+      "independent": 0.5845576232451845,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.ctx20.f1",
+      "author": 0.595081149947377,
+      "independent": 0.595081149947377,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.ctx20.f1_ci_95[0]",
+      "author": 0.5638720245465239,
+      "independent": 0.5638720245465239,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.ctx20.f1_ci_95[1]",
+      "author": 0.6231017056029671,
+      "independent": 0.6231017056029671,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.unmatched_cost",
+      "author": 0.076949134835129,
+      "independent": 0.076949134835129,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s02",
+      "author": 0.6732081911262797,
+      "independent": 0.6732081911262797,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s03",
+      "author": 0.5701559020044543,
+      "independent": 0.5701559020044543,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s07",
+      "author": 0.6687054026503568,
+      "independent": 0.6687054026503568,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s09",
+      "author": 0.6680286006128703,
+      "independent": 0.6680286006128703,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s11",
+      "author": 0.6086956521739131,
+      "independent": 0.6086956521739131,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s12",
+      "author": 0.6921797004991681,
+      "independent": 0.6921797004991681,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s15",
+      "author": 0.7055616139585605,
+      "independent": 0.7055616139585605,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s17",
+      "author": 0.6395604395604396,
+      "independent": 0.6395604395604396,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s18",
+      "author": 0.6666666666666667,
+      "independent": 0.6666666666666667,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s19",
+      "author": 0.6012121212121212,
+      "independent": 0.6012121212121212,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s20",
+      "author": 0.6701298701298701,
+      "independent": 0.6701298701298701,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s22",
+      "author": 0.5959302325581395,
+      "independent": 0.5959302325581395,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s27",
+      "author": 0.6062424969987994,
+      "independent": 0.6062424969987994,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s31",
+      "author": 0.6476462196861625,
+      "independent": 0.6476462196861625,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s33",
+      "author": 0.656182212581345,
+      "independent": 0.656182212581345,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s34",
+      "author": 0.5842696629213482,
+      "independent": 0.5842696629213482,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s35",
+      "author": 0.6189024390243903,
+      "independent": 0.6189024390243903,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s36",
+      "author": 0.4820051413881748,
+      "independent": 0.4820051413881748,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s37",
+      "author": 0.4616876818622697,
+      "independent": 0.4616876818622697,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_proposed.speaker_f1_edge20.s38",
+      "author": 0.6302916274694261,
+      "independent": 0.6302916274694261,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.n_failed_clips",
+      "author": 2,
+      "independent": 2,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge20.precision",
+      "author": 0.6327842960288809,
+      "independent": 0.6327842960288809,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge20.recall",
+      "author": 0.610403743606486,
+      "independent": 0.610403743606486,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge20.f1",
+      "author": 0.6213925663324654,
+      "independent": 0.6213925663324654,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge20.f1_ci_95[0]",
+      "author": 0.5939005710173538,
+      "independent": 0.5939005710173539,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge20.f1_ci_95[1]",
+      "author": 0.6463755503952886,
+      "independent": 0.6463755503952886,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge50.precision",
+      "author": 0.833201714801444,
+      "independent": 0.833201714801444,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge50.recall",
+      "author": 0.8037327239090216,
+      "independent": 0.8037327239090216,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge50.f1",
+      "author": 0.8182019608929263,
+      "independent": 0.8182019608929263,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge50.f1_ci_95[0]",
+      "author": 0.7894121971068069,
+      "independent": 0.7894121971068069,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.edge50.f1_ci_95[1]",
+      "author": 0.8430934245399612,
+      "independent": 0.8430934245399612,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.ctx20.precision",
+      "author": 0.6032265342960289,
+      "independent": 0.6032265342960289,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.ctx20.recall",
+      "author": 0.5818913918815976,
+      "independent": 0.5818913918815976,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.ctx20.f1",
+      "author": 0.5923669196255469,
+      "independent": 0.5923669196255469,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.ctx20.f1_ci_95[0]",
+      "author": 0.5611957828741708,
+      "independent": 0.5611957828741708,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.ctx20.f1_ci_95[1]",
+      "author": 0.6199876384878222,
+      "independent": 0.6199876384878222,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.unmatched_cost",
+      "author": 0.07659625639351408,
+      "independent": 0.07659625639351408,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s02",
+      "author": 0.6697952218430033,
+      "independent": 0.6697952218430033,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s03",
+      "author": 0.5701559020044543,
+      "independent": 0.5701559020044543,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s07",
+      "author": 0.6605504587155964,
+      "independent": 0.6605504587155964,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s09",
+      "author": 0.6629213483146067,
+      "independent": 0.6629213483146067,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s11",
+      "author": 0.5855072463768116,
+      "independent": 0.5855072463768116,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s12",
+      "author": 0.6963394342762063,
+      "independent": 0.6963394342762063,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s15",
+      "author": 0.6772082878953108,
+      "independent": 0.6772082878953108,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s17",
+      "author": 0.6307692307692309,
+      "independent": 0.6307692307692309,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s18",
+      "author": 0.6739926739926742,
+      "independent": 0.6739926739926742,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s19",
+      "author": 0.5927272727272727,
+      "independent": 0.5927272727272727,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s20",
+      "author": 0.6675324675324675,
+      "independent": 0.6675324675324675,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s22",
+      "author": 0.6002906976744186,
+      "independent": 0.6002906976744186,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s27",
+      "author": 0.6062424969987994,
+      "independent": 0.6062424969987994,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s31",
+      "author": 0.6619115549215407,
+      "independent": 0.6619115549215407,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s33",
+      "author": 0.6605206073752712,
+      "independent": 0.6605206073752712,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s34",
+      "author": 0.5741573033707864,
+      "independent": 0.5741573033707864,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s35",
+      "author": 0.6189024390243903,
+      "independent": 0.6189024390243903,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s36",
+      "author": 0.4768637532133676,
+      "independent": 0.4768637532133676,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s37",
+      "author": 0.4616876818622697,
+      "independent": 0.4616876818622697,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_const.speaker_f1_edge20.s38",
+      "author": 0.6349952963311383,
+      "independent": 0.6349952963311383,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.n_failed_clips",
+      "author": 2,
+      "independent": 2,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge20.precision",
+      "author": 0.6895870938628159,
+      "independent": 0.6895870938628159,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge20.recall",
+      "author": 0.6651975187724453,
+      "independent": 0.6651975187724453,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge20.f1",
+      "author": 0.6771727690688528,
+      "independent": 0.6771727690688528,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge20.f1_ci_95[0]",
+      "author": 0.6498764500366881,
+      "independent": 0.6498764500366881,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge20.f1_ci_95[1]",
+      "author": 0.7007234577448003,
+      "independent": 0.7007234577448003,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge50.precision",
+      "author": 0.8407603790613718,
+      "independent": 0.8407603790613718,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge50.recall",
+      "author": 0.8110240504951572,
+      "independent": 0.8110240504951572,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge50.f1",
+      "author": 0.8256245499362986,
+      "independent": 0.8256245499362986,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge50.f1_ci_95[0]",
+      "author": 0.7967871708111687,
+      "independent": 0.7967871708111687,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.edge50.f1_ci_95[1]",
+      "author": 0.8507671690088219,
+      "independent": 0.8507671690088219,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.ctx20.precision",
+      "author": 0.6576601985559567,
+      "independent": 0.6576601985559567,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.ctx20.recall",
+      "author": 0.6343998258787681,
+      "independent": 0.6343998258787681,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.ctx20.f1",
+      "author": 0.6458206392289371,
+      "independent": 0.6458206392289371,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.ctx20.f1_ci_95[0]",
+      "author": 0.6145900855669579,
+      "independent": 0.6145900855669578,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.ctx20.f1_ci_95[1]",
+      "author": 0.6726826787165503,
+      "independent": 0.6726826787165502,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.unmatched_cost",
+      "author": 0.08340248122755478,
+      "independent": 0.08340248122755478,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s02",
+      "author": 0.705631399317406,
+      "independent": 0.705631399317406,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s03",
+      "author": 0.6447661469933185,
+      "independent": 0.6447661469933185,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s07",
+      "author": 0.7176350662589195,
+      "independent": 0.7176350662589195,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s09",
+      "author": 0.7344228804902961,
+      "independent": 0.7344228804902961,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s11",
+      "author": 0.6565217391304349,
+      "independent": 0.6565217391304349,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s12",
+      "author": 0.7221297836938435,
+      "independent": 0.7221297836938435,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s15",
+      "author": 0.6924754634678298,
+      "independent": 0.6924754634678298,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s17",
+      "author": 0.7120879120879119,
+      "independent": 0.7120879120879119,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s18",
+      "author": 0.7289377289377289,
+      "independent": 0.7289377289377289,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s19",
+      "author": 0.6642424242424242,
+      "independent": 0.6642424242424242,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s20",
+      "author": 0.748051948051948,
+      "independent": 0.748051948051948,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s22",
+      "author": 0.684593023255814,
+      "independent": 0.684593023255814,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s27",
+      "author": 0.6602641056422569,
+      "independent": 0.6602641056422569,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s31",
+      "author": 0.7132667617689015,
+      "independent": 0.7132667617689015,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s33",
+      "author": 0.7071583514099783,
+      "independent": 0.7071583514099783,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s34",
+      "author": 0.6415730337078652,
+      "independent": 0.6415730337078652,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s35",
+      "author": 0.673780487804878,
+      "independent": 0.673780487804878,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s36",
+      "author": 0.5604113110539845,
+      "independent": 0.5604113110539845,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s37",
+      "author": 0.486905916585839,
+      "independent": 0.486905916585839,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.B2_brqe.speaker_f1_edge20.s38",
+      "author": 0.6829727187206021,
+      "independent": 0.6829727187206021,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge20.precision",
+      "author": 0.33973452290283973,
+      "independent": 0.33973452290283973,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge20.recall",
+      "author": 0.3398084666449015,
+      "independent": 0.3398084666449015,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge20.f1",
+      "author": 0.33977149075081614,
+      "independent": 0.33977149075081614,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge20.f1_ci_95[0]",
+      "author": 0.32592191020688693,
+      "independent": 0.32592191020688693,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge20.f1_ci_95[1]",
+      "author": 0.35442576306475504,
+      "independent": 0.354425763064755,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge50.precision",
+      "author": 0.7173321727777173,
+      "independent": 0.7173321727777173,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge50.recall",
+      "author": 0.7174883012297312,
+      "independent": 0.7174883012297312,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge50.f1",
+      "author": 0.7174102285092492,
+      "independent": 0.7174102285092492,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge50.f1_ci_95[0]",
+      "author": 0.695004349226624,
+      "independent": 0.695004349226624,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.edge50.f1_ci_95[1]",
+      "author": 0.7388113519571825,
+      "independent": 0.7388113519571825,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.ctx20.precision",
+      "author": 0.33973452290283973,
+      "independent": 0.33973452290283973,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.ctx20.recall",
+      "author": 0.3398084666449015,
+      "independent": 0.3398084666449015,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.ctx20.f1",
+      "author": 0.33977149075081614,
+      "independent": 0.33977149075081614,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.ctx20.f1_ci_95[0]",
+      "author": 0.32592191020688693,
+      "independent": 0.32592191020688693,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.ctx20.f1_ci_95[1]",
+      "author": 0.35442576306475504,
+      "independent": 0.354425763064755,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.unmatched_cost",
+      "author": 9.153335509853866e-05,
+      "independent": 9.153335509853866e-05,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s02",
+      "author": 0.3521008403361345,
+      "independent": 0.3521008403361345,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s03",
+      "author": 0.2762008733624454,
+      "independent": 0.2762008733624454,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s07",
+      "author": 0.32965931863727455,
+      "independent": 0.32965931863727455,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s09",
+      "author": 0.3289205702647658,
+      "independent": 0.3289205702647658,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s11",
+      "author": 0.3285302593659942,
+      "independent": 0.3285302593659942,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s12",
+      "author": 0.4008196721311476,
+      "independent": 0.4008196721311476,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s15",
+      "author": 0.3687635574837311,
+      "independent": 0.3687635574837311,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s17",
+      "author": 0.3036876355748373,
+      "independent": 0.3036876355748373,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s18",
+      "author": 0.38733252131546897,
+      "independent": 0.38733252131546897,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s19",
+      "author": 0.33170731707317075,
+      "independent": 0.33170731707317075,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s20",
+      "author": 0.2943444730077121,
+      "independent": 0.2943444730077121,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s22",
+      "author": 0.3357142857142857,
+      "independent": 0.3357142857142857,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s27",
+      "author": 0.31490384615384615,
+      "independent": 0.31490384615384615,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s31",
+      "author": 0.3277310924369748,
+      "independent": 0.3277310924369748,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s33",
+      "author": 0.3743372216330859,
+      "independent": 0.3743372216330859,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s34",
+      "author": 0.3652173913043478,
+      "independent": 0.3652173913043478,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s35",
+      "author": 0.3677932405566601,
+      "independent": 0.3677932405566601,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s36",
+      "author": 0.30853658536585366,
+      "independent": 0.30853658536585366,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s37",
+      "author": 0.3451086956521739,
+      "independent": 0.3451086956521739,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A1_ctc.speaker_f1_edge20.s38",
+      "author": 0.3163265306122449,
+      "independent": 0.3163265306122449,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.n_failed_clips",
+      "author": 2,
+      "independent": 2,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge20.precision",
+      "author": 0.7109861308288741,
+      "independent": 0.7109861308288741,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge20.recall",
+      "author": 0.7085101752094896,
+      "independent": 0.7085101752094896,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge20.f1",
+      "author": 0.7097459936770958,
+      "independent": 0.7097459936770958,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge20.f1_ci_95[0]",
+      "author": 0.690995024958633,
+      "independent": 0.690995024958633,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge20.f1_ci_95[1]",
+      "author": 0.7270491578528852,
+      "independent": 0.7270491578528853,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge50.precision",
+      "author": 0.9274871682865568,
+      "independent": 0.9274871682865568,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge50.recall",
+      "author": 0.9242572641201436,
+      "independent": 0.9242572641201436,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge50.f1",
+      "author": 0.9258693993241034,
+      "independent": 0.9258693993241034,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge50.f1_ci_95[0]",
+      "author": 0.9150782491199827,
+      "independent": 0.9150782491199827,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.edge50.f1_ci_95[1]",
+      "author": 0.93612948168701,
+      "independent": 0.93612948168701,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.ctx20.precision",
+      "author": 0.7108769247570165,
+      "independent": 0.7108769247570165,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.ctx20.recall",
+      "author": 0.7084013494395472,
+      "independent": 0.7084013494395472,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.ctx20.f1",
+      "author": 0.7096369780878665,
+      "independent": 0.7096369780878665,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.ctx20.f1_ci_95[0]",
+      "author": 0.690851940325737,
+      "independent": 0.690851940325737,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.ctx20.f1_ci_95[1]",
+      "author": 0.7269797116160943,
+      "independent": 0.7269797116160943,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.unmatched_cost",
+      "author": 0.0027898247905103757,
+      "independent": 0.0027898247905103757,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s02",
+      "author": 0.7453781512605042,
+      "independent": 0.7453781512605042,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s03",
+      "author": 0.6572052401746725,
+      "independent": 0.6572052401746725,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s07",
+      "author": 0.7301750772399588,
+      "independent": 0.7301750772399588,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s09",
+      "author": 0.7362525458248472,
+      "independent": 0.7362525458248472,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s11",
+      "author": 0.6714697406340058,
+      "independent": 0.6714697406340058,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s12",
+      "author": 0.7782357790601814,
+      "independent": 0.7782357790601814,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s15",
+      "author": 0.7711496746203904,
+      "independent": 0.7711496746203904,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s17",
+      "author": 0.7136659436008677,
+      "independent": 0.7136659436008677,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s18",
+      "author": 0.7235079171741778,
+      "independent": 0.7235079171741778,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s19",
+      "author": 0.697560975609756,
+      "independent": 0.697560975609756,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s20",
+      "author": 0.7146529562982006,
+      "independent": 0.7146529562982006,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s22",
+      "author": 0.67,
+      "independent": 0.67,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s27",
+      "author": 0.6995192307692307,
+      "independent": 0.6995192307692307,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s31",
+      "author": 0.6890756302521008,
+      "independent": 0.6890756302521008,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s33",
+      "author": 0.7370095440084835,
+      "independent": 0.7370095440084835,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s34",
+      "author": 0.7282608695652174,
+      "independent": 0.7282608695652174,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s35",
+      "author": 0.7256461232604374,
+      "independent": 0.7256461232604374,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s36",
+      "author": 0.6365853658536585,
+      "independent": 0.6365853658536585,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s37",
+      "author": 0.6268115942028986,
+      "independent": 0.6268115942028986,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_proposed.speaker_f1_edge20.s38",
+      "author": 0.6929499072356216,
+      "independent": 0.6929499072356216,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.n_failed_clips",
+      "author": 2,
+      "independent": 2,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge20.precision",
+      "author": 0.7083651851042918,
+      "independent": 0.7083651851042918,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge20.recall",
+      "author": 0.7058983567308739,
+      "independent": 0.7058983567308739,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge20.f1",
+      "author": 0.7071296195355936,
+      "independent": 0.7071296195355936,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge20.f1_ci_95[0]",
+      "author": 0.688561645964704,
+      "independent": 0.6885616459647039,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge20.f1_ci_95[1]",
+      "author": 0.725041471045146,
+      "independent": 0.725041471045146,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge50.precision",
+      "author": 0.9280878016817735,
+      "independent": 0.9280878016817735,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge50.recall",
+      "author": 0.9248558058548264,
+      "independent": 0.9248558058548264,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge50.f1",
+      "author": 0.9264689850648643,
+      "independent": 0.9264689850648643,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge50.f1_ci_95[0]",
+      "author": 0.9152034104787927,
+      "independent": 0.9152034104787928,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.edge50.f1_ci_95[1]",
+      "author": 0.937055396962653,
+      "independent": 0.9370553969626529,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.ctx20.precision",
+      "author": 0.7082559790324342,
+      "independent": 0.7082559790324342,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.ctx20.recall",
+      "author": 0.7057895309609316,
+      "independent": 0.7057895309609316,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.ctx20.f1",
+      "author": 0.7070206039463643,
+      "independent": 0.7070206039463643,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.ctx20.f1_ci_95[0]",
+      "author": 0.6884138378275168,
+      "independent": 0.6884138378275168,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.ctx20.f1_ci_95[1]",
+      "author": 0.7248313982566591,
+      "independent": 0.7248313982566591,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.unmatched_cost",
+      "author": 0.0028016432691261306,
+      "independent": 0.0028016432691261306,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s02",
+      "author": 0.7487394957983193,
+      "independent": 0.7487394957983193,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s03",
+      "author": 0.6615720524017468,
+      "independent": 0.6615720524017468,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s07",
+      "author": 0.7239958805355303,
+      "independent": 0.7239958805355303,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s09",
+      "author": 0.730142566191446,
+      "independent": 0.730142566191446,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s11",
+      "author": 0.6484149855907781,
+      "independent": 0.6484149855907781,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s12",
+      "author": 0.7840065952184667,
+      "independent": 0.7840065952184667,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s15",
+      "author": 0.7483731019522777,
+      "independent": 0.7483731019522777,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s17",
+      "author": 0.7071583514099783,
+      "independent": 0.7071583514099783,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s18",
+      "author": 0.7271619975639464,
+      "independent": 0.7271619975639464,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s19",
+      "author": 0.6878048780487804,
+      "independent": 0.6878048780487804,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s20",
+      "author": 0.7107969151670951,
+      "independent": 0.7107969151670951,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s22",
+      "author": 0.6757142857142857,
+      "independent": 0.6757142857142857,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s27",
+      "author": 0.6983173076923077,
+      "independent": 0.6983173076923077,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s31",
+      "author": 0.7058823529411765,
+      "independent": 0.7058823529411765,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s33",
+      "author": 0.7433722163308589,
+      "independent": 0.7433722163308589,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s34",
+      "author": 0.716304347826087,
+      "independent": 0.716304347826087,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s35",
+      "author": 0.7246520874751491,
+      "independent": 0.7246520874751491,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s36",
+      "author": 0.6304878048780488,
+      "independent": 0.6304878048780488,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s37",
+      "author": 0.6222826086956522,
+      "independent": 0.6222826086956522,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_const.speaker_f1_edge20.s38",
+      "author": 0.6938775510204082,
+      "independent": 0.6938775510204082,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.n_failed_clips",
+      "author": 2,
+      "independent": 2,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge20.precision",
+      "author": 0.7672272578355357,
+      "independent": 0.7672272578355357,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge20.recall",
+      "author": 0.7645554467297856,
+      "independent": 0.7645554467297856,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge20.f1",
+      "author": 0.7658890221301646,
+      "independent": 0.7658890221301646,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge20.f1_ci_95[0]",
+      "author": 0.7492222825476188,
+      "independent": 0.7492222825476188,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge20.f1_ci_95[1]",
+      "author": 0.7809029438048407,
+      "independent": 0.7809029438048408,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge50.precision",
+      "author": 0.9380255542208147,
+      "independent": 0.9380255542208147,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge50.recall",
+      "author": 0.9347589509195777,
+      "independent": 0.9347589509195777,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge50.f1",
+      "author": 0.9363894036847269,
+      "independent": 0.9363894036847269,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge50.f1_ci_95[0]",
+      "author": 0.9266989490384893,
+      "independent": 0.9266989490384894,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.edge50.f1_ci_95[1]",
+      "author": 0.9456042808799475,
+      "independent": 0.9456042808799475,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.ctx20.precision",
+      "author": 0.7671180517636781,
+      "independent": 0.7671180517636781,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.ctx20.recall",
+      "author": 0.7644466209598433,
+      "independent": 0.7644466209598433,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.ctx20.f1",
+      "author": 0.7657800065409354,
+      "independent": 0.7657800065409354,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.ctx20.f1_ci_95[0]",
+      "author": 0.7490672407814672,
+      "independent": 0.7490672407814672,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.ctx20.f1_ci_95[1]",
+      "author": 0.780796427526686,
+      "independent": 0.7807964275266859,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.unmatched_cost",
+      "author": 0.0030445532702144673,
+      "independent": 0.0030445532702144673,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s02",
+      "author": 0.7764705882352941,
+      "independent": 0.7764705882352941,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s03",
+      "author": 0.7172489082969431,
+      "independent": 0.7172489082969431,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s07",
+      "author": 0.7878475798146242,
+      "independent": 0.7878475798146242,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s09",
+      "author": 0.8065173116089613,
+      "independent": 0.8065173116089613,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s11",
+      "author": 0.7262247838616714,
+      "independent": 0.7262247838616714,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s12",
+      "author": 0.807914262159934,
+      "independent": 0.807914262159934,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s15",
+      "author": 0.764642082429501,
+      "independent": 0.764642082429501,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s17",
+      "author": 0.7982646420824295,
+      "independent": 0.7982646420824295,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s18",
+      "author": 0.7904993909866016,
+      "independent": 0.7904993909866016,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s19",
+      "author": 0.7658536585365854,
+      "independent": 0.7658536585365854,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s20",
+      "author": 0.802056555269923,
+      "independent": 0.802056555269923,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s22",
+      "author": 0.76,
+      "independent": 0.76,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s27",
+      "author": 0.7524038461538461,
+      "independent": 0.7524038461538461,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s31",
+      "author": 0.7521008403361344,
+      "independent": 0.7521008403361344,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s33",
+      "author": 0.7942735949098623,
+      "independent": 0.7942735949098623,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s34",
+      "author": 0.7869565217391304,
+      "independent": 0.7869565217391304,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s35",
+      "author": 0.7803180914512923,
+      "independent": 0.7803180914512923,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s36",
+      "author": 0.7146341463414634,
+      "independent": 0.7146341463414634,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s37",
+      "author": 0.6648550724637681,
+      "independent": 0.6648550724637681,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.A2_brqe.speaker_f1_edge20.s38",
+      "author": 0.7551020408163265,
+      "independent": 0.7551020408163265,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_proposed - B2_proposed.mean_difference",
+      "author": 0.08489251957802273,
+      "independent": 0.08489251957802273,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_proposed - B2_proposed.p_value_raw",
+      "author": 1.9073486328125e-06,
+      "independent": 1.9073486328125e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_proposed - B2_proposed.p_value_holm",
+      "author": 9.5367431640625e-06,
+      "independent": 9.5367431640625e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.B2_brqe - B2_const.mean_difference",
+      "author": 0.05773784137012818,
+      "independent": 0.05773784137012818,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.B2_brqe - B2_const.p_value_raw",
+      "author": 1.9073486328125e-06,
+      "independent": 1.9073486328125e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.B2_brqe - B2_const.p_value_holm",
+      "author": 9.5367431640625e-06,
+      "independent": 9.5367431640625e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_brqe - A2_const.mean_difference",
+      "author": 0.060756326752097634,
+      "independent": 0.060756326752097634,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_brqe - A2_const.p_value_raw",
+      "author": 1.9073486328125e-06,
+      "independent": 1.9073486328125e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_brqe - A2_const.p_value_holm",
+      "author": 9.5367431640625e-06,
+      "independent": 9.5367431640625e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_proposed - A1_ctc.mean_difference",
+      "author": 0.36936881693315277,
+      "independent": 0.36936881693315277,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_proposed - A1_ctc.p_value_raw",
+      "author": 1.9073486328125e-06,
+      "independent": 1.9073486328125e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.A2_proposed - A1_ctc.p_value_holm",
+      "author": 9.5367431640625e-06,
+      "independent": 9.5367431640625e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.B2_proposed - B1_whisper_ctc.mean_difference",
+      "author": 0.31336264706807665,
+      "independent": 0.31336264706807665,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.B2_proposed - B1_whisper_ctc.p_value_raw",
+      "author": 1.9073486328125e-06,
+      "independent": 1.9073486328125e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "buckeye.tests.B2_proposed - B1_whisper_ctc.p_value_holm",
+      "author": 9.5367431640625e-06,
+      "independent": 9.5367431640625e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge20.precision",
+      "author": 0.020028612303290415,
+      "independent": 0.020028612303290415,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge20.recall",
+      "author": 0.020086083213773313,
+      "independent": 0.020086083213773313,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge20.f1",
+      "author": 0.020057306590257878,
+      "independent": 0.020057306590257878,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge20.f1_ci_95[0]",
+      "author": 0.014719965265924017,
+      "independent": 0.014719965265924017,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge20.f1_ci_95[1]",
+      "author": 0.025232895793730437,
+      "independent": 0.02523289579373044,
+      "abs_diff": 3.469446951953614e-18,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge50.precision",
+      "author": 0.0815450643776824,
+      "independent": 0.0815450643776824,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge50.recall",
+      "author": 0.08177905308464849,
+      "independent": 0.08177905308464849,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge50.f1",
+      "author": 0.0816618911174785,
+      "independent": 0.0816618911174785,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge50.f1_ci_95[0]",
+      "author": 0.06737719849722017,
+      "independent": 0.06737719849722015,
+      "abs_diff": 1.3877787807814457e-17,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.edge50.f1_ci_95[1]",
+      "author": 0.09415263751825001,
+      "independent": 0.09415263751825,
+      "abs_diff": 1.3877787807814457e-17,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.ctx20.precision",
+      "author": 0.018955650929899856,
+      "independent": 0.018955650929899856,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.ctx20.recall",
+      "author": 0.019010043041606885,
+      "independent": 0.019010043041606885,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.ctx20.f1",
+      "author": 0.018982808022922636,
+      "independent": 0.018982808022922636,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.ctx20.f1_ci_95[0]",
+      "author": 0.013893713137790444,
+      "independent": 0.013893713137790442,
+      "abs_diff": 1.734723475976807e-18,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.ctx20.f1_ci_95[1]",
+      "author": 0.023454783560471766,
+      "independent": 0.02345478356047177,
+      "abs_diff": 3.469446951953614e-18,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.unmatched_cost",
+      "author": 0.0005139167862266876,
+      "independent": 0.0005139167862266876,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.010752688172043012,
+      "independent": 0.010752688172043012,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.038461538461538464,
+      "independent": 0.038461538461538464,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr2-faem0",
+      "author": 0.01176470588235294,
+      "independent": 0.01176470588235294,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr2-marc0",
+      "author": 0.01764705882352941,
+      "independent": 0.01764705882352941,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr3-falk0",
+      "author": 0.02631578947368421,
+      "independent": 0.02631578947368421,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr3-madc0",
+      "author": 0.02040816326530612,
+      "independent": 0.02040816326530612,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr4-falr0",
+      "author": 0.03529411764705882,
+      "independent": 0.03529411764705882,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.017751479289940825,
+      "independent": 0.017751479289940825,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.011299435028248588,
+      "independent": 0.011299435028248588,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.022988505747126436,
+      "independent": 0.022988505747126436,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.0,
+      "independent": 0.0,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.028089887640449437,
+      "independent": 0.028089887640449437,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.022222222222222223,
+      "independent": 0.022222222222222223,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr7-madd0",
+      "author": 0.02352941176470588,
+      "independent": 0.02352941176470588,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.0,
+      "independent": 0.0,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B0_whisper.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.03296703296703297,
+      "independent": 0.03296703296703297,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge20.precision",
+      "author": 0.33464285714285713,
+      "independent": 0.33464285714285713,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge20.recall",
+      "author": 0.3360832137733142,
+      "independent": 0.3360832137733142,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge20.f1",
+      "author": 0.335361488904796,
+      "independent": 0.335361488904796,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge20.f1_ci_95[0]",
+      "author": 0.31364002930725216,
+      "independent": 0.3136400293072521,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge20.f1_ci_95[1]",
+      "author": 0.3576652097629039,
+      "independent": 0.3576652097629039,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge50.precision",
+      "author": 0.7017857142857142,
+      "independent": 0.7017857142857142,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge50.recall",
+      "author": 0.7048063127690101,
+      "independent": 0.7048063127690101,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge50.f1",
+      "author": 0.7032927702219041,
+      "independent": 0.7032927702219041,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge50.f1_ci_95[0]",
+      "author": 0.6760430028995278,
+      "independent": 0.6760430028995278,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.edge50.f1_ci_95[1]",
+      "author": 0.7319817806870328,
+      "independent": 0.7319817806870327,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.ctx20.precision",
+      "author": 0.33,
+      "independent": 0.33,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.ctx20.recall",
+      "author": 0.3314203730272597,
+      "independent": 0.3314203730272597,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.ctx20.f1",
+      "author": 0.33070866141732286,
+      "independent": 0.33070866141732286,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.ctx20.f1_ci_95[0]",
+      "author": 0.30847317585570816,
+      "independent": 0.30847317585570816,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.ctx20.f1_ci_95[1]",
+      "author": 0.3537273826148325,
+      "independent": 0.35372738261483255,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.unmatched_cost",
+      "author": 0.008116786226685824,
+      "independent": 0.008116786226685824,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.41397849462365593,
+      "independent": 0.41397849462365593,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.3131868131868132,
+      "independent": 0.3131868131868132,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr2-faem0",
+      "author": 0.29411764705882354,
+      "independent": 0.29411764705882354,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr2-marc0",
+      "author": 0.4000000000000001,
+      "independent": 0.4000000000000001,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr3-falk0",
+      "author": 0.3355263157894737,
+      "independent": 0.3355263157894737,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr3-madc0",
+      "author": 0.3112244897959184,
+      "independent": 0.3112244897959184,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr4-falr0",
+      "author": 0.3176470588235294,
+      "independent": 0.3176470588235294,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.3136094674556213,
+      "independent": 0.3136094674556213,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.2655367231638418,
+      "independent": 0.2655367231638418,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.3850574712643678,
+      "independent": 0.3850574712643678,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.28160919540229884,
+      "independent": 0.28160919540229884,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.34831460674157305,
+      "independent": 0.34831460674157305,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.2777777777777778,
+      "independent": 0.2777777777777778,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr7-madd0",
+      "author": 0.37058823529411766,
+      "independent": 0.37058823529411766,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.42073170731707316,
+      "independent": 0.42073170731707316,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B1_whisper_ctc.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.3241758241758242,
+      "independent": 0.3241758241758242,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge20.precision",
+      "author": 0.6596428571428572,
+      "independent": 0.6596428571428572,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge20.recall",
+      "author": 0.6624820659971306,
+      "independent": 0.6624820659971306,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge20.f1",
+      "author": 0.661059413027917,
+      "independent": 0.661059413027917,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge20.f1_ci_95[0]",
+      "author": 0.6244080145719489,
+      "independent": 0.624408014571949,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge20.f1_ci_95[1]",
+      "author": 0.6967880897857357,
+      "independent": 0.6967880897857358,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge50.precision",
+      "author": 0.8957142857142857,
+      "independent": 0.8957142857142857,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge50.recall",
+      "author": 0.8995695839311334,
+      "independent": 0.8995695839311334,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge50.f1",
+      "author": 0.8976377952755905,
+      "independent": 0.8976377952755905,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge50.f1_ci_95[0]",
+      "author": 0.8753106288959517,
+      "independent": 0.8753106288959518,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.edge50.f1_ci_95[1]",
+      "author": 0.9181662012084513,
+      "independent": 0.9181662012084513,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.ctx20.precision",
+      "author": 0.6492857142857142,
+      "independent": 0.6492857142857142,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.ctx20.recall",
+      "author": 0.6520803443328551,
+      "independent": 0.6520803443328551,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.ctx20.f1",
+      "author": 0.6506800286327845,
+      "independent": 0.6506800286327845,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.ctx20.f1_ci_95[0]",
+      "author": 0.6142746646016862,
+      "independent": 0.6142746646016863,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.ctx20.f1_ci_95[1]",
+      "author": 0.6859566200250808,
+      "independent": 0.6859566200250807,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.unmatched_cost",
+      "author": 0.01601793400286944,
+      "independent": 0.01601793400286944,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.7634408602150536,
+      "independent": 0.7634408602150536,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.5109890109890111,
+      "independent": 0.5109890109890111,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr2-faem0",
+      "author": 0.7411764705882353,
+      "independent": 0.7411764705882353,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr2-marc0",
+      "author": 0.6411764705882353,
+      "independent": 0.6411764705882353,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr3-falk0",
+      "author": 0.6513157894736842,
+      "independent": 0.6513157894736842,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr3-madc0",
+      "author": 0.6785714285714286,
+      "independent": 0.6785714285714286,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr4-falr0",
+      "author": 0.735294117647059,
+      "independent": 0.735294117647059,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.6568047337278107,
+      "independent": 0.6568047337278107,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.615819209039548,
+      "independent": 0.615819209039548,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.6091954022988506,
+      "independent": 0.6091954022988506,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.5172413793103449,
+      "independent": 0.5172413793103449,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.7078651685393259,
+      "independent": 0.7078651685393259,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.7,
+      "independent": 0.7,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr7-madd0",
+      "author": 0.7294117647058823,
+      "independent": 0.7294117647058823,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.6158536585365854,
+      "independent": 0.6158536585365854,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_proposed.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.6978021978021978,
+      "independent": 0.6978021978021978,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge20.precision",
+      "author": 0.6521428571428571,
+      "independent": 0.6521428571428571,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge20.recall",
+      "author": 0.6549497847919655,
+      "independent": 0.6549497847919655,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge20.f1",
+      "author": 0.6535433070866142,
+      "independent": 0.6535433070866142,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge20.f1_ci_95[0]",
+      "author": 0.6178628698294485,
+      "independent": 0.6178628698294484,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge20.f1_ci_95[1]",
+      "author": 0.6885134730652359,
+      "independent": 0.688513473065236,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge50.precision",
+      "author": 0.8953571428571429,
+      "independent": 0.8953571428571429,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge50.recall",
+      "author": 0.8992109038737446,
+      "independent": 0.8992109038737446,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge50.f1",
+      "author": 0.8972798854688617,
+      "independent": 0.8972798854688617,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge50.f1_ci_95[0]",
+      "author": 0.8738855881881692,
+      "independent": 0.8738855881881693,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.edge50.f1_ci_95[1]",
+      "author": 0.9189443752164448,
+      "independent": 0.9189443752164448,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.ctx20.precision",
+      "author": 0.6414285714285715,
+      "independent": 0.6414285714285715,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.ctx20.recall",
+      "author": 0.6441893830703013,
+      "independent": 0.6441893830703013,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.ctx20.f1",
+      "author": 0.6428060128847531,
+      "independent": 0.6428060128847531,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.ctx20.f1_ci_95[0]",
+      "author": 0.6071650323149744,
+      "independent": 0.6071650323149744,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.ctx20.f1_ci_95[1]",
+      "author": 0.678998306885806,
+      "independent": 0.6789983068858059,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.unmatched_cost",
+      "author": 0.015850215208034424,
+      "independent": 0.015850215208034424,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.7580645161290323,
+      "independent": 0.7580645161290323,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.5109890109890111,
+      "independent": 0.5109890109890111,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr2-faem0",
+      "author": 0.7411764705882353,
+      "independent": 0.7411764705882353,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr2-marc0",
+      "author": 0.6352941176470588,
+      "independent": 0.6352941176470588,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr3-falk0",
+      "author": 0.6513157894736842,
+      "independent": 0.6513157894736842,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr3-madc0",
+      "author": 0.6836734693877551,
+      "independent": 0.6836734693877551,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr4-falr0",
+      "author": 0.735294117647059,
+      "independent": 0.735294117647059,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.6331360946745562,
+      "independent": 0.6331360946745562,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.6045197740112994,
+      "independent": 0.6045197740112994,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.6149425287356322,
+      "independent": 0.6149425287356322,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.5114942528735632,
+      "independent": 0.5114942528735632,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.6966292134831461,
+      "independent": 0.6966292134831461,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.6666666666666666,
+      "independent": 0.6666666666666666,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr7-madd0",
+      "author": 0.7176470588235294,
+      "independent": 0.7176470588235294,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.6036585365853658,
+      "independent": 0.6036585365853658,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_const.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.6868131868131868,
+      "independent": 0.6868131868131868,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge20.precision",
+      "author": 0.6775,
+      "independent": 0.6775,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge20.recall",
+      "author": 0.680416068866571,
+      "independent": 0.680416068866571,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge20.f1",
+      "author": 0.6789549033643522,
+      "independent": 0.6789549033643522,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge20.f1_ci_95[0]",
+      "author": 0.651013572751855,
+      "independent": 0.651013572751855,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge20.f1_ci_95[1]",
+      "author": 0.706678774239953,
+      "independent": 0.706678774239953,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge50.precision",
+      "author": 0.8821428571428571,
+      "independent": 0.8821428571428571,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge50.recall",
+      "author": 0.8859397417503587,
+      "independent": 0.8859397417503587,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge50.f1",
+      "author": 0.8840372226198998,
+      "independent": 0.8840372226198998,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge50.f1_ci_95[0]",
+      "author": 0.8598595942425532,
+      "independent": 0.8598595942425531,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.edge50.f1_ci_95[1]",
+      "author": 0.9051307666146227,
+      "independent": 0.9051307666146227,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.ctx20.precision",
+      "author": 0.6667857142857143,
+      "independent": 0.6667857142857143,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.ctx20.recall",
+      "author": 0.6696556671449068,
+      "independent": 0.6696556671449068,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.ctx20.f1",
+      "author": 0.6682176091624911,
+      "independent": 0.6682176091624911,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.ctx20.f1_ci_95[0]",
+      "author": 0.6398980692854869,
+      "independent": 0.6398980692854868,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.ctx20.f1_ci_95[1]",
+      "author": 0.6955965517733999,
+      "independent": 0.6955965517734,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.unmatched_cost",
+      "author": 0.016483931133428942,
+      "independent": 0.016483931133428942,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.7526881720430108,
+      "independent": 0.7526881720430108,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.6208791208791209,
+      "independent": 0.6208791208791209,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr2-faem0",
+      "author": 0.6882352941176471,
+      "independent": 0.6882352941176471,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr2-marc0",
+      "author": 0.6352941176470588,
+      "independent": 0.6352941176470588,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr3-falk0",
+      "author": 0.6447368421052632,
+      "independent": 0.6447368421052632,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr3-madc0",
+      "author": 0.7040816326530612,
+      "independent": 0.7040816326530612,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr4-falr0",
+      "author": 0.7764705882352941,
+      "independent": 0.7764705882352941,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.6390532544378699,
+      "independent": 0.6390532544378699,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.6779661016949152,
+      "independent": 0.6779661016949152,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.6666666666666666,
+      "independent": 0.6666666666666666,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.5459770114942529,
+      "independent": 0.5459770114942529,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.6853932584269663,
+      "independent": 0.6853932584269663,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.7,
+      "independent": 0.7,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr7-madd0",
+      "author": 0.7,
+      "independent": 0.7,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.6585365853658537,
+      "independent": 0.6585365853658537,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.B2_brqe.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.7527472527472527,
+      "independent": 0.7527472527472527,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge20.precision",
+      "author": 0.343974175035868,
+      "independent": 0.343974175035868,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge20.recall",
+      "author": 0.343974175035868,
+      "independent": 0.343974175035868,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge20.f1",
+      "author": 0.343974175035868,
+      "independent": 0.343974175035868,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge20.f1_ci_95[0]",
+      "author": 0.32104463729289306,
+      "independent": 0.32104463729289306,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge20.f1_ci_95[1]",
+      "author": 0.36589957266829276,
+      "independent": 0.3658995726682927,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge50.precision",
+      "author": 0.7223816355810617,
+      "independent": 0.7223816355810617,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge50.recall",
+      "author": 0.7223816355810617,
+      "independent": 0.7223816355810617,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge50.f1",
+      "author": 0.7223816355810617,
+      "independent": 0.7223816355810617,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge50.f1_ci_95[0]",
+      "author": 0.6910906213173902,
+      "independent": 0.6910906213173902,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.edge50.f1_ci_95[1]",
+      "author": 0.7523210531004989,
+      "independent": 0.752321053100499,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.ctx20.precision",
+      "author": 0.343974175035868,
+      "independent": 0.343974175035868,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.ctx20.recall",
+      "author": 0.343974175035868,
+      "independent": 0.343974175035868,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.ctx20.f1",
+      "author": 0.343974175035868,
+      "independent": 0.343974175035868,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.ctx20.f1_ci_95[0]",
+      "author": 0.32104463729289306,
+      "independent": 0.32104463729289306,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.ctx20.f1_ci_95[1]",
+      "author": 0.36589957266829276,
+      "independent": 0.3658995726682927,
+      "abs_diff": 5.551115123125783e-17,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.unmatched_cost",
+      "author": 2.582496413194857e-05,
+      "independent": 2.582496413194857e-05,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.41935483870967744,
+      "independent": 0.41935483870967744,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.34444444444444444,
+      "independent": 0.34444444444444444,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr2-faem0",
+      "author": 0.29411764705882354,
+      "independent": 0.29411764705882354,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr2-marc0",
+      "author": 0.4235294117647059,
+      "independent": 0.4235294117647059,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr3-falk0",
+      "author": 0.34210526315789475,
+      "independent": 0.34210526315789475,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr3-madc0",
+      "author": 0.3112244897959184,
+      "independent": 0.3112244897959184,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr4-falr0",
+      "author": 0.3352941176470588,
+      "independent": 0.3352941176470588,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.3273809523809524,
+      "independent": 0.3273809523809524,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.2727272727272727,
+      "independent": 0.2727272727272727,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.3850574712643678,
+      "independent": 0.3850574712643678,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.28160919540229884,
+      "independent": 0.28160919540229884,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.3595505617977528,
+      "independent": 0.3595505617977528,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.28651685393258425,
+      "independent": 0.28651685393258425,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr7-madd0",
+      "author": 0.37058823529411766,
+      "independent": 0.37058823529411766,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.42073170731707316,
+      "independent": 0.42073170731707316,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A1_ctc.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.33516483516483514,
+      "independent": 0.33516483516483514,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge20.precision",
+      "author": 0.6840028694404591,
+      "independent": 0.6840028694404591,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge20.recall",
+      "author": 0.6840028694404591,
+      "independent": 0.6840028694404591,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge20.f1",
+      "author": 0.6840028694404591,
+      "independent": 0.6840028694404591,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge20.f1_ci_95[0]",
+      "author": 0.6499619202903621,
+      "independent": 0.6499619202903621,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge20.f1_ci_95[1]",
+      "author": 0.716814359550846,
+      "independent": 0.716814359550846,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge50.precision",
+      "author": 0.9214490674318508,
+      "independent": 0.9214490674318508,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge50.recall",
+      "author": 0.9214490674318508,
+      "independent": 0.9214490674318508,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge50.f1",
+      "author": 0.9214490674318508,
+      "independent": 0.9214490674318508,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge50.f1_ci_95[0]",
+      "author": 0.9029310102728575,
+      "independent": 0.9029310102728575,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.edge50.f1_ci_95[1]",
+      "author": 0.9372830498163364,
+      "independent": 0.9372830498163365,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.ctx20.precision",
+      "author": 0.6840028694404591,
+      "independent": 0.6840028694404591,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.ctx20.recall",
+      "author": 0.6840028694404591,
+      "independent": 0.6840028694404591,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.ctx20.f1",
+      "author": 0.6840028694404591,
+      "independent": 0.6840028694404591,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.ctx20.f1_ci_95[0]",
+      "author": 0.6499619202903621,
+      "independent": 0.6499619202903621,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.ctx20.f1_ci_95[1]",
+      "author": 0.716814359550846,
+      "independent": 0.716814359550846,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.unmatched_cost",
+      "author": -2.869440459019046e-06,
+      "independent": -2.869440459019046e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.7849462365591398,
+      "independent": 0.7849462365591398,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.6,
+      "independent": 0.6,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr2-faem0",
+      "author": 0.7470588235294117,
+      "independent": 0.7470588235294117,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr2-marc0",
+      "author": 0.6705882352941176,
+      "independent": 0.6705882352941176,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr3-falk0",
+      "author": 0.6578947368421053,
+      "independent": 0.6578947368421053,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr3-madc0",
+      "author": 0.6785714285714286,
+      "independent": 0.6785714285714286,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr4-falr0",
+      "author": 0.7647058823529412,
+      "independent": 0.7647058823529412,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.6904761904761905,
+      "independent": 0.6904761904761905,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.6477272727272727,
+      "independent": 0.6477272727272727,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.6379310344827587,
+      "independent": 0.6379310344827587,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.5287356321839081,
+      "independent": 0.5287356321839081,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.7247191011235955,
+      "independent": 0.7247191011235955,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.7303370786516854,
+      "independent": 0.7303370786516854,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr7-madd0",
+      "author": 0.735294117647059,
+      "independent": 0.735294117647059,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.6097560975609756,
+      "independent": 0.6097560975609756,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_proposed.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.7252747252747253,
+      "independent": 0.7252747252747253,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge20.precision",
+      "author": 0.6757532281205165,
+      "independent": 0.6757532281205165,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge20.recall",
+      "author": 0.6757532281205165,
+      "independent": 0.6757532281205165,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge20.f1",
+      "author": 0.6757532281205165,
+      "independent": 0.6757532281205165,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge20.f1_ci_95[0]",
+      "author": 0.6408950602896388,
+      "independent": 0.6408950602896388,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge20.f1_ci_95[1]",
+      "author": 0.7079779206196082,
+      "independent": 0.7079779206196082,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge50.precision",
+      "author": 0.9200143472022956,
+      "independent": 0.9200143472022956,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge50.recall",
+      "author": 0.9200143472022956,
+      "independent": 0.9200143472022956,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge50.f1",
+      "author": 0.9200143472022956,
+      "independent": 0.9200143472022956,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge50.f1_ci_95[0]",
+      "author": 0.9003485619599952,
+      "independent": 0.9003485619599951,
+      "abs_diff": 1.1102230246251565e-16,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.edge50.f1_ci_95[1]",
+      "author": 0.9377653586115279,
+      "independent": 0.9377653586115279,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.ctx20.precision",
+      "author": 0.6757532281205165,
+      "independent": 0.6757532281205165,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.ctx20.recall",
+      "author": 0.6757532281205165,
+      "independent": 0.6757532281205165,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.ctx20.f1",
+      "author": 0.6757532281205165,
+      "independent": 0.6757532281205165,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.ctx20.f1_ci_95[0]",
+      "author": 0.6408950602896388,
+      "independent": 0.6408950602896388,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.ctx20.f1_ci_95[1]",
+      "author": 0.7079779206196082,
+      "independent": 0.7079779206196082,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.unmatched_cost",
+      "author": 4.677187948343153e-05,
+      "independent": 4.677187948343153e-05,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.7795698924731183,
+      "independent": 0.7795698924731183,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.5888888888888889,
+      "independent": 0.5888888888888889,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr2-faem0",
+      "author": 0.7470588235294117,
+      "independent": 0.7470588235294117,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr2-marc0",
+      "author": 0.6647058823529411,
+      "independent": 0.6647058823529411,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr3-falk0",
+      "author": 0.6578947368421053,
+      "independent": 0.6578947368421053,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr3-madc0",
+      "author": 0.6836734693877551,
+      "independent": 0.6836734693877551,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr4-falr0",
+      "author": 0.7529411764705881,
+      "independent": 0.7529411764705881,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.6785714285714286,
+      "independent": 0.6785714285714286,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.6420454545454546,
+      "independent": 0.6420454545454546,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.6436781609195402,
+      "independent": 0.6436781609195402,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.5114942528735632,
+      "independent": 0.5114942528735632,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.7134831460674156,
+      "independent": 0.7134831460674156,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.6966292134831461,
+      "independent": 0.6966292134831461,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr7-madd0",
+      "author": 0.7235294117647059,
+      "independent": 0.7235294117647059,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.5975609756097561,
+      "independent": 0.5975609756097561,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_const.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.7197802197802198,
+      "independent": 0.7197802197802198,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.n_failed_clips",
+      "author": 0,
+      "independent": 0,
+      "abs_diff": 0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge20.precision",
+      "author": 0.6987087517934003,
+      "independent": 0.6987087517934003,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge20.recall",
+      "author": 0.6987087517934003,
+      "independent": 0.6987087517934003,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge20.f1",
+      "author": 0.6987087517934003,
+      "independent": 0.6987087517934003,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge20.f1_ci_95[0]",
+      "author": 0.6682087900693022,
+      "independent": 0.6682087900693022,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge20.f1_ci_95[1]",
+      "author": 0.7269815988175753,
+      "independent": 0.7269815988175753,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge50.precision",
+      "author": 0.9081779053084649,
+      "independent": 0.9081779053084649,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge50.recall",
+      "author": 0.9081779053084649,
+      "independent": 0.9081779053084649,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge50.f1",
+      "author": 0.9081779053084649,
+      "independent": 0.9081779053084649,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge50.f1_ci_95[0]",
+      "author": 0.8859694715158106,
+      "independent": 0.8859694715158106,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.edge50.f1_ci_95[1]",
+      "author": 0.9253847118815226,
+      "independent": 0.9253847118815226,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.ctx20.precision",
+      "author": 0.6987087517934003,
+      "independent": 0.6987087517934003,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.ctx20.recall",
+      "author": 0.6987087517934003,
+      "independent": 0.6987087517934003,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.ctx20.f1",
+      "author": 0.6987087517934003,
+      "independent": 0.6987087517934003,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.ctx20.f1_ci_95[0]",
+      "author": 0.6682087900693022,
+      "independent": 0.6682087900693022,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.ctx20.f1_ci_95[1]",
+      "author": 0.7269815988175753,
+      "independent": 0.7269815988175753,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.unmatched_cost",
+      "author": -8.75179340020793e-06,
+      "independent": -8.75179340020793e-06,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr1-fvmh0",
+      "author": 0.7849462365591398,
+      "independent": 0.7849462365591398,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr1-mcpm0",
+      "author": 0.6944444444444444,
+      "independent": 0.6944444444444444,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr2-faem0",
+      "author": 0.6882352941176471,
+      "independent": 0.6882352941176471,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr2-marc0",
+      "author": 0.6470588235294118,
+      "independent": 0.6470588235294118,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr3-falk0",
+      "author": 0.6578947368421053,
+      "independent": 0.6578947368421053,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr3-madc0",
+      "author": 0.7040816326530612,
+      "independent": 0.7040816326530612,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr4-falr0",
+      "author": 0.8000000000000002,
+      "independent": 0.8000000000000002,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr4-maeb0",
+      "author": 0.6785714285714286,
+      "independent": 0.6785714285714286,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr5-ftlg0",
+      "author": 0.7272727272727273,
+      "independent": 0.7272727272727273,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr5-mbgt0",
+      "author": 0.6839080459770115,
+      "independent": 0.6839080459770115,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr6-fapb0",
+      "author": 0.5402298850574713,
+      "independent": 0.5402298850574713,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr6-mbma1",
+      "author": 0.702247191011236,
+      "independent": 0.702247191011236,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr7-fblv0",
+      "author": 0.7303370786516854,
+      "independent": 0.7303370786516854,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr7-madd0",
+      "author": 0.6941176470588235,
+      "independent": 0.6941176470588235,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr8-fbcg1",
+      "author": 0.6646341463414634,
+      "independent": 0.6646341463414634,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.A2_brqe.speaker_f1_edge20.dr8-mbcg0",
+      "author": 0.7637362637362637,
+      "independent": 0.7637362637362637,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_proposed - B2_proposed.mean_difference",
+      "author": 0.022628683202753887,
+      "independent": 0.022628683202753887,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_proposed - B2_proposed.p_value_raw",
+      "author": 0.00030517578125,
+      "independent": 0.00030517578125,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_proposed - B2_proposed.p_value_holm",
+      "author": 0.00091552734375,
+      "independent": 0.00091552734375,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.B2_brqe - B2_const.mean_difference",
+      "author": 0.02483819337409074,
+      "independent": 0.02483819337409074,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.B2_brqe - B2_const.p_value_raw",
+      "author": 0.041259765625,
+      "independent": 0.041259765625,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.B2_brqe - B2_const.p_value_holm",
+      "author": 0.08251953125,
+      "independent": 0.08251953125,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_brqe - A2_const.mean_difference",
+      "author": 0.02251315301649262,
+      "independent": 0.02251315301649262,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_brqe - A2_const.p_value_raw",
+      "author": 0.0579833984375,
+      "independent": 0.0579833984375,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_brqe - A2_const.p_value_holm",
+      "author": 0.08251953125,
+      "independent": 0.08251953125,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_proposed - A1_ctc.mean_difference",
+      "author": 0.3390387059635961,
+      "independent": 0.3390387059635961,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_proposed - A1_ctc.p_value_raw",
+      "author": 3.0517578125e-05,
+      "independent": 3.0517578125e-05,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.A2_proposed - A1_ctc.p_value_holm",
+      "author": 0.000152587890625,
+      "independent": 0.000152587890625,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.B2_proposed - B1_whisper_ctc.mean_difference",
+      "author": 0.3249297396351589,
+      "independent": 0.3249297396351589,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.B2_proposed - B1_whisper_ctc.p_value_raw",
+      "author": 3.0517578125e-05,
+      "independent": 3.0517578125e-05,
+      "abs_diff": 0.0,
+      "status": "match"
+    },
+    {
+      "path": "timit.tests.B2_proposed - B1_whisper_ctc.p_value_holm",
+      "author": 0.000152587890625,
+      "independent": 0.000152587890625,
+      "abs_diff": 0.0,
+      "status": "match"
+    }
+  ]
+}

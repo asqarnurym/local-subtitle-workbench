@@ -180,7 +180,7 @@ def analyze_corpus(name: str) -> dict[str, Any]:
                     "check": f"{mode} F1@{tol}",
                     "here": a,
                     "f1_results": b,
-                    "pass": abs(a - b) <= 1e-9,
+                    "pass": bool(abs(a - b) <= 1e-9),
                 }
             )
         for key in ("start", "end"):

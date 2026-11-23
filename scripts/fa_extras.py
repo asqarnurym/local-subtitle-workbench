@@ -187,7 +187,12 @@ def analyze_corpus(name: str) -> dict[str, Any]:
             a = se[f"mean_signed_{key}_ms"]
             b = e1[mode]["breakdowns"][f"word/{key}"]["mean_signed_error_ms"]
             out["sanity"].append(
-                {"check": f"{mode} signed {key}", "here": a, "e1": b, "pass": abs(a - b) <= 0.01}
+                {
+                    "check": f"{mode} signed {key}",
+                    "here": a,
+                    "e1": b,
+                    "pass": bool(abs(a - b) <= 0.01),
+                }
             )
         out["modes"][mode] = {
             "n_failed_clips": d["n_failed"],

@@ -1,6 +1,8 @@
 # Statement bank for the DG 2027 paper
 
 > **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
+>
+> **Check status.** Results (§6) and Table I (§9): checked against the sources on 24.11.2026. Method, Setup, Discussion, Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -441,7 +443,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - by position at segment edges or inside segments;
   - by signed start, end and duration errors.
   - Support: (d) `docs/FA_EXTRAS_PROTOCOL.md`; `docs/FA_EXTRAS_RESULTS.md` line 3 (protocol committed before numbers).
-  - Note: needed if RES-A-09 or RES-B-06 is used without explanation.
+  - Note: needed if RES-A-09 or RES-B-18 is used without explanation.
 - **SET-C-13** [OPTIONAL] If Cliff's delta is reported, define it as in `FORMULAS.md` and add a reference for it.
   - Support: `FORMULAS.md` (note under Eq. 5).
   - Note: no Cliff reference is in `references.bib`, and `BIBLIOGRAPHY_CRITICALITY.md` recommends leaving delta out (§10d).
@@ -469,116 +471,126 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 6. Results (target 1,000 words)
 
+> Checked 24.11.2026 against `docs/CLAIM_LEDGER.csv` and the report JSON files. `AUTHOR:` marks a decision for the author.
+
 ### 6.A Boundary Accuracy with and without a Known Transcript (RQ1; target 380)
 
-- **RES-A-01** [REQUIRED] Table I gives word-boundary MAE, Acc@20, word coverage and boundary F1 at 20 ms for all nine modes on both corpora.
-  - Support: Table I plan (§9).
+- **RES-A-01** [REQUIRED] Table I gives word-boundary MAE, Acc@20, word coverage and boundary F1 at 20 ms for all nine modes on both corpora. MAE and Acc@20 cover matched words only, so scenario A and scenario B values refer to different sets of boundaries; boundary F1 was added as a secondary metric.
+  - Support: Table I plan (§9); CLAIM-114 and CLAIM-115 reasons; matched sets differ per `docs/E1_ANALYSIS_RESULTS.md` §1 ("Это не тест по идентичному набору слов").
 - **RES-A-02** [REQUIRED] With a known transcript, MFA with speaker adaptation (A2) reaches a word-boundary MAE of 19.6 ms [95 % CI 17.8, 21.6] and Acc@20 of 71.1 % on spontaneous speech. CTC alignment of the same text (A1) gives 40.5 ms and 34.0 %.
-  - Support: CLAIM-101.
+  - Support: CLAIM-101. The point values cover each mode's aligned clips (A1 999, A2 997 of 999); the tests use the 997 common clips.
   - Note: CLAIM-101's "p < 0.001, Cliff's delta 0.86" is clip-paired. The paper's tests are speaker-level (RES-A-05; §10d).
-- **RES-A-03** [REQUIRED] Without a transcript, the proposed pipeline (B2) lowers word-boundary MAE from 126.5 ms for Whisper's timestamps (B0) and 41.3 ms for Whisper with CTC (B1) to 30.1 ms [25.9, 34.5], with Acc@20 of 69.0 % at a word coverage of 89.0 %.
-  - Support: CLAIM-102.
-  - Note: coverage is mandatory beside B numbers (CLAIM-102 reason).
-- **RES-A-04** [REQUIRED] On read speech (TIMIT), MFA reaches 20.3 ms with the known transcript (A2) and 20.5 ms with Whisper's text (B2, coverage 97.63 %). CTC gives 36.9 ms and Whisper's timestamps 153.0 ms.
-  - Support: CLAIM-106; coverage (b) `docs/E1_ANALYSIS_RESULTS.md` §3 ("97.63% для B2") and `reports/timit/benchmark_results.json` modes.B2_proposed.word_metrics.coverage = 0.9763.
-- **RES-A-05** [REQUIRED] Speaker by speaker on Buckeye, MFA beats CTC with the known transcript for 20 of 20 speakers. B2 beats B0 for 20 and B1 for 19 of 20 speakers (exact Wilcoxon, Holm p = 1.34 × 10⁻⁵ in each case). On TIMIT the same comparisons favour MFA for 15 or 16 of 16 speakers (Holm p ≤ 0.0004).
-  - Support: (b) `reports/e1_analysis_20261102/analysis.json` corpora.buckeye.speaker_comparisons.{A2_vs_A1, B2_vs_B0, B2_vs_B1}.n_speakers_improved (20, 20, 19) and .p_value_holm (1.335e-05). Corpora.timit.speaker_comparisons: 15, 16, 15 speakers; Holm p 0.000366, 0.000214, 0.000366. `docs/E1_ANALYSIS_RESULTS.md` §2.
-  - Note: **needs CLAIM before submission**.
+- **RES-A-03** [REQUIRED] Without a transcript, the proposed pipeline (B2) gives a word-boundary MAE of 30.1 ms [25.9, 34.5] and Acc@20 of 69.0 % at a word coverage of 89.0 %. Whisper's timestamps (B0) give 126.5 ms (coverage 88.8 %) and Whisper with CTC (B1) 41.3 ms (coverage 89.0 %).
+  - Support: CLAIM-102; B0 and B1 coverage (b) `reports/buckeye/benchmark_results.json` modes.{B0_whisper, B1_whisper_ctc}.word_metrics.coverage = 0.888, 0.8897.
+  - Note: coverage is mandatory beside B numbers; RES-A-08 must follow closely (CLAIM-115 reason).
+- **RES-A-04** [REQUIRED] On read speech (a TIMIT sample of 160 utterances and 16 speakers), MFA reaches 20.3 ms with the known transcript (A2) and 20.5 ms with Whisper's text (B2, coverage 97.6 %). CTC gives 36.9 ms in both scenarios (B1 coverage 97.6 %) and Whisper's timestamps 153.0 ms (coverage 97.4 %).
+  - Support: CLAIM-106 (reason: NLTK sample, not the full LDC corpus); coverage (b) `reports/timit/benchmark_results.json` word_metrics.coverage: B0 0.9735, B1 and B2 0.9763.
+- **RES-A-05** [REQUIRED] Speaker by speaker on Buckeye, MFA has a lower MAE than CTC with the known transcript for 20 of 20 speakers; B2 has a lower MAE than B0 for 20 and than B1 for 19 of 20 speakers (exact Wilcoxon, Holm p < 0.0001 in each case). On TIMIT the same three comparisons favour MFA for 15, 16 and 15 of 16 speakers (Holm p < 0.0004). These tests were added after the clip-level results were known.
+  - Support: (b) `reports/e1_analysis_20261102/analysis.json` corpora.buckeye.speaker_comparisons.{A2_vs_A1, B2_vs_B0, B2_vs_B1}.n_speakers_improved = 20, 20, 19 and .p_value_holm = 1.335e-05; corpora.timit: 15, 16, 15 and 0.000366, 0.000214, 0.000366. `docs/E1_ANALYSIS_RESULTS.md` intro (protocol fixed after the original results) and §2.
+  - Note: **needs CLAIM before submission**. Common clips (997 and 160), not identical word sets.
 - **RES-A-06** [REQUIRED] The secondary boundary F1 at 20 ms, which charges missed and inserted words, gives the same conclusions on Buckeye: the known transcript beats Whisper's text (0.710 vs 0.624), and MFA beats CTC. Each difference holds for all 20 speakers (exact Wilcoxon, Holm p < 0.001).
   - Support: CLAIM-114.
   - Note: "secondary" must stay (CLAIM-114 reason).
-- **RES-A-07** [OPTIONAL] Under this F1, CTC reaches 0.340 with the known transcript (A1) and 0.311 with Whisper's text (B1).
+- **RES-A-07** [OPTIONAL] Under this F1, CTC reaches 0.340 with the known transcript (A1) and 0.311 with Whisper's text (B1, word coverage 89.0 %) on Buckeye.
   - Support: (b) `reports/f1_20261123/f1_results.json` corpora.buckeye.modes.A1_ctc.edge20.f1 = 0.3398 and B1_whisper_ctc.edge20.f1 = 0.3105; `docs/F1_RESULTS.md` §1.
   - Note: **needs CLAIM before submission**. These are also Table I cells.
-- **RES-A-08** [REQUIRED] Scored over all reference boundaries, scenario-B recall at 20 ms on Buckeye is 7.7 to 8.3 points below the matched-word Acc@20 (about 11 % relative), so matched-word scores for recognized text are optimistic. For the known transcript the gap is 0.3 points.
-  - Support: CLAIM-115.
-- **RES-A-09** [REQUIRED] Boundaries between two correctly recognized words are placed equally well with recognized and with known text (recall at 20 ms 0.728 vs 0.731), but recognized text has fewer such boundaries (74 % vs 89 % of reference boundaries). The scenario-B loss therefore comes from recognition, not alignment; this descriptive analysis has no significance test.
-  - Support: CLAIM-117 (reason: descriptive, no test, secondary analysis after FA-Bench).
-- **RES-A-10** [REQUIRED] Fig. 2 shows boundary F1 against tolerance. On Buckeye, F1 for Whisper's text with MFA levels off near 0.86 (0.864 at 100 ms, word coverage 89.0 %), because no tolerance recovers missed or misrecognized words.
-  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.buckeye.modes.B2_proposed.f1_sweep["100"].f1 = 0.864; `docs/FA_EXTRAS_RESULTS.md` §3 ("Потолок сценария B"); coverage CLAIM-102.
-  - Note: **needs CLAIM before submission**. `main.tex` plans this figure and the 0.86 ceiling.
-- **RES-A-11** [OPTIONAL] From 70 ms on, CTC with the known transcript (A1) exceeds MFA with Whisper's text (B2): 0.850 vs 0.846 at 70 ms and 0.933 vs 0.864 at 100 ms. On TIMIT, where Whisper errs less, the curves do not cross.
-  - Support: (b) fa_extras.json corpora.buckeye.modes.{A1_ctc, B2_proposed}.f1_sweep["70"] and ["100"]; `docs/FA_EXTRAS_RESULTS.md` §3.
-  - Note: **needs CLAIM before submission**.
-- **RES-A-12** [OPTIONAL] On TIMIT, the known transcript adds less (F1 0.684 vs 0.661, better for 14 of 16 speakers, Holm p = 0.0009), in line with Whisper's higher word coverage there (97.63 %).
-  - Support: (b) `reports/f1_20261123/f1_results.json` corpora.timit.modes.{A2_proposed, B2_proposed}.edge20.f1 and tests_edge20["A2_proposed - B2_proposed"] (n_worse = 14, which counts speakers where the first mode is better, per `F1_RESULTS.md` §6 item 9; p_value_holm = 0.000916); `docs/F1_RESULTS.md` §2.
-  - Note: **needs CLAIM before submission**.
+- **RES-A-08** [REQUIRED] Scored over all reference boundaries, the scenario-B recall at 20 ms of the MFA modes on Buckeye is 7.7 to 8.3 points below the matched-word Acc@20 (about 11 % relative), so matched-word scores for recognized text are optimistic. For the known transcript the gap is 0.3 points.
+  - Support: CLAIM-115; recomputed from Acc@20 minus edge20.recall: B2 7.7, B2+const 7.7, B2+BRQE 8.3; A2 and A2+BRQE 0.3.
+  - Note: "of the MFA modes" was added because B1 (3.8 points) and B0 (0.8 points) lie outside the range. `AUTHOR:` CLAIM-115 says "scenario-B recall" without this limit.
+- **RES-A-09** [REQUIRED] A post-hoc observation, made without a protocol and with MFA before BRQE: on Buckeye, recognized text has fewer reference boundaries between two correctly recognized words than known text (74 % vs 89 %), and on the same such boundaries its error is larger (MAE 26.1 vs 17.6 ms; errors above 100 ms 3.2 % vs 1.4 %) at an equal median of 10.0 ms. On TIMIT the MAE on these boundaries is about the same (17.9 vs 17.8 ms). We do not attribute the loss to a cause.
+  - Support: CLAIM-117 (24.11.2026 wording); shares `fa_extras.json` groups.M2I.share (0.741, 0.887); the rest `reports/claim117_recheck_20261124/output.txt` (n = 13,570 and 2,358 common boundaries).
+  - Note: "post-hoc" must stay. The recheck is not independently checked. Do not write that the loss comes from recognition rather than alignment, and do not compare recall 0.728 with 0.731 (different boundary sets).
+- **RES-A-10** [REQUIRED] Fig. 2 shows boundary F1 against tolerance. On Buckeye, F1 for Whisper's text with MFA rises only from 0.846 at 70 ms to 0.864 at 100 ms (word coverage 89.0 %), against 0.978 at 100 ms with the known transcript. Words that Whisper missed or misrecognized count as errors at every tolerance.
+  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.buckeye.modes.{B2_proposed, A2_proposed}.f1_sweep["70"], ["100"]; last sentence is the metric definition (`FORMULAS.md` Eq. 3a); coverage CLAIM-102.
+  - Note: **needs CLAIM before submission**. Tolerances above 100 ms were not computed, so "ceiling" and "levels off" are not used.
+- **RES-A-11** [OPTIONAL] On Buckeye from 70 ms on, CTC with the known transcript (A1) has a higher F1 than MFA with Whisper's text (B2, word coverage 89.0 %): 0.850 vs 0.846 at 70 ms and 0.933 vs 0.864 at 100 ms. On TIMIT this happens only at 100 ms (0.964 vs 0.956, B2 word coverage 97.6 %).
+  - Support: (b) fa_extras.json corpora.*.modes.{A1_ctc, B2_proposed}.f1_sweep["70"], ["90"], ["100"]; TIMIT at 90 ms 0.945 vs 0.949.
+  - Note: **needs CLAIM before submission**; descriptive, no test. `docs/FA_EXTRAS_RESULTS.md` §3 says there is no crossing on TIMIT; its own JSON shows one at 100 ms. `AUTHOR:` correct that document.
+- **RES-A-12** [OPTIONAL] On TIMIT, the F1 difference between known and recognized text is smaller (0.684 vs 0.661 at a word coverage of 97.6 %); the known transcript is better for 14 of 16 speakers (Holm p = 0.0009).
+  - Support: (b) `reports/f1_20261123/f1_results.json` corpora.timit.modes.{A2_proposed, B2_proposed}.edge20.f1 and tests_edge20["A2_proposed - B2_proposed"] (n_worse = 14 counts speakers where the first mode is better, `F1_RESULTS.md` §6 item 9; one tie, one worse; p_value_holm = 0.000916).
+  - Note: **needs CLAIM before submission**. Corpora differ in more than coverage; no explanation is given.
 - **RES-A-13** [OPTIONAL] MFA failed on 2 of 999 Buckeye clips in both scenarios, at its beam limit. In boundary F1 these clips count as misses.
   - Support: CLAIM-101 reason; (b) `reports/f1_20261123/f1_results.json` corpora.buckeye.modes.A2_proposed.n_failed_clips = 2; `FORMULAS.md` Eq. 3a.
 
 ### 6.B Boundary Refinement and Reliability (RQ2; target 400)
 
-- **RES-B-01** [REQUIRED] On the 20 Buckeye test speakers, BRQE lowers word MAE from 19.6 to 17.0 ms with the known transcript (A2) and from 30.1 to 27.7 ms with Whisper's text (B2, coverage 89.0 %). It raises Acc@20 from 71.1 % to 76.8 % and from 69.0 % to 74.9 %.
-  - Support: CLAIM-103.
-- **RES-B-02** [OPTIONAL] Against the constant-offset rival, the clip-paired difference is significant (p < 0.001) with a small effect (Cliff's delta 0.23 for A2 and 0.17 for B2).
+- **RES-B-01** [REQUIRED] On the 20 Buckeye test speakers, BRQE lowers word MAE from 19.6 to 17.0 ms with the known transcript (A2) and from 30.1 to 27.7 ms with Whisper's text (B2, coverage 89.0 %). It raises Acc@20 from 71.1 % to 76.8 % and from 69.0 % to 74.9 %, respectively.
+  - Support: CLAIM-103 (reason: inclusion decided by the pre-registered CV rule before test numbers existed). BRQE moves boundaries of the same words, so each before/after pair uses the same boundary set.
+- **RES-B-02** [OPTIONAL] Against the constant-offset rival, the clip-paired difference is significant (Holm p < 0.001) with a small effect (Cliff's delta 0.23 for A2 and 0.17 for B2).
   - Support: CLAIM-103.
   - Note: needs a delta definition and a Cliff reference, which the bib lacks (SET-C-13). RES-B-03 can replace it.
-- **RES-B-03** [REQUIRED] Speaker by speaker, BRQE beats the constant offset for 20 of 20 test speakers in both scenarios (exact Wilcoxon, Holm p = 1.34 × 10⁻⁵).
+- **RES-B-03** [REQUIRED] Speaker by speaker, BRQE has a lower word MAE than the constant offset for 20 of 20 test speakers in both scenarios (exact Wilcoxon, Holm p < 0.0001; speaker-level tests added after the clip-level results; B2 coverage 89.0 %).
   - Support: (b) `reports/e1_analysis_20261102/analysis.json` corpora.buckeye.speaker_comparisons.{A2brqe_vs_A2const, B2brqe_vs_B2const}.n_speakers_improved = 20, p_value_holm = 1.335e-05; `docs/E1_ANALYSIS_RESULTS.md` §2; evidence of accepted contribution 1 (`TITLE_KEYWORDS_RQ.md` line 59).
   - Note: **needs CLAIM before submission**.
-- **RES-B-04** [REQUIRED] Under the secondary boundary F1 at 20 ms, BRQE also beats the constant offset in both scenarios for all 20 speakers (exact Wilcoxon, Holm p < 0.001): 0.766 vs 0.707 with the known transcript, and 0.677 vs 0.621 with Whisper's text.
+- **RES-B-04** [REQUIRED] Under the secondary boundary F1 at 20 ms, BRQE also beats the constant offset in both scenarios for all 20 speakers (exact Wilcoxon, Holm p < 0.001): 0.766 vs 0.707 with the known transcript, and 0.677 vs 0.621 with Whisper's text (word coverage 89.0 %).
   - Support: CLAIM-114.
-- **RES-B-05** [OPTIONAL] The constant offset is a weak rival, because MFA's mean signed errors are already within about ±6 ms. BRQE instead narrows the spread: for example, the mean absolute word-duration error falls from 28.1 to 24.6 ms (A2).
-  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.*.modes.{A2_proposed, B2_proposed}.signed.mean_signed_start_ms and mean_signed_end_ms (−6.2 to +6.3 ms); corpora.buckeye.modes.A2_proposed.signed.mean_abs_duration_ms = 28.08 and A2_brqe = 24.58; `docs/FA_EXTRAS_RESULTS.md` §4.
-  - Note: **needs CLAIM before submission**.
-- **RES-B-06** [REQUIRED] BRQE's largest corrections are at the ends of speech segments, where MFA is least accurate. On Buckeye, recall at 20 ms of the segment-final boundary rises from 0.41–0.44 to 0.75–0.76, and segment edges (9 % of boundaries) give about 40 % of the recall gain; on read speech (TIMIT) the gain is at segment edges only.
-  - Support: CLAIM-118 (reason: descriptive, no test).
-  - Note: add "(descriptive)" or place after SET-C-12. The ledger reads "recall gain"; `TITLE_KEYWORDS_RQ.md` reads "F1 recall gain". The ledger wording is used.
-- **RES-B-07** [OPTIONAL] On Buckeye, BRQE's F1 gain is largest at tight tolerances (0.07 to 0.08 at 10 ms) and disappears by 100 ms (0.863 vs 0.864 with Whisper's text, 0.978 for both with the known transcript).
-  - Support: (b) fa_extras.json corpora.buckeye.modes.{A2_brqe, A2_proposed, B2_brqe, B2_proposed}.f1_sweep["10"] (0.582 vs 0.502; 0.512 vs 0.439) and ["100"]; `docs/FA_EXTRAS_RESULTS.md` §3.
-  - Note: **needs CLAIM before submission**. Readable from Fig. 2.
-- **RES-B-08** [REQUIRED] The reliability head detects words whose MFA boundary error exceeds 20 ms with ROC-AUC 0.756 (A2) and 0.749 (B2). Rejecting the 30 % least reliable words lowers word MAE from 17.0 to 14.7 ms (A2) and from 27.7 to 25.1 ms (B2, coverage 89.0 %), as Fig. 3 shows.
+- **RES-B-05** [OPTIONAL] The mean signed errors of MFA are small (within about ±6 ms for word starts and ends, both corpora), which leaves little for a constant offset to correct. BRQE lowers the mean absolute word-duration error on Buckeye from 28.1 to 24.6 ms (A2).
+  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.*.modes.{A2_proposed, B2_proposed}.signed (−6.15 to +6.33 ms); corpora.buckeye.modes.{A2_proposed, A2_brqe}.signed.mean_abs_duration_ms = 28.08, 24.58.
+  - Note: **needs CLAIM before submission**. "Narrows the spread" was removed: no dispersion of signed errors was computed. If this is used to explain the source of the BRQE gain, RES-B-18 must be used as well.
+- **RES-B-06** [REMOVED 24.11.2026] Rested on CLAIM-118, which is withdrawn from the paper. See RES-B-18.
+- **RES-B-07** [OPTIONAL] On Buckeye, BRQE's F1 gain over MFA is largest at the 10 ms tolerance (0.582 vs 0.502 with the known transcript; 0.512 vs 0.439 with Whisper's text) and is gone at 100 ms (0.978 for both; 0.863 vs 0.864). Word coverage with Whisper's text is 89.0 %.
+  - Support: (b) fa_extras.json corpora.buckeye.modes.{A2_brqe, A2_proposed, B2_brqe, B2_proposed}.f1_sweep["10"] to ["100"]; `docs/FA_EXTRAS_RESULTS.md` §3.
+  - Note: **needs CLAIM before submission**; descriptive, no test. Readable from Fig. 2.
+- **RES-B-08** [REQUIRED] On Buckeye test speakers, the reliability head detects words for which the larger of the two MFA boundary errors exceeds 20 ms, with ROC-AUC 0.756 (A2) and 0.749 (B2). Rejecting the 30 % least reliable words lowers word MAE from 17.0 to 14.7 ms (A2) and from 27.7 to 25.1 ms (B2, coverage 89.0 % before rejection), as Fig. 3 shows.
   - Support: CLAIM-105; Fig. 3 data (b) `reports/buckeye/benchmark_results.json` modes.{A2_brqe, B2_brqe}.quality_estimation.word_mae_after_rejection_ms.
 - **RES-B-09** [REQUIRED] About half of the words carry the error label (positive rate 0.50–0.52).
   - Support: CLAIM-105 reason ("positive rate 0.50–0.52").
-- **RES-B-10** [REQUIRED] Rejection improves accuracy on the words that remain at the cost of leaving the rejected words unscored. It is not a measured benefit of manual correction.
+- **RES-B-10** [REQUIRED] The figures after rejection describe only the words that are kept. Use of the score for manual review was not measured.
   - Support: `docs/E1_ANALYSIS_RESULTS.md` §4, last paragraph; CLAIM-105 reason.
-- **RES-B-11** [REQUIRED] BRQE, trained on spontaneous speech, does not significantly improve read speech. On TIMIT (160 utterances, 16 speakers), word MAE changes from 20.3 to 19.9 ms (A2) and from 20.5 to 20.1 ms (B2, coverage 97.63 %), p = 0.24–0.27, a negligible effect.
+- **RES-B-11** [REQUIRED] BRQE, trained on spontaneous speech, does not significantly improve read speech. On TIMIT (160 utterances, 16 speakers), word MAE changes from 20.3 to 19.9 ms (A2) and from 20.5 to 20.1 ms (B2, coverage 97.63 %), clip-paired Holm p = 0.24–0.27, a negligible effect.
   - Support: CLAIM-104 (clip-paired Holm p); coverage as in RES-A-04.
   - Note: reported as a limitation, without attributing it to speaking style (CLAIM-104 reason).
-- **RES-B-12** [OPTIONAL] Speaker by speaker, 11 or 12 of 16 TIMIT speakers improve, and no BRQE comparison is significant (Holm p = 0.467). Under boundary F1, the gain over the constant offset (0.023 to 0.025) is not significant either (Holm p = 0.083).
-  - Support: (b) `reports/e1_analysis_20261102/analysis.json` corpora.timit.speaker_comparisons.*brqe* (n_speakers_improved 11–12, p_value_holm = 0.4667); `docs/E1_ANALYSIS_RESULTS.md` §2; `reports/f1_20261123/f1_results.json` corpora.timit.tests_edge20 (p_value_holm = 0.0825); `docs/F1_RESULTS.md` §2.
+- **RES-B-12** [OPTIONAL] Speaker by speaker, 11 or 12 of 16 TIMIT speakers improve, and no BRQE comparison on MAE is significant (Holm p = 0.467). Under the secondary boundary F1, the mean per-speaker gain over the constant offset (0.023 with the known transcript, 0.025 with Whisper's text, coverage 97.6 %) is not significant either (Holm p = 0.083; 10 of 16 speakers improve). This does not show that there is no effect.
+  - Support: (b) `reports/e1_analysis_20261102/analysis.json` corpora.timit.speaker_comparisons.*brqe* (12, 12, 12, 11; p_value_holm = 0.4667); `docs/E1_ANALYSIS_RESULTS.md` §2; `reports/f1_20261123/f1_results.json` corpora.timit.tests_edge20 (mean_difference 0.0225 and 0.0248, n_worse = 10, p_value_holm = 0.0825).
   - Note: **needs CLAIM before submission**.
-- **RES-B-13** [REQUIRED] On TIMIT, BRQE beats MFA only at 10 and 20 ms tolerances and is worse from 30 ms on: at 30 ms, F1 is 0.779 vs 0.792 with Whisper's text (coverage 97.63 %) and 0.800 vs 0.816 with the known transcript.
-  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.timit.modes.{B2_brqe, B2_proposed, A2_brqe, A2_proposed}.f1_sweep["30"].f1; `docs/FA_EXTRAS_RESULTS.md` §3.
-  - Note: **needs CLAIM before submission**. Required by the task (negative result).
-- **RES-B-14** [OPTIONAL] Across pitch-preserving tempo changes, BRQE keeps a 2.8–3.5 ms gain over MFA on Buckeye. On TIMIT it does not improve, and at 1.25 it is worse than MFA (21.8 vs 20.2 ms).
+- **RES-B-13** [REQUIRED] On TIMIT, BRQE's F1 is higher than MFA's at tolerances of 10 and 20 ms and lower from 30 to 80 ms; at 30 ms it is 0.779 vs 0.792 with Whisper's text (coverage 97.6 %) and 0.800 vs 0.816 with the known transcript. At 90 and 100 ms the two differ by less than 0.002. No test was run.
+  - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.timit.modes.{B2_brqe, B2_proposed, A2_brqe, A2_proposed}.f1_sweep["10"] to ["100"].
+  - Note: **needs CLAIM before submission**. "Worse from 30 ms on" was corrected: at 90 ms B is equal (0.94918) and A is higher with BRQE (0.97489 vs 0.97453).
+- **RES-B-14** [OPTIONAL] With the known transcript and pitch-preserving tempo changes from 0.8 to 1.25, BRQE keeps a 2.8–3.5 ms gain over MFA on Buckeye (speaker-mean MAE on the original speech scale). On TIMIT it does not improve, and at a speed factor of 1.25 it is worse than MFA (21.8 vs 20.2 ms).
   - Support: CLAIM-113.
-  - Note: use here or in DIS-14, not both.
-- **RES-B-15** [REQUIRED] In 5-fold speaker cross-validation on the training speakers, the inclusion rule held in 9 of 9 hyperparameter variants (epochs, window, hidden size, loss weight), and word MAE moved by at most 0.498 ms from the default.
+  - Note: use here or in DIS-14, not both. Means over speakers, so A2 at tempo 1.0 (18.2 ms) differs from the pooled value of CLAIM-101 (19.6 ms); `docs/S2_RESULTS.md` §1. Add "vocoder tempo is not natural fast speech" (CLAIM-111 reason).
+- **RES-B-15** [REQUIRED] In 5-fold speaker cross-validation on the training speakers only, the inclusion rule held in both scenarios for all 9 configurations: the default and 8 that change one setting (epochs, window, hidden size or loss weight; one seed each). Word MAE moved by at most 0.5 ms from the default.
   - Support: (b) `reports/brqe_sensitivity_20261102/summary.json` rule_6_5_holds = "9/9", max_abs_word_mae_delta_vs_baseline_ms = 0.498; `docs/BRQE_SENSITIVITY_RESULTS.md`.
-  - Note: **needs CLAIM before submission**. Training speakers only, one seed per variant.
-- **RES-B-16** [OPTIONAL] On TIMIT, BRQE lowers word-end errors (20.74 to 18.89 ms, known text) but raises word-start errors (19.78 to 20.89 ms), while on Buckeye both improve.
+  - Note: **needs CLAIM before submission**. No test among configurations. The default was not the lowest (6 epochs: 16.06 vs 16.46 ms in A).
+- **RES-B-16** [OPTIONAL] On TIMIT, BRQE lowers word-end errors (20.74 to 18.89 ms, known text) but raises word-start errors (19.78 to 20.89 ms), while on Buckeye both are lower with BRQE (A2 starts 19.70 to 17.27 ms, ends 19.42 to 16.68 ms). Descriptive, no test.
   - Support: (b) `docs/E1_ANALYSIS_RESULTS.md` §4 table; `reports/e1_analysis_20261102/analysis.json` corpora.*.modes.*.breakdowns.
   - Note: **needs CLAIM before submission**.
-- **RES-B-17** [OPTIONAL] On 10-minute recordings that aligned, the reliability score kept ROC-AUC 0.740 (A2) and 0.731 (B2).
+- **RES-B-17** [OPTIONAL] On the 10-minute recordings that aligned (14 of 20 for A2, 8 of 20 for B2, coverage 91.4 %), the reliability score had ROC-AUC 0.740 (A2) and 0.731 (B2).
   - Support: (b) `docs/S1B_RESULTS.md` §2; `reports/s1b_long_20261103/analysis.json`.
   - Note: **needs CLAIM before submission**; survivors only.
+- **RES-B-18** [OPTIONAL] About 40 % of BRQE's gain in recall at 20 ms on Buckeye falls on the edges of our cut clips (9 % of reference boundaries with Whisper's text, 11 % with the known transcript). These are clip edges, not ends of speech.
+  - Support: (b) fa_extras.json corpora.buckeye.modes.{A2_proposed, A2_brqe, B2_proposed, B2_brqe}.groups.{M1B, M1E}: edge part of the gain 39 % (A2) and 38 % (B2); edge shares 0.108 and 0.089; `TITLE_KEYWORDS_RQ.md`, CLAIM-117 and 118.
+  - Note: **needs CLAIM before submission**; descriptive. Required if any text explains the source of the BRQE gain; otherwise leave out. The 9 % in the withdrawn CLAIM-118 is the B2 share only.
 
 ### 6.C Long Recordings (RQ3; target 220)
 
-- **RES-C-01** [REQUIRED] The pre-registered seam check used 20 one-minute recordings. With overlap-and-stitch, the excess word-boundary error near chunk seams, relative to one-chunk alignment, fell from +111.8 to −0.4 ms (A2) and from +125.3 to −15.4 ms (B2). The threshold was 10 ms.
-  - Support: CLAIM-107 (reason: pre-registered check C on 20 L01 recordings); threshold and "near" definition from (d) `FORMULAS.md` Eq. 12 (`eq:seam`).
-- **RES-C-02** [REQUIRED] With the known transcript, word MAE on recordings that align stays at 19.2–20.4 ms for lengths of 1 to 10 minutes, and the per-speaker length effect is −0.2 ms [−1.2, 0.4] over 14 speakers. These figures cover surviving recordings only.
-  - Support: CLAIM-108 (reason: survivors only; 14 of 20 speakers).
-- **RES-C-03** [REQUIRED] Failed recordings rise with length (A2: 0, 3 and 6 of 20; B2: 2, 7 and 12 of 20). The share of failed chunks stays at about 1.3–1.5 % (A2, 5 and 10 min) and 3.9–4.8 % (B2).
-  - Support: CLAIM-109; Fig. 4 (optional).
-- **RES-C-04** [REQUIRED] One failed chunk fails the whole recording, so more chunks mean more failed recordings. This explanation is descriptive and was not tested.
+- **RES-C-01** [REQUIRED] The seam check was pre-registered with a threshold of 10 ms and run on 20 one-minute recordings. It measures the excess word-boundary error near chunk seams relative to one-chunk alignment of the same words. The original chunking failed it (+111.8 ms for A2, +125.3 ms for B2). Overlap-and-stitch, run on the same recordings, passed it (−0.4 ms and −15.4 ms).
+  - Support: CLAIM-107; both `seam_check.json` files (pass = false, true); threshold and "near" definition from (d) `FORMULAS.md` Eq. 12 (`eq:seam`); amendment 3 of `docs/S1B_SEAM_SAFE_PROTOCOL.md` (criterion unchanged, fixed before the full check).
+  - Note: 19 recordings enter each stitch comparison (one-chunk alignment failed for s34 in A; s15 failed in B). The two checks use different seams (A 584 vs 526 near boundaries; B 482 vs 458), so "fell from … to …" is not a comparison on one set; "failed, then passed" is used. `AUTHOR:` CLAIM-107 says "falls from … to …" and "20 L01 recordings".
+- **RES-C-10** [REQUIRED] The overlap-and-stitch design was chosen on 6 of these 20 recordings, so the check is not independent of the choice. The negative B2 value reflects a high one-chunk error on these words (91.3 ms, against 75.9 ms with chunks, on 458 boundaries) and is not read as an improvement.
+  - Support: (b) `docs/S1B_MICROTEST_FINDINGS.md` §1 (sample: s07, s09, s11, s20, s27, s34, s37); `seam_check.json` (stitch) results.B.near_mae_single_ms, near_mae_multi_ms.
+  - Note: added in the check; **needs CLAIM before submission**. The list names 7 speakers because the deterministic-failure recording differs by scenario (s34 in A, s07 in B). `AUTHOR:` keep here or move to Limitations.
+- **RES-C-02** [REQUIRED] With the known transcript, word MAE on recordings that align is 19.4, 19.2 and 20.4 ms at 1, 5 and 10 minutes (20, 17 and 14 of 20 recordings). On the same words aligned inside the 10-minute recording and in the 1-minute recording, the per-speaker difference is −0.2 ms [−1.2, 0.4] over 14 speakers. These figures cover surviving recordings only, and the absence of a length effect is not claimed.
+  - Support: CLAIM-108 (reason: survivors only; 14 of 20 speakers); same-words definition `docs/S1_LONG_RECORDINGS_PROTOCOL.md` H3; `docs/S1B_RESULTS.md` §2–3 (Holm p = 1).
+- **RES-C-03** [REQUIRED] Failed recordings rise with length (A2: 0, 3 and 6 of 20; B2: 2, 7 and 12 of 20). The share of failed chunks is 0 %, 1.5 % and 1.3 % for A2 and 4.8 %, 3.9 % and 4.6 % for B2.
+  - Support: CLAIM-109; `docs/MFA_FAILURE_BACKLOG.md` §1 table (A2 0/62, 4/269, 7/533; B2 3/62, 10/257, 23/501); Fig. 4 (optional).
+  - Note: CLAIM-109 gives the A2 range for 5 and 10 min only; the 0 of 62 at 1 min is stated so that "stays constant" is not implied.
+- **RES-C-04** [REQUIRED] One failed chunk fails the whole recording, so a longer recording has more chances to fail. This explanation is descriptive and was not tested.
   - Support: CLAIM-109 (reason: "descriptive, not a tested hypothesis").
-- **RES-C-05** [REQUIRED] Without word anchors, 15, 20 and 20 of 20 recordings fail at 1, 5 and 10 minutes. Anchoring is therefore required, and its effect on error cannot be tested.
+- **RES-C-05** [REQUIRED] Without word anchors, 15, 20 and 20 of 20 recordings fail at 1, 5 and 10 minutes. This ablation (A2) shows that the pipeline needs anchoring; the effect of anchoring on error cannot be tested.
   - Support: CLAIM-110.
-- **RES-C-06** [OPTIONAL] With Whisper's text, surviving long recordings have higher error than short clips: word MAE is 49.1, 52.2 and 51.6 ms at 1, 5 and 10 minutes, with 2, 7 and 12 failures, and coverage is 91.35 % at 10 minutes.
-  - Support: (b) `docs/S1B_RESULTS.md` §2; `reports/s1b_long_20261103/analysis.json`.
-  - Note: **needs CLAIM before submission**. Recommended: reporting A2 long-recording errors without B2 could read as selective (§10d).
-- **RES-C-07** [OPTIONAL] BRQE keeps its gain on long recordings with the known transcript (17.2, 17.0 and 18.0 ms against 19.4, 19.2 and 20.4 ms for A2).
-  - Support: (b) `docs/S1B_RESULTS.md` §2.
-  - Note: **needs CLAIM before submission**; survivors.
-- **RES-C-08** [OPTIONAL] CTC alignment never failed on long recordings, at word MAE of 43.3–45.1 ms (A1) and 44.9–47.5 ms (B1).
-  - Support: (b) `docs/S1B_RESULTS.md` §2.
-  - Note: **needs CLAIM before submission**.
-- **RES-C-09** [OPTIONAL] A test for error drift within recordings was not significant (A2: +3.79 ms, 95 % CI −1.72 to +11.65, 14 speakers, Holm p = 1). By protocol, this does not establish that drift is absent.
-  - Support: (b) `docs/S1B_RESULTS.md` §3 (H1), and the rule that an absence is never claimed from a non-significant test.
-  - Note: **needs CLAIM before submission**.
+- **RES-C-06** [OPTIONAL] With Whisper's text, word MAE on the long recordings that aligned is 49.1, 52.2 and 51.6 ms at 1, 5 and 10 minutes (coverage 88.9 %, 89.6 % and 91.4 %; 18, 13 and 8 of 20 recordings).
+  - Support: (b) `docs/S1B_RESULTS.md` §2; `reports/s1b_long_20261103/analysis.json` runs.{L01,L05,L10}_anchored.modes.B2_proposed.word.{mae_ms, coverage}.
+  - Note: **needs CLAIM before submission**. The comparison with short clips was removed: the words and recordings differ. Recommended to keep, because A2 without B2 could read as selective (§10d).
+- **RES-C-07** [OPTIONAL] On the long recordings that aligned with the known transcript, word MAE with BRQE is 17.2, 17.0 and 18.0 ms against 19.4, 19.2 and 20.4 ms for A2 on the same recordings.
+  - Support: (b) `docs/S1B_RESULTS.md` §2; analysis.json (A2_proposed and A2_brqe fail on the same recordings).
+  - Note: **needs CLAIM before submission**; survivors; no test.
+- **RES-C-08** [OPTIONAL] CTC alignment failed on none of the long recordings. Its word MAE over all 20 recordings is 43.3–45.1 ms (A1) and 44.9–47.5 ms (B1, coverage 88.7–91.1 %).
+  - Support: (b) `docs/S1B_RESULTS.md` §2; analysis.json A1_ctc, B1_whisper_ctc.
+  - Note: **needs CLAIM before submission**. Not comparable with the survivor-only MFA values; do not place them side by side without saying so.
+- **RES-C-09** [OPTIONAL] A test for error drift between the first and the last two minutes of the 10-minute recordings was not significant for A2 (+3.79 ms, 95 % CI −1.72 to +11.65, 14 speakers, Holm p = 1) or B2 (−35.20 ms, −84.01 to −2.01, 8 speakers, Holm p = 0.44). By protocol, this does not establish that drift is absent.
+  - Support: (b) `docs/S1B_RESULTS.md` §3 (H1, H2); `docs/S1_LONG_RECORDINGS_PROTOCOL.md` H1 (minutes [8, 10) minus [0, 2)).
+  - Note: **needs CLAIM before submission**; survivors. B2 added so that only the better result is not shown.
 
 ---
 
@@ -692,14 +704,14 @@ At most 3 data figures plus the pipeline diagram (`ARTIFACT_VALIDATION.md` §5).
 | ID | File | Section | Caption statement | Data source | Status |
 |---|---|---|---|---|---|
 | Fig. 1 | author's pipeline diagram (to draw) | III-A | M-A-09 | `PSEUDOCODE.md` Algorithm 1 | REQUIRED; author draws |
-| Fig. 2 | `reports/fa_extras_20261123/f1_tolerance_en.pdf` | V-A, also V-B | "Boundary F1 against matching tolerance (10–100 ms) on Buckeye (left) and TIMIT (right); shaded bands are 95 % speaker-bootstrap intervals. Missed and inserted words count as errors, so curves for Whisper's text level off below 1." | `fa_extras.json` corpora.*.modes.*.f1_sweep (f1, f1_ci_95; bands drawn from f1_ci_95, `scripts/render_fa_extras.py` lines 51–54) | REQUIRED. No hash manifest exists; figure produced at clean revision `49acdc5` (`FA_EXTRAS_RESULTS.md` line 3). Constant-offset modes are not drawn |
+| Fig. 2 | `reports/fa_extras_20261123/f1_tolerance_en.pdf` | V-A, also V-B | "Boundary F1 against matching tolerance (10–100 ms) on Buckeye (left) and TIMIT (right); shaded bands are 95 % speaker-bootstrap intervals. Missed and inserted words count as errors, so missed words lower the curves for Whisper's text at every tolerance." | `fa_extras.json` corpora.*.modes.*.f1_sweep (f1, f1_ci_95; bands drawn from f1_ci_95, `scripts/render_fa_extras.py` lines 51–54) | REQUIRED. No hash manifest exists; figure produced at clean revision `49acdc5` (`FA_EXTRAS_RESULTS.md` line 3). Constant-offset modes are not drawn |
 | Fig. 3 | `reports/e1_analysis_20261102/figures/reliability_retention_en.pdf` | V-B | "Word MAE of the words kept after rejecting the 0–50 % least reliable words by BRQE's reliability score, with known text (A2+BRQE) and Whisper's text (B2+BRQE), on TIMIT (left) and Buckeye (right). Y-axes differ." | `benchmark_results.json` modes.{A2_brqe, B2_brqe}.quality_estimation.word_mae_after_rejection_ms (both corpora) | REQUIRED. Hash matches `figure_manifest.json` (`ARTIFACT_VALIDATION.md` §1). Text quotes Buckeye numbers only (CLAIM-105); the TIMIT panel has no CLAIM (§10d) |
 | Fig. 4 | `reports/s1b_long_20261103/figures/s1b_failures_en.pdf` | V-C | "Failed recordings of 20 (left) and share of unaligned chunks (right) for recordings of 1, 5 and 10 minutes. A recording fails when any chunk fails; A2 without anchors is hatched." | CLAIM-109, CLAIM-110 (values checked visually in `ARTIFACT_VALIDATION.md` §2) | OPTIONAL; otherwise RES-C-03 to RES-C-05 in text. No hash manifest |
 | — | not used | — | `phone_group_mae` (empty "Other" defect), `s3_asr_size` (style defects), `speaker_brqe_gain` (too tall), `word_error_ecdf` (replaced) | `ARTIFACT_VALIDATION.md` §2 | Do not use |
 
 **Table I (REQUIRED, V-A).**
 - **Title:** "Word-Boundary Accuracy on Spontaneous (Buckeye) and Read (TIMIT) Speech."
-- **Caption statement:** "MAE and Acc@20 use matched words only and must be read with word coverage. Boundary F1 at 20 ms counts missed and inserted words and was added as a secondary check. CIs are speaker-bootstrap 95 % intervals. B modes use Whisper's text; A modes use the known transcript."
+- **Caption statement:** "MAE and Acc@20 use matched words only and must be read with word coverage. Boundary F1 at 20 ms counts missed and inserted words and was added as a secondary check. CIs are speaker-bootstrap 95 % intervals. B modes use Whisper's text; A modes use the known transcript. MAE and Acc@20 of A and B modes refer to different word sets; on Buckeye, matched-word Acc@20 of the B modes with MFA is 7.7 to 8.3 points above recall over all reference boundaries."
 - **Caption support:** `FORMULAS.md` Eqs. 1–3a; CLAIM-114 and CLAIM-115 reasons.
 - **Layout:** use `table*` (two columns wide) or one column with `\footnotesize`.
 
@@ -733,6 +745,7 @@ Raw values for checking:
 - Coverage: Buckeye 0.888, 0.8897 (all B), 0.9998 (all A); TIMIT 0.9735, 0.9763, 1.0.
 - TIMIT failed clips: 0 for all modes (`n_utterances_failed`).
 - Rounding note: A2 + const on TIMIT is 20.34, which rounds to 20.3, the same as A2 (20.26). Keep two decimals in this column if the difference must show.
+- Checked 24.11.2026: all 117 values agree with the JSON fields. Cov stands in the column next to Acc@20 in every B row, and F1@20 is a column for both corpora, as the author asked. Cov is matched / reference words in successfully aligned clips (over all 999 clips: A2 99.61 %, B2 88.86 %).
 
 **Algorithms.**
 - Algorithm 1 `alg:pipeline` (III-A): REQUIRED.
@@ -830,8 +843,8 @@ All 25 selected keys appear in at least one REQUIRED statement. No selected key 
 | 114 | RES-A-06, RES-B-04, SET-C-05, INT-13, INT-15, AB-07, CON-02 | "Secondary, added after the main results" kept in each use |
 | 115 | RES-A-08, LIM-01, Table I caption | See item 5 in (d) |
 | 116 | DIS-03 | Qualitative, plural |
-| 117 | RES-A-09, DIS-01, INT-15, AB-07, CON-02, CON-06 | Descriptive, no test |
-| 118 | RES-B-06, INT-13, AB-04, DIS-09 | Descriptive, no test |
+| 117 | RES-A-09 (rewritten); DIS-01, INT-15, AB-07, CON-02, CON-06 still use the old wording | Post-hoc, no protocol, not a cause |
+| 118 | none: withdrawn 24.11.2026; INT-13, AB-04 and DIS-09 still use it and are to be rewritten in their checks (RES-B-06 removed) | Do not use |
 
 Every CLAIM is used.
 

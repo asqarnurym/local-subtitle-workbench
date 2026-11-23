@@ -2,7 +2,7 @@
 
 > **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
 >
-> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5), Discussion (§7), Introduction (§2) and Related Work (§3): checked against the sources on 24.11.2026. Conclusion and the Abstract plan: not checked yet.
+> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5), Discussion (§7), Introduction (§2), Related Work (§3) and Conclusion (§8): checked against the sources on 24.11.2026. the Abstract plan: not checked yet.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -704,20 +704,24 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 8. Conclusion (target 150 words)
 
-- **CON-01** [REQUIRED] RQ1: On spontaneous speech, MFA placed word boundaries with an MAE of 19.6 ms using a known transcript, and of 30.1 ms using Whisper's text at 89.0 % word coverage, against 126.5 ms for Whisper's own timestamps. On read speech, both scenarios were near 20 ms.
-  - Support: CLAIM-101, CLAIM-102, CLAIM-106.
-- **CON-02** [REQUIRED] Recognized text cost about 9 points of boundary F1, and the loss came from recognition errors, not from alignment.
-  - Support: CLAIM-114 (0.710 vs 0.624), CLAIM-117.
-- **CON-03** [REQUIRED] RQ2: BRQE beat a constant-offset correction on held-out spontaneous speech for all 20 speakers, and its reliability score detected erroneous words with ROC-AUC 0.756 and 0.749, but it did not improve read speech.
-  - Support: CLAIM-103, 105, 104, 114; speaker count (b) E1 (as in RES-B-03).
-  - Note: **needs CLAIM before submission** for the MAE speaker count.
-- **CON-04** [REQUIRED] RQ3: On recordings of one to ten minutes, error rose at chunk seams rather than with length, overlap-and-stitch removed the seam excess, and failed recordings grew with length.
-  - Support: CLAIM-107, CLAIM-108, CLAIM-109.
-- **CON-05** [REQUIRED] Future work should test the pipeline on natural lecture recordings with manual word boundaries, and on noisy and accented speech.
-  - Support: `docs/S1_LONG_RECORDINGS_PROTOCOL.md` rule 5; `IMPROVEMENT_PLAN.md` §9.2; `TITLE_KEYWORDS_RQ.md` line 3 (no lecture corpus with manual boundaries).
-  - Note: the one allowed future-work sentence.
-- **CON-06** [OPTIONAL] For caption timing, the transcript deserves effort before the aligner.
-  - Support: CLAIM-117 (interpretation, as in DIS-01).
+> Checked 24.11.2026 against the CLAIMs. `AUTHOR:` marks a decision for the author.
+
+- **CON-01** [REQUIRED] RQ1: On matched words of spontaneous speech, MFA placed word boundaries with an MAE of 19.6 ms using a known transcript, and of 30.1 ms using Whisper's text at 89.0 % word coverage, against 126.5 ms for Whisper's own timestamps at 88.8 % coverage. On read speech the two MFA values were 20.3 and 20.5 ms (coverage 97.6 % with Whisper's text).
+  - Support: CLAIM-101, CLAIM-102, CLAIM-106; coverage as in RES-A-03 and RES-A-04.
+  - Note: the A and B values cover different word sets; do not write "a known transcript reduces MAE by 10.5 ms". The difference that charges missed words is in CON-02.
+- **CON-02** [REQUIRED] Under the secondary boundary F1 at 20 ms, the known transcript reached 0.710 and Whisper's text 0.624 (word coverage 89.0 %), a difference in the same direction for all 20 speakers.
+  - Support: CLAIM-114, CLAIM-102 (coverage).
+  - Note: "the loss came from recognition errors, not from alignment" and "about 9 points" were removed (CLAIM-117 refuted the first; the second was a rounding). No cause is stated.
+- **CON-03** [REQUIRED] RQ2: On held-out spontaneous speech, BRQE beat a constant-offset correction for all 20 speakers under MAE and boundary F1, and its reliability score detected words with an MFA boundary more than 20 ms off with ROC-AUC 0.756 (A2) and 0.749 (B2). It did not significantly improve read speech.
+  - Support: CLAIM-103, 105, 104, 114; speaker count under MAE (b) E1 (as in RES-B-03).
+  - Note: **needs CLAIM before submission** for the MAE speaker count. "Significantly" restored (CLAIM-104).
+- **CON-04** [REQUIRED] RQ3: On one-minute recordings, the original chunking raised the error near chunk seams by more than 100 ms, and overlap-and-stitch passed the pre-registered 10 ms check. Among recordings that aligned with the known transcript, word MAE was 19.4, 19.2 and 20.4 ms at 1, 5 and 10 minutes; failed recordings grew with length.
+  - Support: CLAIM-107, CLAIM-108 (survivors only), CLAIM-109; RES-C-01 to RES-C-03.
+  - Note: "rather than with length" and "removed the seam excess" were removed (no absence of a length effect is claimed; seams were checked at 60 s only).
+- **CON-05** [REQUIRED] Future work should test the pipeline on natural lecture recordings with hand-corrected word boundaries, and on noisy and accented speech.
+  - Support: `docs/S1_LONG_RECORDINGS_PROTOCOL.md` rule 5; `IMPROVEMENT_PLAN.md` §9.2; `TITLE_KEYWORDS_RQ.md` line 5 (no lecture corpus with manual boundaries).
+  - Note: the one allowed future-work sentence (`main.tex` comment).
+- **CON-06** [REMOVED 24.11.2026] Advice to spend effort on the transcript: rested on the old CLAIM-117 and breaks contribution 3 (no advice).
 
 **Acknowledgment.** No statement is proposed: there is no supported funding or help to acknowledge. If one is added, write it in the third person.
 
@@ -869,7 +873,7 @@ All 25 selected keys appear in at least one REQUIRED statement. No selected key 
 | 114 | RES-A-06, RES-B-04, SET-C-05, INT-13, INT-15, AB-07, CON-02 | "Secondary, added after the main results" kept in each use |
 | 115 | RES-A-08, LIM-01, Table I caption | See item 5 in (d) |
 | 116 | DIS-03 | Qualitative, plural |
-| 117 | RES-A-09, DIS-01, INT-15 (rewritten); AB-07, CON-02, CON-06 still use the old wording | Post-hoc, no protocol, not a cause |
+| 117 | RES-A-09, DIS-01, INT-15 (rewritten); CON-02 no longer uses it, CON-06 removed; AB-07 still uses the old wording | Post-hoc, no protocol, not a cause |
 | 118 | none: withdrawn 24.11.2026; AB-04 still uses it and is to be rewritten in its check (RES-B-06 removed) | Do not use |
 
 Every CLAIM is used.

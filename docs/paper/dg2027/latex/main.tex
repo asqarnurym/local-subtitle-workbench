@@ -52,11 +52,12 @@ t.zhukabayeva@astanait.edu.kz}
 \maketitle
 
 \begin{abstract}
-% One paragraph. Problem (caption timing for accessibility), what was compared (scenario A
-% known transcript vs B ASR text; B0, B1, A1 baselines vs Whisper plus MFA), BRQE,
-% corpora (TIMIT read, Buckeye spontaneous, manual boundaries, held-out speakers),
-% main numbers from CLAIM-101..106 (with coverage for scenario B), long-recording finding
-% (CLAIM-107..110), honest limitation. No symbols or math.
+% One paragraph, in the order of the contributions (TITLE_KEYWORDS_RQ.md): problem (caption
+% timing for accessibility); the refinement and reliability module and its gain on held-out
+% spontaneous speech (CLAIM-103, 105, 114); long recordings (CLAIM-107..110); what recognized
+% text costs and that the cost comes from recognition (CLAIM-114, 117); corpora (TIMIT read,
+% Buckeye spontaneous, manual boundaries, held-out speakers); one honest limit (read speech).
+% No symbols or math. Do not name other benchmarks here.
 Abstract to be written.
 \end{abstract}
 
@@ -66,24 +67,29 @@ forced alignment, word boundary accuracy, speech-text alignment, automatic speec
 
 \section{Introduction}
 % Problem: captions help many learners only if timing is right; word-level timing enables
-% karaoke-style highlighting. Practical choice for captioning: is the transcript known?
-% Gap (IMPROVEMENT_PLAN 10.1): both scenarios rarely compared in one pipeline on manual
-% boundaries with speaker-level statistics; aligners give no per-boundary reliability;
-% long recordings and chunking cost. Link to the previous DG 2026 work (cite, one sentence):
-% it measured throughput, accuracy was left open; this paper measures it.
-% Research questions (TITLE_KEYWORDS_RQ.md): RQ1, RQ2, RQ3.
-% Contributions (3 items).
+% karaoke-style highlighting and lets a captioner check only doubtful words.
+% Positioning (TITLE_KEYWORDS_RQ.md, "Positioning"): recent benchmarks rank existing aligners
+% and recognizers on short utterances [Chu2026FABench, Zolkepli2026, McAuliffe2026,
+% Rousso2024]; this paper proposes and tests additions to a local captioning pipeline.
+% Gap as differences, never "first": no per-boundary reliability score evaluated on held-out
+% spontaneous speech; where accuracy is lost on minutes-long recordings; speaker-level tests.
+% Link to the previous DG 2026 work (one sentence): it measured throughput, accuracy was left
+% open; this paper measures and improves it.
+% Research questions RQ1-RQ3. Contributions: the 3 items in TITLE_KEYWORDS_RQ.md, same order.
 
 \section{Related Work}
 \subsection{Caption Timing and Accessibility}
 % Captions and learning; synchronization quality matters. No claims of learning effect
 % of our system.
 \subsection{ASR Timestamps and Forced Alignment}
-% Whisper timestamps, WhisperX-style CTC alignment, MMS, NFA, MFA/Kaldi; benchmarks of
-% aligners on manual boundaries.
+% Whisper timestamps (Yeh2025), WhisperX-style CTC alignment, MMS, NFA, MFA/Kaldi; recent
+% evaluations on manual boundaries cited together (Chu2026FABench, Zolkepli2026,
+% McAuliffe2026, Rousso2024) as rankings of existing systems; long-form aligners (Mu2026,
+% Vaidya2026) report accuracy, not where it is lost.
 \subsection{Boundary Refinement and Confidence}
-% Post-alignment correction (prior art, no priority claim), reliability or confidence
-% estimation.
+% Post-alignment correction: Stolcke2014, Cuozzo2018 (CNN refinement of MFA, read single-
+% speaker TTS data, no reliability output), Kelley2024. Reliability: Kelley2026 (ensemble
+% intervals), Vaidya2026 (word presence). State our differences, no priority claim.
 
 \section{Method}
 \subsection{Pipeline}
@@ -102,26 +108,38 @@ forced alignment, word boundary accuracy, speech-text alignment, automatic speec
 \subsection{Compared Modes}
 % B0, B1, B2, A1, A2, constant offset, BRQE. WhisperX and NFA programs were not run.
 \subsection{Metrics and Statistics}
-% Eq. 1-5: MAE, Acc@20ms, coverage, speaker-level exact Wilcoxon with Holm, speaker
-% bootstrap CI.
+% Eq. 1-5: MAE (pre-registered primary), Acc@20ms, coverage, speaker-level exact Wilcoxon
+% with Holm, speaker bootstrap CI. Eq. 3a: boundary F1 that charges missed and inserted words,
+% added as a robustness check because matched-word MAE can favour recognition-based systems
+% [Chu2026FABench]; say it was added after the main results.
 \subsection{Implementation}
 % Local consumer laptop (RTX 3050 Laptop, 4 GB), Whisper large-v3 int8_float16, MFA 3.4.3;
 % reproducibility (protocols before numbers, hashes). Speed is not an evaluation metric.
 
 \section{Results}
 \subsection{Boundary Accuracy with and without a Known Transcript}
-% RQ1: one merged table with coverage; ECDF figure (Buckeye). CLAIM-101, 102, 106.
+% RQ1: one merged table (MAE, Acc@20, coverage, F1@20). CLAIM-101, 102, 106, 114, 115.
+% Where B loses: CLAIM-117 (equal accuracy between correctly recognized words).
+% Figure: F1 against tolerance (reports/fa_extras_20261123/f1_tolerance_en.pdf) instead of
+% ECDF; it also shows the scenario-B ceiling near 0.86 on Buckeye.
 \subsection{Boundary Refinement and Reliability}
-% RQ2: CLAIM-103, 104 (negative TIMIT result must stay), 105; reliability-retention figure;
-% sensitivity in one sentence.
+% RQ2: CLAIM-103, 105, 114 (all 20 speakers under MAE and F1); CLAIM-118 (largest
+% corrections at segment ends); CLAIM-104 negative TIMIT result must stay (worse than MFA from
+% 30 ms tolerance, FA_EXTRAS_RESULTS.md 3); reliability-retention figure; sensitivity in one
+% sentence.
 \subsection{Long Recordings}
 % RQ3: CLAIM-107..110; failures beside errors; survivors stated.
 
 \section{Discussion}
-% Interpretation, comparison with published aligner benchmarks (qualitative only),
-% limitations: spliced long recordings, survivors, read vs spontaneous transfer, engine
-% cores instead of WhisperX and NFA programs, single seed, no user study; accent and noise
-% (S4, S6) as limitations with hypotheses; tempo and Whisper size (S2, S3) in one sentence.
+% Interpretation: for captioning, improve the transcript before the aligner (CLAIM-117).
+% Our figures are consistent with recent benchmarks (CLAIM-116; plural, one sentence).
+% Whisper shifts whole words about 115-150 ms early and CTC starts words about 40 ms late
+% (reports/fa_extras_20261123/fa_extras.json), as reported elsewhere.
+% Limitations: matched-word scores for recognized text are about 11 % optimistic (CLAIM-115);
+% Buckeye clips are runs of regular words without event tags (easier than full utterances);
+% no noise or reverberation; spliced long recordings and survivors; read vs spontaneous
+% transfer; engine cores instead of WhisperX and NFA programs; single seed; no user study;
+% accent (S4) as a limitation; tempo and Whisper size (S2, S3) in one sentence.
 
 \section{Conclusion}
 % Answers to RQ1-RQ3 in plain words; no future-work promises beyond one sentence.

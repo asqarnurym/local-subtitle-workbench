@@ -23,6 +23,14 @@ e_b = 1000\,\lvert \hat{t}_b - t_b \rvert, \qquad b \in \mathcal{B}
 \mathrm{Cov} = \frac{N_{\text{matched}}}{N_{\text{reference}}}
 ```
 
+**Eq. 3a. Boundary F1 (robustness check, required since CLAIM-114…116).** Every word gives two boundaries. $H_\tau$ = boundaries of matched words with $e_b \le \tau$; $N^{\text{ref}}$, $N^{\text{pred}}$ = all reference and all predicted boundaries, failed clips included (their reference boundaries are misses). Missed words lower recall, inserted words lower precision. Main $\tau = 20$ ms. Source: `scripts/f1_analysis.py`, `docs/F1_PROTOCOL.md`.
+
+```latex
+P_\tau = \frac{H_\tau}{N^{\text{pred}}}, \qquad
+R_\tau = \frac{H_\tau}{N^{\text{ref}}}, \qquad
+F_{1,\tau} = \frac{2P_\tau R_\tau}{P_\tau + R_\tau} = \frac{2H_\tau}{N^{\text{pred}} + N^{\text{ref}}}
+```
+
 **Eq. 4. Speaker-level comparison.** Speaker value = pooled MAE of that speaker on clips scored in both modes; paired difference per speaker; exact two-sided Wilcoxon signed-rank test over speakers; Holm correction over the $K$ comparisons of a family. Source: `scripts/analyze_speaker_errors.py` (E1), `exact_signed_rank`, `metrics.py::bonferroni_holm_adjustment`.
 
 ```latex

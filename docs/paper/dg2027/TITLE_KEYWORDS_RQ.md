@@ -31,50 +31,38 @@ The blind version removes both blocks and any self-identifying sentence; the DG 
 
 Derived from `IMPROVEMENT_PLAN.md` §10.1 (RQ1–RQ4), narrowed to what the 6-page paper reports. Each is answerable from approved claims only.
 
-- **RQ1.** How large is the word- and phone-boundary error of open pipelines that combine speech recognition with forced alignment, measured against manual boundaries on read (TIMIT) and spontaneous (Buckeye) English speech, and how much does a known transcript reduce it compared with recognized text? *Evidence:* CLAIM-101, 102, 106 (with word coverage for scenario B).
-- **RQ2.** Does a lightweight learned post-alignment module reduce forced-alignment boundary error more than a constant-offset correction on held-out speakers, and does its reliability score separate boundaries that are more than 20 ms off? *Evidence:* CLAIM-103, 104 (negative transfer to read speech), 105.
+- **RQ1.** How large is the word- and phone-boundary error of open pipelines that combine speech recognition with forced alignment, measured against manual boundaries on read (TIMIT) and spontaneous (Buckeye) English speech, and how much does a known transcript reduce it compared with recognized text? *Evidence:* CLAIM-101, 102, 106 (with word coverage for scenario B), robustness under boundary F1 CLAIM-114, 115; where B loses CLAIM-117 (candidate).
+- **RQ2.** Does a lightweight learned post-alignment module reduce forced-alignment boundary error more than a constant-offset correction on held-out speakers, and does its reliability score separate boundaries that are more than 20 ms off? *Evidence:* CLAIM-103, 104 (negative transfer to read speech), 105, 114; where BRQE gains CLAIM-118 (candidate).
 - **RQ3.** On recordings of one to ten minutes, how do recording length and chunking affect boundary error and the share of failed alignments? *Evidence:* CLAIM-107…110.
 
 RQ4 (tempo, Whisper size) is answered in one sentence in the Discussion (CLAIM-111…113 and the S3 result), not as a research question, to fit 6 pages.
 
 What makes them valid: each names the population (English read and spontaneous speech), the comparison (A vs B; BRQE vs constant offset; lengths), the measure (MAE, Acc@20 ms, coverage, ROC-AUC, failures) and the reference (manual boundaries, held-out speakers).
 
-## Update 21.11.2026 after the literature search
+## Positioning (accepted direction 23.11.2026)
 
-FA-Bench (Chu et al., arXiv, Oct 2026) already compares a reference transcript with recognizer output on TIMIT and Buckeye with held-out speakers (`literature/REFERENCE_AUDIT.md` §1). RQ1 stays as a question, but contribution 1 below is reworded as an independent consistency check, and the paper's weight moves to BRQE and long recordings. The original wording is kept below for reference.
-
-**Proposed contributions (replace the list below if the author agrees):**
-1. A lightweight boundary refinement and reliability module trained only on disjoint speakers and frozen before testing, compared with a constant-offset rival on held-out spontaneous speech, with its negative transfer to read speech reported.
-2. Evidence on one- to ten-minute recordings that chunk seams, not length, drive the error and that one failed chunk removes whole recordings; an overlap-and-stitch fix that passes a pre-registered seam check.
-3. Known-transcript and recognized-text alignment measured in one local pipeline with speaker-level exact tests and coverage beside every error; the numbers agree in order with recent independent benchmarks.
-
-## Positioning after FA-Bench (proposal 23.11.2026, author's decision)
-
-Author's requirement (23.11.2026): the paper must not read as a check of someone else's preprint and must not lose its own value.
+The author asked for the presentation that shows the work in its best light, within what the evidence supports, and never as a check of another group's preprint. History: the first list (21.11) led with the A vs B comparison; after FA-Bench (arXiv, Sep–Oct 2026) that comparison alone is no longer a gap, so the weight moved to the methods and to a practical finding.
 
 **Rules for the text.**
-1. FA-Bench is one of several recent evaluations (Chu2026FABench, Zolkepli2026, McAuliffe2026), cited together in Related Work and once in the Discussion. It is never named in the abstract, the title or the contributions. The words "verify", "validate", "replicate" or "confirm FA-Bench" are not used.
-2. Agreement goes in our favour, plural and short: "Our MFA and Whisper figures are consistent with recent benchmarks [..]" (CLAIM-116). It supports our numbers; it is not a result.
-3. The type of paper differs and is stated: those works *rank existing systems*; this paper *proposes and tests additions to an alignment pipeline for captioning* (a refinement and reliability module, an overlap-and-stitch scheme for long recordings) and measures what the choice of transcript costs inside that pipeline.
-4. The F1 analysis is our robustness check against a known criticism of MAE, cited to its source: "Because matched-word MAE can favour recognition-based systems [Chu2026], we also report boundary F1 that charges missed and inserted words; all conclusions hold (CLAIM-114), and matched-word scores for recognized text are about 11 % optimistic (CLAIM-115)." That is what a careful paper does, not a check of their work.
-5. Gap = what our paper does that none of the read works does (checked against EVIDENCE_NEW_SOURCES.md; state as a difference, never "first"):
-   - a learned post-alignment module that also outputs a per-boundary reliability score, evaluated by ROC-AUC and a rejection curve on held-out speakers of spontaneous speech (Cuozzo2018: refinement only, read single-speaker TTS data; Kelley2026: ensemble intervals around a neural aligner; FuseAlign: word presence, not boundary error);
-   - the cost of chunk seams and of chunk failures on 1–10 minute recordings measured against manual boundaries (long-form aligners — NFA, LLM-ForcedAligner, FuseAlign — report accuracy, not where it is lost);
-   - speaker-level exact tests for every comparison (FA-Bench reports none; text search for Wilcoxon, bootstrap and confidence intervals found nothing).
+1. FA-Bench is one of several recent evaluations (Chu2026FABench, Zolkepli2026, McAuliffe2026, Rousso2024), cited together in Related Work and once in the Discussion. Never in the title, abstract or contributions; never "verify", "validate", "replicate" or "confirm" another work.
+2. Type of paper, said once in the Introduction: those works rank existing aligners and recognizers on short utterances; this paper proposes and tests additions to a local captioning pipeline and measures what the transcript choice costs inside it.
+3. Agreement supports our numbers, plural and short, in the Discussion: "our MFA and Whisper figures are consistent with recent benchmarks [..]" (CLAIM-116).
+4. Boundary F1 is our robustness check against a known weakness of matched-word MAE, cited to its source; MAE stays the pre-registered primary metric (CLAIM-114, 115).
+5. Gap = what we do that none of the read works does, stated as a difference, never "first" (sources in `literature/EVIDENCE_NEW_SOURCES.md`):
+   - learned refinement that also gives a per-boundary reliability score, evaluated on held-out speakers of spontaneous speech (Cuozzo2018: refinement only, read single-speaker data; Kelley2026: ensemble intervals around a neural aligner; FuseAlign: word presence, not boundary error);
+   - where accuracy is lost on 1–10 minute recordings (seams, chunk failures), against manual boundaries (long-form aligners report accuracy, not where it is lost);
+   - speaker-level exact tests for every comparison.
+6. Keep honest edges visible: negative transfer to read speech (CLAIM-104, 113), survivors only in S1b, scenario-B matched-word optimism (CLAIM-115). Stating limits plainly is part of the best light for reviewers.
 
-**Proposed contributions v2 (replace the list below if the author agrees).**
-1. A lightweight boundary refinement and reliability module for forced alignment, trained only on disjoint speakers and frozen before testing. On held-out spontaneous speech it beats a constant-offset rival under both MAE and boundary F1, with about 40 % of the gain at speech-segment edges (9 % of boundaries), and its reliability score detects boundaries more than 20 ms off (ROC-AUC 0.75). Its negative transfer to read speech is reported.
-2. Evidence on one- to ten-minute recordings that chunk seams, not length, drive the error and that one failed chunk removes whole recordings, with an overlap-and-stitch scheme that passes a pre-registered seam check.
-3. A measurement, inside one local captioning pipeline with speaker-level tests, of what recognized text costs compared with a known transcript, and where the cost arises: on boundaries between correctly recognized words both scenarios are equally accurate, so the loss comes from recognition, not alignment.
+## Contributions (for the Introduction; final wording after CLAIM-117, 118 are approved)
 
-Evidence needed: the edge share in item 1 and the equal accuracy in item 3 come from `docs/FA_EXTRAS_RESULTS.md` (descriptive, independently checked). They need a CLAIM row approved by the author before they enter the paper.
+1. **Refinement and reliability for forced alignment.** A lightweight module, trained only on speakers disjoint from the test set and frozen before testing, that corrects word boundaries and scores their reliability. On held-out spontaneous speech it beats a constant-offset correction under both error and boundary F1 for all 20 test speakers, with the largest corrections at the ends of speech segments, where the aligner is least accurate; its reliability score flags boundaries more than 20 ms off (ROC-AUC 0.75), so a captioner can review a short list instead of every word. Its limits on read speech are reported. *Evidence:* CLAIM-103, 105, 114, 118 (candidate), 104; 20 of 20 speakers on MAE: `reports/e1_analysis_20261102/analysis.json` speaker_comparisons (B2brqe_vs_B2const, A2brqe_vs_A2const).
+2. **Long recordings.** On recordings of one to ten minutes, accuracy is lost at chunk seams, not with length, and a single failed chunk removes a whole recording; an overlap-and-stitch scheme passes a pre-registered seam check. *Evidence:* CLAIM-107…110.
+3. **What a recognized transcript costs.** Inside one local pipeline that runs on a 4 GB laptop GPU, with speaker-level tests and a metric that charges missed words, recognized text costs about 9 points of boundary F1 on spontaneous speech, and the cost comes from recognition, not alignment: boundaries between correctly recognized words are placed equally well in both scenarios. For captioning, effort is better spent on the transcript than on the aligner. *Evidence:* CLAIM-101, 102, 114, 115, 117 (candidate).
 
-Why this is stronger than "a same-pipeline comparison": item 3 now ends in a practical finding for captioning (improve the transcript, not the aligner), which the benchmarks do not state for a pipeline; items 1–2 are methods, not measurements of existing tools.
+No claim of novelty for post-alignment correction itself (prior art: Stolcke2014, Cuozzo2018), of learning benefit, or of accessibility impact on users.
 
-## Contributions (for the Introduction)
+## CLAIM candidates for the author (from `docs/FA_EXTRAS_RESULTS.md`, independently checked 1620/1620)
 
-1. A same-pipeline comparison of known-transcript and recognized-text alignment on manual word and phone boundaries of read and spontaneous speech, with speaker-level statistics and coverage reported beside every error.
-2. A lightweight boundary refinement and reliability module trained only on disjoint speakers, frozen before testing, compared with a constant-offset rival, including its negative transfer result.
-3. Evidence on long recordings that chunk seams, not length, drive the error, and that one failed chunk removes whole recordings; an overlap-and-stitch fix that passes a pre-registered seam check.
-
-No claim of novelty for post-alignment correction itself (prior art: Stolcke et al. 2014), of learning benefit, or of accessibility impact on users.
+- **CLAIM-117.** On Buckeye test speakers, boundaries between two correctly recognized words are placed equally well with recognized and with known text (recall at 20 ms 0.728 vs 0.731); recognized text has fewer such boundaries (74 % vs 89 % of reference boundaries), so the scenario-B loss comes from recognition, not alignment. Descriptive, no test.
+- **CLAIM-118.** BRQE's largest corrections are at the ends of speech segments, where MFA is least accurate: on Buckeye, recall at 20 ms of the segment-final boundary rises from 0.41–0.44 to 0.75–0.76, and segment edges (9 % of boundaries) give about 40 % of the F1 recall gain; on read speech (TIMIT) the gain is at segment edges only. Descriptive, no test.

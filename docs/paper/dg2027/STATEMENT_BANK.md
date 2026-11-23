@@ -2,7 +2,7 @@
 
 > **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
 >
-> **Check status.** Results (§6) and Table I (§9): checked against the sources on 24.11.2026. Method, Setup, Discussion, Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
+> **Check status.** Results (§6), Table I (§9) and Method (§4): checked against the sources on 24.11.2026. Setup, Discussion, Introduction, Related Work, Conclusion and the Abstract plan: not checked yet.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -282,6 +282,8 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 4. Method (target 700 words)
 
+> Checked 24.11.2026 against the code in `src/` and `scripts/`, not only `PSEUDOCODE.md`. `AUTHOR:` marks a decision for the author.
+
 ### 4.A Pipeline (target 230)
 
 - **M-A-01** [REQUIRED] Fig. 1 and Algorithm 1 show the pipeline for one recording. It takes 16 kHz mono audio and an optional transcript, and returns word and phone boundaries with a reliability score for each word.
@@ -291,8 +293,9 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: the VAD is the Silero model called from faster-whisper 1.2.1 (`IMPROVEMENT_PLAN.md` §10.3).
 - **M-A-03** [REQUIRED] In scenario A, the known transcript is anchored to Whisper's words (Section III-B). In scenario B, Whisper's own words are aligned.
   - Support: (d) `PSEUDOCODE.md` Algorithm 1, lines 3–6.
-- **M-A-04** [REQUIRED] Words are split into chunks of at most 30 s with 0.5 s of padding. Cuts go at the midpoint of a VAD pause if possible, otherwise at an ASR segment boundary, otherwise at the widest gap between words.
-  - Support: (d) `PSEUDOCODE.md` Algorithm 1, line 7.
+- **M-A-04** [REQUIRED] Words are split into chunks of at most 30 s with 0.5 s of padding. Cuts go at the midpoint of the latest suitable VAD pause if there is one, otherwise at a segment boundary (Whisper segments in scenario B, groups of 40 transcript words in scenario A), otherwise at the widest gap between words.
+  - Support: (d) `src/subtitle_workbench/chunker.py` `partition_into_chunks`; `src/subtitle_workbench/pipeline.py` SEED_SEGMENT_WORDS = 40, `_segments_from_words`.
+  - Note: "ASR segment boundary" was corrected; in scenario A the segments are not from the ASR. `PSEUDOCODE.md` line 7 has the same simplification.
 - **M-A-05** [REQUIRED] MFA 3.4.3 aligns all chunks of a speaker in one call. It uses the english_us_arpa acoustic model and dictionary, a grapheme-to-phoneme (G2P) model for out-of-vocabulary words, speaker adaptation, and the --fine_tune option, which places boundaries below the 10 ms frame shift.
   - Support: (d) `PSEUDOCODE.md` Algorithm 1, line 8; (b) `reports/buckeye/benchmark_results.json` config.aligners.mfa (speaker_adaptation = true, fine_tune = true, invocation = per_speaker); `docs/RUNBOOK.md` line 51 (fine_tune); `IMPROVEMENT_PLAN.md` line 45 (version 3.4.3).
 - **M-A-06** [REQUIRED] A chunk that MFA cannot align is recorded as a failure and is never replaced by another aligner's output.
@@ -300,8 +303,8 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **M-A-07** [REQUIRED] The chunk alignments are merged into one monotonic timeline and refined by BRQE (Section III-C). The words can be exported as WebVTT captions with an inline timestamp for every word.
   - Support: (d) `PSEUDOCODE.md` Algorithm 1, lines 9–11; `src/subtitle_workbench/export.py` `export_karaoke_vtt` (inline per-word timestamps; cues break at 8 words, 42 characters or a 1 s pause).
   - Note: "can be exported". The API does not yet call BRQE or the stitch (`IMPROVEMENT_PLAN.md` §11.5; §10d).
-- **M-A-08** [REQUIRED] Every benchmark clip is shorter than 30 s, so it forms a single chunk. Chunking matters only for the long recordings of Section III-D.
-  - Support: (d) `PSEUDOCODE.md`, notes under Algorithm 1.
+- **M-A-08** [REQUIRED] Every benchmark clip is shorter than 30 s (the longest Buckeye test clip is 10.7 s), so it forms a single chunk. Chunking matters only for the long recordings of Section III-D.
+  - Support: (d) `PSEUDOCODE.md`, notes under Algorithm 1; audio headers of the 1,000 test-sample files (maximum 10.744 s, read 24.11.2026).
 - **M-A-09** [OPTIONAL] Fig. 1 caption statement: Proposed pipeline. Scenario A anchors a known transcript to Whisper's words, and scenario B aligns Whisper's own words. MFA aligns them chunk by chunk, and BRQE refines every boundary and outputs a reliability score for each word.
   - Support: (d) `PSEUDOCODE.md` Algorithm 1.
   - Note: the author draws Fig. 1 (`ARTIFACT_VALIDATION.md` §4).
@@ -313,8 +316,8 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **M-B-02** [REQUIRED] The two word sequences are aligned by dynamic programming, as in \eqref{eq:anchor}. Identical normalized words score +2, others −1, and gaps −1. Only cells within a band of width w = max(50, 0.1 max(n, m), |n − m| + 1) around the diagonal are filled, so the cost is O(n·w).
   - Support: (d) `FORMULAS.md` Eq. 6; `PSEUDOCODE.md` Algorithm 3, lines 1–2; `src/subtitle_workbench/anchoring.py` `banded_sequence_alignment`.
   - Note: if the equation is dropped for space, keep this sentence in words.
-- **M-B-03** [REQUIRED] Exact matches on the best path become anchors if they start after the previous anchor ends. Runs of words without an anchor share the interval between neighbouring anchors in proportion to their character length.
-  - Support: (d) `PSEUDOCODE.md` Algorithm 3, lines 3–6; `FORMULAS.md` Eq. 7 (`eq:interp`).
+- **M-B-03** [REQUIRED] Exact matches on the best path become anchors if they do not start before the previous anchor ends and lie within the recording. Runs of words without an anchor share the interval between neighbouring anchors in proportion to their character length.
+  - Support: (d) `src/subtitle_workbench/anchoring.py` `anchor_transcript` (words at either end use the start or end of the recording; each word lasts at least 10 ms); `FORMULAS.md` Eq. 7 (`eq:interp`).
 - **M-B-04** [OPTIONAL] The interpolation can be stated as \eqref{eq:interp}.
   - Support: (d) `FORMULAS.md` Eq. 7.
   - Note: drop first if short of space.
@@ -323,24 +326,30 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 - **M-C-01** [REQUIRED] For every MFA boundary, BRQE reads a 64-band log-mel window of ±100 ms (25 ms frames, 5 ms hop, 41 frames) and six scalar features: start or end, word or phone, scenario, log duration, sub-frame offset, and a bias.
   - Support: (d) `FORMULAS.md` Eq. 8; `PSEUDOCODE.md` Algorithm 2, lines 1–4; `src/subtitle_workbench/refiner.py`.
-- **M-C-02** [REQUIRED] Three 1-D convolutions and a multilayer perceptron (MLP; 128 hidden units, dropout 0.2) feed two heads, as in \eqref{eq:brqe-h} and \eqref{eq:brqe}. One head gives a shift of at most 0.1 s that is added to the boundary; the other gives the probability that the MFA boundary is more than 20 ms off.
-  - Support: (d) `FORMULAS.md` Eq. 8 (Δmax = 0.1 s); Eq. 9 (label 1[|ε| > 0.02 s]).
-- **M-C-03** [REQUIRED] After refinement, overlapping neighbours are moved to their midpoint, and tokens shorter than 5 ms keep their original times. The word reliability is one minus the larger error probability of the word's start and end, as in \eqref{eq:reliability}.
-  - Support: (d) `PSEUDOCODE.md` Algorithm 2, lines 7–9; `FORMULAS.md` Eq. 10.
+- **M-C-02** [REQUIRED] Three 1-D convolutions, followed by one hidden layer of 128 units that also receives the scalar features (dropout 0.2), feed two heads, as in \eqref{eq:brqe-h} and \eqref{eq:brqe}. One head gives a shift of at most 0.1 s that is added to the boundary; the other gives the probability that the MFA boundary is more than 20 ms off.
+  - Support: (d) `refiner.py` `_build_net` (a single hidden layer, so "MLP" in Eq. 8 means that layer); `FORMULAS.md` Eq. 8 (Δmax = 0.1 s); Eq. 9 (label 1[|ε| > 0.02 s]).
+- **M-C-03** [REQUIRED] After refinement, if a token starts before the previous one ends, both times move to their midpoint, and tokens shorter than 5 ms get their original times back. The word reliability is one minus the larger error probability of the word's start and end, as in \eqref{eq:reliability}.
+  - Support: (d) `refiner.py` `_shifted`, `refine_prediction`; `FORMULAS.md` Eq. 10.
+  - Note: the second step runs after the first, so do not claim that refined tokens never overlap (the docstring says so, the code does not guarantee it).
 - **M-C-04** [REQUIRED] The training loss \eqref{eq:loss} adds two parts:
   - an L1 error in milliseconds, divided by 20, on boundaries within 0.1 s of the reference;
   - 0.5 times the binary cross-entropy of the error label.
   - Training uses AdamW (learning rate 10⁻³, weight decay 10⁻⁴), batch 512 and 12 epochs with one seed.
   - Support: (d) `FORMULAS.md` Eq. 9; `PSEUDOCODE.md` training paragraph; (b) `reports/buckeye/benchmark_results.json` config.refiners.brqe_config.
-- **M-C-05** [REQUIRED] BRQE was trained on 3,000 clips from the 20 Buckeye training speakers, aligned by MFA with known text as in scenario A, with manual boundaries as targets. The same weights are applied in both scenarios.
-  - Support: (b) `reports/buckeye/benchmark_results.json` config.refiners.trained_on (n_utterances = 3000, n_speakers = 20); `IMPROVEMENT_PLAN.md` §6.3; `PSEUDOCODE.md`.
-- **M-C-06** [REQUIRED] The constant-offset rival shifts each boundary by the median training correction for its boundary kind and scenario, as in \eqref{eq:const}.
-  - Support: (d) `FORMULAS.md` Eq. 11; `ConstantRefiner.fit`.
+- **M-C-05** [REQUIRED] BRQE was trained on 3,000 clips from the 20 Buckeye training speakers. Their MFA boundaries in both scenarios (A2 with known text and B2 with Whisper's text; words and phones; 382,270 boundaries matched to manual ones) form one training set with manual boundaries as targets. One set of weights serves both scenarios, with the scenario as an input feature.
+  - Support: (d) `scripts/train_brqe.py` SCENARIO_MODES, `load_training_boundaries`; (b) `reports/brqe_cv_20260401.json` n_matched = 382270; `benchmark_results.json` config.refiners.trained_on (3000 clips, 20 speakers).
+  - Note: corrected. The old text ("aligned with known text as in scenario A") followed the plan in `IMPROVEMENT_PLAN.md` §6.3, not the code. The B2 clips that failed (10 of 3,000) are absent. `AUTHOR:` §6.3 of the plan and the code disagree; this must be stated as in the code.
+- **M-C-06** [REQUIRED] The constant-offset rival shifts each boundary by the median training correction (over boundaries within 0.1 s of the reference) for its boundary kind and scenario, as in \eqref{eq:const}. These medians are at most 1.4 ms.
+  - Support: (d) `FORMULAS.md` Eq. 11; `ConstantRefiner.fit`; `models/brqe/const_offsets.json` (largest −1.4 ms, word start, B).
   - Note: can be written in words without the equation.
-- **M-C-07** [REQUIRED] A rule fixed before any cross-validation numbers existed decided whether refinement entered the pipeline: in 5-fold speaker cross-validation on the training speakers, it had to beat the constant offset in both scenarios (paired Wilcoxon over 20 speakers, p < 0.05). Both scenarios met the rule.
-  - Support: `IMPROVEMENT_PLAN.md` §6.5 (rule fixed 29.10.2026 before CV numbers); (b) `reports/brqe_cv_20260401.json` decision.refinement_enters_proposed = true, per_scenario A = true, B = true; CLAIM-103 reason.
-- **M-C-08** [REQUIRED] The weights and offsets were frozen and hashed before any run on test speakers.
-  - Support: (b) `reports/buckeye/benchmark_results.json` config.refiners (brqe_weights_sha256, const_offsets_sha256); tag `bench-frozen-20261029c` (CLAIM-101 source); CLAIM-103 reason.
+- **M-C-07** [REQUIRED] A rule fixed before any cross-validation numbers existed decided whether refinement entered the pipeline: in 5-fold speaker cross-validation on the training speakers, it had to lower word MAE below that of the constant offset in both scenarios (paired Wilcoxon over 20 speakers, p < 0.05). Both scenarios met the rule (20 of 20 speakers, p < 0.001).
+  - Support: `IMPROVEMENT_PLAN.md` §6.5 (rule fixed 29.10.2026 before CV numbers); (b) `reports/brqe_cv_20260401.json` decision.refinement_enters_proposed = true, per_scenario A = true, B = true, tests.word_{A,B}.brqe_vs_const (speakers_improved = 20, p_value = 9.57e-05, normal approximation); CLAIM-103 reason.
+- **M-C-08** [REQUIRED] BRQE was trained and selected without test speakers, and its weights and the offsets were frozen and hashed before they were applied to any test speaker.
+  - Support: (d) `scripts/train_brqe.py` refuses runs with test speakers; commit `bb74b81` (29.10.2026 08:26) with weights, before the BRQE pilot (14:46 local time) and tag `bench-frozen-20261029c`; (b) config.refiners hashes.
+  - Note: narrowed. "Before any run on test speakers" was wrong: see M-C-11.
+- **M-C-11** [REQUIRED] Before the freeze, pilots on 400 Buckeye clips covered all 40 speakers (10 clips each, so 200 clips of test speakers, 22 of them in the test sample) and were used to find defects in the pipeline and the metric; the second pilot included BRQE.
+  - Support: (b) `reports/pilot_buckeye/benchmark_results.json` and `reports/pilot_brqe_buckeye/benchmark_results.json` (n_speakers = 40, n_utterances = 400; 28.10.2026 23:23 and 29.10.2026 09:46 UTC); overlap counted 24.11.2026 against `reports/buckeye_test_sample_20260401.json`; fixes after the pilot in `IMPROVEMENT_PLAN.md` ("Исправлено до заморозки по итогам пилотов").
+  - Note: added in the check; **needs CLAIM before submission**. `AUTHOR:` keep here, in Setup or in Limitations. A reviewer can find it in the repository.
 - **M-C-09** [OPTIONAL] If refinement had failed the rule, only the reliability head would have been kept.
   - Support: `IMPROVEMENT_PLAN.md` §6.5.
 - **M-C-10** [OPTIONAL] Hyperparameters were the defaults, without tuning. Their sensitivity was checked afterwards on training speakers only (RES-B-15).
@@ -348,13 +357,14 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ### 4.D Long Recordings (target 110)
 
-- **M-D-01** [REQUIRED] With the default VAD padding of 400 ms, short pauses stay hidden, so chunk seams can fall inside speech. The 0.5 s padding then contains a neighbour's speech without its text.
-  - Support: (d) `PSEUDOCODE.md` Algorithm 4, line 1 ("default 400 ms hid pauses"); `IMPROVEMENT_PLAN.md` §10.3 (mechanism from a microtest on 6 recordings; `docs/S1B_MICROTEST_FINDINGS.md`).
-  - Note: design rationale from a small pilot that is not versioned. Do not give its numbers (§10d).
-- **M-D-02** [REQUIRED] Overlap-and-stitch (Algorithm 4) uses 30 ms VAD padding and extends each chunk with neighbouring words until it overlaps each neighbour by at least 3 s. It then aligns all chunks.
+- **M-D-01** [REQUIRED] With the default VAD padding of 400 ms, short pauses are not detected, so a chunk seam can fall inside speech. The 0.5 s padding then contains a neighbour's speech without its text.
+  - Support: (d) faster-whisper default speech_pad_ms = 400, `IMPROVEMENT_PLAN.md` §10.3 (pauses below about 1.2 s; microtest on 6 recordings, `docs/S1B_MICROTEST_FINDINGS.md`); `chunker.py` (a chunk's text is its own words only).
+  - Note: design rationale from a small pilot that is not versioned. Do not give its numbers and do not call it the cause of the seam error (§10d).
+- **M-D-02** [REQUIRED] Overlap-and-stitch (Algorithm 4) uses 30 ms VAD padding and extends each chunk with neighbouring words until they span at least 3 s on each side or the neighbour has no more words. It then aligns all chunks.
   - Support: (d) `PSEUDOCODE.md` Algorithm 4, lines 1–4; `scripts/seam_stitch.py` (SPEECH_PAD_MS = 30, MIN_OVERLAP_S = 3.0).
-- **M-D-03** [REQUIRED] At each seam, the two tracks are joined at an anchor word. The anchor has the same text in both tracks, both of its boundaries within 20 ms of each other, and is the closest such word to the seam that is not a track's outermost word. Without an anchor, the cut falls at the seam time, and the timeline is made monotonic.
-  - Support: (d) `PSEUDOCODE.md` Algorithm 4, lines 5–9 (ANCHOR_TOL_S = 0.02).
+- **M-D-03** [REQUIRED] At each seam, the two tracks are joined at an anchor word. The anchor has the same normalized text in both tracks and both of its boundaries within 20 ms, and it is the closest such word to the seam. The first word of the earlier track and the last word of the later track are not used. Without an anchor, the cut falls at the seam time, and the timeline is made monotonic.
+  - Support: (d) `scripts/seam_stitch.py` `stitch` (loops over a[1:] and b[:-1]; ANCHOR_TOL_S = 0.02).
+  - Note: corrected to the code. The protocol and `PSEUDOCODE.md` say "not a track's outermost word"; the code excludes only the words far from the seam and allows the last word of the earlier track and the first word of the later one. `AUTHOR:` describe it as in the code (recommended) and correct `PSEUDOCODE.md` and `algorithms.tex`.
 - **M-D-04** [REQUIRED] A long recording counts as failed when any of its chunks fails to align, and failures are reported beside errors.
   - Support: `docs/S1_LONG_RECORDINGS_PROTOCOL.md` (runs paragraph, failure rule; rule 3); `docs/S1B_RESULTS.md` §1.
 

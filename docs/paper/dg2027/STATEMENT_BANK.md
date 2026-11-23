@@ -2,7 +2,7 @@
 
 > **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
 >
-> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5), Discussion (§7) and Introduction (§2): checked against the sources on 24.11.2026. Related Work, Conclusion and the Abstract plan: not checked yet.
+> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5), Discussion (§7), Introduction (§2) and Related Work (§3): checked against the sources on 24.11.2026. Conclusion and the Abstract plan: not checked yet.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -183,6 +183,8 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 3. Related Work (target 600 words)
 
+> Checked 24.11.2026 against the PDFs (page text). `AUTHOR:` marks a decision for the author.
+
 ### 3.A Caption Timing and Accessibility (target 130)
 
 - **RW-A-01** [REQUIRED] A review of more than 100 empirical studies concludes that same-language captions improve comprehension of, attention to and memory for video in children, adolescents, college students and adults [Gernsbacher2015].
@@ -191,9 +193,10 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **RW-A-02** [REQUIRED] In a qualitative survey of disabled, neurodivergent and neurotypical university students, 48 % of participants mentioned pausing, changing speed or using captions to adapt lecture recordings to their needs [Horlin2024].
   - Support: (c) Horlin2024 p. 2082: "adapting pace by pausing, slowing down, speeding up, and using captions in the recordings was mentioned by 48% of participants"; p. 2079, sample groups.
   - Note: the 48 % is of all participants, not only disabled students.
-- **RW-A-03** [REQUIRED] In a survey of 216 participants on live-television captions, latency significantly lowered quality ratings, and hard-of-hearing viewers rated delayed television captions two points lower than captions without delay [Thompson2026].
-  - Support: (c) Thompson2026 arXiv p. 1 and p. 14; EVN lines 52–53.
-- **RW-A-04** [REQUIRED] These delays were of seconds (about 2 to 12 s). They show that timing matters to viewers, not that word-boundary errors of tens of milliseconds do, and this paper makes no claim about viewers.
+- **RW-A-03** [REQUIRED] In a survey of 216 participants on television captions, delay lowered quality ratings (for example, mean 3.66 with delay and 5.09 without for original TV captions, on a scale of 1 to 7) [Thompson2026].
+  - Support: (c) Thompson2026 arXiv p. 1, pp. 12–13.
+  - Note: the two-point figure for hard-of-hearing viewers was removed; the paper calls that analysis exploratory (p. 13–14).
+- **RW-A-04** [REQUIRED] These delays were of seconds (about 2 to 12 s). They show that delays of this size matter to the viewers surveyed, not that word-boundary errors of tens of milliseconds do, and this paper makes no claim about viewers.
   - Support: EVN lines 52 and 54 (scale caveat).
   - Note: mandatory caveat whenever Thompson2026 is cited.
 - **RW-A-05** [OPTIONAL] Partial and synchronized captions for second-language listening align ASR output with the transcript to time each word, then show only the words that are hard to hear [Mirzaei2018].
@@ -201,7 +204,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: optional reference. Its own pages may differ from the journal's pp. 17–36.
 - **RW-A-06** [OPTIONAL] In focus groups, only neurodivergent students raised concerns about the quality of captions and transcripts in online learning, such as keeping up with automated captions or finding mistakes in transcripts [LeCunff2024].
   - Support: (c) LeCunff2024 PDF p. 8 ("Only neurodivergent students raised concerns about the quality of the captions and transcripts …"); `Thesis/Article base/` PDF.
-  - Note: reserve reference. It supports "improve the transcript" (DIS-01), not timing.
+  - Note: reserve reference, on caption quality, not timing. It must not be used as advice to improve the transcript.
 
 ### 3.B ASR Timestamps and Forced Alignment (target 270)
 
@@ -212,7 +215,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: (c) Yeh2025 arXiv p. 1; EVN line 47.
   - Note: not a system we ran.
 - **RW-B-03** [REQUIRED] WhisperX observes that Whisper's word-level timestamps are not available out of the box. It therefore adds voice activity detection (VAD) and forced alignment of the recognized text with an external phoneme model [Bain2023].
-  - Support: (c) Bain2023 p. 4489 ("word-level timestamps are not available out-of-the-box"; "(iii) forced alignment with an external phoneme model to provide accurate word-level timestamps").
+  - Support: (c) Bain2023 arXiv:2303.00747v2 p. 1 ("word-level timestamps are not available out-of-the-box"; VAD, then forced alignment with a phoneme recognition model) and p. 2 §2.4. Interspeech page numbers are not used: the PDF at hand is the arXiv version.
 - **RW-B-04** [REQUIRED] The Massively Multilingual Speech (MMS) project trains a CTC acoustic model for forced alignment [Pratap2024], and TorchAudio implements CTC forced alignment on CPU and GPU with a tutorial for the MMS alignment model [Hwang2023].
   - Support: (c) Pratap2024 arXiv v1 §3.1.3, p. 6; Hwang2023 arXiv p. 3; EVN lines 82–83.
 - **RW-B-05** [REQUIRED] The NeMo Forced Aligner (NFA) uses CTC-based models to produce word-level subtitles. It was evaluated on AMI meeting recordings with a 200 ms match window, where MFA aligned only 5 of 16 audio files [Rastorgueva2023].
@@ -221,16 +224,17 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **RW-B-06** [REQUIRED] MFA is built on the Kaldi toolkit. It uses a Gaussian mixture model and hidden Markov model (GMM-HMM) architecture, with triphone acoustic models and speaker adaptation of acoustic features [McAuliffe2017].
   - Support: (c) McAuliffe2017 p. 498 ("MFA is built on top of Kaldi"; "standard GMM/HMM architecture"; "triphone acoustic models and speaker adaptation") and p. 499 (fMLLR).
   - Note: add [Povey2011] after "Kaldi" if space allows (RW-B-11).
-- **RW-B-07** [REQUIRED] On TIMIT and Buckeye, MFA placed word boundaries more accurately than WhisperX and MMS at every tolerance, in a comparison limited to words the recognizers got right [Rousso2024]. MFA 3.0 reached mean word-boundary errors of 19.93 ms on TIMIT and 21.75 ms on Buckeye [McAuliffe2026].
-  - Support: (c) Rousso2024 p. 1 (comparison "only on words correctly recognized") and p. 3 ("MFA outperforms the MMS and WhisperX timestamps at all thresholds"); LA lines 64–65. McAuliffe2026 p. 352, Table 4; LA lines 151–152.
-- **RW-B-08** [REQUIRED] A 2026 pilot benchmark found MFA the most precise of nine aligner configurations [Zolkepli2026]. FA-Bench gives each aligner either the reference transcript or a recognizer's output on the same TIMIT and Buckeye audio, for 21 open models and 9 commercial APIs with held-out speakers [Chu2026FABench].
-  - Support: (c) Zolkepli2026 arXiv p. 1, EVN line 19; Chu2026FABench arXiv v2 pp. 1–2, EVN line 9.
-  - Note: rule 1, a ranking of existing systems among several. Both are preprints, so recheck for published versions (`REFERENCE_AUDIT.md` §6).
-- **RW-B-09** [REQUIRED] Most of these evaluations use short, clean utterances, whereas captioning pipelines run on long recordings and often on error-prone recognized text [Vaidya2026].
-  - Support: (c) Vaidya2026 arXiv p. 1 ("relying on short, clean speech, perfect transcripts … real-world media and data-processing pipelines operate on long and diverse recordings"); EVN line 27.
-- **RW-B-10** [REQUIRED] Unlike these evaluations, this paper measures against manual boundaries where accuracy is lost on recordings of one to ten minutes: at chunk seams, with length, or through failed chunks.
+- **RW-B-07** [REQUIRED] On TIMIT and Buckeye, MFA placed word boundaries more accurately than WhisperX and MMS at all tested time resolutions, in a comparison limited to words the recognizers got right [Rousso2024]. MFA 3.0 reached mean word-boundary errors of 19.93 ms on TIMIT and 21.75 ms on Buckeye [McAuliffe2026].
+  - Support: (c) Rousso2024 p. 1 (comparison "only on words correctly recognized") and p. 4 ("at all time resolutions"); LA lines 64–65. McAuliffe2026 p. 352, Table 4; LA lines 151–152.
+- **RW-B-08** [REQUIRED] Two 2026 preprints also compare aligners on TIMIT and Buckeye: one finds MFA the most precise of nine existing configurations and then trains a more precise aligner [Zolkepli2026]; the other gives each system either the reference transcript or a recognizer's output, with held-out speakers [Chu2026FABench].
+  - Support: (c) Zolkepli2026 arXiv p. 1; Chu2026FABench arXiv v2 pp. 1–2.
+  - Note: the model counts were removed and the trained aligner added, because "MFA the most precise" alone is half of the abstract. Rule 1: among several. Both are preprints, so recheck for published versions (`REFERENCE_AUDIT.md` §6).
+- **RW-B-09** [REQUIRED] Evaluations of forced alignment have been described as relying on short, clean speech and perfect transcripts, whereas captioning pipelines run on long recordings and often on error-prone recognized text [Vaidya2026].
+  - Support: (c) Vaidya2026 arXiv p. 1 ("relying on short, clean speech, perfect transcripts … real-world media and data-processing pipelines operate on long and diverse recordings").
+  - Note: "most of these evaluations" was corrected to the source's own statement: Zolkepli2026 and Chu2026FABench also test degraded speech and recognizer output.
+- **RW-B-10** [REQUIRED] This paper reports seam error, the effect of length and failed chunks separately, on recordings of one to ten minutes spliced from clips with reference boundaries.
   - Support: positioning rule 5 (`TITLE_KEYWORDS_RQ.md` line 53); CLAIM-107–110.
-  - Note: a difference only, no claim about what others did not do.
+  - Note: "unlike these evaluations", "manual" and "where accuracy is lost" were removed. A difference only, no claim about what others did not do.
 - **RW-B-11** [OPTIONAL] MFA builds on Kaldi, an open-source toolkit with finite-state transducers and GMM acoustic models with linear and affine feature transforms [Povey2011].
   - Support: (c) Povey2011 p. 1; EVN line 58.
   - Note: optional reference.
@@ -239,13 +243,13 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **RW-B-13** [OPTIONAL] Very long audio can be aligned by recursive speech recognition with a gradually restricted dictionary and language model, a method tolerant to noise and to gaps in the transcript [Moreno1998].
   - Support: (c) Moreno1998 p. 1; LA lines 110–114.
   - Note: optional reference.
-- **RW-B-14** [OPTIONAL] A neural forced aligner based on a speech LLM handles spliced speech of up to 300 s, but its reference labels come from MFA rather than from manual boundaries [Mu2026].
-  - Support: (c) Mu2026 pp. 1–2 (up to 300 s) and p. 4 ("we adopt pseudo-timestamp labels generated by MFA"); LA lines 170–181.
-  - Note: reserve reference. Do not compare its numbers with ours (LA line 182).
+- **RW-B-14** [OPTIONAL] A neural forced aligner based on a speech LLM handles spliced speech of up to 300 s; its reference labels come mostly from MFA [Mu2026].
+  - Support: (c) Mu2026 ACL pp. 1–2 (up to 300 s) and pp. 4–5 (pseudo-timestamp labels by MFA); LA lines 170–181 (manual labels only for an internal Chinese set).
+  - Note: "rather than from manual boundaries" was corrected. Reserve reference. Do not compare its numbers with ours.
 - **RW-B-15** [OPTIONAL] Cutting audio with VAD introduces cascaded errors, as in other chunk-based alignment systems [Sorenson2026].
   - Support: (c) Sorenson2026 arXiv p. 4; EVN lines 94–95.
   - Note: reserve reference; preprint, so do not quote its numbers.
-- **RW-B-16** [OPTIONAL] Neural aligners trained on manual boundaries can now beat MFA. One example is Whisper fine-tuned to emit word start and end tokens, which reaches 11.6 ms on TIMIT under the FA-Bench protocol [Zolkepli2026]. These systems are not compared here.
+- **RW-B-16** [OPTIONAL] Neural aligners trained on manual boundaries can now beat MFA. One example is Whisper fine-tuned to emit word start and end tokens, which reaches a word-boundary error of 11.6 ms on TIMIT [Zolkepli2026]. These systems are not compared here.
   - Support: (c) Zolkepli2026 arXiv p. 1; EVN line 21. Optionally add [Rousso2026] (EVN lines 98–99; reserve).
 
 ### 3.C Boundary Refinement and Confidence (target 200)
@@ -253,25 +257,25 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **RW-C-01** [REQUIRED] Correcting boundaries after HMM alignment is an established idea. Boundary correction models with system fusion raised the share of TIMIT phone boundaries within 20 ms from 93.9 % to 96.8 % [Stolcke2014].
   - Support: (c) Stolcke2014 p. 5552 (abstract: "from 93.9% to 96.8% boundary accuracy with a 20-ms tolerance"); LA lines 97–100.
   - Note: phone boundaries on read speech. No priority claim (LA lines 101–108).
-- **RW-C-02** [REQUIRED] Cuozzo et al. [Cuozzo2018] refine MFA boundaries with a small CNN that scores 50 candidate positions (2 ms apart) in a window of acoustic features around each boundary. They train one model per pair of phone classes on read Brazilian Portuguese text-to-speech recordings of one speaker.
-  - Support: (c) Cuozzo2018 author copy pp. 2–4; EVN lines 68–69.
+- **RW-C-02** [REQUIRED] Cuozzo et al. [Cuozzo2018] refine MFA boundaries with a small CNN that takes a 50-frame window of acoustic features (2 ms per frame) around each boundary and outputs the corrected position. They train one model per pair of phone classes on Brazilian Portuguese text-to-speech recordings of one speaker and test it on that speaker and two others.
+  - Support: (c) Cuozzo2018 author copy pp. 2–5 (63 models, covering 85 % of boundaries); EVN lines 68–69. "50 candidate positions" was replaced by the method as described.
   - Note: define CNN (convolutional neural network) here or in Section III, whichever comes first.
-- **RW-C-03** [REQUIRED] For two other speakers, that refinement cut the share of phone boundaries more than 10 ms off from 52.6 % to 27.7 % and from 58.5 % to 41.0 %, with no statistical tests and no reliability output [Cuozzo2018].
+- **RW-C-03** [REQUIRED] For two other speakers, that refinement cut the share of phone boundaries more than 10 ms off from 52.6 % to 27.7 % and from 58.5 % to 41.0 % [Cuozzo2018].
   - Support: (c) Cuozzo2018 author copy p. 6, Table 2; EVN line 70.
-  - Note: do not compare these magnitudes with ours (EVN line 71; RW-C-07).
+  - Note: "no statistical tests and no reliability output" was removed (a verdict on another work); the difference is stated in RW-C-06. Do not compare these magnitudes with ours (EVN line 71; RW-C-07).
 - **RW-C-04** [REQUIRED] Kelley [Kelley2026] aligns with an ensemble of ten classifiers and places each boundary at the ensemble median with a 97.85 % confidence interval. The width of the interval shows model uncertainty and can help find boundaries to review. The ensemble gave a slight overall improvement on Buckeye and TIMIT.
   - Support: (c) Kelley2026, arXiv v4 p. 1; EVN lines 40–41.
 - **RW-C-05** [REQUIRED] FuseAlign adds a presence head that predicts whether a transcript word occurs in the audio and rejects absent words [Vaidya2026]. It scores word presence, not boundary error.
   - Support: (c) Vaidya2026 arXiv p. 6; EVN lines 28–29.
 - **RW-C-06** [REQUIRED] The module proposed here differs from these works in several ways:
-  - it refines word boundaries of spontaneous English after MFA;
+  - it refines word and phone boundaries of spontaneous English after MFA;
   - it is trained on 20 speakers and tested on 20 others;
   - it outputs a reliability score for each word, evaluated by ROC-AUC and a rejection curve;
   - it is compared with a constant-offset rival using speaker-level tests;
-  - it is reported with its failure to transfer to read speech.
+  - it is reported with its result on read speech, where it gives no significant improvement.
   - Support: EVN line 71 (Cuozzo2018 use), line 42 (Kelley2026 use), line 29 (Vaidya2026 use); CLAIM-103, 104, 105.
   - Note: stated as differences, not "first" (rule 3).
-- **RW-C-07** [OPTIONAL] Those gains were measured on read single-speaker speech at 5–10 ms tolerances, ours on conversational speech, so their sizes are not compared.
+- **RW-C-07** [OPTIONAL] Those gains were measured on text-to-speech recordings of phonetically balanced sentences at 5–10 ms tolerances, ours on conversational speech, so their sizes are not compared.
   - Support: EVN line 71.
 - **RW-C-08** [OPTIONAL] Neural segmentation with sub-frame interpolation increased the share of boundaries within 10 ms by 27.92 % relative to MFA, but MFA marginally outperformed the networks beyond about 25–30 ms [Kelley2024].
   - Support: (c) Kelley2024 arXiv pp. 1, 31–32; EVN lines 34–35.

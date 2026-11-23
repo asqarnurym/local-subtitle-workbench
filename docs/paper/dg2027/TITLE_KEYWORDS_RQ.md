@@ -31,8 +31,8 @@ The blind version removes both blocks and any self-identifying sentence; the DG 
 
 Derived from `IMPROVEMENT_PLAN.md` §10.1 (RQ1–RQ4), narrowed to what the 6-page paper reports. Each is answerable from approved claims only.
 
-- **RQ1.** How large is the word- and phone-boundary error of open pipelines that combine speech recognition with forced alignment, measured against manual boundaries on read (TIMIT) and spontaneous (Buckeye) English speech, and how much does a known transcript reduce it compared with recognized text? *Evidence:* CLAIM-101, 102, 106 (with word coverage for scenario B), robustness under boundary F1 CLAIM-114, 115; where B loses CLAIM-117 (candidate).
-- **RQ2.** Does a lightweight learned post-alignment module reduce forced-alignment boundary error more than a constant-offset correction on held-out speakers, and does its reliability score separate boundaries that are more than 20 ms off? *Evidence:* CLAIM-103, 104 (negative transfer to read speech), 105, 114; where BRQE gains CLAIM-118 (candidate).
+- **RQ1.** How large is the word- and phone-boundary error of open pipelines that combine speech recognition with forced alignment, measured against manual boundaries on read (TIMIT) and spontaneous (Buckeye) English speech, and how much does a known transcript reduce it compared with recognized text? *Evidence:* CLAIM-101, 102, 106 (with word coverage for scenario B), robustness under boundary F1 CLAIM-114, 115; where B loses CLAIM-117.
+- **RQ2.** Does a lightweight learned post-alignment module reduce forced-alignment boundary error more than a constant-offset correction on held-out speakers, and does its reliability score separate boundaries that are more than 20 ms off? *Evidence:* CLAIM-103, 104 (negative transfer to read speech), 105, 114; where BRQE gains CLAIM-118.
 - **RQ3.** On recordings of one to ten minutes, how do recording length and chunking affect boundary error and the share of failed alignments? *Evidence:* CLAIM-107…110.
 
 RQ4 (tempo, Whisper size) is answered in one sentence in the Discussion (CLAIM-111…113 and the S3 result), not as a research question, to fit 6 pages.
@@ -54,7 +54,7 @@ The author asked for the presentation that shows the work in its best light, wit
    - speaker-level exact tests for every comparison.
 6. Keep honest edges visible: negative transfer to read speech (CLAIM-104, 113), survivors only in S1b, scenario-B matched-word optimism (CLAIM-115). Stating limits plainly is part of the best light for reviewers.
 
-## Contributions (for the Introduction; final wording after CLAIM-117, 118 are approved)
+## Contributions (for the Introduction; accepted 23.11.2026)
 
 1. **Refinement and reliability for forced alignment.** A lightweight module, trained only on speakers disjoint from the test set and frozen before testing, that corrects word boundaries and scores their reliability. On held-out spontaneous speech it beats a constant-offset correction under both error and boundary F1 for all 20 test speakers, with the largest corrections at the ends of speech segments, where the aligner is least accurate; its reliability score flags boundaries more than 20 ms off (ROC-AUC 0.75), so a captioner can review a short list instead of every word. Its limits on read speech are reported. *Evidence:* CLAIM-103, 105, 114, 118 (candidate), 104; 20 of 20 speakers on MAE: `reports/e1_analysis_20261102/analysis.json` speaker_comparisons (B2brqe_vs_B2const, A2brqe_vs_A2const).
 2. **Long recordings.** On recordings of one to ten minutes, accuracy is lost at chunk seams, not with length, and a single failed chunk removes a whole recording; an overlap-and-stitch scheme passes a pre-registered seam check. *Evidence:* CLAIM-107…110.
@@ -62,7 +62,7 @@ The author asked for the presentation that shows the work in its best light, wit
 
 No claim of novelty for post-alignment correction itself (prior art: Stolcke2014, Cuozzo2018), of learning benefit, or of accessibility impact on users.
 
-## CLAIM candidates for the author (from `docs/FA_EXTRAS_RESULTS.md`, independently checked 1620/1620)
+## CLAIM-117 and 118 (approved 23.11.2026, in `docs/CLAIM_LEDGER.csv`)
 
 - **CLAIM-117.** On Buckeye test speakers, boundaries between two correctly recognized words are placed equally well with recognized and with known text (recall at 20 ms 0.728 vs 0.731); recognized text has fewer such boundaries (74 % vs 89 % of reference boundaries), so the scenario-B loss comes from recognition, not alignment. Descriptive, no test.
 - **CLAIM-118.** BRQE's largest corrections are at the ends of speech segments, where MFA is least accurate: on Buckeye, recall at 20 ms of the segment-final boundary rises from 0.41–0.44 to 0.75–0.76, and segment edges (9 % of boundaries) give about 40 % of the F1 recall gain; on read speech (TIMIT) the gain is at segment edges only. Descriptive, no test.

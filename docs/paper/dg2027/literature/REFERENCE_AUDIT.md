@@ -38,6 +38,7 @@ Status: **R** = full text read and evidence recorded; **R\*** = read earlier, ev
 | | McAuliffe2017 | MFA | R\* |
 | | McAuliffe2026 | MFA accuracy 2026 on TIMIT/Buckeye | R\* |
 | | Pratap2024 | MMS (our CTC baselines) | R\* |
+| | Hwang2023 | TorchAudio forced_align used for CTC baselines | R (23.11.2026) |
 | | Rastorgueva2023 | NFA for subtitles; MFA fails on long files | R\* |
 | | Rousso2024 | MFA vs WhisperX vs MMS on TIMIT/Buckeye | R\* |
 | | Chu2026FABench | Same two-track comparison; metric critique | R |
@@ -54,7 +55,7 @@ Status: **R** = full text read and evidence recorded; **R\*** = read earlier, ev
 | Corpora | Garofolo1993 | TIMIT | R\* (scan) |
 | | Pitt2005 | Buckeye | R\* |
 | | Raymond2002 | Buckeye annotator consistency (only if the 20 ms context is discussed) | R\* |
-| Statistics | Holm1979 | Holm correction used | **TODO: read** |
+| Statistics | Holm1979 | Holm correction used | R (23.11.2026) |
 | | Liu2020Blockwise | Utterances within a speaker are dependent | R\* |
 | | Dror2018 | Choice of paired tests (optional) | R\* |
 
@@ -74,7 +75,7 @@ Sumi2025, Ingavelez2022, Sweller2020, Mayer2020 (actually Castro-Alonso et al. 2
 | Neural boundary refinement prior art | Closed: Kelley2024 and Cuozzo2018 read |
 | Whisper word-timestamp accuracy (recent) | Closed: Yeh2025; FA-Bench Whisper rows |
 | Caption timing and users (recent) | Closed: Thompson2026 (seconds-scale caveat) |
-| Holm original | Open: JSTOR only |
+| Holm original | Closed: read 23.11.2026 from a scan the author obtained |
 | Software citations | Closed: SileroVAD, FasterWhisper |
 
 ## 5. Age and type (for information; the conference sets no quotas)
@@ -83,7 +84,7 @@ Of 36: 2026 — 9, 2024–2025 — 8, 2020–2023 — 7, 2011–2018 — 7, befo
 
 ## 6. Before submission
 
-1. Read Holm1979 through a library (Cuozzo2018 read and completed 23.11.2026).
+1. Holm1979 and Cuozzo2018 read 23.11.2026; Hwang2023 (TorchAudio 2.1) added and read.
 2. Confirm the DG 2026 paper's publication data (Nurym2026).
 3. Re-check the three preprints for published versions.
 4. Every cited claim in the text must point to a quote or note in `EVIDENCE_NEW_SOURCES.md` or `LITERATURE_ANNOTATIONS.md`.

@@ -70,7 +70,22 @@ Each entry was read from the downloaded full text (`literature/pdf/`, plain text
 - **Result (p6, Table 2).** Share of phone boundaries off by more than 10 ms: 50.3 → 20.0 % (same speaker), 52.6 → 27.7 % (other female), 58.5 → 41.0 % (male). Abstract: "an absolute gain between 20% and 33% in cross speaker scenario". No statistical tests, no confidence or reliability output.
 - **Use in the paper.** Closest prior art for BRQE's refinement head: a CNN that corrects MFA boundaries in a fixed window and transfers across speakers. Differences to state (not "first"): BRQE works on word boundaries of spontaneous English, is trained on 20 disjoint speakers and tested on 20 held-out speakers, adds a reliability head (ROC-AUC, rejection curve), is compared with a constant-offset rival with speaker-level tests, and reports its negative transfer to read speech. Their gain is on read single-speaker TTS data at 5–10 ms tolerances; ours is smaller and on conversational speech — do not compare magnitudes.
 
+## Holm1979 — S. Holm, *A Simple Sequentially Rejective Multiple Test Procedure*, Scandinavian Journal of Statistics 6(2):65–70, 1979, doi:10.2307/4615733. Read 23.11.2026 from a scan the author obtained (6 pp., no text layer; pages read as images). SHA-256 `eb4b0014…`
+
+- **Procedure (p66–67, Scheme 1).** Order the obtained levels (p-values) $R^{(1)} \le \dots \le R^{(n)}$; compare them in turn with α/n, α/(n−1), …, α/1; reject while the level is below its bound and stop at the first that is not, accepting it and all remaining hypotheses. Holm calls it the "sequentially rejective Bonferroni test".
+- **Guarantee (p67, Theorem 1).** The procedure "has the multiple level of significance α for free combinations", i.e. the probability of rejecting any true hypothesis is at most α (familywise error), proved from the Boole inequality.
+- **Versus Bonferroni (p67).** Never rejects less than the classical Bonferroni test with the same statistics and in non-trivial cases rejects more, so it "ought to replace" Bonferroni.
+- **Use in the paper.** One citation where Eq. 4 introduces Holm-adjusted p-values. Our Eq. 4 states the same procedure as adjusted p-values (reject $H_{(k)}$ iff $p^{	ext{Holm}}_{(k)} \le α$); the adjusted-value form is equivalent but is not written that way in Holm's paper — do not attribute the formula's notation to him. Pages 68–70 (power examples, applications) were not read; nothing from them is used.
+
+## Hwang2023 — J. Hwang, M. Hira, C. Chen, X. Zhang, Z. Ni et al., *TorchAudio 2.1: Advancing Speech Recognition, Self-Supervised Learning, and Audio Processing Components for PyTorch*, Proc. IEEE ASRU 2023, pp. 1–9, doi:10.1109/ASRU57964.2023.10389648 (Crossref). Read from arXiv:2310.17864v1. SHA-256 `7921603c…`
+
+- **Forced alignment (p3, §3).** TorchAudio 2.1 adds CTC-based forced alignment: `forced_align` "computes frame-level alignments between audio and transcripts using a CTC-trained neural network model", on CPU and GPU; a tutorial shows alignment "for more than 1000 languages using the CTC-based alignment model" from MMS.
+- **Use in the paper.** Software citation for our CTC baselines (A1, B1): `torchaudio.pipelines.MMS_FA` with `forced_align` (`src/subtitle_workbench/ctc_aligner.py`). Pratap2024 covers the MMS model, this covers the alignment implementation.
+
 ## Read but kept in reserve (not for the 6-page paper)
+
+- **Found 23.11.2026, not read (candidates):** Huang et al., *Less Peaky and More Accurate CTC Forced Alignment by Label Priors*, arXiv:2406.02560 (ICASSP 2024) — on CTC boundary shifts like our late CTC starts; *Scaling Forced Alignment to End-User Devices*, arXiv:2609.21145 (2026) — local, on-device alignment.
+
 
 - **Multilingual2026** — Weber, Zehavi, Rousso, Keshet, *Multilingual Word-Level Forced Alignment with Self-Supervised Representations and Learned Dynamic Programming*, arXiv:2606.10675v1 (Jun 2026). Claims to outperform MFA and MMS on TIMIT and Buckeye. Preprint; optional one-clause citation with FuseAlign and Zolkepli.
 - **RefFree2026** — Akavarapu, Daniel, Jäger, *Phoneme- and Word-Level Metrics Using Self-Supervised Speech Representations for Forced Alignment Evaluation*, arXiv:2608.28508v1. Reference-free alignment metrics; dissertation reserve.
@@ -78,5 +93,4 @@ Each entry was read from the downloaded full text (`literature/pdf/`, plain text
 
 ## Not obtained (need manual access)
 
-- **Holm 1979**, *A Simple Sequentially Rejective Multiple Test Procedure*, Scandinavian Journal of Statistics 6(2):65–70, doi:10.2307/4615733 — JSTOR only; the copies found online are of unknown authorization. The procedure we use is defined in Eq. (Holm) and implemented in `metrics.py`; cite after reading the original through a library.
 - **CHI 2024**, *How Users Experience Closed Captions on Live Television: Quality Metrics Remain a Challenge*, doi:10.1145/3613904.3641988 — automatic download blocked by ACM; optional.

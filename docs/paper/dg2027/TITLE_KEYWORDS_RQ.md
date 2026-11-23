@@ -63,9 +63,11 @@ Author's requirement (23.11.2026): the paper must not read as a check of someone
    - speaker-level exact tests for every comparison (FA-Bench reports none; text search for Wilcoxon, bootstrap and confidence intervals found nothing).
 
 **Proposed contributions v2 (replace the list below if the author agrees).**
-1. A lightweight boundary refinement and reliability module for forced alignment, trained only on disjoint speakers and frozen before testing. On held-out spontaneous speech it beats a constant-offset rival under both MAE and boundary F1, mostly at speech-segment edges, and its reliability score detects boundaries more than 20 ms off (ROC-AUC 0.75). Its negative transfer to read speech is reported.
+1. A lightweight boundary refinement and reliability module for forced alignment, trained only on disjoint speakers and frozen before testing. On held-out spontaneous speech it beats a constant-offset rival under both MAE and boundary F1, with about 40 % of the gain at speech-segment edges (9 % of boundaries), and its reliability score detects boundaries more than 20 ms off (ROC-AUC 0.75). Its negative transfer to read speech is reported.
 2. Evidence on one- to ten-minute recordings that chunk seams, not length, drive the error and that one failed chunk removes whole recordings, with an overlap-and-stitch scheme that passes a pre-registered seam check.
 3. A measurement, inside one local captioning pipeline with speaker-level tests, of what recognized text costs compared with a known transcript, and where the cost arises: on boundaries between correctly recognized words both scenarios are equally accurate, so the loss comes from recognition, not alignment.
+
+Evidence needed: the edge share in item 1 and the equal accuracy in item 3 come from `docs/FA_EXTRAS_RESULTS.md` (descriptive, independently checked). They need a CLAIM row approved by the author before they enter the paper.
 
 Why this is stronger than "a same-pipeline comparison": item 3 now ends in a practical finding for captioning (improve the transcript, not the aligner), which the benchmarks do not state for a pipeline; items 1–2 are methods, not measurements of existing tools.
 

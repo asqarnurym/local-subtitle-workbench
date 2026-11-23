@@ -37,7 +37,7 @@ Status: **R** = full text read and evidence recorded; **R\*** = read earlier, ev
 | Forced alignment | Povey2011 | Kaldi under MFA | R |
 | | McAuliffe2017 | MFA | R\* |
 | | McAuliffe2026 | MFA accuracy 2026 on TIMIT/Buckeye | R\* |
-| | Pratap2023 | MMS (our CTC baselines) | R\* |
+| | Pratap2024 | MMS (our CTC baselines) | R\* |
 | | Rastorgueva2023 | NFA for subtitles; MFA fails on long files | R\* |
 | | Rousso2024 | MFA vs WhisperX vs MMS on TIMIT/Buckeye | R\* |
 | | Chu2026FABench | Same two-track comparison; metric critique | R |
@@ -58,7 +58,7 @@ Status: **R** = full text read and evidence recorded; **R\*** = read earlier, ev
 | | Liu2020Blockwise | Utterances within a speaker are dependent | R\* |
 | | Dror2018 | Choice of paired tests (optional) | R\* |
 
-For 6 pages, 22–26 citations are realistic. The "optional" rows are the first to drop.
+For 6 pages, 22–26 citations are realistic. The "optional" rows are the first to drop. **Update 23.11.2026:** criticality decided by two independent reviewers (advocate and critic), see `BIBLIOGRAPHY_CRITICALITY.md`: 18 must-keep, 5 keep, Holm1979 only if read, torchaudio to add if read, 5 to drop. Key Pratap2023 renamed Pratap2024 (the entry year was already 2024).
 
 ## 3. Pool entries not used in the paper (kept for the dissertation)
 

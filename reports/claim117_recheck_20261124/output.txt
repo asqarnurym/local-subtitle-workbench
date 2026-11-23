@@ -1,0 +1,8 @@
+buckeye A2_proposed B2_proposed n 13570 recall 0.7452 0.728 MAE 17.58 26.07 median 10.0 10.0 >100ms 0.0141 0.0321
+   recall diff p 1.9073486328125e-06 | MAE diff 8.7 worse 19 / 20 p 3.62396240234375e-05
+buckeye A2_brqe B2_brqe n 13570 recall 0.7864 0.7699 MAE 15.45 24.03 median 7.3 7.6 >100ms 0.0134 0.0316
+   recall diff p 8.20159912109375e-05 | MAE diff 8.79 worse 19 / 20 p 3.62396240234375e-05
+timit A2_proposed B2_proposed n 2358 recall 0.7379 0.7362 MAE 17.77 17.92 median 9.56 9.56 >100ms 0.0131 0.014
+   recall diff p 0.625 | MAE diff 0.17 worse 6 / 16 p 0.474609375
+timit A2_brqe B2_brqe n 2358 recall 0.7409 0.7383 MAE 17.35 17.53 median 7.64 7.67 >100ms 0.0123 0.014
+   recall diff p 0.375 | MAE diff 0.19 worse 10 / 16 p 0.528167724609375

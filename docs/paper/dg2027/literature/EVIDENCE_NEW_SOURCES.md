@@ -99,7 +99,7 @@ Each entry was read from the downloaded full text (`literature/pdf/`, plain text
 - **Use in the paper.** Optional, one clause in Related Work: neural phoneme aligners trained on manual boundaries now beat MFA at 25–100 ms on TIMIT and Buckeye (with Zolkepli2026, Multilingual2026). FA-Bench notes FALCON's training overlaps its Buckeye split. Preprint.
 
 ### Strgar2022 — L. Strgar, D. Harwath, *Phoneme Segmentation Using Self-Supervised Speech Models*, Proc. IEEE SLT 2022, pp. 1067–1073, doi:10.1109/SLT54892.2023.10022827 (Crossref). Read from arXiv:2211.01461v1. SHA-256 `1e49fa71…`
-- **Evaluation (p4–5).** Precision and recall of boundaries are ambiguous when several predictions fall within one tolerance window; a strict scheme "prohibits double counting", a lenient one allows it; results "consistently show deviations of 3-4%" (supervised) and 5–7 % (unsupervised).
+- **Evaluation (p5).** Precision and recall of boundaries are ambiguous when several predictions fall within one tolerance window; a strict scheme "prohibits double counting", a lenient one allows it; results "consistently show deviations of 3-4%" (supervised) and 5–7 % (unsupervised).
 - **Use in the paper.** Optional, one clause where boundary F1 is defined: our matching is strict by construction (each predicted word is paired with at most one reference word). Cite only if the F1 definition is given in the paper.
 
 ## Read but kept in reserve (not for the 6-page paper)

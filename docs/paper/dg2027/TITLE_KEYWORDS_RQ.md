@@ -1,5 +1,7 @@
 # Title, keywords, affiliation and research questions (DG 2027)
 
+> **Correction 24.11.2026.** CLAIM-117 and 118 are suspended. Contribution 3 must not say that the loss "comes from recognition, not alignment", that both scenarios are "placed equally well", or that effort is better spent on the transcript. Contribution 1 must not say "ends of speech segments" or "so a captioner can review a short list". Both contributions await new wording by the author.
+
 Draft 21.11.2026 for the author's decision. Constraints: DG rules forbid symbols, special characters and math in the title and abstract; the title must not promise what was not measured (no lecture corpus with manual boundaries, no user study, no guarantee of sub-20 ms accuracy).
 
 ## Title

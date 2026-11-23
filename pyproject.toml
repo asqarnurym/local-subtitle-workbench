@@ -42,7 +42,7 @@ packages = ["src/subtitle_workbench"]
 target-version = "py311"
 line-length = 100
 # Archived verifier code is evidence and stays byte-identical.
-extend-exclude = ["reports/p1_p4_20261120/independent", "reports/f1_20261123/independent", "reports/fa_extras_20261123/independent"]
+extend-exclude = ["reports/p1_p4_20261120/independent", "reports/f1_20261123/independent", "reports/fa_extras_20261123/independent", "reports/claim117_recheck_20261124"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]

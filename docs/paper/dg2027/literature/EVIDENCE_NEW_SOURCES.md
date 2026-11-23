@@ -63,6 +63,13 @@ Each entry was read from the downloaded full text (`literature/pdf/`, plain text
 - **Silero VAD** — Silero Team, GitHub repository snakers4/silero-vad; the README gives a BibTeX entry (author "Silero Team", year 2024). Cite with access date.
 - **faster-whisper** — SYSTRAN, GitHub repository SYSTRAN/faster-whisper: reimplementation of Whisper on CTranslate2, "up to 4 times faster than openai/whisper for the same accuracy", 8-bit quantization on CPU and GPU. Cite with access date. Our runs: large-v3, `int8_float16`, CUDA.
 
+## Cuozzo2018 — L. G. D. Cuozzo, D. A. Silva, M. Uliani Neto, F. O. Simões, E. J. Nagle (CPqD), *CNN-Based Phonetic Segmentation Refinement with a Cross-Speaker Setup*, PROPOR 2018, LNCS 11122, pp. 448–456, doi:10.1007/978-3-319-99722-3_45 (Crossref). Read 23.11.2026 from the author copy the author downloaded (9 pp.). SHA-256 `65c568f4…`
+
+- **Method (p2–3).** Post-processing after MFA: a small VGG-like CNN looks at a 50-bin context (2 ms shift, about ±50 ms) of 16 acoustic features (12 MGCC with energy, two spectral-distance deltas, two energy deltas) centred on the MFA boundary and outputs the boundary position in the window. Training places the manual boundary at each of the 50 positions; one model per pair of phone classes, 63 models, covering 85 % of boundaries (p5).
+- **Data (p3–4).** Brazilian Portuguese TTS recordings, read phonetically balanced sentences, three speakers; MFA and CNN trained on one female speaker (450 min); "cross speaker" = the other female and the male speaker.
+- **Result (p6, Table 2).** Share of phone boundaries off by more than 10 ms: 50.3 → 20.0 % (same speaker), 52.6 → 27.7 % (other female), 58.5 → 41.0 % (male). Abstract: "an absolute gain between 20% and 33% in cross speaker scenario". No statistical tests, no confidence or reliability output.
+- **Use in the paper.** Closest prior art for BRQE's refinement head: a CNN that corrects MFA boundaries in a fixed window and transfers across speakers. Differences to state (not "first"): BRQE works on word boundaries of spontaneous English, is trained on 20 disjoint speakers and tested on 20 held-out speakers, adds a reliability head (ROC-AUC, rejection curve), is compared with a constant-offset rival with speaker-level tests, and reports its negative transfer to read speech. Their gain is on read single-speaker TTS data at 5–10 ms tolerances; ours is smaller and on conversational speech — do not compare magnitudes.
+
 ## Read but kept in reserve (not for the 6-page paper)
 
 - **Multilingual2026** — Weber, Zehavi, Rousso, Keshet, *Multilingual Word-Level Forced Alignment with Self-Supervised Representations and Learned Dynamic Programming*, arXiv:2606.10675v1 (Jun 2026). Claims to outperform MFA and MMS on TIMIT and Buckeye. Preprint; optional one-clause citation with FuseAlign and Zolkepli.
@@ -72,5 +79,4 @@ Each entry was read from the downloaded full text (`literature/pdf/`, plain text
 ## Not obtained (need manual access)
 
 - **Holm 1979**, *A Simple Sequentially Rejective Multiple Test Procedure*, Scandinavian Journal of Statistics 6(2):65–70, doi:10.2307/4615733 — JSTOR only; the copies found online are of unknown authorization. The procedure we use is defined in Eq. (Holm) and implemented in `metrics.py`; cite after reading the original through a library.
-- **Cuozzo et al. 2018**, *CNN-Based Phonetic Segmentation Refinement with a Cross-Speaker Setup*, PROPOR 2018, LNCS, doi:10.1007/978-3-319-99722-3_45 — paywalled. Closest prior art to BRQE's refinement head (CNN adjusting each boundary in a fixed window, cross-speaker). Strongly recommended to obtain and cite, to avoid an unsupported novelty claim.
 - **CHI 2024**, *How Users Experience Closed Captions on Live Television: Quality Metrics Remain a Challenge*, doi:10.1145/3613904.3641988 — automatic download blocked by ACM; optional.

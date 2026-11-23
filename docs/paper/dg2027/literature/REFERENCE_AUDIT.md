@@ -7,7 +7,7 @@ Inputs: the audited pool `docs/paper/references.bib` (43 entries, `docs/LITERATU
 **FA-Bench** (Chu et al., arXiv, Oct 2026) evaluates word and phone boundaries on TIMIT and Buckeye with held-out speakers under two tracks — reference transcript vs recognizer output — for 21 open systems and 9 APIs. This is the comparison behind our RQ1 and gap item 1 (`IMPROVEMENT_PLAN.md` §10.1: "known text vs ASR rarely compared in one pipeline on manual boundaries"). That item can no longer be presented as a gap.
 
 What still holds and is ours:
-1. **BRQE**: a lightweight learned refinement plus a per-boundary reliability score, trained only on disjoint speakers, frozen before testing, compared with a constant-offset rival, with a negative transfer result on read speech (CLAIM-103…105). Closest prior work: boundary correction over HMM (Stolcke2014), CNN boundary refinement (Cuozzo2018, not yet read), ensemble confidence intervals (Kelley2026). None of these reports a reliability head evaluated by ROC-AUC and a rejection curve on held-out spontaneous-speech speakers — state it as a difference, not as a first.
+1. **BRQE**: a lightweight learned refinement plus a per-boundary reliability score, trained only on disjoint speakers, frozen before testing, compared with a constant-offset rival, with a negative transfer result on read speech (CLAIM-103…105). Closest prior work: boundary correction over HMM (Stolcke2014), CNN refinement of MFA boundaries with cross-speaker transfer on read TTS speech (Cuozzo2018, read 23.11.2026), ensemble confidence intervals (Kelley2026). None of these reports a reliability head evaluated by ROC-AUC and a rejection curve on held-out spontaneous-speech speakers — state it as a difference, not as a first.
 2. **Long recordings**: chunk seams, not length, drive the error; one failed chunk removes whole recordings; overlap-and-stitch passes a pre-registered seam check (CLAIM-107…110). FuseAlign (2026) independently notes that a globally constrained decoder lets one mismatch shift neighbouring words — consistent with our seam mechanism.
 3. **RQ1 becomes a consistency check, not a contribution**: our numbers agree in order with FA-Bench, Zolkepli2026 and McAuliffe2026 (MFA about 19–22 ms; Whisper timestamps about 120–150 ms; torchaudio MMS about 37–42 ms), obtained in one local pipeline with speaker-level exact tests and coverage beside every error.
 
@@ -47,7 +47,7 @@ Status: **R** = full text read and evidence recorded; **R\*** = read earlier, ev
 | | Vaidya2026 | Long-form, ASR-transcript aligner; presence head | R |
 | | Mu2026 | Neural aligner on long spliced speech (optional) | R\* |
 | Refinement and reliability | Stolcke2014 | Boundary correction over HMM (prior art) | R\* |
-| | Cuozzo2018 | CNN boundary refinement (closest prior art) | **TODO: obtain** |
+| | Cuozzo2018 | CNN boundary refinement (closest prior art) | R (23.11.2026) |
 | | Kelley2026 | Per-boundary uncertainty for review | R |
 | Long recordings | Moreno1998 | Recursive alignment of very long audio | R\* |
 | | Kurzinger2020 | CTC segmentation of long audio (optional) | R\* |
@@ -71,7 +71,7 @@ Sumi2025, Ingavelez2022, Sweller2020, Mayer2020 (actually Castro-Alonso et al. 2
 | Recent (2025–2026) aligner benchmarks on manual boundaries | Closed: Chu2026FABench, Zolkepli2026, McAuliffe2026 |
 | Kaldi primary source | Closed: Povey2011 |
 | Reliability or uncertainty of individual boundaries | Closed: Kelley2026; Vaidya2026 (presence head) |
-| Neural boundary refinement prior art | Partly: Kelley2024 read; Cuozzo2018 needs manual access |
+| Neural boundary refinement prior art | Closed: Kelley2024 and Cuozzo2018 read |
 | Whisper word-timestamp accuracy (recent) | Closed: Yeh2025; FA-Bench Whisper rows |
 | Caption timing and users (recent) | Closed: Thompson2026 (seconds-scale caveat) |
 | Holm original | Open: JSTOR only |
@@ -83,7 +83,7 @@ Of 36: 2026 — 9, 2024–2025 — 8, 2020–2023 — 7, 2011–2018 — 7, befo
 
 ## 6. Before submission
 
-1. Read Holm1979 and Cuozzo2018 through a library; complete Cuozzo's given names.
+1. Read Holm1979 through a library (Cuozzo2018 read and completed 23.11.2026).
 2. Confirm the DG 2026 paper's publication data (Nurym2026).
 3. Re-check the three preprints for published versions.
 4. Every cited claim in the text must point to a quote or note in `EVIDENCE_NEW_SOURCES.md` or `LITERATURE_ANNOTATIONS.md`.

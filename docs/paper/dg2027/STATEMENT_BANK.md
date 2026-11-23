@@ -1,8 +1,6 @@
 # Statement bank for the DG 2027 paper
 
-> **DRAFT, NOT CHECKED (24.11.2026).** Written by a subagent that was stopped before its final self-check. Statements resting on the 23.11 wording of CLAIM-117 or on CLAIM-118 (withdrawn) must be rewritten or removed.
->
-> **Check status.** Results (§6), Table I (§9), Method (§4), Setup (§5), Discussion (§7), Introduction (§2), Related Work (§3) and Conclusion (§8): checked against the sources on 24.11.2026. the Abstract plan: not checked yet.
+> **Check status (24.11.2026).** All sections, Table I and the Abstract plan were checked against the sources; the open decisions were settled (§10f). Still open: the items of §10d not marked done and the missing evidence notes of eight older sources.
 
 **Paper.** "Word Boundary Accuracy and Reliability Estimation in Forced Alignment for Accessible Educational Video" (Askar Nurym, Tamara Zhukabayeva, Astana IT University). IEEE DG 2027, 4–6 pages, A4 two-column IEEE template, English.
 
@@ -87,31 +85,24 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 **Abstract facts** (one paragraph, in contribution order). There are no citations, symbols or math, and units are spelled out. "F1" can be written "F-score" (see §10d).
 
-- **AB-01** Word-level caption timing matters for accessible educational video, yet open pipelines that combine speech recognition with forced alignment are rarely tested inside a local captioning pipeline. The test needs manual boundaries, speakers unseen in training, and long recordings.
-  - Support: Gernsbacher2015 p. 195 (captions benefit many viewers); RQ1–RQ3 (`TITLE_KEYWORDS_RQ.md` lines 34–36); positioning rule 5.
-  - Note: do not name other benchmarks (main.tex abstract comment). If "rarely" seems a priority claim, write "This paper tests…" instead.
-- **AB-02** The paper proposes a local pipeline with these parts: speech detection, Whisper recognition, transcript anchoring, the Montreal Forced Aligner, and a lightweight learned module that refines each word boundary and estimates its reliability. It runs on a laptop graphics card with 4 gigabytes of memory.
-  - Support: (d) `PSEUDOCODE.md` Algorithm 1; `docs/ARCHITECTURE.md` line 5.
-- **AB-03** Evaluation uses read English (160 TIMIT utterances) and spontaneous English (999 Buckeye clips from 20 test speakers), both with manual word boundaries. The module was trained on 20 other speakers and frozen before testing.
-  - Support: CLAIM-101, CLAIM-104 (counts); `reports/buckeye_split_20260401.json`; CLAIM-103 reason (pre-registered rule).
-- **AB-04** On held-out spontaneous speech with a known transcript, the module lowers mean absolute word-boundary error from 19.6 to 17.0 milliseconds. It beats a constant-offset correction for all 20 test speakers, with its largest corrections at the ends of speech segments.
-  - Support: CLAIM-103; CLAIM-118. The 20 of 20 speakers comes from (b) `reports/e1_analysis_20261102/analysis.json` corpora.buckeye.speaker_comparisons.A2brqe_vs_A2const.n_speakers_improved = 20 and the boundary F1 result in CLAIM-114. **Needs CLAIM before submission** for the MAE speaker count.
-- **AB-05** Its reliability score detects words whose boundaries are more than 20 milliseconds off: the area under the receiver operating characteristic curve is 0.756 with a known transcript and 0.749 with recognized text.
-  - Support: CLAIM-105.
-- **AB-06** On recordings of one to ten minutes, accuracy is lost at chunk seams rather than with length, and an overlap-and-stitch scheme removes the excess error near seams. Failed recordings still grow with length, because one failed chunk fails a whole recording.
-  - Support: CLAIM-107, CLAIM-108, CLAIM-109.
-  - Note: keep "survivors" in the body (CLAIM-108). The chunk explanation is descriptive (CLAIM-109 reason).
-- **AB-07** Recognized text lowers boundary F-score at a 20 millisecond tolerance from 0.710 to 0.624 on spontaneous speech, at 89.0 percent word coverage. Boundaries between correctly recognized words are placed equally well, so the loss comes from recognition, not alignment.
-  - Support: CLAIM-114; CLAIM-102 (coverage); CLAIM-117.
-  - Note: CLAIM-114 is a secondary analysis and CLAIM-117 is descriptive. In the abstract, "the loss comes from recognition" may stay, because the body states both caveats.
-- **AB-08** The module, trained on spontaneous speech, does not significantly improve read speech.
-  - Support: CLAIM-104.
+- **AB-01** Captions help many learners only if words appear at the right moment. This paper studies word-boundary accuracy and reliability in a local captioning pipeline for accessible educational video.
+  - Support: Gernsbacher2015 p. 195 (captions benefit many viewers; "only if" is our motivation, not a finding; write "depend on timing" if a reviewer could read it as one). No other benchmark is named.
+- **AB-02** The pipeline combines speech detection, speech recognition or a known transcript, transcript anchoring and the Montreal Forced Aligner with a lightweight learned module that refines each word boundary and scores the reliability of each word. It runs on a laptop with a 4 gigabyte graphics card.
+  - Support: (d) `PSEUDOCODE.md` Algorithm 1; `docs/ARCHITECTURE.md` line 5; SET-D-01.
+- **AB-03** It is evaluated on spontaneous and read English (999 Buckeye clips from 20 speakers unseen in training and 160 TIMIT utterances) against reference boundaries based on hand-corrected labels.
+  - Support: CLAIM-101, 104; SET-A-01.
+- **AB-04** On spontaneous speech with a known transcript, the module lowers the mean absolute word-boundary error from 19.6 to 17.0 milliseconds and beats a constant-offset correction for all 20 test speakers. Its reliability score detects words with boundary errors above 20 milliseconds with an area under the receiver operating characteristic curve of about 0.75. It does not significantly improve read speech.
+  - Support: CLAIM-103, 105, 104, 119. One clause about read speech is enough; it keeps the claim honest at no cost.
+- **AB-05** On long recordings, an overlap-and-stitch scheme passes a pre-registered check of the error near chunk seams that the original chunking fails. With a known transcript, the error on recordings that aligned is 19.2 to 20.4 milliseconds at one to ten minutes.
+  - Support: CLAIM-107, 108 (survivors: "that aligned" must stay). "Pre-registered" may stay; the design selection is in RES-C-10.
+- **AB-06** With recognized instead of known text, the boundary F-score at a 20 millisecond tolerance is 0.624 instead of 0.710, with 89.0 percent of words matched.
+  - Support: CLAIM-114, 102. No cause (CLAIM-117 is not used in the abstract).
 
 ---
 
 ## 2. Introduction (target 550 words)
 
-> Checked 24.11.2026 against the CLAIMs, the report files and the PDFs. `AUTHOR:` marks a decision for the author.
+> Checked 24.11.2026 against the CLAIMs, the report files and the PDFs. Author decisions were settled on 24.11.2026 (§10f).
 
 - **INT-01** [REQUIRED] Captions make video accessible to deaf and hard-of-hearing viewers, and studies report that they also help hearing viewers [Gernsbacher2015].
   - Support: (c) Gernsbacher2015 p. 195 (abstract: captions "benefit everyone who watches videos") and p. 196 ("captions benefit persons who are D/deaf or hard of hearing … Captions also benefit hearing persons"). Horlin2024 was removed here: its 48 % counts pausing, speed change and captions together, so it does not show that captions help.
@@ -138,7 +129,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: "recognizer timestamps" was removed: Rousso2024 and McAuliffe2026 do not test them. "Manual boundaries" was removed (TIMIT words, SET-A-01). Positioning rule 1 (cite FA-Bench only within the group). Do not write "MFA is the most precise aligner": the same works show neural aligners ahead of MFA (Zolkepli2026 abstract; MAPS in Chu2026FABench Table 1).
 - **INT-07** [REQUIRED] These works compare or propose aligners and recognizers, mostly on short utterances. This paper proposes and tests additions to a local captioning pipeline, and measures inside it what the choice of transcript costs.
   - Support: positioning rule 2 (`TITLE_KEYWORDS_RQ.md` line 48); Vaidya2026 p. 1 ("short, clean speech, perfect transcripts"); McAuliffe2026 p. 351 (utterances separated by 300 ms of silence).
-  - Note: "rank existing aligners" was corrected: McAuliffe2026 presents MFA 3.0 and Zolkepli2026 trains a new aligner. `AUTHOR:` rule 2 itself says "rank existing aligners"; it needs the same change.
+  - Note: "rank existing aligners" was corrected: McAuliffe2026 presents MFA 3.0 and Zolkepli2026 trains a new aligner. Rule 2 changed the same way 24.11.2026.
 - **INT-08** [REQUIRED] The paper differs from those evaluations in three ways:
   - it adds a learned module that refines each aligner boundary and scores its reliability, tested on speakers unseen in training;
   - it measures where accuracy is lost on recordings of one to ten minutes;
@@ -150,7 +141,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: "improves" was removed. Third person for the blind copy. The 2026 paper meant transcription accuracy (WER/CER), so do not write that it left "timing accuracy" open.
 - **INT-10** [REQUIRED] RQ1: How large is the word-boundary error of open pipelines that combine speech recognition with forced alignment, measured against reference boundaries based on hand-corrected labels on read (TIMIT) and spontaneous (Buckeye) English, and how much does a known transcript reduce it compared with recognized text?
   - Support: `TITLE_KEYWORDS_RQ.md` line 36.
-  - Note: differs from RQ1 in that file in two places: "word- and phone-boundary" is cut to "word-boundary" (no phone result is in the Results), and "manual boundaries" is replaced (SET-A-01). `AUTHOR:` approve or restore.
+  - Note: differs from RQ1 in that file in two places: "word- and phone-boundary" is cut to "word-boundary" (no phone result is in the Results), and "manual boundaries" is replaced (SET-A-01). Approved 24.11.2026.
 - **INT-11** [REQUIRED] RQ2: Does a lightweight learned post-alignment module reduce forced-alignment boundary error more than a constant-offset correction on held-out speakers, and does its reliability score separate words whose boundaries are more than 20 ms off?
   - Support: `TITLE_KEYWORDS_RQ.md` line 37.
   - Note: "words whose boundaries" replaces "boundaries", because the label is per word (`FORMULAS.md` Eq. 10; CLAIM-105 reason).
@@ -161,11 +152,11 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
     - CLAIM-103, 104, 105, 114; contribution 1 (`TITLE_KEYWORDS_RQ.md`, corrected text);
     - 20 of 20 speakers under MAE: (b) `reports/e1_analysis_20261102/analysis.json` A2brqe_vs_A2const and B2brqe_vs_B2const, n_speakers_improved = 20.
   - Note:
-    - CLAIM-118 and "ends of speech segments" removed. **Needs CLAIM before submission** for the MAE speaker count.
+    - CLAIM-118 and "ends of speech segments" removed. CLAIM-119 for the MAE speaker count.
     - "Frozen before testing": the weights (M-C-08); pilots on test speakers are in M-C-11.
 - **INT-14** [REQUIRED] Contribution 2, long recordings. On recordings of one to ten minutes, the original chunking raises the error near chunk seams, and an overlap-and-stitch scheme passes a pre-registered seam check. Failed recordings grow with length, because a single failed chunk fails the whole recording; no length effect on the error was found among the recordings that aligned.
   - Support: CLAIM-107 (pre-registered check C; seams measured on one-minute recordings), CLAIM-108, CLAIM-109, CLAIM-110.
-  - Note: "accuracy is lost at chunk seams rather than with length" was weakened: the length test is not significant, which the protocol does not read as absence (`docs/S1B_RESULTS.md` §3), and only survivors are scored. The seam check covers 60 s recordings only. `AUTHOR:` contribution 2 in `TITLE_KEYWORDS_RQ.md` has the stronger wording.
+  - Note: "accuracy is lost at chunk seams rather than with length" was weakened: the length test is not significant, which the protocol does not read as absence (`docs/S1B_RESULTS.md` §3), and only survivors are scored. The seam check covers 60 s recordings only. Contribution 2 changed to match 24.11.2026.
 - **INT-15** [REQUIRED] Contribution 3, what a recognized transcript costs. Inside one local pipeline on a 4 GB laptop GPU, with speaker-level tests and a metric that charges missed words, boundary F1 at 20 ms on spontaneous speech is 0.624 with recognized text (word coverage 89.0 %) and 0.710 with a known transcript. The paper reports what the difference consists of as a post-hoc observation.
   - Support: CLAIM-114 (secondary analysis), CLAIM-102 (coverage), CLAIM-117 (24.11.2026 wording), CLAIM-101; `docs/ARCHITECTURE.md` line 5 (4 GB GPU); contribution 3 (`TITLE_KEYWORDS_RQ.md`, corrected text).
   - Note: "the cost comes from recognition, not alignment", "placed equally well" and "about 9 points" were removed. No advice on where effort is better spent.
@@ -183,7 +174,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 3. Related Work (target 600 words)
 
-> Checked 24.11.2026 against the PDFs (page text). `AUTHOR:` marks a decision for the author.
+> Checked 24.11.2026 against the PDFs (page text). Author decisions were settled on 24.11.2026 (§10f).
 
 ### 3.A Caption Timing and Accessibility (target 130)
 
@@ -202,7 +193,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **RW-A-05** [OPTIONAL] Partial and synchronized captions for second-language listening align ASR output with the transcript to time each word, then show only the words that are hard to hear [Mirzaei2018].
   - Support: (c) Mirzaei2018, self-archived Kyoto copy p. 3 ("PSC synchronizes the text to speech in word-level using ASR technology") and p. 4 (forced alignment of ASR transcripts with the human transcript); `Thesis/Article base/` PDF.
   - Note: optional reference. Its own pages may differ from the journal's pp. 17–36.
-- **RW-A-06** [OPTIONAL] In focus groups, only neurodivergent students raised concerns about the quality of captions and transcripts in online learning, such as keeping up with automated captions or finding mistakes in transcripts [LeCunff2024].
+- **RW-A-06** [NOT USED] In focus groups, only neurodivergent students raised concerns about the quality of captions and transcripts in online learning, such as keeping up with automated captions or finding mistakes in transcripts [LeCunff2024].
   - Support: (c) LeCunff2024 PDF p. 8 ("Only neurodivergent students raised concerns about the quality of the captions and transcripts …"); `Thesis/Article base/` PDF.
   - Note: reserve reference, on caption quality, not timing. It must not be used as advice to improve the transcript.
 
@@ -285,7 +276,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 4. Method (target 700 words)
 
-> Checked 24.11.2026 against the code in `src/` and `scripts/`, not only `PSEUDOCODE.md`. `AUTHOR:` marks a decision for the author.
+> Checked 24.11.2026 against the code in `src/` and `scripts/`, not only `PSEUDOCODE.md`. Author decisions were settled on 24.11.2026 (§10f).
 
 ### 4.A Pipeline (target 230)
 
@@ -341,7 +332,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: (d) `FORMULAS.md` Eq. 9; `PSEUDOCODE.md` training paragraph; (b) `reports/buckeye/benchmark_results.json` config.refiners.brqe_config.
 - **M-C-05** [REQUIRED] BRQE was trained on 3,000 clips from the 20 Buckeye training speakers. Their MFA boundaries in both scenarios (A2 with known text and B2 with Whisper's text; words and phones; 382,270 boundaries matched to manual ones) form one training set with manual boundaries as targets. One set of weights serves both scenarios, with the scenario as an input feature.
   - Support: (d) `scripts/train_brqe.py` SCENARIO_MODES, `load_training_boundaries`; (b) `reports/brqe_cv_20260401.json` n_matched = 382270; `benchmark_results.json` config.refiners.trained_on (3000 clips, 20 speakers).
-  - Note: corrected. The old text ("aligned with known text as in scenario A") followed the plan in `IMPROVEMENT_PLAN.md` §6.3, not the code. The B2 clips that failed (10 of 3,000) are absent. `AUTHOR:` §6.3 of the plan and the code disagree; this must be stated as in the code.
+  - Note: corrected. The old text ("aligned with known text as in scenario A") followed the plan in `IMPROVEMENT_PLAN.md` §6.3, not the code. The B2 clips that failed (10 of 3,000) are absent. Decided: as in the code; the plan has a dated note.
 - **M-C-06** [REQUIRED] The constant-offset rival shifts each boundary by the median training correction (over boundaries within 0.1 s of the reference) for its boundary kind and scenario, as in \eqref{eq:const}. These medians are at most 1.4 ms.
   - Support: (d) `FORMULAS.md` Eq. 11; `ConstantRefiner.fit`; `models/brqe/const_offsets.json` (largest −1.4 ms, word start, B).
   - Note: can be written in words without the equation.
@@ -350,9 +341,9 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **M-C-08** [REQUIRED] BRQE was trained and selected without test speakers, and its weights and the offsets were frozen and hashed before they were applied to any test speaker.
   - Support: (d) `scripts/train_brqe.py` refuses runs with test speakers; commit `bb74b81` (29.10.2026 08:26) with weights, before the BRQE pilot (14:46 local time) and tag `bench-frozen-20261029c`; (b) config.refiners hashes.
   - Note: narrowed. "Before any run on test speakers" was wrong: see M-C-11.
-- **M-C-11** [REQUIRED] Before the freeze, pilots on 400 Buckeye clips covered all 40 speakers (10 clips each, so 200 clips of test speakers, 22 of them in the test sample) and were used to find defects in the pipeline and the metric; the second pilot included BRQE.
+- **M-C-11** [REQUIRED; place in Setup V-A] Pipeline defects were found and fixed in pilots on 400 clips from all 40 speakers; the samples, BRQE weights and benchmark code were then frozen. Of the 999 test clips, 22 had been in a pilot. BRQE was trained on the training speakers only, and its weights were fixed before it was applied to any test speaker.
   - Support: (b) `reports/pilot_buckeye/benchmark_results.json` and `reports/pilot_brqe_buckeye/benchmark_results.json` (n_speakers = 40, n_utterances = 400; 28.10.2026 23:23 and 29.10.2026 09:46 UTC); overlap counted 24.11.2026 against `reports/buckeye_test_sample_20260401.json`; fixes after the pilot in `IMPROVEMENT_PLAN.md` ("Исправлено до заморозки по итогам пилотов").
-  - Note: added in the check; **needs CLAIM before submission**. `AUTHOR:` keep here, in Setup or in Limitations. A reviewer can find it in the repository.
+  - Note: added in the check; CLAIM-122. Decided 24.11.2026: CLAIM-122, place once, in Setup V-A after SET-A-05 (not in Method, not in Limitations).
 - **M-C-09** [OPTIONAL] If refinement had failed the rule, only the reliability head would have been kept.
   - Support: `IMPROVEMENT_PLAN.md` §6.5.
 - **M-C-10** [OPTIONAL] Hyperparameters were the defaults, without tuning. Their sensitivity was checked afterwards on training speakers only (RES-B-15).
@@ -367,7 +358,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: (d) `PSEUDOCODE.md` Algorithm 4, lines 1–4; `scripts/seam_stitch.py` (SPEECH_PAD_MS = 30, MIN_OVERLAP_S = 3.0).
 - **M-D-03** [REQUIRED] At each seam, the two tracks are joined at an anchor word. The anchor has the same normalized text in both tracks and both of its boundaries within 20 ms, and it is the closest such word to the seam. The first word of the earlier track and the last word of the later track are not used. Without an anchor, the cut falls at the seam time, and the timeline is made monotonic.
   - Support: (d) `scripts/seam_stitch.py` `stitch` (loops over a[1:] and b[:-1]; ANCHOR_TOL_S = 0.02).
-  - Note: corrected to the code. The protocol and `PSEUDOCODE.md` say "not a track's outermost word"; the code excludes only the words far from the seam and allows the last word of the earlier track and the first word of the later one. `AUTHOR:` describe it as in the code (recommended) and correct `PSEUDOCODE.md` line 87.
+  - Note: corrected to the code. The protocol and `PSEUDOCODE.md` say "not a track's outermost word"; the code excludes only the words far from the seam and allows the last word of the earlier track and the first word of the later one. Decided: as in the code; `PSEUDOCODE.md` corrected.
 - **M-D-04** [REQUIRED] A long recording counts as failed when any of its chunks fails to align, and failures are reported beside errors.
   - Support: `docs/S1_LONG_RECORDINGS_PROTOCOL.md` (runs paragraph, failure rule; rule 3); `docs/S1B_RESULTS.md` §1.
 
@@ -375,13 +366,13 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 5. Experimental Setup (target 650 words)
 
-> Checked 24.11.2026 against the code, the reports and the PDFs. `AUTHOR:` marks a decision for the author.
+> Checked 24.11.2026 against the code, the reports and the PDFs. Author decisions were settled on 24.11.2026 (§10f).
 
 ### 5.A Corpora and Speaker Split (target 200)
 
 - **SET-A-01** [REQUIRED] Read speech comes from TIMIT [Garofolo1993], in the NLTK sample of 160 utterances from 16 speakers, not the full corpus. Its phone boundaries were placed automatically and corrected by hand; its word boundaries were derived from the phone segments by a string alignment program.
   - Support: CLAIM-106 reason; `docs/CORPORA_TAXONOMY.md` line 32; (c) Garofolo1993, NISTIR 4930 scan, PDF pp. 17 and 62 (word boundaries by dynamic programming string alignment with the phonetic segments), p. 51 (phone boundaries "hand corrected").
-  - Note: corrected. "Manual word boundaries" is not accurate for TIMIT. `AUTHOR:` "manual boundaries" also stands in RQ1 and in AB-03, INT-06, INT-10, RW-B-10, LIM-09; "reference boundaries based on hand-corrected labels" is safe for both corpora.
+  - Note: corrected. "Manual word boundaries" is not accurate for TIMIT. Decided 24.11.2026: "reference boundaries based on hand-corrected labels" everywhere our two corpora are meant.
 - **SET-A-02** [REQUIRED] Spontaneous speech comes from the Buckeye corpus [Pitt2005]: conversational American English from 40 talkers from central Ohio, with word and phone labels that were aligned automatically and then corrected by hand.
   - Support: (c) Pitt2005 p. 89 (abstract: 307,000 words, 40 talkers, central Ohio) and PDF p. 4 (Entropics Aligner, then "hand-correcting the phonemic labels and their alignment"); LA line 125; `src/subtitle_workbench/buckeye.py` docstring (hand-corrected labels).
 - **SET-A-03** [REQUIRED] The 40 Buckeye speakers were split at random, with a fixed seed, into 20 training and 20 test speakers. BRQE saw only the training speakers.
@@ -449,6 +440,8 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: (d) `FORMULAS.md` Eq. 5; (b) `reports/buckeye/benchmark_results.json` bootstrap_resamples = 2000, seed = 42, config.ci_unit = speaker.
 - **SET-C-09** [REQUIRED] A word counts as erroneous for the reliability evaluation when the larger error of its two uncorrected MFA boundaries exceeds 20 ms, as in \eqref{eq:label}. The score is evaluated by ROC-AUC and by a rejection curve: the MAE, after BRQE, of the matched words kept after rejecting the least reliable share. Both use matched words only.
   - Support: (d) `FORMULAS.md` Eq. 10; `scripts/speech_benchmark.py` `quality_estimation`; CLAIM-105 reason (label definition).
+- **SET-C-14** [REQUIRED] MAE was the pre-registered primary metric; the speaker-level tests, boundary F1 and the boundary-group analyses are secondary and were added later.
+  - Support: CLAIM-114 reason; `docs/E1_ANALYSIS_RESULTS.md`; decided 24.11.2026: said once, here (LIM-08 is optional).
 - **SET-C-10** [OPTIONAL] With 20 speakers, an exact two-sided test reaches its smallest possible p-value, 2/2²⁰ ≈ 1.9 × 10⁻⁶, when all 20 differences have the same sign.
   - Support: `docs/F1_RESULTS.md` line 33; `IMPROVEMENT_PLAN.md` §6.5 (2/2²⁰ ≈ 1.907·10⁻⁶).
   - Note: helps the reader see why many p-values are identical.
@@ -472,7 +465,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: CPU for CTC and BRQE: frozen JSON hardware.torch_cuda_available = false, whisper_cuda_available = true. The GPU model is not in the JSON (cuda_device_name = null; §10d); its platform string reads Windows-10-10.0.26340, a build number of Windows 11.
 - **SET-D-02** [REQUIRED] Processing time was logged for transparency only and is not an evaluation metric.
   - Support: (b) `reports/buckeye/benchmark_results.json` runtime.note = "transparency only; not an evaluation target"; rule 5.
-- **SET-D-03** [REQUIRED] Samples, splits, BRQE weights and the benchmark code were frozen under tags before the reported test runs. Three earlier Buckeye runs stopped before any metric was written (an empty audio file, an MFA crash and a Python crash). The first two led to fixes under new tags (exclusion of empty clips; retry of a crashed MFA call); the reported run needed no retry.
+- **SET-D-03** [REQUIRED] Samples, splits, BRQE weights and the benchmark code were frozen under tags before the reported test runs; earlier runs that stopped on technical errors before any metric was written led only to technical fixes.
   - Support: CLAIM-101, 104, 106 sources and reasons (tags `bench-frozen-20261029`, `-29b`, `-29c`); `IMPROVEMENT_PLAN.md` "C3/D, первая попытка" to "D, третья попытка" (results are written at the end of a run); (b) config.mfa_retries = [].
   - Note: rewritten; "before the test runs" hid the stopped runs. The sentence on the integrity check is now SET-D-06. See also M-C-11 (pilots).
 - **SET-D-06** [OPTIONAL] An integrity check regenerated the frozen tables byte for byte from the stored results.
@@ -491,7 +484,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 6. Results (target 1,000 words)
 
-> Checked 24.11.2026 against `docs/CLAIM_LEDGER.csv` and the report JSON files. `AUTHOR:` marks a decision for the author.
+> Checked 24.11.2026 against `docs/CLAIM_LEDGER.csv` and the report JSON files. Author decisions were settled on 24.11.2026 (§10f).
 
 ### 6.A Boundary Accuracy with and without a Known Transcript (RQ1; target 380)
 
@@ -505,9 +498,9 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: coverage is mandatory beside B numbers; RES-A-08 must follow closely (CLAIM-115 reason).
 - **RES-A-04** [REQUIRED] On read speech (a TIMIT sample of 160 utterances and 16 speakers), MFA reaches 20.3 ms with the known transcript (A2) and 20.5 ms with Whisper's text (B2, coverage 97.6 %). CTC gives 36.9 ms in both scenarios (B1 coverage 97.6 %) and Whisper's timestamps 153.0 ms (coverage 97.4 %).
   - Support: CLAIM-106 (reason: NLTK sample, not the full LDC corpus); coverage (b) `reports/timit/benchmark_results.json` word_metrics.coverage: B0 0.9735, B1 and B2 0.9763.
-- **RES-A-05** [REQUIRED] Speaker by speaker on Buckeye, MFA has a lower MAE than CTC with the known transcript for 20 of 20 speakers; B2 has a lower MAE than B0 for 20 and than B1 for 19 of 20 speakers (exact Wilcoxon, Holm p < 0.0001 in each case). On TIMIT the same three comparisons favour MFA for 15, 16 and 15 of 16 speakers (Holm p < 0.0004). These tests were added after the clip-level results were known.
+- **RES-A-05** [REQUIRED] Speaker by speaker on Buckeye, MFA has a lower MAE than CTC with the known transcript for 20 of 20 speakers; B2 has a lower MAE than B0 for 20 and than B1 for 19 of 20 speakers (exact Wilcoxon, Holm p < 0.0001 in each case). On TIMIT the same three comparisons favour MFA for 15, 16 and 15 of 16 speakers (Holm p < 0.0004).
   - Support: (b) `reports/e1_analysis_20261102/analysis.json` corpora.buckeye.speaker_comparisons.{A2_vs_A1, B2_vs_B0, B2_vs_B1}.n_speakers_improved = 20, 20, 19 and .p_value_holm = 1.335e-05; corpora.timit: 15, 16, 15 and 0.000366, 0.000214, 0.000366. `docs/E1_ANALYSIS_RESULTS.md` intro (protocol fixed after the original results) and §2.
-  - Note: **needs CLAIM before submission**. Common clips (997 and 160), not identical word sets.
+  - Note: CLAIM-119. Common clips (997 and 160), not identical word sets.
 - **RES-A-06** [REQUIRED] The secondary boundary F1 at 20 ms, which charges missed and inserted words, gives the same conclusions on Buckeye: the known transcript beats Whisper's text (0.710 vs 0.624), and MFA beats CTC. Each difference holds for all 20 speakers (exact Wilcoxon, Holm p < 0.001).
   - Support: CLAIM-114.
   - Note: "secondary" must stay (CLAIM-114 reason).
@@ -516,16 +509,16 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: **needs CLAIM before submission**. These are also Table I cells.
 - **RES-A-08** [REQUIRED] Scored over all reference boundaries, the scenario-B recall at 20 ms of the MFA modes on Buckeye is 7.7 to 8.3 points below the matched-word Acc@20 (about 11 % relative), so matched-word scores for recognized text are optimistic. For the known transcript the gap is 0.3 points.
   - Support: CLAIM-115; recomputed from Acc@20 minus edge20.recall: B2 7.7, B2+const 7.7, B2+BRQE 8.3; A2 and A2+BRQE 0.3.
-  - Note: "of the MFA modes" was added because B1 (3.8 points) and B0 (0.8 points) lie outside the range. `AUTHOR:` CLAIM-115 says "scenario-B recall" without this limit.
+  - Note: "of the MFA modes" was added because B1 (3.8 points) and B0 (0.8 points) lie outside the range. CLAIM-115 carries this limit since 24.11.2026.
 - **RES-A-09** [REQUIRED] A post-hoc observation, made without a protocol and with MFA before BRQE: on Buckeye, recognized text has fewer reference boundaries between two correctly recognized words than known text (74 % vs 89 %), and on the same such boundaries its error is larger (MAE 26.1 vs 17.6 ms; errors above 100 ms 3.2 % vs 1.4 %) at an equal median of 10.0 ms. On TIMIT the MAE on these boundaries is about the same (17.9 vs 17.8 ms). We do not attribute the loss to a cause.
   - Support: CLAIM-117 (24.11.2026 wording); shares `fa_extras.json` groups.M2I.share (0.741, 0.887); the rest `reports/claim117_recheck_20261124/output.txt` (n = 13,570 and 2,358 common boundaries).
   - Note: "post-hoc" must stay. The recheck is not independently checked. Do not write that the loss comes from recognition rather than alignment, and do not compare recall 0.728 with 0.731 (different boundary sets).
 - **RES-A-10** [REQUIRED] Fig. 2 shows boundary F1 against tolerance. On Buckeye, F1 for Whisper's text with MFA rises only from 0.846 at 70 ms to 0.864 at 100 ms (word coverage 89.0 %), against 0.978 at 100 ms with the known transcript. Words that Whisper missed or misrecognized count as errors at every tolerance.
   - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.buckeye.modes.{B2_proposed, A2_proposed}.f1_sweep["70"], ["100"]; last sentence is the metric definition (`FORMULAS.md` Eq. 3a); coverage CLAIM-102.
-  - Note: **needs CLAIM before submission**. Tolerances above 100 ms were not computed, so "ceiling" and "levels off" are not used.
+  - Note: CLAIM-120. Tolerances above 100 ms were not computed, so "ceiling" and "levels off" are not used.
 - **RES-A-11** [OPTIONAL] On Buckeye from 70 ms on, CTC with the known transcript (A1) has a higher F1 than MFA with Whisper's text (B2, word coverage 89.0 %): 0.850 vs 0.846 at 70 ms and 0.933 vs 0.864 at 100 ms. On TIMIT this happens only at 100 ms (0.964 vs 0.956, B2 word coverage 97.6 %).
   - Support: (b) fa_extras.json corpora.*.modes.{A1_ctc, B2_proposed}.f1_sweep["70"], ["90"], ["100"]; TIMIT at 90 ms 0.945 vs 0.949.
-  - Note: **needs CLAIM before submission**; descriptive, no test. `docs/FA_EXTRAS_RESULTS.md` §3 says there is no crossing on TIMIT; its own JSON shows one at 100 ms. `AUTHOR:` correct that document.
+  - Note: **needs CLAIM before submission**; descriptive, no test. `docs/FA_EXTRAS_RESULTS.md` §3 says there is no crossing on TIMIT; its own JSON shows one at 100 ms. That document was corrected 24.11.2026.
 - **RES-A-12** [OPTIONAL] On TIMIT, the F1 difference between known and recognized text is smaller (0.684 vs 0.661 at a word coverage of 97.6 %); the known transcript is better for 14 of 16 speakers (Holm p = 0.0009).
   - Support: (b) `reports/f1_20261123/f1_results.json` corpora.timit.modes.{A2_proposed, B2_proposed}.edge20.f1 and tests_edge20["A2_proposed - B2_proposed"] (n_worse = 14 counts speakers where the first mode is better, `F1_RESULTS.md` §6 item 9; one tie, one worse; p_value_holm = 0.000916).
   - Note: **needs CLAIM before submission**. Corpora differ in more than coverage; no explanation is given.
@@ -539,9 +532,9 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **RES-B-02** [OPTIONAL] Against the constant-offset rival, the clip-paired difference is significant (Holm p < 0.001) with a small effect (Cliff's delta 0.23 for A2 and 0.17 for B2).
   - Support: CLAIM-103.
   - Note: needs a delta definition and a Cliff reference, which the bib lacks (SET-C-13). RES-B-03 can replace it.
-- **RES-B-03** [REQUIRED] Speaker by speaker, BRQE has a lower word MAE than the constant offset for 20 of 20 test speakers in both scenarios (exact Wilcoxon, Holm p < 0.0001; speaker-level tests added after the clip-level results; B2 coverage 89.0 %).
+- **RES-B-03** [REQUIRED] Speaker by speaker, BRQE has a lower word MAE than the constant offset for 20 of 20 test speakers in both scenarios (exact Wilcoxon, Holm p < 0.0001; B2 coverage 89.0 %).
   - Support: (b) `reports/e1_analysis_20261102/analysis.json` corpora.buckeye.speaker_comparisons.{A2brqe_vs_A2const, B2brqe_vs_B2const}.n_speakers_improved = 20, p_value_holm = 1.335e-05; `docs/E1_ANALYSIS_RESULTS.md` §2; evidence of accepted contribution 1 (`TITLE_KEYWORDS_RQ.md` line 59).
-  - Note: **needs CLAIM before submission**.
+  - Note: CLAIM-119.
 - **RES-B-04** [REQUIRED] Under the secondary boundary F1 at 20 ms, BRQE also beats the constant offset in both scenarios for all 20 speakers (exact Wilcoxon, Holm p < 0.001): 0.766 vs 0.707 with the known transcript, and 0.677 vs 0.621 with Whisper's text (word coverage 89.0 %).
   - Support: CLAIM-114.
 - **RES-B-05** [OPTIONAL] The mean signed errors of MFA are small (within about ±6 ms for word starts and ends, both corpora), which leaves little for a constant offset to correct. BRQE lowers the mean absolute word-duration error on Buckeye from 28.1 to 24.6 ms (A2).
@@ -565,13 +558,13 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: **needs CLAIM before submission**.
 - **RES-B-13** [REQUIRED] On TIMIT, BRQE's F1 is higher than MFA's at tolerances of 10 and 20 ms and lower from 30 to 80 ms; at 30 ms it is 0.779 vs 0.792 with Whisper's text (coverage 97.6 %) and 0.800 vs 0.816 with the known transcript. At 90 and 100 ms the two differ by less than 0.002. No test was run.
   - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.timit.modes.{B2_brqe, B2_proposed, A2_brqe, A2_proposed}.f1_sweep["10"] to ["100"].
-  - Note: **needs CLAIM before submission**. "Worse from 30 ms on" was corrected: at 90 ms B is equal (0.94918) and A is higher with BRQE (0.97489 vs 0.97453).
+  - Note: CLAIM-120. "Worse from 30 ms on" was corrected: at 90 ms B is equal (0.94918) and A is higher with BRQE (0.97489 vs 0.97453).
 - **RES-B-14** [OPTIONAL] With the known transcript and pitch-preserving tempo changes from 0.8 to 1.25, BRQE keeps a 2.8–3.5 ms gain over MFA on Buckeye (speaker-mean MAE on the original speech scale). On TIMIT it does not improve, and at a speed factor of 1.25 it is worse than MFA (21.8 vs 20.2 ms).
   - Support: CLAIM-113.
   - Note: use here or in DIS-14, not both. Means over speakers, so A2 at tempo 1.0 (18.2 ms) differs from the pooled value of CLAIM-101 (19.6 ms); `docs/S2_RESULTS.md` §1. Add "vocoder tempo is not natural fast speech" (CLAIM-111 reason).
 - **RES-B-15** [REQUIRED] In 5-fold speaker cross-validation on the training speakers only, the inclusion rule held in both scenarios for all 9 configurations: the default and 8 that change one setting (epochs, window, hidden size or loss weight; one seed each). Word MAE moved by at most 0.5 ms from the default.
   - Support: (b) `reports/brqe_sensitivity_20261102/summary.json` rule_6_5_holds = "9/9", max_abs_word_mae_delta_vs_baseline_ms = 0.498; `docs/BRQE_SENSITIVITY_RESULTS.md`.
-  - Note: **needs CLAIM before submission**. No test among configurations. The default was not the lowest (6 epochs: 16.06 vs 16.46 ms in A).
+  - Note: CLAIM-121. No test among configurations. The default was not the lowest (6 epochs: 16.06 vs 16.46 ms in A).
 - **RES-B-16** [OPTIONAL] On TIMIT, BRQE lowers word-end errors (20.74 to 18.89 ms, known text) but raises word-start errors (19.78 to 20.89 ms), while on Buckeye both are lower with BRQE (A2 starts 19.70 to 17.27 ms, ends 19.42 to 16.68 ms). Descriptive, no test.
   - Support: (b) `docs/E1_ANALYSIS_RESULTS.md` §4 table; `reports/e1_analysis_20261102/analysis.json` corpora.*.modes.*.breakdowns.
   - Note: **needs CLAIM before submission**.
@@ -586,10 +579,10 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 - **RES-C-01** [REQUIRED] The seam check was pre-registered with a threshold of 10 ms and run on 20 one-minute recordings. It measures the excess word-boundary error near chunk seams relative to one-chunk alignment of the same words. The original chunking failed it (+111.8 ms for A2, +125.3 ms for B2). Overlap-and-stitch, run on the same recordings, passed it (−0.4 ms and −15.4 ms).
   - Support: CLAIM-107; both `seam_check.json` files (pass = false, true); threshold and "near" definition from (d) `FORMULAS.md` Eq. 12 (`eq:seam`); amendment 3 of `docs/S1B_SEAM_SAFE_PROTOCOL.md` (criterion unchanged, fixed before the full check).
-  - Note: 19 recordings enter each stitch comparison (one-chunk alignment failed for s34 in A; s15 failed in B). The two checks use different seams (A 584 vs 526 near boundaries; B 482 vs 458), so "fell from … to …" is not a comparison on one set; "failed, then passed" is used. `AUTHOR:` CLAIM-107 says "falls from … to …" and "20 L01 recordings".
-- **RES-C-10** [REQUIRED] The overlap-and-stitch design was chosen on 6 of these 20 recordings, so the check is not independent of the choice. The negative B2 value reflects a high one-chunk error on these words (91.3 ms, against 75.9 ms with chunks, on 458 boundaries) and is not read as an improvement.
+  - Note: 19 recordings enter each stitch comparison (one-chunk alignment failed for s34 in A; s15 failed in B). The two checks use different seams (A 584 vs 526 near boundaries; B 482 vs 458), so "fell from … to …" is not a comparison on one set; "failed, then passed" is used. CLAIM-107 reworded 24.11.2026.
+- **RES-C-10** [REQUIRED] The overlap-and-stitch design was selected on 6 of these 20 recordings, and the negative B2 value is not read as an improvement.
   - Support: (b) `docs/S1B_MICROTEST_FINDINGS.md` §1 (sample: s07, s09, s11, s20, s27, s34, s37); `seam_check.json` (stitch) results.B.near_mae_single_ms, near_mae_multi_ms.
-  - Note: added in the check; **needs CLAIM before submission**. The list names 7 speakers because the deterministic-failure recording differs by scenario (s34 in A, s07 in B). `AUTHOR:` keep here or move to Limitations.
+  - Note: added in the check; CLAIM-122. The list names 7 speakers because the deterministic-failure recording differs by scenario (s34 in A, s07 in B). Decided 24.11.2026: CLAIM-122, here in Results only. One-chunk error behind the B2 value: 91.3 ms vs 75.9 ms with chunks (458 boundaries).
 - **RES-C-02** [REQUIRED] With the known transcript, word MAE on recordings that align is 19.4, 19.2 and 20.4 ms at 1, 5 and 10 minutes (20, 17 and 14 of 20 recordings). On the same words aligned inside the 10-minute recording and in the 1-minute recording, the per-speaker difference is −0.2 ms [−1.2, 0.4] over 14 speakers. These figures cover surviving recordings only, and the absence of a length effect is not claimed.
   - Support: CLAIM-108 (reason: survivors only; 14 of 20 speakers); same-words definition `docs/S1_LONG_RECORDINGS_PROTOCOL.md` H3; `docs/S1B_RESULTS.md` §2–3 (Holm p = 1).
 - **RES-C-03** [REQUIRED] Failed recordings rise with length (A2: 0, 3 and 6 of 20; B2: 2, 7 and 12 of 20). The share of failed chunks is 0 %, 1.5 % and 1.3 % for A2 and 4.8 %, 3.9 % and 4.6 % for B2.
@@ -599,9 +592,9 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: CLAIM-109 (reason: "descriptive, not a tested hypothesis").
 - **RES-C-05** [REQUIRED] Without word anchors, 15, 20 and 20 of 20 recordings fail at 1, 5 and 10 minutes. This ablation (A2) shows that the pipeline needs anchoring; the effect of anchoring on error cannot be tested.
   - Support: CLAIM-110.
-- **RES-C-06** [OPTIONAL] With Whisper's text, word MAE on the long recordings that aligned is 49.1, 52.2 and 51.6 ms at 1, 5 and 10 minutes (coverage 88.9 %, 89.6 % and 91.4 %; 18, 13 and 8 of 20 recordings).
+- **RES-C-06** [REQUIRED] With Whisper's text, word MAE on the long recordings that aligned is 49.1, 52.2 and 51.6 ms at 1, 5 and 10 minutes (coverage 88.9 %, 89.6 % and 91.4 %; 18, 13 and 8 of 20 recordings).
   - Support: (b) `docs/S1B_RESULTS.md` §2; `reports/s1b_long_20261103/analysis.json` runs.{L01,L05,L10}_anchored.modes.B2_proposed.word.{mae_ms, coverage}.
-  - Note: **needs CLAIM before submission**. The comparison with short clips was removed: the words and recordings differ. Recommended to keep, because A2 without B2 could read as selective (§10d).
+  - Note: CLAIM-124. The comparison with short clips was removed: the words and recordings differ. Recommended to keep, because A2 without B2 could read as selective (§10d).
 - **RES-C-07** [OPTIONAL] On the long recordings that aligned with the known transcript, word MAE with BRQE is 17.2, 17.0 and 18.0 ms against 19.4, 19.2 and 20.4 ms for A2 on the same recordings.
   - Support: (b) `docs/S1B_RESULTS.md` §2; analysis.json (A2_proposed and A2_brqe fail on the same recordings).
   - Note: **needs CLAIM before submission**; survivors; no test.
@@ -616,7 +609,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 7. Discussion (target 600 words, including Limitations)
 
-> Checked 24.11.2026 against the CLAIMs, the report JSON files and the PDFs. `AUTHOR:` marks a decision for the author.
+> Checked 24.11.2026 against the CLAIMs, the report JSON files and the PDFs. Author decisions were settled on 24.11.2026 (§10f).
 
 ### 7.1 Interpretation (target 330)
 
@@ -634,13 +627,13 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: qualitative only (different clips and preparation; LA line 164).
 - **DIS-05** [REQUIRED] Whisper's timestamps are early on average: the mean signed start error is −115.0 ms on Buckeye and −147.5 ms on TIMIT, and the mean signed duration error is −21.3 and −10.3 ms (word coverage 88.8 % and 97.4 %). Per word, however, the mean absolute duration error is 86.4 and 101.2 ms, so a constant shift would not correct every word.
   - Support: (b) `reports/fa_extras_20261123/fa_extras.json` corpora.{buckeye, timit}.modes.B0_whisper.signed (86.45, rounded as in `docs/FA_EXTRAS_RESULTS.md` §4); coverage `benchmark_results.json`.
-  - Note: **needs CLAIM before submission**; descriptive, matched words only. "Shift whole words" was softened to a mean.
+  - Note: CLAIM-125; descriptive, matched words only. "Shift whole words" was softened to a mean.
 - **DIS-06** [OPTIONAL] A similar early shift of about 150 ms has been reported for Whisper [Chu2026FABench].
   - Support: (c) Chu2026FABench pp. 1, 4; EVN line 12.
   - Note: this would be a second FA-Bench citation in the Discussion. Merge it into DIS-03's citation or drop it (rule 1).
 - **DIS-07** [REQUIRED] On average, CTC alignment starts words 39–46 ms late and ends them 15–23 ms early, so its words are about 60 ms too short. This is in line with the report that, on the forced CTC path, the first character frame falls a median 33 ms after the human word start and the last ends a median 26 ms before the human end, with a median 67 % of the frames inside a word blank [Zolkepli2026].
   - Support: (b) fa_extras.json corpora.*.modes.{A1_ctc, B1_whisper_ctc}.signed (start +38.8 to +45.6 ms, end −14.8 to −23.3 ms, duration −58.2 to −62.3 ms); `docs/FA_EXTRAS_RESULTS.md` §4. (c) Zolkepli2026 arXiv p. 4 (median 33 ms; "a median 67% of the frames inside a human word are blank"); EVN line 20.
-  - Note: **needs CLAIM before submission**. Our values are means, theirs are medians of character frames on TIMIT with MMS-300M; B1 coverage is 89.0 % and 97.6 %.
+  - Note: CLAIM-125. Our values are means, theirs are medians of character frames on TIMIT with MMS-300M; B1 coverage is 89.0 % and 97.6 %.
 - **DIS-08** [OPTIONAL] CTC models have peaky output distributions, and MMS words were also found to be about 60 ms shorter than manual words on Buckeye and TIMIT [Huang2024].
   - Support: (c) Huang2024 pp. 1, 3 (Table 1, WDUR 181 vs 241 ms and 242 vs 305 ms); EVN lines 88–90.
   - Note: reserve reference.
@@ -684,7 +677,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Support: `IMPROVEMENT_PLAN.md` §10.1; `PSEUDOCODE.md` notes.
 - **LIM-07** [REQUIRED] TIMIT results come from the 160-utterance NLTK sample, not the full corpus.
   - Support: CLAIM-106 reason.
-- **LIM-08** [REQUIRED] The speaker-level tests, boundary F1 and the boundary-group analyses were added after the main results; the group analyses have no tests. The comparison on shared boundaries was post-hoc and without a protocol.
+- **LIM-08** [OPTIONAL] The speaker-level tests, boundary F1 and the boundary-group analyses were added after the main results; the group analyses have no tests. The comparison on shared boundaries was post-hoc and without a protocol.
   - Support: `docs/E1_ANALYSIS_RESULTS.md` intro; CLAIM-114 and CLAIM-117 reasons; `docs/FA_EXTRAS_PROTOCOL.md` ("тестовые дикторы Buckeye уже много раз использованы").
   - Note: CLAIM-118 removed from the support. Do not name FA-Bench here, which would be a third Discussion mention.
 - **LIM-09** [REQUIRED] No user study was run. The paper measures timing against reference boundaries based on hand-corrected labels, not comprehension, learning or accessibility benefit for viewers.
@@ -696,7 +689,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **LIM-12** [OPTIONAL] Rankings on clean speech may not hold under degradation [Chu2026FABench].
   - Support: (c) Chu2026FABench p. 4 ("a clean-speech MAE ranking does not survive degradation").
   - Note: an extra FA-Bench citation, so use it only instead of DIS-03's.
-- **LIM-13** [REQUIRED] Pilots used to find defects before the freeze included clips of the test speakers, and the overlap-and-stitch design was chosen on 6 of the 20 recordings of its check.
+- **LIM-13** [REMOVED] Dropped 24.11.2026: the pilots stand in Setup (M-C-11) and the selection of the design in Results (RES-C-10).
   - Support: M-C-11, RES-C-10.
   - Note: added in the check; **needs CLAIM before submission**. If M-C-11 and RES-C-10 stay in their sections, this can be dropped.
 
@@ -704,7 +697,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 
 ## 8. Conclusion (target 150 words)
 
-> Checked 24.11.2026 against the CLAIMs. `AUTHOR:` marks a decision for the author.
+> Checked 24.11.2026 against the CLAIMs. Author decisions were settled on 24.11.2026 (§10f).
 
 - **CON-01** [REQUIRED] RQ1: On matched words of spontaneous speech, MFA placed word boundaries with an MAE of 19.6 ms using a known transcript, and of 30.1 ms using Whisper's text at 89.0 % word coverage, against 126.5 ms for Whisper's own timestamps at 88.8 % coverage. On read speech the two MFA values were 20.3 and 20.5 ms (coverage 97.6 % with Whisper's text).
   - Support: CLAIM-101, CLAIM-102, CLAIM-106; coverage as in RES-A-03 and RES-A-04.
@@ -714,7 +707,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
   - Note: "the loss came from recognition errors, not from alignment" and "about 9 points" were removed (CLAIM-117 refuted the first; the second was a rounding). No cause is stated.
 - **CON-03** [REQUIRED] RQ2: On held-out spontaneous speech, BRQE beat a constant-offset correction for all 20 speakers under MAE and boundary F1, and its reliability score detected words with an MFA boundary more than 20 ms off with ROC-AUC 0.756 (A2) and 0.749 (B2). It did not significantly improve read speech.
   - Support: CLAIM-103, 105, 104, 114; speaker count under MAE (b) E1 (as in RES-B-03).
-  - Note: **needs CLAIM before submission** for the MAE speaker count. "Significantly" restored (CLAIM-104).
+  - Note: CLAIM-119 for the MAE speaker count. "Significantly" restored (CLAIM-104).
 - **CON-04** [REQUIRED] RQ3: On one-minute recordings, the original chunking raised the error near chunk seams by more than 100 ms, and overlap-and-stitch passed the pre-registered 10 ms check. Among recordings that aligned with the known transcript, word MAE was 19.4, 19.2 and 20.4 ms at 1, 5 and 10 minutes; failed recordings grew with length.
   - Support: CLAIM-107, CLAIM-108 (survivors only), CLAIM-109; RES-C-01 to RES-C-03.
   - Note: "rather than with length" and "removed the seam excess" were removed (no absence of a length effect is claimed; seams were checked at 60 s only).
@@ -755,7 +748,7 @@ At most 3 data figures plus the pipeline diagram (`ARTIFACT_VALIDATION.md` §5).
 | F1@20 | `reports/f1_20261123/f1_results.json` → corpora.`c`.modes.`m`.edge20.f1 (CI: .f1_ci_95) |
 | Failed | `reports/{c}/benchmark_results.json` → modes.`m`.n_utterances_failed |
 
-**Rows and values** (copied from the JSON fields above, rounded as in the CLAIMs). Mark: ✓ = covered by a CLAIM; ◇ = report value only, so add a Table I CLAIM before submission.
+**Rows and values** (copied from the JSON fields above, rounded as in the CLAIMs). Mark: ✓ = covered by a CLAIM; ◇ = report value, covered by CLAIM-123.
 
 | Mode | Buckeye MAE [CI] | Acc@20 | Cov | F1@20 | Fail | TIMIT MAE [CI] | Acc@20 | Cov | F1@20 |
 |---|---|---|---|---|---|---|---|---|---|
@@ -937,3 +930,17 @@ Suggested first cuts if the layout overflows:
 - SET-A-07, merged with LIM-04;
 - DIS-14, if RES-B-14 is used;
 - Algorithm 3 and Algorithm 4, which are already optional.
+
+### (f) Decisions of 24.11.2026
+
+The author asked for the most favourable presentation and left the disputed points to the assistant, and all other points to its recommendations.
+
+- **Kept, in one neutral sentence each:** pilots that touched test speakers (Setup), selection of the stitch design (Results), secondary analyses added later (Setup), no significant gain on read speech. Without them "unseen in training", "pre-registered" and "frozen" would mislead, and the repository shows them.
+- **Not foregrounded:** details of stopped runs (SET-D-03 is one clause), LIM-08, LIM-13, LeCunff2024, the tempo result on TIMIT. If tempo is mentioned, do not write that read speech is unaffected.
+- **CLAIMs:** 107 and 115 reworded, reason of 103 completed, 119–125 added. Optional statements marked "needs CLAIM" stay out of the paper.
+- **§10d settled:** item 5 (coverage beside numbers, caveat in the Table I caption and LIM-01); 6 (no captioner clause); 7 (CLAIM-118 not used); 8 (no "about 9 points"); 9 (speaker-level p-values, CLAIM-119); 13; 14 (RES-C-06 in, CLAIM-124); 16 ("F-score" in the abstract); 17 (no Cliff's delta). Item 18 is not a rule of the conference, only good practice.
+- **B2** is written "Whisper + MFA"; frozen files are untouched. CLAIM-116 is used in the paper as "MFA ahead of CTC".
+
+### (g) Conference rules (text from the author, 24.11.2026)
+
+Call for Papers: at least 10 references, at most 20 % self-citation, at least 30 % of references from Scopus or Web of Science, at most three authors with at most one faculty member, 4–6 pages, English. The guidelines text has no ban on preprints. IEEE requires original work not under review elsewhere, and a presentation by an author. Our plan: 25 references, 1 self-citation (4 %), 3 arXiv preprints; 18 are journal or proceedings papers (indexing of each was not checked; 8 are needed). Two authors, one faculty member.

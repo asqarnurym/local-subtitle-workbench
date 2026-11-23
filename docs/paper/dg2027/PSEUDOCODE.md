@@ -84,7 +84,8 @@ Source: `scripts/seam_stitch.py`; parameters `SPEECH_PAD_MS = 30`, `MIN_OVERLAP_
 4:  align all chunks (MFA, one call per speaker)
 5:  for each seam between tracks k and k+1 do
 6:      anchor ← word aligned in both tracks with the same text and both boundaries
-                 within 20 ms, closest to the seam, not a track's outermost word
+                 within 20 ms, closest to the seam; the first word of the earlier track
+                 and the last word of the later track are excluded
 7:      keep track k up to the anchor and track k+1 after it
 8:      if no anchor exists then cut at the seam time (logged)
 9:  enforce a monotonic timeline

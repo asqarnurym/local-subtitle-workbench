@@ -62,7 +62,7 @@ reports/e1_analysis_20261102/tables/*
 !reports/brqe_sensitivity_20261102/
 
 # Open-access literature PDFs (docs/LITERATURE_ANNOTATIONS.md lists URLs and SHA-256)
-literature/
+/literature/
 !reports/s1b_seam_check_20261103/
 !reports/s1b_seam_check_stitch_20261103/
 # S1b evidence; large prediction files stay local.

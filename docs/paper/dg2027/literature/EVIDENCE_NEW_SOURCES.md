@@ -1,0 +1,76 @@
+# Evidence from new sources (read 21.11.2026)
+
+Each entry was read from the downloaded full text (`literature/pdf/`, plain text in `literature/text/`, both local and outside Git). Quotes are short and page-anchored; everything else is paraphrase. Metadata were checked against the PDF and, where a DOI exists, Crossref. **Text for the paper must be written from these notes, not from memory.** Evidence for older sources is in `docs/LITERATURE_ANNOTATIONS.md` ("Ключевые факты"), verified 03–04.11.2026.
+
+---
+
+## FABench2026 — Chu et al., *FA-Bench: A Benchmark for Phone- and Word-Level Timestamp Accuracy in Forced Alignment and ASR on Clean and Noisy Speech*, arXiv:2609.32396v2, 8 Oct 2026. PDF SHA-256 `35cfbc5e…`
+
+- **What it does (p1–2).** Open benchmark; "Track 1 gives every aligner the reference transcript and Track 2 gives it a recognizer's output" on the same audio, TIMIT and Buckeye with hand-marked boundaries, all evaluation speakers held out, 21 open models and 9 APIs, clean and four degradations.
+- **Metric critique (p1, p3).** Matched-word MAE favours recognition-dependent systems: scored only at correctly recognized words, a system's Buckeye MAE "drops by 9% to 14%"; primary metric is boundary F1 at 20 ms, which charges missed and inserted words.
+- **Numbers (Table 1, word tier, clean).** MFA 3.4: 21.8 ms (TIMIT), 21.3 ms (Buckeye). Whisper large-v3 own timestamps: 148.0 / 122.7 ms. Two-step "Qwen3-ASR → MFA": 21.8 / 22.7 ms. MMS-FA 31.1 / 37.1; WhisperX 37.2 / 41.7; TorchAudio 39.8 / 42.4.
+- **Bias (p1, p4, Fig. 1).** Whisper word times are about 150 ms early at both ends; absolute error hides such offsets.
+- **Splits (p2).** Buckeye has no official split; they define one by sex × age (6 train / 2 dev / 2 test speakers per cell). Not the same split as ours.
+- **Use in the paper.** (1) External consistency check: our A2 MFA 19.6 ms (Buckeye) and 20.3 ms (TIMIT), B0 Whisper 126.5 ms (Buckeye) are of the same order as their MFA and Whisper rows — qualitative only (different clips, split, metric details, MFA version). (2) **Gap statement must change:** a same-protocol comparison of known transcript vs recognizer output on TIMIT/Buckeye with held-out speakers now exists. (3) Our scenario-B MAE is matched-word MAE; report coverage beside it and cite this critique as a limitation.
+- **Status.** arXiv preprint (v2). Cite as preprint.
+
+## Zolkepli2026 — H. Zolkepli, *Where Words Begin and End*, arXiv:2610.17782v2, 19 Oct 2026 (Scicom). SHA-256 `b05a05d5…`
+
+- **Pilot benchmark (Table 6, p12).** Mean word-boundary error, clean: MFA (ARPA) 19.1 ms TIMIT, 21.0 ms Buckeye; MMS with torchaudio 37.5 / 41.4 ms; WhisperX 46.9 / 50.2 ms. MFA "is the most precise" of nine configurations (abstract, p1).
+- **Why CTC starts late (p4).** On TIMIT with MMS-300M, "a median 67% of the frames inside a human word are blank" on the forced path; the first character frame "falls a median 33 ms after the human start".
+- **Method (p1).** Whisper fine-tuned with LoRA to emit word start/end tokens, trained only on human boundaries; with FA-Bench's protocol 11.6 ms on TIMIT.
+- **Use in the paper.** Explains our CTC baselines (A1 40.5 ms, B1 41.3 ms Buckeye; torchaudio MMS_FA) and supports "MFA remains the most precise open HMM aligner" with a 2026 source; neural aligners trained on human boundaries can now beat MFA (state of the art context, not our comparison).
+- **Status.** Preprint, single author, company report. Cite cautiously.
+
+## Vaidya2026 — Vaidya, Bailey, Badam, Bendel, He (Descript), *FuseAlign: Forced Alignment in the Wild*, arXiv:2609.33650v1, 27 Sep 2026, "Preprint. Under review." SHA-256 `f5eb5a16…`
+
+- **Claims (p1).** Existing evaluations rely on "short, clean speech, perfect transcripts"; real pipelines run on long recordings and error-prone ASR output. FuseAlign "refines boundaries at millisecond resolution and detects missing transcript words".
+- **Presence head (p6).** A globally constrained decoder must place every token, "so one mismatch can shift neighboring intervals"; FuseAlign localizes words independently and a presence head rejects words absent from the audio.
+- **Use in the paper.** Related work on long-form, ASR-transcript alignment and on a per-word output beyond a point estimate (presence probability). Contrast: our reliability head predicts whether an MFA boundary is more than 20 ms off; it does not detect absent words. The "one mismatch shifts neighbours" remark matches our S1b mechanism (text placed over the wrong speech near seams).
+- **Status.** Preprint under review.
+
+## Kelley2024 — Kelley, Perry, Tucker, *The Mason-Alberta Phonetic Segmenter: a forced alignment system based on deep neural networks and interpolation*, Phonetica 81(5):451–508, 2024, doi:10.1515/phon-2024-0015 (Crossref). Read from arXiv:2310.15425v1. SHA-256 `84672428…`. Note: a correction to its Algorithm 2 appeared in 2026 (doi:10.1515/phon-2026-0074).
+
+- **Result (p1, p32).** Interpolation beyond the 10 ms frame gave "a 27.92% relative increase of boundaries within the 10 ms threshold" and 6.77 % within 20 ms over MFA (best case).
+- **Caveat (p31).** MFA started to "marginally outperform" the networks beyond about 25–30 ms.
+- **Use in the paper.** Prior work on sub-frame boundary precision with neural models; relevant to BRQE's sub-frame correction. No priority claim.
+
+## Kelley2025 — M. C. Kelley, *Gradient boundaries through confidence intervals for forced alignment estimates using model ensembles*, Phonetica 83(3):285–305, 2026, doi:10.1515/phon-2025-0039 (Crossref; online 6 May 2026). Read from arXiv:2506.01256v4. SHA-256 `d3910965…`
+
+- **Method (p1).** Ten segment classifiers; boundary at the ensemble median with "a 97.85% confidence interval" from order statistics; the range "indicates the model uncertainty", "facilitating tasks like finding boundaries that should be reviewed".
+- **Result (p1).** On Buckeye and TIMIT the ensemble boundaries show "a slight overall improvement" over a single model.
+- **Use in the paper.** Closest prior work to our reliability head (per-boundary uncertainty for review). Difference: ensemble intervals around a neural aligner vs a single learned head that predicts P(MFA boundary error > 20 ms), evaluated by ROC-AUC and a rejection curve on held-out speakers.
+- **Year to cite:** 2026 (journal issue); the bib key keeps "2025" only as an internal name — use `Kelley2026` in the final bib.
+
+## Yeh2025 — Yeh, Meng, Tang, *Whisper Has an Internal Word Aligner*, Proc. IEEE ASRU 2025, pp. 1–7, doi:10.1109/ASRU65441.2025.11434635 (Crossref). Read from arXiv:2509.09987v1. SHA-256 `20f2900e…`
+
+- **Claims (p1).** Prior evaluations of Whisper word timestamps are "relatively loose, typically using a tolerance of more than 200 ms"; selected attention heads give more accurate alignments under 20–100 ms tolerances, without training.
+- **Use in the paper.** Supports that Whisper's own word times are coarse (our B0) and that the field is moving to stricter tolerances; not a system we ran.
+
+## Thompson2026 — Thompson, Waller, Calderon Torres, Ming, Arroyo Chavez, Conway, Kushalnagar, Vogler, *Are Caption Metrics Broken? Latency, Deaf and Hard of Hearing User Ratings, and Cross-Technology Bias*, Proc. ASSETS 2026 (ACM SIGACCESS), pp. 1–22, doi:10.1145/3797867.3829032 (Crossref). Read from arXiv:2609.11408v1 (title there ends "…Bias across Technologies"). SHA-256 `bfbae77a…`
+
+- **Study (p1).** 216 validated DHH and hearing participants; live-TV clips with original delay (7–12 s), synchronized TV captions, synchronized ASR captions, ASR with about 2 s delay.
+- **Finding (p1, p14, p20).** Latency significantly affects ratings; hard-of-hearing viewers rated delayed TV captions "two points lower"; several participants said "delay was more disruptive than caption errors" (p20).
+- **Use in the paper.** Motivation that timing, not only text accuracy, matters to caption users. Scale caveat: seconds of delay in live TV, not millisecond word boundaries; do not claim that 20 ms matters to viewers.
+
+## Povey2011 — Povey et al., *The Kaldi Speech Recognition Toolkit*, IEEE ASRU 2011. Read from the EPFL Infoscience PDF. SHA-256 `07f6ee1b…`
+
+- **Content (p1).** Open-source C++ toolkit on finite-state transducers (OpenFst), GMM and SGMM acoustic models with common linear and affine transforms; Apache 2.0.
+- **Use in the paper.** MFA is built on Kaldi (GMM-HMM, speaker-adaptive transforms); one citation where MFA is introduced.
+
+## Software references (READMEs read 21.11.2026)
+
+- **Silero VAD** — Silero Team, GitHub repository snakers4/silero-vad; the README gives a BibTeX entry (author "Silero Team", year 2024). Cite with access date.
+- **faster-whisper** — SYSTRAN, GitHub repository SYSTRAN/faster-whisper: reimplementation of Whisper on CTranslate2, "up to 4 times faster than openai/whisper for the same accuracy", 8-bit quantization on CPU and GPU. Cite with access date. Our runs: large-v3, `int8_float16`, CUDA.
+
+## Read but kept in reserve (not for the 6-page paper)
+
+- **Multilingual2026** — Weber, Zehavi, Rousso, Keshet, *Multilingual Word-Level Forced Alignment with Self-Supervised Representations and Learned Dynamic Programming*, arXiv:2606.10675v1 (Jun 2026). Claims to outperform MFA and MMS on TIMIT and Buckeye. Preprint; optional one-clause citation with FuseAlign and Zolkepli.
+- **RefFree2026** — Akavarapu, Daniel, Jäger, *Phoneme- and Word-Level Metrics Using Self-Supervised Speech Representations for Forced Alignment Evaluation*, arXiv:2608.28508v1. Reference-free alignment metrics; dissertation reserve.
+- **Manenti2016** — Manenti, Pellegrini, Pinquier, *CNN-based phone segmentation experiments in a less-represented language*, Interspeech 2016 (IRIT PDF). Reports 79 % F-measure on Buckeye at 20 ms, "equal to the human inter-annotator agreement rate" (p1). Possible support for the 20 ms tolerance; check against Raymond2002 before use.
+
+## Not obtained (need manual access)
+
+- **Holm 1979**, *A Simple Sequentially Rejective Multiple Test Procedure*, Scandinavian Journal of Statistics 6(2):65–70, doi:10.2307/4615733 — JSTOR only; the copies found online are of unknown authorization. The procedure we use is defined in Eq. (Holm) and implemented in `metrics.py`; cite after reading the original through a library.
+- **Cuozzo et al. 2018**, *CNN-Based Phonetic Segmentation Refinement with a Cross-Speaker Setup*, PROPOR 2018, LNCS, doi:10.1007/978-3-319-99722-3_45 — paywalled. Closest prior art to BRQE's refinement head (CNN adjusting each boundary in a fixed window, cross-speaker). Strongly recommended to obtain and cite, to avoid an unsupported novelty claim.
+- **CHI 2024**, *How Users Experience Closed Captions on Live Television: Quality Metrics Remain a Challenge*, doi:10.1145/3613904.3641988 — automatic download blocked by ACM; optional.

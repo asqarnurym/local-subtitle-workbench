@@ -571,7 +571,7 @@ Using every REQUIRED statement gives about 11 % over target. This is the cut mar
 - **RES-B-17** [OPTIONAL] On the 10-minute recordings that aligned (14 of 20 for A2, 8 of 20 for B2, coverage 91.4 %), the reliability score had ROC-AUC 0.740 (A2) and 0.731 (B2).
   - Support: (b) `docs/S1B_RESULTS.md` §2; `reports/s1b_long_20261103/analysis.json`.
   - Note: **needs CLAIM before submission**; survivors only.
-- **RES-B-18** [OPTIONAL] About 40 % of BRQE's gain in recall at 20 ms on Buckeye falls on the edges of our cut clips (9 % of reference boundaries with Whisper's text, 11 % with the known transcript). These are clip edges, not ends of speech.
+- **RES-B-18** [USED, Discussion; CLAIM-126] About 40 % of BRQE's gain in recall at 20 ms on Buckeye falls on the edges of our cut clips (9 % of reference boundaries with Whisper's text, 11 % with the known transcript). These are clip edges, not ends of speech.
   - Support: (b) fa_extras.json corpora.buckeye.modes.{A2_proposed, A2_brqe, B2_proposed, B2_brqe}.groups.{M1B, M1E}: edge part of the gain 39 % (A2) and 38 % (B2); edge shares 0.108 and 0.089; `TITLE_KEYWORDS_RQ.md`, CLAIM-117 and 118.
   - Note: **needs CLAIM before submission**; descriptive. Required if any text explains the source of the BRQE gain; otherwise leave out. The 9 % in the withdrawn CLAIM-118 is the B2 share only.
 

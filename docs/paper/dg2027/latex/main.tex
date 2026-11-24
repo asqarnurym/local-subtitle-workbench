@@ -13,8 +13,10 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 \usepackage{url}
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks,bookmarks=false]{hyperref}
 
 \makeatletter
 \def\ps@IEEEtitlepagestyle{%
@@ -50,7 +52,7 @@ t.zhukabayeva@astanait.edu.kz}
 \maketitle
 
 \begin{abstract}
-Captions make educational video accessible to many learners, and word-level captions depend on accurate word times. This paper studies word boundary accuracy and reliability in a local captioning pipeline. The pipeline combines speech detection, speech recognition or a known transcript, transcript anchoring, and the Montreal Forced Aligner with a lightweight learned module that refines each word boundary and scores the reliability of each word. It runs on a laptop with a 4 gigabyte graphics card. It is evaluated on spontaneous and read English, with 999 clips from 20 Buckeye speakers unseen in training and 160 TIMIT utterances, against reference boundaries based on hand-corrected labels. On spontaneous speech with a known transcript, the module lowers the mean absolute word boundary error from 19.6 to 17.0 milliseconds and beats a constant-offset correction for all 20 test speakers. Its reliability score detects words with boundary errors above 20 milliseconds with an area under the receiver operating characteristic curve of about 0.75. It does not significantly improve read speech. On long recordings, an overlap-and-stitch scheme passes a pre-registered check of the error near chunk seams that the original chunking fails, and with a known transcript the error on recordings that aligned is 19.2 to 20.4 milliseconds at one to ten minutes. With recognized instead of known text, the boundary F-score at a 20 millisecond tolerance is 0.624 instead of 0.710, with 89.0 percent of words matched.
+Word-level captions for accessible educational video depend on accurate word times. This paper studies word boundary accuracy and reliability in a local captioning pipeline. The pipeline combines speech detection, speech recognition or a known transcript, transcript anchoring, and the Montreal Forced Aligner with a lightweight learned module that refines each word boundary and scores the reliability of each word. It runs on a laptop with a 4 gigabyte graphics card. It is evaluated on spontaneous and read English, with 999 clips from 20 Buckeye speakers unseen in training and 160 TIMIT utterances, against reference boundaries based on hand-corrected labels. On spontaneous speech with a known transcript, the module lowers the mean absolute word boundary error from 19.6 to 17.0 milliseconds and beats a constant-offset correction for all 20 test speakers. Its reliability score detects words with boundary errors above 20 milliseconds with an area under the receiver operating characteristic curve of about 0.75. It does not significantly improve read speech. On long recordings, an overlap-and-stitch scheme passes a pre-registered check of the error near chunk seams that the original chunking fails, and with a known transcript the error on recordings that aligned is 19.2 to 20.4 milliseconds at one to ten minutes. With recognized instead of known text, the boundary F-score at a 20 millisecond tolerance is 0.624 instead of 0.710, with 89.0 percent of words matched.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -60,7 +62,7 @@ forced alignment, word boundary accuracy, speech-text alignment, automatic speec
 \section{Introduction}
 Captions make video accessible to deaf and hard-of-hearing viewers, and studies report that they also help hearing viewers \cite{Gernsbacher2015}. Timing matters too: viewers rate delayed captions lower \cite{Thompson2026}. Word-level timing goes further: it lets a player highlight each word as it is spoken, and open aligners already produce subtitle files of this kind \cite{Rastorgueva2023}. A time alone, however, does not say how far it can be trusted. Per-boundary uncertainty has been proposed as a way to find boundaries that should be reviewed \cite{Kelley2026}.
 
-Open tools produce word times in two ways. An automatic speech recognition (ASR) model such as Whisper reports its own word timestamps \cite{Radford2023}. A forced aligner places a known or recognized transcript on the audio; examples are the Montreal Forced Aligner (MFA) \cite{McAuliffe2017} and aligners based on connectionist temporal classification (CTC) \cite{Pratap2024,Hwang2023}. Recent evaluations on TIMIT and Buckeye place MFA ahead of the CTC-based aligners they test \cite{Rousso2024,McAuliffe2026,Zolkepli2026,Chu2026FABench}. These works compare or propose aligners and recognizers, mostly on short utterances. This paper instead proposes and tests additions to a local captioning pipeline. It also tests its main comparisons speaker by speaker.
+Open tools produce word times in two ways. An automatic speech recognition (ASR) model such as Whisper reports word timestamps \cite{Radford2023}. A forced aligner places a known or recognized transcript on the audio; examples are the Montreal Forced Aligner (MFA) \cite{McAuliffe2017} and aligners based on connectionist temporal classification (CTC) \cite{Pratap2024,Hwang2023}. Recent evaluations on TIMIT and Buckeye place MFA ahead of the CTC-based aligners they test \cite{Rousso2024,McAuliffe2026,Zolkepli2026,Chu2026FABench}. These works compare or propose aligners and recognizers, mostly on short utterances. This paper instead proposes and tests additions to a local captioning pipeline, with speaker-level tests of the main comparisons.
 
 Prior work \cite{Nurym2026} built a multimodal accessibility pipeline with ASR-based word-level captions and reported its processing speed, but left manual validation of caption accuracy for future work. The present paper measures the word timing of a captioning pipeline and tests a learned correction of it. It asks three research questions:
 \begin{itemize}
@@ -71,19 +73,19 @@ Prior work \cite{Nurym2026} built a multimodal accessibility pipeline with ASR-b
 
 The contributions are as follows:
 \begin{enumerate}
-\item \emph{Refinement and reliability.} A lightweight boundary refinement and quality estimation (BRQE) module corrects each MFA boundary and scores each word. It is trained only on speakers disjoint from the test set, and its weights are frozen before testing. On held-out spontaneous speech it beats a constant-offset correction under both mean absolute error (MAE) and boundary F1 for all 20 test speakers, and its score detects words with boundaries more than 20~ms off with an area under the receiver operating characteristic curve (ROC-AUC) of about 0.75.
+\item \emph{Refinement and reliability.} A lightweight boundary refinement and quality estimation (BRQE) module corrects each MFA boundary and scores each word. It is trained only on speakers disjoint from the test set, and its weights are frozen before testing. On held-out spontaneous speech it beats a constant-offset correction under both mean absolute error (MAE) and boundary F1 for all 20 test speakers, and its score detects words with a boundary more than 20~ms off with an area under the receiver operating characteristic curve (ROC-AUC) of about 0.75.
 \item \emph{Long recordings.} An overlap-and-stitch scheme passes a pre-registered seam check that the original chunking fails. No length effect on the error was found among the recordings that aligned, although failed recordings grow with length.
-\item \emph{The cost of a recognized transcript.} Boundary F1 at 20~ms on spontaneous speech is 0.624 with recognized text (word coverage 89.0\%) and 0.710 with a known transcript, measured with a metric that charges missed words and with speaker-level tests.
+\item \emph{The cost of a recognized transcript.} Boundary F1 at 20~ms on spontaneous speech is 0.624 with recognized text (word coverage 89.0\%) and 0.710 with a known transcript.
 \end{enumerate}
 
 \section{Related Work}
 \subsection{Caption Timing and Accessibility}
-A review of more than 100 empirical studies concludes that same-language captions improve comprehension of, attention to, and memory for video in children, adolescents, college students, and adults \cite{Gernsbacher2015}. In a qualitative survey of disabled, neurodivergent, and neurotypical university students, 48\% of participants mentioned pausing, changing speed, or using captions to adapt lecture recordings to their needs \cite{Horlin2024}. In a survey of 216 participants, delay lowered the mean quality rating of television captions from 5.09 to 3.66 on a scale of 1 to 7 \cite{Thompson2026}. Those delays were of about 2 to 12~s; this paper makes no claim about how viewers perceive errors of tens of milliseconds.
+A review of more than 100 empirical studies concludes that same-language captions improve comprehension of, attention to, and memory for video in children, adolescents, college students, and adults \cite{Gernsbacher2015}. In a survey of disabled, neurodivergent, and neurotypical university students, 48\% mentioned pausing, changing speed, or using captions to adapt lecture recordings to their needs \cite{Horlin2024}. In a survey of 216 participants, delay lowered the mean quality rating of television captions from 5.09 to 3.66 on a scale of 1 to 7 \cite{Thompson2026}. Those delays were of about 2 to 12~s; this paper makes no claim about how viewers perceive errors of tens of milliseconds.
 
 \subsection{ASR Timestamps and Forced Alignment}
-Whisper is a speech recognizer trained on 680,000 hours of weakly supervised audio \cite{Radford2023}. Earlier evaluations of its word timestamps typically used tolerances above 200~ms, while selected attention heads inside the model give more accurate alignments at 20--100~ms without training \cite{Yeh2025}. WhisperX adds voice activity detection (VAD) and forced alignment of the recognized text with an external phoneme model \cite{Bain2023}. The Massively Multilingual Speech (MMS) project trains a CTC acoustic model for forced alignment \cite{Pratap2024}, and TorchAudio implements CTC forced alignment \cite{Hwang2023}. The NeMo Forced Aligner (NFA) produces word-level subtitles; in its evaluation on meeting recordings with a 200~ms match window, MFA aligned only 5 of 16 files \cite{Rastorgueva2023}.
+Whisper is a speech recognizer trained on 680,000 hours of weakly supervised audio \cite{Radford2023}. Selected attention heads inside it can align words at tolerances of 20--100~ms without training \cite{Yeh2025}. WhisperX adds voice activity detection (VAD) and forced alignment of the recognized text with an external phoneme model \cite{Bain2023}. The Massively Multilingual Speech (MMS) project trains a CTC acoustic model for forced alignment \cite{Pratap2024}, and TorchAudio implements CTC forced alignment \cite{Hwang2023}. The NeMo Forced Aligner (NFA) produces word-level subtitles; in its evaluation on meeting recordings with a 200~ms match window, MFA aligned only 5 of 16 files \cite{Rastorgueva2023}.
 
-MFA uses Gaussian mixture and hidden Markov models with triphones and speaker adaptation \cite{McAuliffe2017}. On TIMIT and Buckeye it placed word boundaries more accurately than WhisperX and MMS at all tested resolutions, on words that the recognizers got right \cite{Rousso2024}. MFA 3.0 reached mean errors of 19.93~ms on TIMIT and 21.75~ms on Buckeye \cite{McAuliffe2026}. Two 2026 preprints also compare aligners on these corpora: one finds MFA the most precise of nine existing configurations and then trains a more precise aligner \cite{Zolkepli2026}; the other gives each system either the reference transcript or a recognizer's output \cite{Chu2026FABench}. Evaluations of forced alignment have been described as relying on short, clean speech and perfect transcripts, whereas captioning runs on long recordings and often on error-prone text \cite{Vaidya2026}.
+MFA uses Gaussian mixture and hidden Markov models with triphones and speaker adaptation \cite{McAuliffe2017}. On TIMIT and Buckeye it placed word boundaries more accurately than WhisperX and MMS at all tested resolutions, on words that the recognizers got right \cite{Rousso2024}. Two 2026 preprints also compare aligners on these corpora: one finds MFA the most precise of nine existing configurations and then trains a more precise aligner \cite{Zolkepli2026}; the other gives each system either the reference transcript or a recognizer's output \cite{Chu2026FABench}. Evaluations of forced alignment have been described as relying on short, clean speech and perfect transcripts, whereas captioning runs on long recordings and often on error-prone text \cite{Vaidya2026}.
 
 \subsection{Boundary Refinement and Confidence}
 Correcting boundaries after alignment is an established idea. Boundary correction models with system fusion raised the share of TIMIT phone boundaries within 20~ms from 93.9\% to 96.8\% \cite{Stolcke2014}. Cuozzo et al. refine MFA boundaries with a small convolutional neural network (CNN) and one model per pair of phone classes, trained on text-to-speech recordings of one Brazilian Portuguese speaker, with gains for two other speakers \cite{Cuozzo2018}. Kelley places each boundary at the median of an ensemble of ten classifiers with a 97.85\% confidence interval, whose width can help find boundaries to review \cite{Kelley2026}. FuseAlign scores word presence, not boundary error \cite{Vaidya2026}.
@@ -96,23 +98,40 @@ Fig.~\ref{fig:pipeline} shows the pipeline. It takes 16~kHz mono audio and an op
 
 \begin{figure*}[t]
 \centering
-% AUTHOR FIGURE: replace this box with the pipeline diagram.
-\fbox{\parbox[c][3.2cm][c]{0.9\textwidth}{\centering Pipeline diagram (to be inserted)}}
-\caption{Proposed pipeline. Scenario A anchors a known transcript to Whisper's words, and scenario B aligns Whisper's own words. MFA aligns them chunk by chunk, and BRQE refines every boundary and outputs a reliability score for each word.}
+% Temporary diagram (24.11.2026); the author may replace it.
+\begin{tikzpicture}[font=\footnotesize, >={Stealth[length=1.6mm]},
+  box/.style={draw, rounded corners=1.5pt, align=center, minimum height=8mm, inner xsep=3pt},
+  own/.style={box, fill=black!12}, io/.style={align=center}, node distance=4mm]
+\node[io] (au) {Audio};
+\node[box, right=of au] (vad) {Silero\\VAD};
+\node[box, right=of vad] (asr) {Whisper\\large-v3};
+\node[own, right=9mm of asr, yshift=6mm] (anc) {Transcript\\anchoring};
+\node[box, right=9mm of asr, yshift=-6mm] (ww) {Whisper\\words};
+\node[own, right=33mm of asr] (chk) {Chunking,\\overlap};
+\node[box, right=of chk] (mfa) {MFA\\(per speaker)};
+\node[own, right=of mfa] (mer) {Stitch,\\merge};
+\node[own, right=of mer] (brq) {BRQE};
+\node[io, right=of brq] (out) {Boundaries,\\reliability,\\WebVTT};
+\node[io, left=of anc, yshift=3.6mm, xshift=-3mm] (tr) {Known transcript};
+\draw[->] (au)--(vad); \draw[->] (vad)--(asr);
+\draw[->] (asr.east) -- ++(3mm,0) |- ([yshift=-1.5mm]anc.west);
+\draw[->] (asr.east) -- ++(3mm,0) |- (ww.west);
+\draw[->] (tr.east) -- ([yshift=3.6mm]anc.west);
+\draw[->] (anc.east) -| node[above, pos=.25, font=\scriptsize] {A} (chk.north);
+\draw[->] (ww.east) -| node[below, pos=.25, font=\scriptsize] {B} (chk.south);
+\draw[->] (chk)--(mfa); \draw[->] (mfa)--(mer); \draw[->] (mer)--(brq); \draw[->] (brq)--(out);
+\end{tikzpicture}
+\caption{Proposed pipeline. Scenario A anchors a known transcript to Whisper's words, and scenario B aligns Whisper's own words. MFA aligns them chunk by chunk, and BRQE refines every boundary and outputs a reliability score for each word. Shaded blocks are the additions studied in this paper.}
 \label{fig:pipeline}
 \end{figure*}
 
-Words are split into chunks of at most 30~s with 0.5~s of padding. Cuts go at the midpoint of the latest suitable VAD pause if there is one, otherwise at a segment boundary (Whisper segments in scenario B, groups of 40 transcript words in scenario A), otherwise at the widest gap between words. MFA 3.4.3 aligns all chunks of a speaker in one call with the english\_us\_arpa acoustic model and dictionary, a grapheme-to-phoneme model for out-of-vocabulary words, speaker adaptation, and fine tuning, which places boundaries below the 10~ms frame shift. A chunk that MFA cannot align is recorded as a failure and is never replaced by another aligner's output. The alignments are merged into one monotonic timeline and refined by BRQE. The words can be exported as WebVTT captions with word timestamps. Every benchmark clip is shorter than 30~s and forms a single chunk, so chunking matters only for long recordings.
+Words are split into chunks of at most 30~s with 0.5~s of padding. Cuts go at the midpoint of the latest suitable VAD pause, otherwise at a segment boundary, otherwise at the widest gap between words. MFA 3.4.3 aligns all chunks of a speaker in one call with the english\_us\_arpa acoustic model and dictionary, a grapheme-to-phoneme model for out-of-vocabulary words, speaker adaptation, and fine tuning, which places boundaries below the 10~ms frame shift. A chunk that MFA cannot align is recorded as a failure and is never replaced by another aligner's output. The alignments are merged into one monotonic timeline and refined by BRQE. The words can be exported as WebVTT captions with word timestamps. Every benchmark clip forms a single chunk, so chunking matters only for long recordings.
 
 \subsection{Transcript Anchoring}\label{sec:anchor}
 Chunking needs a time for every word, so scenario A first gives each transcript word an approximate time. The two word sequences, of $n$ and $m$ words, are aligned by dynamic programming: identical normalized words score $+2$, others $-1$, and gaps $-1$. Only cells within a band of width $w=\max(50,\,0.1\max(n,m),\,|n-m|+1)$ around the diagonal are filled, so the cost is $O(nw)$. Exact matches on the best path become anchors if they do not start before the previous anchor ends and lie within the recording. Runs of words without an anchor share the interval between neighboring anchors in proportion to their character length.
 
 \subsection{Boundary Refinement and Quality Estimation}\label{sec:brqe}
-For every MFA boundary $b$, BRQE reads a 64-band log-mel window $X_b$ of $\pm100$~ms (25~ms frames, 5~ms hop) and six scalar features $z_b$: start or end, word or phone, scenario, log duration, sub-frame offset, and a bias. Three one-dimensional convolutions and a hidden layer of 128 units that also receives the scalars feed two heads:
-\begin{equation}
-h_b=\mathrm{MLP}([\mathrm{CNN}(X_b);z_b])
-\label{eq:brqe-h}
-\end{equation}
+For every MFA boundary $b$, BRQE reads a 64-band log-mel window $X_b$ of $\pm100$~ms (25~ms frames, 5~ms hop) and six scalar features $z_b$: start or end, word or phone, scenario, log duration, sub-frame offset, and a bias. Three one-dimensional convolutions and a hidden layer of 128 units that also receives the scalars give a representation $h_b$, which feeds two heads:
 \begin{equation}
 \Delta_b=\Delta_{\max}\tanh(w_r^{\top}h_b),\qquad
 p_b=\sigma(w_c^{\top}h_b)
@@ -128,11 +147,11 @@ With $\epsilon_b$ the signed correction from the MFA boundary to the reference i
 \begin{equation}
 \begin{split}
 \mathcal{L}={}&\frac{1}{20\lvert\mathcal{B}_r\rvert}\sum_{b\in\mathcal{B}_r}1000\,\lvert\Delta_b-\epsilon_b\rvert\\
-&+\lambda\,\mathrm{BCE}\bigl(p_b,\mathbb{1}[\lvert\epsilon_b\rvert>0.02]\bigr)
+&+\lambda\,\mathrm{BCE}\bigl(p_b,\mathbf{1}[\lvert\epsilon_b\rvert>0.02]\bigr)
 \end{split}
 \label{eq:loss}
 \end{equation}
-with $\lambda=0.5$ and BCE the binary cross-entropy. Training uses AdamW (learning rate $10^{-3}$, weight decay $10^{-4}$), dropout 0.2, batch size 512, and 12 epochs. The training set is 382,270 MFA boundaries of words and phones, in both scenarios, matched to the reference on 3,000 clips from the 20 training speakers. One set of weights serves both scenarios.
+with $\lambda=0.5$ and BCE the binary cross-entropy. Training uses AdamW (learning rate $10^{-3}$, weight decay $10^{-4}$), dropout 0.2, batch size 512, and 12 epochs. The training set is 382,270 MFA boundaries of words and phones, in both scenarios, matched to the reference on 3,000 clips from the 20 training speakers.
 
 The constant-offset rival shifts each boundary by the median training correction for its kind and scenario; these medians are at most 1.4~ms. A rule fixed before any cross-validation numbers existed decided whether refinement entered the pipeline: in 5-fold speaker cross-validation on the training speakers, it had to lower word MAE below that of the constant offset in both scenarios (paired Wilcoxon over 20 speakers, $p<0.05$). Both met the rule (20 of 20 speakers, $p<0.001$).
 
@@ -141,30 +160,30 @@ With the default VAD padding of 400~ms, short pauses are not detected, so a chun
 
 \section{Experimental Setup}
 \subsection{Corpora and Speaker Split}
-Read speech comes from TIMIT \cite{Garofolo1993}, in the NLTK sample of 160 utterances from 16 speakers. Its phone boundaries were placed automatically and corrected by hand, and its word boundaries were derived from the phone segments. Spontaneous speech comes from the Buckeye corpus \cite{Pitt2005}: conversational American English from 40 talkers, with labels aligned automatically and then corrected by hand. The 40 speakers were split at random, with a fixed seed, into 20 training and 20 test speakers. Clips are maximal runs of at least three ordinary words without labeled silence, non-speech, or unknown tokens, 1 to 30~s long, with up to 0.25~s of adjoining silence. The test set has 50 random clips per test speaker; one clip with empty audio was excluded, leaving 999.
+Read speech comes from TIMIT \cite{Garofolo1993}, in the NLTK sample of 160 utterances from 16 speakers. Its phone boundaries were placed automatically and corrected by hand, and word boundaries were derived from them. Spontaneous speech comes from the Buckeye corpus \cite{Pitt2005}: conversational American English from 40 talkers, with labels aligned automatically and then corrected by hand. The 40 speakers were split at random, with a fixed seed, into 20 training and 20 test speakers. Clips are maximal runs of at least three ordinary words without labeled silence, non-speech, or unknown tokens, 1 to 30~s long, with up to 0.25~s of adjoining silence. The test set has 50 random clips per test speaker, 999 without one clip with empty audio.
 
 Pipeline defects were found and fixed in pilots on 400 clips from all 40 speakers; samples, BRQE weights, and code were then frozen under tags. Of the 999 test clips, 22 had been in a pilot. BRQE was trained on the training speakers only, and its weights were fixed before it was applied to any test speaker.
 
-Long recordings were built for each test speaker by joining that speaker's consecutive clips without inserted pauses until they reach at least 1, 5, or 10 minutes; shorter recordings are prefixes of longer ones. The joins are not natural speech. A recording counts as failed when any of its chunks fails to align.
+Long recordings were built for each test speaker by joining that speaker's consecutive clips without inserted pauses until they reach at least 1, 5, or 10 minutes; shorter recordings are prefixes of longer ones. A recording counts as failed when any of its chunks fails to align.
 
 \subsection{Compared Modes}
-B0 is Whisper's own word timestamps. B1 aligns Whisper's words by CTC with the TorchAudio MMS model \cite{Pratap2024,Hwang2023}, which follows the WhisperX idea of aligning Whisper's text with a separate model \cite{Bain2023}. B2 aligns Whisper's words by MFA. A1 aligns the known transcript by CTC, and A2 anchors it and aligns it by MFA. A2 and B2 are also run with the constant offset and with BRQE, giving nine modes. The WhisperX and NFA programs themselves were not run.
+B0 is Whisper's own word timestamps. B1 aligns Whisper's words by CTC with the TorchAudio MMS model \cite{Pratap2024,Hwang2023}, which follows the WhisperX idea of aligning Whisper's text with a separate model \cite{Bain2023}. B2 aligns Whisper's words by MFA. A1 aligns the known transcript by CTC, and A2 anchors it and aligns it by MFA. A2 and B2 are also run with the constant offset and with BRQE, giving nine modes. MFA failed on 2 of the 999 Buckeye clips in each scenario.
 
 \subsection{Metrics and Statistics}
-Predicted and reference words are paired by Needleman--Wunsch alignment of normalized words (match $+2$, mismatch $-2$, gap $-1$), and only identical words count as matched. Word coverage is the share of matched reference words. Over the boundaries $\mathcal{B}$ (starts and ends) of matched words,
+Predicted and reference words are paired by Needleman--Wunsch alignment of normalized words (match $+2$, mismatch $-2$, gap $-1$), and only identical words count as matched. Word coverage is the share of matched reference words. Over the boundaries $\mathcal{B}$ of matched words,
 \begin{equation}
 e_b = 1000\,\lvert \hat{t}_b - t_b \rvert,\qquad
 \mathrm{MAE} = \frac{1}{\lvert\mathcal{B}\rvert}\sum_{b\in\mathcal{B}} e_b
 \label{eq:mae}
 \end{equation}
-and Acc@20 is the share of $\mathcal{B}$ with $e_b\le20$~ms, a tolerance common in segmentation studies \cite{Stolcke2014}. MAE was fixed as the primary metric before the test runs.
+and Acc@20 is the share of $\mathcal{B}$ with $e_b\le20$~ms \cite{Stolcke2014}. MAE was fixed as the primary metric before the test runs.
 
 Matched-word MAE can favor systems that depend on recognition, because missed words drop out of it \cite{Chu2026FABench}. Boundary F1 therefore counts every predicted and every reference boundary, with the boundaries of failed clips as misses:
 \begin{equation}
 F_{1,\tau} = \frac{2P_\tau R_\tau}{P_\tau + R_\tau} = \frac{2H_\tau}{N^{\mathrm{pred}} + N^{\mathrm{ref}}}
 \label{eq:f1}
 \end{equation}
-where $H_\tau$ is the number of matched boundaries within tolerance $\tau$, $P_\tau$ and $R_\tau$ are precision and recall, and $N^{\mathrm{pred}}$ and $N^{\mathrm{ref}}$ count all predicted and reference boundaries. The protocol for F1 was written before its numbers.
+where $H_\tau$ is the number of matched boundaries within tolerance $\tau$, $P_\tau$ and $R_\tau$ are precision and recall, and $N^{\mathrm{pred}}$ and $N^{\mathrm{ref}}$ count all predicted and reference boundaries. The F1 protocol was written before its numbers.
 
 Errors of utterances from one speaker can be correlated \cite{Liu2020Blockwise}, so comparisons are tested speaker by speaker. Each speaker's value is pooled over clips, and the paired differences are tested with an exact two-sided Wilcoxon signed-rank test. The $p$-values within each corpus and family (seven comparisons for MAE, five for F1) are adjusted by Holm's step-down procedure \cite{Holm1979}. The 95\% confidence intervals (CIs) come from a percentile bootstrap over speakers with 2,000 resamples. The speaker-level tests, boundary F1, and boundary-group analyses are secondary and were added after the main results.
 
@@ -199,11 +218,10 @@ A2 + BRQE & 17.0 [15.3, 18.9] & 76.8 & 99.98 & 0.766 & 19.9 [17.0, 24.6] & 69.9 
 \bottomrule
 \end{tabular}
 
-\smallskip
 \parbox{0.94\textwidth}{\scriptsize B modes use Whisper's text and A modes the known transcript. MAE and Acc@20 use matched words only and must be read with word coverage (Cov, over successfully scored clips); A and B values refer to different word sets. On Buckeye, matched-word Acc@20 of the B modes with MFA is 7.7 to 8.3 points above recall over all reference boundaries. F1@20 counts missed and inserted words. CIs are speaker-bootstrap intervals.}
 \end{table*}
 
-Table~\ref{tab:main} gives the results for all nine modes. With a known transcript, MFA (A2) reaches an MAE of 19.6~ms and an Acc@20 of 71.1\% on spontaneous speech, against 40.5~ms and 34.0\% for CTC (A1). Without a transcript, the proposed pipeline (B2) gives 30.1~ms and 69.0\% at a word coverage of 89.0\%, against 126.5~ms for Whisper's timestamps (coverage 88.8\%) and 41.3~ms for Whisper with CTC (coverage 89.0\%). On read speech, MFA reaches 20.3~ms with the known transcript and 20.5~ms with Whisper's text (coverage 97.6\%).
+Table~\ref{tab:main} gives the results for all nine modes. With a known transcript, A2 reaches an MAE of 19.6~ms and an Acc@20 of 71.1\% on spontaneous speech, against 40.5~ms and 34.0\% for CTC (A1). Without a transcript, the proposed pipeline (B2) gives 30.1~ms and 69.0\% at a word coverage of 89.0\%, against 126.5~ms for Whisper's timestamps (coverage 88.8\%) and 41.3~ms for Whisper with CTC (coverage 89.0\%). On read speech, MFA reaches 20.3~ms with the known transcript and 20.5~ms with Whisper's text (coverage 97.6\%).
 
 Speaker by speaker on Buckeye, A2 has a lower MAE than A1 for 20 of 20 speakers, and B2 has a lower MAE than B0 for 20 and than B1 for 19 of 20 (Holm $p<0.0001$ in each case). On TIMIT the same three comparisons favor MFA for 15, 16, and 15 of 16 speakers (Holm $p<0.0004$).
 
@@ -216,30 +234,30 @@ Boundary F1 at 20~ms gives the same conclusions on Buckeye: the known transcript
 \label{fig:f1}
 \end{figure}
 
-Fig.~\ref{fig:f1} shows F1 against tolerance. On Buckeye, F1 for Whisper's text with MFA rises only from 0.846 at 70~ms to 0.864 at 100~ms (word coverage 89.0\%), against 0.978 at 100~ms with the known transcript; words that Whisper missed or misrecognized count as errors at every tolerance.
+Fig.~\ref{fig:f1} shows F1 against tolerance. On Buckeye, F1 for Whisper's text with MFA rises only from 0.846 at 70~ms to 0.864 at 100~ms (word coverage 89.0\%), against 0.978 at 100~ms with the known transcript.
 
-A post-hoc observation with MFA before BRQE adds detail. On Buckeye, 74\% of reference boundaries lie between two correctly recognized words with recognized text, against 89\% with known text. On the same such boundaries the median error is equal (10.0~ms), but recognized text has a larger MAE (26.1 vs 17.6~ms) and more errors above 100~ms (3.2\% vs 1.4\%). On TIMIT the MAE on these boundaries is about the same (17.9 vs 17.8~ms). The data do not show which part of the loss comes from recognition and which from alignment.
+In a post-hoc look at MFA before BRQE on Buckeye, 74\% of reference boundaries lie between two correctly recognized words with recognized text, against 89\% with known text. On the same such boundaries the median error is equal (10.0~ms), but recognized text has a larger MAE (26.1 vs 17.6~ms) and more errors above 100~ms (3.2\% vs 1.4\%). On TIMIT the MAE on these boundaries is about the same (17.9 vs 17.8~ms). The data do not show how much of the loss comes from recognition and how much from alignment.
 
 \subsection{Boundary Refinement and Reliability}
 On the 20 Buckeye test speakers, BRQE lowers word MAE from 19.6 to 17.0~ms with the known transcript and from 30.1 to 27.7~ms with Whisper's text (coverage 89.0\%). It raises Acc@20 from 71.1\% to 76.8\% and from 69.0\% to 74.9\%, respectively. Speaker by speaker, BRQE has a lower word MAE than the constant offset for 20 of 20 test speakers in both scenarios (Holm $p<0.0001$). Under boundary F1 at 20~ms it also beats the constant offset for all 20 speakers in both scenarios (Holm $p<0.001$): 0.766 vs 0.707 with the known transcript, and 0.677 vs 0.621 with Whisper's text.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/reliability_retention_en.pdf}
+\includegraphics[width=0.8\columnwidth]{figures/reliability_retention_en.pdf}
 \caption{Word MAE of the words kept after rejecting the least reliable 0--50\% by BRQE's score, with known text (A2+BRQE) and Whisper's text (B2+BRQE), on TIMIT (left) and Buckeye (right). Vertical axes differ.}
 \label{fig:rel}
 \end{figure}
 
 The reliability head detects words for which the larger of the two MFA boundary errors exceeds 20~ms with ROC-AUC 0.756 (A2) and 0.749 (B2); about half of the words carry this label (0.50--0.52). Rejecting the 30\% least reliable words lowers word MAE from 17.0 to 14.7~ms (A2) and from 27.7 to 25.1~ms (B2, coverage 89.0\% before rejection), as Fig.~\ref{fig:rel} shows.
 
-BRQE, trained on spontaneous speech, does not significantly improve read speech. On TIMIT, word MAE changes from 20.3 to 19.9~ms (A2) and from 20.5 to 20.1~ms (B2, coverage 97.6\%), with clip-paired Holm $p$ of 0.24--0.27. Its F1 there is higher than MFA's at tolerances of 10 and 20~ms and lower from 30 to 80~ms (at 30~ms, 0.800 vs 0.816 with the known transcript and 0.779 vs 0.792 with Whisper's text).
+BRQE, trained on spontaneous speech, does not significantly improve read speech. On TIMIT, MAE changes from 20.3 to 19.9~ms (A2) and from 20.5 to 20.1~ms (B2, coverage 97.6\%), with clip-paired Holm $p$ of 0.24--0.27. Its F1 there is higher than MFA's at tolerances of 10 and 20~ms and lower from 30 to 80~ms (at 30~ms, 0.800 vs 0.816 with the known transcript and 0.779 vs 0.792 with Whisper's text).
 
 The tested settings matter little. In 5-fold speaker cross-validation on the training speakers, the inclusion rule held in both scenarios for all nine configurations (the default and eight that change the epochs, window, hidden size, or loss weight; one seed each), and word MAE moved by at most 0.5~ms from the default.
 
 \subsection{Long Recordings}
 The seam check was pre-registered with a threshold of 10~ms and run on 20 one-minute recordings. It measures the excess word-boundary error near chunk seams relative to one-chunk alignment of the same words. The original chunking failed it (+111.8~ms for A2, +125.3~ms for B2). Overlap-and-stitch, run on the same recordings, passed it ($-0.4$ and $-15.4$~ms). The design was selected on 6 of these 20 recordings, and the negative B2 value is not read as an improvement.
 
-Table~\ref{tab:long} gives the results by length. With the known transcript, for the same words aligned inside the 10-minute and the 1-minute recording, the per-speaker MAE difference is $-0.2$~ms [$-1.2$, 0.4] over 14 speakers. These figures cover surviving recordings only, and the absence of a length effect is not claimed. Failed recordings rise with length, while the share of failed chunks stays below 2\% for A2 and 5\% for B2: one failed chunk fails the whole recording, so a longer recording has more chances to fail. Without word anchors, 15, 20, and 20 of 20 A2 recordings fail at 1, 5, and 10 minutes, so the pipeline needs anchoring.
+Table~\ref{tab:long} gives the results by length. With the known transcript, for the same words aligned inside the 10-minute and the 1-minute recording, the per-speaker MAE difference is $-0.2$~ms [$-1.2$, 0.4] over 14 speakers. These figures cover surviving recordings only; the absence of a length effect is not claimed. Failed recordings rise with length, while the share of failed chunks stays below 2\% for A2 and 5\% for B2: one failed chunk fails the whole recording, so a longer recording has more chances to fail. Without word anchors, 15, 20, and 20 of 20 A2 recordings fail at 1, 5, and 10 minutes, so the pipeline needs anchoring.
 
 \begin{table}[t]
 \caption{Long Recordings (20 per Length, Overlap-and-Stitch)}
@@ -262,15 +280,21 @@ B2: failed chunks, \% & 4.8 & 3.9 & 4.6\\
 \end{tabular}
 \end{table}
 
-\section{Discussion and Limitations}
-Our MFA results and the order of MFA ahead of CTC alignment are consistent with recent benchmarks \cite{Chu2026FABench,Zolkepli2026,McAuliffe2026,Rousso2024}; absolute values differ, as do boundary definitions, clips, and speaker splits. Whisper's timestamps are early: the mean signed start error is $-115.0$~ms on Buckeye and $-147.5$~ms on TIMIT (coverage 88.8\% and 97.4\%). CTC alignment starts words 39--46~ms late on average and ends them 15--23~ms early. This is in line with the report that, on the forced CTC path, the first character frame falls a median 33~ms after the human word start and the last ends a median 26~ms before the human end \cite{Zolkepli2026}.
+\section{Discussion}
+\subsection{Interpretation}
+\emph{Transcript.} Recognized text costs 0.086 in boundary F1 at 20~ms on spontaneous speech (0.710 vs 0.624, word coverage 89.0\%). In the post-hoc look at shared boundaries the median error is the same, and recognized text differs by more errors above 100~ms. On read speech (coverage 97.6\%), the two texts give almost the same MAE.
 
-BRQE gives a gain for every held-out speaker of spontaneous speech with one small network applied after alignment. The gain does not carry over to read speech significantly; the cause was not tested. One possible use of the reliability score is to mark words for review, as proposed for uncertainty ranges of boundaries \cite{Kelley2026}; this use was not measured. MFA failures on long files have also been reported elsewhere \cite{Rastorgueva2023}.
+\emph{Agreement with other work.} Our MFA results and the order of MFA ahead of CTC alignment are consistent with recent benchmarks \cite{Chu2026FABench,Zolkepli2026,McAuliffe2026,Rousso2024}: mean MFA errors of 19.93 and 21.75~ms on TIMIT and Buckeye \cite{McAuliffe2026} and of 19.1 and 21.0~ms \cite{Zolkepli2026} are of the same order as ours (20.3 and 19.6~ms). Boundary definitions, clips, and speaker splits differ. Whisper's timestamps are early, with a mean start error of $-115.0$~ms on Buckeye and $-147.5$~ms on TIMIT (coverage 88.8\% and 97.4\%), but the mean absolute duration error is 86.4 and 101.2~ms, so one shift would not correct every word. CTC alignment starts words 39--46~ms late on average and ends them 15--23~ms early, in line with the report that the first character frame on the forced CTC path falls a median 33~ms after the human word start \cite{Zolkepli2026}.
 
-The study has limits. Buckeye clips are runs of ordinary words without noise or interviewer speech and may be easier than full conversational utterances. About 40\% of BRQE's gain in recall at 20~ms on Buckeye falls on the edges of these clips. Noise, reverberation, and accented speech were not tested. The long recordings were spliced from clips and stand in for lectures only partly. BRQE was trained on one corpus with one seed, and TIMIT results come from a 160-utterance sample. B1 and A1 reproduce the alignment cores of WhisperX-style and MMS pipelines, not the programs. No user study was run: the paper measures timing, not comprehension or learning.
+\emph{Refinement.} BRQE gives a gain for every held-out speaker of spontaneous speech with one small network applied after alignment, under two different metrics. The gain is largest at the edges of the clips, which give about 40\% of the increase in recall at 20~ms, but it also holds inside them: on boundaries between two recognized words, MAE falls from 19.0 to 16.9~ms with the known transcript and from 26.1 to 24.0~ms with Whisper's text (coverage 89.0%). It also holds when the tempo of Buckeye clips is changed by factors from 0.8 to 1.25 with the pitch preserved (2.8--3.5~ms, known transcript). It does not carry over to read speech: the gain on TIMIT is not significant, and at 1.25 BRQE is worse there than MFA (21.8 vs 20.2~ms). The cause was not tested. One possible use of the reliability score is to mark words for review, as proposed for uncertainty ranges of boundaries \cite{Kelley2026}; this use was not measured.
+
+\emph{Long recordings.} In a small pilot, seams fell inside speech when VAD found no pauses. An aligner that must place every token can then shift neighboring intervals \cite{Vaidya2026}. Overlap-and-stitch addresses this with more audio and text around each seam. What remains is the failed chunk; MFA failures on long files have also been reported elsewhere \cite{Rastorgueva2023}.
+
+\subsection{Limitations}
+Buckeye clips are runs of ordinary words without noise or interviewer speech and may be easier than full conversational utterances. Noise, reverberation, and accented speech were not tested. The long recordings were spliced from clips and stand in for lectures only partly. BRQE was trained on one corpus with one seed, and TIMIT results come from a 160-utterance sample. B1 and A1 reproduce the alignment cores of WhisperX-style and MMS pipelines, not the programs. No user study was run: the paper measures timing, not comprehension or learning.
 
 \section{Conclusion}
-For RQ1, MFA placed the word boundaries of spontaneous speech with an MAE of 19.6~ms using a known transcript, and of 30.1~ms on matched words using Whisper's text (coverage 89.0\%), against 126.5~ms for Whisper's own timestamps (coverage 88.8\%). For RQ2, on held-out spontaneous speech BRQE beat a constant-offset correction for all 20 speakers under MAE and boundary F1, and its reliability score detected words with an MFA boundary more than 20~ms off with ROC-AUC 0.756 and 0.749. It did not significantly improve read speech. For RQ3, the original chunking raised the error near seams of one-minute recordings by more than 100~ms, and overlap-and-stitch passed the pre-registered 10~ms check. Among recordings that aligned with the known transcript, word MAE stayed at 19.2--20.4~ms, while failed recordings grew with length. Future work should test the pipeline on natural lecture recordings with hand-corrected word boundaries, and on noisy and accented speech.
+For RQ1, MFA placed the word boundaries of spontaneous speech with an MAE of 19.6~ms using a known transcript, and of 30.1~ms on matched words using Whisper's text (coverage 89.0\%), against 126.5~ms for Whisper's own timestamps (coverage 88.8\%). For RQ2, on held-out spontaneous speech BRQE beat a constant-offset correction for all 20 speakers under MAE and boundary F1, and its reliability score detected words with an MFA boundary more than 20~ms off with ROC-AUC 0.756 and 0.749. It did not significantly improve read speech. For RQ3, the original chunking raised the error near seams by more than 100~ms on one-minute recordings, and overlap-and-stitch passed the pre-registered 10~ms check. Among recordings that aligned with the known transcript, word MAE stayed at 19.2--20.4~ms, while failed recordings grew with length. Future work should test the pipeline on natural lecture recordings with hand-corrected word boundaries, and on noisy and accented speech.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
